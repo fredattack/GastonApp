@@ -1,0 +1,22 @@
+{
+    "content": "contenu",
+    "animals": "animaux",
+    "my_pets": "mes animaux",
+    "alimentation": "alimentation",
+    "care": "soin",
+    "task":"tâche",
+    "id": "ID",
+    "name": "Nom",
+    "species": "Espèce",
+    "breed": "Race",
+    "birthdate": "Date de naissance",
+    "photo_url": "URL de la photo",
+    "number_of_tasks": "Nombre de tâches",
+    "tasks": "tâches",
+    "is_active": "Actif",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "created_at": "Date d'enregistrement"
+
+
+}
