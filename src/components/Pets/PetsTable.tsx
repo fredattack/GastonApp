@@ -16,12 +16,12 @@ function PetsTable({ data, hiddenColumns, pageSize, onPageSizeChange,columns }: 
 
     const visibleColumns = columns.filter((col:Column) => !hiddenColumns.includes(col.accessor));
 
-    const sortedData = useMemo(() => {
+    const sortedData = data /*= useMemo(() => {
         const sorted = [...data].sort((a:Pet, b:Pet) =>
             sortStatus.direction === 'asc' ? a[sortStatus.columnAccessor].localeCompare(b[sortStatus.columnAccessor]) : b[sortStatus.columnAccessor].localeCompare(a[sortStatus.columnAccessor]),
         );
         return sorted.slice((page - 1) * pageSize, page * pageSize);
-    }, [data, sortStatus, page, pageSize]);
+    }, [data, sortStatus, page, pageSize]);*/
 
     return (
         <DataTable

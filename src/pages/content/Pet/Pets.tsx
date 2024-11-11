@@ -16,9 +16,11 @@ import {
 } from 'react-i18next';
 
 import IconMenuPages
-    from '../../components/Icon/Menu/IconMenuPages';
+    from '../../../components/Icon/Menu/IconMenuPages';
 import IconMenuTables
-    from '../../components/Icon/Menu/IconMenuTables';
+    from '../../../components/Icon/Menu/IconMenuTables';
+import DropdownMenu
+    from '../../../components/Shared/DropdownMenu';
 
 type Column = {
     accessor: string;
@@ -27,7 +29,7 @@ type Column = {
 };
 const rowData = [
     {
-        id: '01',
+        id: 1,
         ownerId: '01',
         name: 'Rex',
         species: 'Chien',
@@ -39,7 +41,7 @@ const rowData = [
         createdAt: '2024-11-10T09:00:00Z'
     },
     {
-        id: '02',
+        id: 2,
         ownerId: '01',
         name: 'Bella',
         species: 'Chien',
@@ -51,7 +53,7 @@ const rowData = [
         createdAt: '2024-11-10T09:15:00Z'
     },
     {
-        id: '03',
+        id: 3,
         ownerId: '02',
         name: 'Max',
         species: 'Chien',
@@ -63,7 +65,7 @@ const rowData = [
         createdAt: '2024-11-10T09:30:00Z'
     },
     {
-        id: '04',
+        id: 4,
         ownerId: '03',
         name: 'Lucy',
         species: 'Chien',
@@ -75,7 +77,7 @@ const rowData = [
         createdAt: '2024-11-10T09:45:00Z'
     },
     {
-        id: '05',
+        id: 5,
         ownerId: '01',
         name: 'Mimi',
         species: 'Chat',
@@ -87,7 +89,7 @@ const rowData = [
         createdAt: '2024-11-10T10:00:00Z'
     },
     {
-        id: '06',
+        id: 6,
         ownerId: '02',
         name: 'Tom',
         species: 'Chat',
@@ -99,7 +101,7 @@ const rowData = [
         createdAt: '2024-11-10T10:15:00Z'
     },
     {
-        id: '07',
+        id: 7,
         ownerId: '03',
         name: 'Luna',
         species: 'Chat',
@@ -111,7 +113,7 @@ const rowData = [
         createdAt: '2024-11-10T10:30:00Z'
     },
     {
-        id: '08',
+        id: 8,
         ownerId: '01',
         name: 'Simba',
         species: 'Chat',
@@ -123,7 +125,7 @@ const rowData = [
         createdAt: '2024-11-10T10:45:00Z'
     },
     {
-        id: '09',
+        id: 9,
         ownerId: '02',
         name: 'Shadow',
         species: 'Chat',
@@ -135,7 +137,7 @@ const rowData = [
         createdAt: '2024-11-10T11:00:00Z'
     },
     {
-        id: '10',
+        id: 10,
         ownerId: '03',
         name: 'Mochi',
         species: 'Chat',
@@ -147,7 +149,7 @@ const rowData = [
         createdAt: '2024-11-10T11:15:00Z'
     },
     {
-        id: '11',
+        id: 11,
         ownerId: '01',
         name: 'Nala',
         species: 'Chat',
@@ -159,7 +161,7 @@ const rowData = [
         createdAt: '2024-11-10T11:30:00Z'
     },
     {
-        id: '12',
+        id: 12,
         ownerId: '02',
         name: 'Cleo',
         species: 'Chat',
@@ -182,20 +184,42 @@ function Pets() {
     const filteredData = rowData.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
     const cols: Column[] = [
         {
+            accessor: 'actions',
+            title: 'action',
+            // @ts-ignore
+            render: ({ id }: {
+                id: number
+            }) => {
+
+                let actions: Action[] = generateActions(id);
+                return (<DropdownMenu
+                    id={id}
+                    actions={actions}
+                    openingDirection={'left'}
+                />);
+            }
+        },
+        {
             accessor: 'photo',
             title: t('photo'),
-    // @ts-ignore
-            render: ({ photo, name }:{photo:string,name:string}) => (
+            // @ts-ignore
+            render: ({
+                         photo,
+                         name
+                     }: {
+                photo: string,
+                name: string
+            }) => (
                 <img
                     src={photo}
                     alt={`${name}'s photo`}
                     style={{
                         width: 50,
                         height: 50,
-                        borderRadius: '50%',
+                        borderRadius: '50%'
                     }}
                 />
-            ),
+            )
         },
         {
             accessor: 'id',
@@ -230,10 +254,12 @@ function Pets() {
             title: t('is_active'),
             // @ts-ignore
             render: ({ isActive }) => (
-                <div className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${isActive ? 'bg-green-50 text-green-700 ring-green-600/10' : 'bg-red-50 text-red-700 ring-red-600/10'}`} style={{ textTransform: 'capitalize' }}>
+                <div
+                    className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${isActive ? 'bg-green-50 text-green-700 ring-green-600/10' : 'bg-red-50 text-red-700 ring-red-600/10'}`}
+                    style={{ textTransform: 'capitalize' }}>
                     {isActive ? t('active') : t('inactive')}
                 </div>
-            ),
+            )
 
         }, // Actif
         {
@@ -242,15 +268,39 @@ function Pets() {
         } // Nombre de tâches associées
     ];
 
-    const generateActions = (animal: Pet) => [
-        { label: 'Edit', onClick: () => handleEdit(animal.id) },
-        { label: animal.isActive ? 'Set Inactive' : 'Set Active', onClick: () => toggleActiveStatus(animal.id) },
-        { label: 'Set Deceased', onClick: () => setDeceased(animal.id) },
-        { label: 'Delete', onClick: () => deleteAnimal(animal.id) },
-        { label: 'Add Treatment', onClick: () => addTreatment(animal.id) },
-        { label: 'Add Menu', onClick: () => addMenu(animal.id) },
-        { label: 'Add Rendezvous', onClick: () => addRendezvous(animal.id) }
-    ];
+    const generateActions = (id: number) => {
+        const pet = rowData.find((pet) => pet.id == id);
+        return [
+            {
+                label: 'Edit',
+                onClick: () => handleEdit(id)
+            },
+            {
+                label: pet?.isActive ? 'Set Inactive' : 'Set Active',
+                onClick: () => toggleActiveStatus(id)
+            },
+            {
+                label: 'Set Deceased',
+                onClick: () => setDeceased(id)
+            },
+            {
+                label: 'Delete',
+                onClick: () => deleteAnimal(id)
+            },
+            {
+                label: 'Add Treatment',
+                onClick: () => addTreatment(id)
+            },
+            {
+                label: 'Add Menu',
+                onClick: () => addMenu(id)
+            },
+            {
+                label: 'Add Rendezvous',
+                onClick: () => addRendezvous(id)
+            }
+        ];
+    };
 
     // Method to handle edit
     const handleEdit = (id: number) => {
@@ -352,23 +402,23 @@ function Pets() {
                         columns={cols}
                         pageSize={pageSize}
                         onPageSizeChange={setPageSize}
-                        actions={(pet:Pet) => generateActions(pet)}
+                        actions={(pet: Pet) => generateActions(pet.id)}
                     />
                 ) : (
                     <div
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {
-                        // @ts-ignore
+                            // @ts-ignore
                             filteredData.map((pet: Pet) => {
-                            let actions = generateActions(pet);
-                            return (
-                                <PetsCard
-                                    key={pet.id || Math.random()} // Utiliser une clé de secours
-                                    pet={pet}
-                                    actions={actions}
-                                />
-                            );
-                        })}
+                                let actions = generateActions(pet.id);
+                                return (
+                                    <PetsCard
+                                        key={pet.id || Math.random()} // Utiliser une clé de secours
+                                        pet={pet}
+                                        actions={actions}
+                                    />
+                                );
+                            })}
                     </div>
                 )}
             </div>
