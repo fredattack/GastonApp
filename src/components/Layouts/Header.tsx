@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { IRootState } from '../../store';
-import { toggleRTL, toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import { IRootState } from '../../store';
+import { toggleRTL, toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
 import Dropdown from '../Dropdown';
 import IconMenu from '../Icon/IconMenu';
 import IconCalendar from '../Icon/IconCalendar';
@@ -33,10 +33,10 @@ import IconMenuForms from '../Icon/Menu/IconMenuForms';
 import IconMenuPages from '../Icon/Menu/IconMenuPages';
 import IconMenuMore from '../Icon/Menu/IconMenuMore';
 
-const Header = () => {
+function Header() {
     const location = useLocation();
     useEffect(() => {
-        const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
+        const selector = document.querySelector(`ul.horizontal-menu a[href="${window.location.pathname}"]`);
         if (selector) {
             selector.classList.add('active');
             const all: any = document.querySelectorAll('ul.horizontal-menu .nav-link.active');
@@ -56,7 +56,7 @@ const Header = () => {
         }
     }, [location]);
 
-    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl';
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
@@ -141,9 +141,9 @@ const Header = () => {
     return (
         <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
             <div className="shadow-sm">
-              <div className="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-black">
+                <div className="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-black">
                     <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
-                       {/* <Link to="/" className="main-logo flex items-center shrink-0">
+                        {/* <Link to="/" className="main-logo flex items-center shrink-0">
                             <img className="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo.svg" alt="logo" />
                             <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">VRISTO</span>
                         </Link>
@@ -155,11 +155,11 @@ const Header = () => {
                             }}
                         >
                             <IconMenu className="w-5 h-5" />
-                        </button>*/}
+                        </button> */}
                     </div>
 
                     <div className="ltr:mr-2 rtl:ml-2 hidden sm:block">
-                       {/* <ul className="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
+                        {/* <ul className="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
                             <li>
                                 <Link to="/apps/calendar" className="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60">
                                     <IconCalendar />
@@ -175,11 +175,11 @@ const Header = () => {
                                     <IconChatNotification />
                                 </Link>
                             </li>
-                        </ul>*/}
+                        </ul> */}
                     </div>
                     <div className="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
                         <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
-                            {/*<form
+                            {/* <form
                                 className={`${search && '!block'} sm:relative absolute inset-x-0 sm:top-0 top-1/2 sm:translate-y-0 -translate-y-1/2 sm:mx-0 mx-4 z-10 sm:block hidden`}
                                 onSubmit={() => setSearch(false)}
                             >
@@ -203,10 +203,10 @@ const Header = () => {
                                 className="search_btn sm:hidden p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:bg-white-light/90 dark:hover:bg-dark/60"
                             >
                                 <IconSearch className="w-4.5 h-4.5 mx-auto dark:text-[#d0d2d6]" />
-                            </button>*/}
+                            </button> */}
                         </div>
                         <div>
-                           {/* {themeConfig.theme === 'light' ? (
+                            {/* {themeConfig.theme === 'light' ? (
                                 <button
                                     className={`${
                                         themeConfig.theme === 'light' &&
@@ -246,9 +246,9 @@ const Header = () => {
                                 >
                                     <IconLaptop />
                                 </button>
-                            )}*/}
+                            )} */}
                         </div>
-                    {/*        <div className="dropdown shrink-0">
+                        {/*        <div className="dropdown shrink-0">
                                 <Dropdown
                                     offset={[0, 8]}
                                     placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
@@ -413,7 +413,7 @@ const Header = () => {
                                         )}
                                     </ul>
                                 </Dropdown>
-                            </div>*/}
+                            </div> */}
                         <div className="dropdown shrink-0 flex">
                             <Dropdown
                                 offset={[0, 8]}
@@ -467,7 +467,7 @@ const Header = () => {
                 </div>
 
                 {/* horizontal menu */}
-                {/*<ul className="horizontal-menu hidden py-1.5 font-semibold px-6 lg:space-x-1.5 xl:space-x-8 rtl:space-x-reverse bg-white border-t border-[#ebedf2] dark:border-[#191e3a] dark:bg-black text-black dark:text-white-dark">
+                {/* <ul className="horizontal-menu hidden py-1.5 font-semibold px-6 lg:space-x-1.5 xl:space-x-8 rtl:space-x-reverse bg-white border-t border-[#ebedf2] dark:border-[#191e3a] dark:bg-black text-black dark:text-white-dark">
                     <li className="menu nav-item relative">
                         <button type="button" className="nav-link">
                             <div className="flex items-center">
@@ -983,10 +983,10 @@ const Header = () => {
                             </li>
                         </ul>
                     </li>
-                </ul>*/}
+                </ul> */}
             </div>
         </header>
     );
-};
+}
 
 export default Header;

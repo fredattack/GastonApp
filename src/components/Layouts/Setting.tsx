@@ -8,7 +8,7 @@ import IconSun from '../Icon/IconSun';
 import IconMoon from '../Icon/IconMoon';
 import IconLaptop from '../Icon/IconLaptop';
 
-const Setting = () => {
+function Setting() {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const Setting = () => {
 
     return (
         <div>
-            <div className={`${(showCustomizer && '!block') || ''} fixed inset-0 bg-[black]/60 z-[51] px-4 hidden transition-[display]`} onClick={() => setShowCustomizer(false)}></div>
+            <div className={`${(showCustomizer && '!block') || ''} fixed inset-0 bg-[black]/60 z-[51] px-4 hidden transition-[display]`} onClick={() => setShowCustomizer(false)} />
 
             <nav
                 className={`${
@@ -186,6 +186,6 @@ const Setting = () => {
             </nav>
         </div>
     );
-};
+}
 
 export default Setting;

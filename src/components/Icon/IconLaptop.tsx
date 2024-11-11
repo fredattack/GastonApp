@@ -22,8 +22,8 @@ const IconLaptop: FC<IconLaptopProps> = ({ className, fill = false, duotone = tr
             ) : (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
                     <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
                         d="M1 20.2405C1 19.8207 1.3436 19.4805 1.76744 19.4805H22.2326C22.6564 19.4805 23 19.8207 23 20.2405C23 20.6602 22.6564 21.0005 22.2326 21.0005H1.76744C1.3436 21.0005 1 20.6602 1 20.2405Z"
                         fill="currentColor"
                     />

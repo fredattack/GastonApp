@@ -7,9 +7,9 @@ import Footer from './Footer';
 import Header from './Header';
 import Setting from './Setting';
 import Sidebar from './Sidebar';
-import Portals from '../../components/Portals';
+import Portals from '../Portals';
 
-const DefaultLayout = ({ children }: PropsWithChildren) => {
+function DefaultLayout({ children }: PropsWithChildren) {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
 
@@ -50,7 +50,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
             {/* BEGIN MAIN CONTAINER */}
             <div className="relative">
                 {/* sidebar menu overlay */}
-                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 bg-[black]/60 z-50 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
+                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 bg-[black]/60 z-50 lg:hidden`} onClick={() => dispatch(toggleSidebar())} />
                 {/* screen loader */}
                 {showLoader && (
                     <div className="screen_loader fixed inset-0 bg-[#fafafa] dark:bg-[#060818] z-[60] grid place-content-center animate__animated">
@@ -103,6 +103,6 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
             </div>
         </App>
     );
-};
+}
 
 export default DefaultLayout;

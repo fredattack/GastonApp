@@ -1,10 +1,10 @@
-const Portals = () => {
+function Portals() {
     return (
         <>
-            <div id="popper-portal"></div>
-            <div id="modal-portal"></div>
+            <div id="popper-portal" />
+            <div id="modal-portal" />
         </>
     );
-};
+}
 
 export default Portals;

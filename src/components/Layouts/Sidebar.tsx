@@ -2,10 +2,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
-import { toggleSidebar } from '../../store/themeConfigSlice';
 import AnimateHeight from 'react-animate-height';
-import { IRootState } from '../../store';
 import { useState, useEffect } from 'react';
+import { toggleSidebar } from '../../store/themeConfigSlice';
+import { IRootState } from '../../store';
 import IconCaretsDown from '../Icon/IconCaretsDown';
 import IconCaretDown from '../Icon/IconCaretDown';
 import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
@@ -32,7 +32,7 @@ import IconMenuPages from '../Icon/Menu/IconMenuPages';
 import IconMenuAuthentication from '../Icon/Menu/IconMenuAuthentication';
 import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
 
-const Sidebar = () => {
+function Sidebar() {
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const [errorSubMenu, setErrorSubMenu] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -47,7 +47,7 @@ const Sidebar = () => {
     };
 
     useEffect(() => {
-        const selector = document.querySelector('.sidebar ul a[href="' + window.location.pathname + '"]');
+        const selector = document.querySelector(`.sidebar ul a[href="${window.location.pathname}"]`);
         if (selector) {
             selector.classList.add('active');
             const ul: any = selector.closest('ul.sub-menu');
@@ -95,8 +95,7 @@ const Sidebar = () => {
                             <li className="menu nav-item">
                                 <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
                                     <div className="flex items-center">
-                                        <IconMenuDashboard
-                                         className="group-hover:!text-primary shrink-0" />
+                                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('dashboard')}</span>
                                     </div>
 
@@ -155,7 +154,7 @@ const Sidebar = () => {
                                         </NavLink>
                                     </li>
 
-                                   {/* <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <NavLink to="/apps/notes" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuNotes className="group-hover:!text-primary shrink-0" />
@@ -219,10 +218,10 @@ const Sidebar = () => {
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('calendar')}</span>
                                             </div>
                                         </NavLink>
-                                    </li>*/}
+                                    </li> */}
                                 </ul>
                             </li>
-{/*
+                            {/*
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
                                 <span>{t('user_interface')}</span>
@@ -706,13 +705,13 @@ const Sidebar = () => {
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('documentation')}</span>
                                     </div>
                                 </NavLink>
-                            </li>*/}
+                            </li> */}
                         </ul>
                     </PerfectScrollbar>
                 </div>
             </nav>
         </div>
     );
-};
+}
 
 export default Sidebar;

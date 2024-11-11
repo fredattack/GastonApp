@@ -16,11 +16,11 @@ const IconRestore: FC<IconRestoreProps> = ({ className, fill = false, duotone = 
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                ></path>
+                />
             </g>
             <defs>
                 <clipPath id="clip0_1276_6232">
-                    <rect width="24" height="24" fill="white"></rect>
+                    <rect width="24" height="24" fill="white" />
                 </clipPath>
             </defs>
         </svg>

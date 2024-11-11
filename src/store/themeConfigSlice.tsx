@@ -67,7 +67,7 @@ const initialState = {
 
 const themeConfigSlice = createSlice({
     name: 'auth',
-    initialState: initialState,
+    initialState,
     reducers: {
         toggleTheme(state, { payload }) {
             payload = payload || state.theme; // light | dark | system
@@ -120,7 +120,7 @@ const themeConfigSlice = createSlice({
             state.navbar = payload;
         },
         toggleSemidark(state, { payload }) {
-            payload = payload === true || payload === 'true' ? true : false;
+            payload = !!(payload === true || payload === 'true');
             localStorage.setItem('semidark', payload);
             state.semidark = payload;
         },
