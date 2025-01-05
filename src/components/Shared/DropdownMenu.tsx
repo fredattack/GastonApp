@@ -18,7 +18,6 @@ const DropdownMenu: ({ id, actions, openingDirection }: {
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
-    console.log('actions in dropdown', actions);
     return (
         <Dropdown
             offset={[0, 5]}
