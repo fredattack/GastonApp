@@ -16,7 +16,6 @@ const PetCard = ({ pet ,actions}: { pet: Pet, actions:Action[] }) => {
             </div>
 
             {/* pet Info */}
-            <img src={pet.photo} alt={`${pet.name}'s`} className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-gray-200 dark:border-gray-700" />
             <h3 className="text-lg font-semibold mb-2 capitalize text-center">{pet.name}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
                 <span className="font-bold capitalize">{t('species')}: </span>
