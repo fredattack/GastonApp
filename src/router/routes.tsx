@@ -23,8 +23,8 @@ const routes = [
         element: <AccountSetting />,
         layout: 'default',
     },{
-        path: '/content/pets/{id}',
-        element: <PetForm />,
+        path: '/content/pets/:id',
+        element: <PetForm animal={null} onSubmit={() => {}} onCancel={() => {}} />,
         layout: 'default',
     },
 ];

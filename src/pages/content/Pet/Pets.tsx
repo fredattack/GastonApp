@@ -14,6 +14,7 @@ import ColumnSelector
 import {
     useTranslation
 } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import IconMenuPages
     from '../../../components/Icon/Menu/IconMenuPages';
@@ -175,8 +176,8 @@ const rowData = [
 
 function Pets() {
     const { t } = useTranslation();
-
-    const [displayMode, setDisplayMode] = useState<'cards' | 'table'>('table');
+    const navigate = useNavigate();
+    const [displayMode, setDisplayMode] = useState<'cards' | 'table'>('cards');
     const [search, setSearch] = useState('');
     const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
     const [pageSize, setPageSize] = useState(10);
@@ -305,6 +306,7 @@ function Pets() {
     // Method to handle edit
     const handleEdit = (id: number) => {
         console.log(`Editing animal with ID: ${id}`);
+        navigate(`/content/pets/${id}`);
         // Add your logic to open an edit form/modal
     };
 
