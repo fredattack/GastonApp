@@ -16,10 +16,7 @@ import {
 } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import IconMenuPages
-    from '../../../components/Icon/Menu/IconMenuPages';
-import IconMenuTables
-    from '../../../components/Icon/Menu/IconMenuTables';
+
 import DropdownMenu
     from '../../../components/Shared/DropdownMenu';
 
@@ -180,7 +177,7 @@ function Pets() {
     const [displayMode, setDisplayMode] = useState<'cards' | 'table'>('cards');
     const [search, setSearch] = useState('');
     const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
-    const [pageSize, setPageSize] = useState(10);
+
 
     const filteredData = rowData.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
     const cols: Column[] = [
@@ -358,23 +355,6 @@ function Pets() {
                         className="flex items-center gap-5 ltr:ml-auto rtl:mr-auto">
                         <div
                             className="flex md:items-center md:flex-row flex-col gap-5">
-                            {displayMode === 'table' && (
-                                <ColumnSelector
-                                    columns={cols}
-                                    hiddenColumns={hiddenColumns}
-                                    onToggleColumn={(col: string) => {
-                                        console.log('Toggling column:', col);
-                                        setHiddenColumns((prev: string[]) => {
-                                            console.log('COL', col);
-                                            const newHiddenColumns = prev.includes(col)
-                                                ? prev.filter((c) => c !== col)
-                                                : [...prev, col];
-                                            console.log('newHiddenColumns', newHiddenColumns);
-                                            return newHiddenColumns;
-                                        });
-                                    }}
-                                />)
-                            }
                             <div
                                 className="text-right">
                                 <input
