@@ -1,18 +1,32 @@
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../../../../firebaseConfig";
-import { useState, useEffect } from "react";
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    where
+} from 'firebase/firestore';
+import {
+    db
+} from '../../../../firebaseConfig';
 
-
+import {
+    useEffect,
+    useState
+} from 'react';
 
 import PetsCard
-// @ts-ignore
+//@ts-ignore
     from '@c/Pets/index/PetsCard';
 
 import {
     useTranslation
 } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
+import {
+    useNavigate
+} from 'react-router-dom';
 
 function Pets() {
     const { t } = useTranslation();
@@ -23,8 +37,15 @@ function Pets() {
 
     const fetchPets = async () => {
         try {
-            // Create a query to fetch data sorted by 'order'
-            const petsQuery = query(collection(db, "pets"), orderBy("order", "asc")); // Use 'desc' for descending order
+            const authId = "vB6WiAAmU8PsKg9chwip";
+            const ownerRef = doc(db, "users", authId);
+            const petsRef = collection(db, "pets");
+            const petsQuery = query(
+                petsRef,
+                where("owner_id", "==", ownerRef),
+                orderBy("order", "desc")
+            );
+
             const querySnapshot = await getDocs(petsQuery);
 
             const petsList: Pet[] = querySnapshot.docs.map((doc) => ({
@@ -46,14 +67,13 @@ function Pets() {
 
     const generateActions = (id: string) => {
         const pet = pets.find((pet) => pet.id == id);
-        console.log('id', id);
         return [
             {
                 label: 'Edit',
                 onClick: () => handleEdit(id)
             },
             {
-                label: pet?.isActive ? 'Set Inactive' : 'Set Active',
+                label: pet?.is_active ? 'Set Inactive' : 'Set Active',
                 onClick: () => toggleActiveStatus(id)
             },
             {
@@ -105,7 +125,16 @@ function Pets() {
     // Method to delete the animal
     const deleteAnimal = (id: string) => {
         console.log(`Deleting animal with ID: ${id}`);
-        // Add logic to delete the animal
+
+        const petRef = doc(db, 'pets', id);
+        deleteDoc(petRef)
+            .then(() => {
+                console.log(`Animal with ID: ${id} successfully deleted.`);
+                setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
+            })
+            .catch((error) => {
+                console.error(`Error deleting animal with ID: ${id}`, error);
+            });
     };
 
     // Method to add a treatment

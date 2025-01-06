@@ -27,7 +27,7 @@ const PetCard = ({ pet, actions }: { pet: Pet; actions: Action[] }) => {
 
                 {/* Settings Icon */}
                 <div>
-                    <DropdownMenu id={pet.id} actions={actions} />
+                    <DropdownMenu id={Number(pet.id)} actions={actions} />
                 </div>
             </div>
         </div>
