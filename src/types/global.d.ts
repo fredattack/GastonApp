@@ -4,16 +4,16 @@ declare global {
         onClick: () => void;
     }
     interface Pet {
-        id: string;
-        ownerId: string;
-        name: string;
-        species: string;
-        breed: string;
         birthDate: string;
-        photo: string;
-        tasks: string[];
-        is_active: boolean;
+        breed: string;
         createdAt: string;
+        id: string;
+        is_active: boolean;
+        name: string;
+        order: number;
+        ownerId: string;
+        species: string;
+        tasks: string[];
     }
 }
 

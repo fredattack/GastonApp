@@ -107,7 +107,13 @@ const PetFormInfo = ({
                 >
                     Annuler
                 </button>
-                <button type="submit" onClick={()=>onSubmit(formData)} className="btn btn-primary">
+                <button
+                    type="submit"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        onSubmit(formData);
+                    }}
+                    className="btn btn-primary">
                     Enregistrer
                 </button>
             </div>

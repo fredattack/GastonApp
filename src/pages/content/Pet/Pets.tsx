@@ -2,6 +2,7 @@ import {
     collection,
     deleteDoc,
     doc,
+    getDoc,
     getDocs,
     orderBy,
     query,
@@ -17,8 +18,11 @@ import {
 } from 'react';
 
 import PetsCard
-//@ts-ignore
+// @ts-ignore
     from '@c/Pets/index/PetsCard';
+import {
+    useToast
+} from '../../../providers/ToastProvider';
 
 import {
     useTranslation
@@ -28,34 +32,44 @@ import {
     useNavigate
 } from 'react-router-dom';
 
+type DeletionQueueItem = {
+    id: string;
+    timeout: NodeJS.Timeout | null;
+    data: Pet | undefined;
+};
+
 function Pets() {
     const { t } = useTranslation();
+    const { addToast } = useToast();
+
     const navigate = useNavigate();
 
     const [search, setSearch] = useState('');
     const [pets, setPets] = useState<Pet[]>([]);
+    const [deletionQueue, setDeletionQueue] = useState<DeletionQueueItem[]>([]);
+
 
     const fetchPets = async () => {
         try {
-            const authId = "vB6WiAAmU8PsKg9chwip";
-            const ownerRef = doc(db, "users", authId);
-            const petsRef = collection(db, "pets");
+            const authId = 'vB6WiAAmU8PsKg9chwip';
+            const ownerRef = doc(db, 'users', authId);
+            const petsRef = collection(db, 'pets');
             const petsQuery = query(
                 petsRef,
-                where("owner_id", "==", ownerRef),
-                orderBy("order", "desc")
+                where('owner_id', '==', ownerRef),
+                orderBy('order', 'desc')
             );
 
             const querySnapshot = await getDocs(petsQuery);
 
             const petsList: Pet[] = querySnapshot.docs.map((doc) => ({
                 id: doc.id,
-                ...doc.data(),
+                ...doc.data()
             })) as Pet[];
 
             setPets(petsList);
         } catch (error) {
-            console.error("Error fetching pets:", error);
+            console.error('Error fetching pets:', error);
         }
     };
 
@@ -123,20 +137,85 @@ function Pets() {
     };
 
     // Method to delete the animal
-    const deleteAnimal = (id: string) => {
+    const deleteAnimal = async (id: string) => {
         console.log(`Deleting animal with ID: ${id}`);
+        /*
+                const petRef = doc(db, 'pets', id);
+                deleteDoc(petRef)
+                    .then(() => {
+                        console.log(`Animal with ID: ${id} successfully deleted.`);
+                        setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
+                    })
+                    .catch((error) => {
+                        console.error(`Error deleting animal with ID: ${id}`, error);
+                    });*/
+        console.log(`Preparing to delete animal with ID: ${id}`);
+
+        // Sauvegarde temporaire de l'animal supprimé
+        const petToDelete = pets.find((pet) => pet.id === id);
+
+        // Ajouter l'animal à la file d'attente
+        setDeletionQueue((prevQueue) => [
+            ...prevQueue,
+            {
+                id,
+                timeout: null,
+                data: petToDelete
+            }
+        ]);
+
+
+        setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
 
         const petRef = doc(db, 'pets', id);
-        deleteDoc(petRef)
-            .then(() => {
-                console.log(`Animal with ID: ${id} successfully deleted.`);
-                setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
-            })
-            .catch((error) => {
+        const petSnap = await getDoc(petRef);
+        const petData = petSnap.data();
+
+        addToast({
+            message: `Animal ${petData?.name ?? 'Unknown'} successfully deleted.`,
+            type: 'info',
+            action: () => undoDelete(id),
+            actionLabel: 'Undo'
+        });
+
+        const timeout = setTimeout(async () => {
+            try {
+                    await deleteDoc(petRef);
+                    console.log(`Animal with ID: ${id} successfully deleted.`);
+
+                // Supprimer l'animal de la file d'attente
+                setDeletionQueue((prevQueue) =>
+                    prevQueue.filter((item) => item.id !== id)
+                );
+            } catch (error) {
                 console.error(`Error deleting animal with ID: ${id}`, error);
-            });
+            }
+        }, 10000); // 10 secondes
+
+
+        setDeletionQueue((prevQueue) =>
+            prevQueue.map((item) =>
+                item.id === id ? {
+                    ...item,
+                    timeout
+                } : item
+            )
+        );
     };
 
+    const undoDelete = (id: string) => {
+
+        const item = deletionQueue.find((entry) => entry.id === id);
+        console.log('item', item);
+        if (item) {
+            clearTimeout(item.timeout!);
+            setDeletionQueue((prevQueue) =>
+                prevQueue.filter((entry) => entry.id !== id)
+            );
+
+            setPets((prevPets) => [...prevPets, item.data!].sort((a:Pet, b:Pet) => (b.order || 0) - (a.order || 0)));
+        }
+    };
     // Method to add a treatment
     const addTreatment = (id: string) => {
         console.log(`Adding treatment for animal ID: ${id}`);
@@ -161,14 +240,16 @@ function Pets() {
             <div
                 className="panel mt-6">
 
-                <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
+                <div
+                    className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
                         {t('my_pets')}
                     </h5>
 
                     {/* Bouton et Search */}
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-2 w-full md:w-auto">
+                    <div
+                        className="flex flex-col md:flex-row gap-4 md:gap-2 w-full md:w-auto">
                         {/* Bouton */}
                         <button
                             onClick={handleCreate}
@@ -178,7 +259,8 @@ function Pets() {
                         </button>
 
                         {/* Search Input */}
-                        <div className="flex items-center justify-end w-full">
+                        <div
+                            className="flex items-center justify-end w-full">
                             <input
                                 type="text"
                                 className="form-input w-full md:w-auto md:ml-2"
@@ -196,8 +278,6 @@ function Pets() {
                             // @ts-ignore
                             filteredData.map((pet: Pet) => {
                                 let actions = generateActions(pet.id);
-
-                                console.log(    'pet', pet);
                                 return (
                                     <PetsCard
                                         key={pet.id || Math.random()} // Utiliser une clé de secours

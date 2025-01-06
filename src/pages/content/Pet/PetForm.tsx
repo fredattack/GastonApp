@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc,collection, addDoc,updateDoc,getDocs,query, where, orderBy } from "firebase/firestore";
 
 import { db } from "../../../../firebaseConfig";
+import { useToast } from "../../../providers/ToastProvider";
+
 
 import PetFormInfo
 // @ts-ignore
@@ -19,6 +21,7 @@ interface PetData {
     isActive: boolean;
 }
 const PetForm = ({ pet }: { pet?: Pet}) => {
+const { addToast } = useToast();
 
 
     const { id } = useParams();
@@ -98,20 +101,12 @@ const PetForm = ({ pet }: { pet?: Pet}) => {
             );
             const querySnapshot = await getDocs(petsQuery);
 
-            console.log('querySnapshot', querySnapshot);
-
-
-            // Trouver le maximum de "order"
             const maxOrder = querySnapshot.docs.length > 0
                 ? querySnapshot.docs[0].data().order
                 : 0;
 
-            console.log('maxOrder', maxOrder);
             // Calculer la nouvelle valeur pour "order"
             const newOrder = maxOrder? maxOrder + 1 : 1;
-
-
-
 
             const data = {
                 name: petData.name,
@@ -123,10 +118,13 @@ const PetForm = ({ pet }: { pet?: Pet}) => {
                 created_at: new Date(), // Ajoute une date de création
                 order:newOrder,
             };
-            console.log('data', data);
             const docRef = await addDoc(collection(db, "pets"), data);
 
             console.log("Pet successfully added with ID:", docRef.id);
+            addToast({
+                message: "Pet successfully added!",
+                type: "success",
+            })
             return docRef.id;
         } catch (error) {
             console.error("Error adding pet:", error);
@@ -149,6 +147,10 @@ const PetForm = ({ pet }: { pet?: Pet}) => {
             });
 
             console.log("Pet successfully updated!");
+            addToast({
+                message: "Pet successfully updated!",
+                type: "success",
+            })
         } catch (error) {
             console.error("Error updating pet:", error);
             throw error;
