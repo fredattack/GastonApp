@@ -2,29 +2,18 @@ import React, {
     useState
 } from 'react';
 
-import PetsTable
-// @ts-ignore
-    from '@c/Pets/index/PetsTable';
+
 import PetsCard
 // @ts-ignore
     from '@c/Pets/index/PetsCard';
-import ColumnSelector
-// @ts-ignore
-    from '@c/Shared/ColumnSelector';
+
 import {
     useTranslation
 } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 
-import DropdownMenu
-    from '../../../components/Shared/DropdownMenu';
 
-type Column = {
-    accessor: string;
-    title: string;
-    render?: (row: any) => string;
-};
 const rowData = [
     {
         id: 1,
@@ -174,97 +163,10 @@ const rowData = [
 function Pets() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [displayMode, setDisplayMode] = useState<'cards' | 'table'>('cards');
     const [search, setSearch] = useState('');
-    const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
 
 
     const filteredData = rowData.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
-    const cols: Column[] = [
-        {
-            accessor: 'actions',
-            title: 'action',
-            // @ts-ignore
-            render: ({ id }: {
-                id: number
-            }) => {
-
-                let actions: Action[] = generateActions(id);
-                return (<DropdownMenu
-                    id={id}
-                    actions={actions}
-                    openingDirection={'left'}
-                />);
-            }
-        },
-        {
-            accessor: 'photo',
-            title: t('photo'),
-            // @ts-ignore
-            render: ({
-                         photo,
-                         name
-                     }: {
-                photo: string,
-                name: string
-            }) => (
-                <img
-                    src={photo}
-                    alt={`${name}'s photo`}
-                    style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: '50%'
-                    }}
-                />
-            )
-        },
-        {
-            accessor: 'id',
-            title: t('id')
-        }, // Identifiant unique de l'animal
-        {
-            accessor: 'name',
-            title: t('name')
-        }, // Nom de l'animal
-        {
-            accessor: 'species',
-            title: t('species')
-        }, // Espèce (Chat ou Chien)
-        {
-            accessor: 'breed',
-            title: t('breed')
-        }, // Race
-        {
-            accessor: 'ownerId',
-            title: t('owner_id')
-        }, // Identifiant du propriétaire
-        {
-            accessor: 'dateOfBirth',
-            title: t('birthdate')
-        }, // Date de naissance
-        {
-            accessor: 'createdAt',
-            title: t('created_at')
-        }, // Date d'enregistrement
-        {
-            accessor: 'isActive',
-            title: t('is_active'),
-            // @ts-ignore
-            render: ({ isActive }) => (
-                <div
-                    className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${isActive ? 'bg-green-50 text-green-700 ring-green-600/10' : 'bg-red-50 text-red-700 ring-red-600/10'}`}
-                    style={{ textTransform: 'capitalize' }}>
-                    {isActive ? t('active') : t('inactive')}
-                </div>
-            )
-
-        }, // Actif
-        {
-            accessor: 'tasks.length',
-            title: t('number_of_tasks')
-        } // Nombre de tâches associées
-    ];
 
     const generateActions = (id: number) => {
         const pet = rowData.find((pet) => pet.id == id);

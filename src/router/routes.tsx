@@ -4,7 +4,6 @@ const Index = lazy(() => import('../pages/Index'));
 // @ts-ignore
 const Pets = lazy(() => import('../pages/content/Pet/Pets'));
 const PetForm = lazy(() => import('../pages/content/Pet/PetForm'));
-const AccountSetting = lazy(() => import('../pages/content/Pet/AccountSetting'));
 
 const routes = [
     // dashboard
@@ -21,7 +20,7 @@ const routes = [
     },
     {
         path: '/content/pets/create',
-        element: <AccountSetting />,
+        element: <PetForm animal={undefined} onSubmit={() => {}} />,
         layout: 'default',
     },{
         path: '/content/pets/:id',
