@@ -12,7 +12,7 @@ declare global {
         birthDate: string;
         photo: string;
         tasks: string[];
-        isActive: boolean;
+        is_active: boolean;
         createdAt: string;
     }
 }

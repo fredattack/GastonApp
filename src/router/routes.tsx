@@ -20,11 +20,11 @@ const routes = [
     },
     {
         path: '/content/pets/create',
-        element: <PetForm pet={undefined} onSubmit={() => {}} />,
+        element: <PetForm pet={undefined} />,
         layout: 'default',
     },{
         path: '/content/pets/:id',
-        element: <PetForm pet={undefined} onSubmit={() => {}} />,
+        element: <PetForm pet={undefined}  />,
         layout: 'default',
     },
 ];

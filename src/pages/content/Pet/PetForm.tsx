@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc,collection, addDoc,updateDoc,getDocs,query, where, orderBy } from "firebase/firestore";
+
 import { db } from "../../../../firebaseConfig";
 
 import PetFormInfo
@@ -9,20 +10,32 @@ import PetFormInfo
 
 //@ts-ignore
 import {Pet} from "@/types/global";
+interface PetData {
+    name: string;
+    species: string;
+    breed: string;
+    owner_id: string;
+    birthDate: Date | string; // Date ou chaîne, selon le format attendu
+    isActive: boolean;
+}
+const PetForm = ({ pet }: { pet?: Pet}) => {
 
-const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => void }) => {
 
     const { id } = useParams();
 
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: "",
         species: "",
         breed: "",
         birthDate: "",
+        owner_id: "",
         isActive: true,
     });
+
     const [activeTab, setActiveTab] = useState("infos");
+
     const fetchPetById = async (id:string) => {
         try {
             const petRef = doc(db, "pets", id); // Accès au document Pet par ID
@@ -35,6 +48,7 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
                     species: petData.species || "dog",
                     breed: petData.breed || "",
                     birthDate: petData.birth_date || "",
+                    owner_id: petData.ownerId || "",
                     isActive: petData.isActive ?? true,
                 });
             } else {
@@ -45,7 +59,6 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
         }
     };
 
-    // Pré-remplir les champs si un pet est fourni ou si l'ID est présent
     useEffect(() => {
         if (pet) {
             setFormData({
@@ -53,7 +66,7 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
                 species: pet.species || "Chien",
                 breed: pet.breed || "",
                 birthDate: pet.birthDate || "",
-
+                owner_id: pet.ownerId || "",
                 isActive: pet.isActive ?? true,
             });
         } else if (id) {
@@ -64,14 +77,107 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
+
+
         setFormData((prevState) => ({
             ...prevState,
             [name]: type === "checkbox" ? checked : value,
         }));
     };
+    const addPet = async (petData:PetData) => {
+        try {
+            const authId = "vB6WiAAmU8PsKg9chwip";
+
+            const petsRef = collection(db, "pets");
+            const ownerRef = doc(db, "users", authId);
+
+            const petsQuery = query(
+                petsRef,
+                where("owner_id", "==", ownerRef),
+                orderBy("order", "desc")
+            );
+            const querySnapshot = await getDocs(petsQuery);
+
+            console.log('querySnapshot', querySnapshot);
+
+
+            // Trouver le maximum de "order"
+            const maxOrder = querySnapshot.docs.length > 0
+                ? querySnapshot.docs[0].data().order
+                : 0;
+
+            console.log('maxOrder', maxOrder);
+            // Calculer la nouvelle valeur pour "order"
+            const newOrder = maxOrder? maxOrder + 1 : 1;
+
+
+
+
+            const data = {
+                name: petData.name,
+                species: petData.species,
+                breed: petData.breed,
+                birth_date: petData.birthDate, // Assurez-vous que c'est au bon format
+                isActive: true,
+                owner_id : ownerRef,
+                created_at: new Date(), // Ajoute une date de création
+                order:newOrder,
+            };
+            console.log('data', data);
+            const docRef = await addDoc(collection(db, "pets"), data);
+
+            console.log("Pet successfully added with ID:", docRef.id);
+            return docRef.id;
+        } catch (error) {
+            console.error("Error adding pet:", error);
+            throw error;
+        }
+    };
+    const updatePet = async (id:string, petData:PetData) => {
+        try {
+            // Référence au document dans Firestore
+            const petRef = doc(db, "pets", id);
+
+            // Mise à jour des champs du document
+            await updateDoc(petRef, {
+                name: petData.name,
+                species: petData.species,
+                breed: petData.breed,
+                birth_date: petData.birthDate, // Assurez-vous que c'est au bon format
+                isActive: petData.isActive,
+                updated_at: new Date(), // Ajoute une date de mise à jour
+            });
+
+            console.log("Pet successfully updated!");
+        } catch (error) {
+            console.error("Error updating pet:", error);
+            throw error;
+        }
+    };
 
     const handleCancel = () => {
         navigate("/content/pets");
+    };
+    const handleSubmit = async (formData :PetData) => {
+
+        if (id) {
+            try {
+                await updatePet(id, formData);
+                console.log("Pet successfully updated!");
+                navigate("/content/pets"); // Redirection après mise à jour
+            } catch (error) {
+                console.error("Failed to update pet:", error);
+            }
+        } else {
+
+            try {
+                await addPet(formData);
+                console.log("Pet successfully added!");
+                navigate("/content/pets");
+            } catch (error) {
+                console.error("Failed to add pet:", error);
+            }
+        }
     };
 
     const handleTabClick = (tab: string) => {
@@ -86,7 +192,7 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
                         formData={formData}
                         handleChange={handleChange}
                         onCancel={handleCancel}
-                        onSubmit={onSubmit}
+                        onSubmit={handleSubmit}
                     />
                 );
             case "cares":
@@ -145,7 +251,7 @@ const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => vo
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        onSubmit(formData);
+                        handleSubmit(formData);
                     }}
                     className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 bg-white dark:bg-black"
                 >

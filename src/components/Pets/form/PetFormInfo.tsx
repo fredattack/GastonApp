@@ -1,5 +1,5 @@
 import React from "react";
-import { format } from "date-fns";
+
 const PetFormInfo = ({
     formData,
     handleChange,
@@ -15,8 +15,22 @@ const PetFormInfo = ({
     };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onCancel: () => void;
-    onSubmit: () => void;
+    onSubmit: (formData: {
+        name: string;
+        species: string;
+        breed?: string;
+        birthDate?: { seconds: number; nanoseconds?: number };
+        isActive: boolean;
+    }) => void;
 }) => {
+    const formatBirthDate = (birthDate: { seconds?: number } | string | null): string => {
+        if (!birthDate) return '';
+        if (typeof birthDate === 'string') return birthDate;
+        if (birthDate.seconds) {
+            return new Date(birthDate.seconds * 1000).toISOString().split('T')[0];
+        }
+        return '';
+    };
     return (
         <div>
             <h6 className="text-lg font-bold mb-5">Informations générales</h6>
@@ -43,8 +57,8 @@ const PetFormInfo = ({
                         onChange={handleChange}
                         className="form-select text-white-dark"
                     >
-                        <option value="Chien">Chien</option>
-                        <option value="Chat">Chat</option>
+                        <option value="dog">Chien</option>
+                        <option value="cat">Chat</option>
                     </select>
                 </div>
                 <div>
@@ -61,16 +75,12 @@ const PetFormInfo = ({
                 </div>
 
                 <div>
-                    <label htmlFor="dateOfBirth">Date de naissance</label>
+                    <label htmlFor="birthDate">Date de naissance</label>
                     <input
-                        id="dateOfBirth"
-                        name="dateOfBirth"
+                        id="birthDate"
+                        name="birthDate"
                         type="date"
-                        value={
-                            formData.birthDate
-                                ? new Date(formData.birthDate.seconds * 1000).toISOString().split('T')[0]
-                                : ''
-                        }
+                        value={formatBirthDate(formData.birthDate ?? null)}
                         onChange={handleChange}
                         className="form-input"
                     />
@@ -97,7 +107,7 @@ const PetFormInfo = ({
                 >
                     Annuler
                 </button>
-                <button type="submit" onClick={onSubmit} className="btn btn-primary">
+                <button type="submit" onClick={()=>onSubmit(formData)} className="btn btn-primary">
                     Enregistrer
                 </button>
             </div>
