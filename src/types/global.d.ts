@@ -4,7 +4,7 @@ declare global {
         onClick: () => void;
     }
     interface Pet {
-        id: number;
+        id: string;
         ownerId: string;
         name: string;
         species: string;

@@ -1,6 +1,7 @@
-import React, {
-    useState
-} from 'react';
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../../../../firebaseConfig";
+import { useState, useEffect } from "react";
+
 
 
 import PetsCard
@@ -13,163 +14,39 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 
-
-const rowData = [
-    {
-        id: 1,
-        ownerId: '01',
-        name: 'Rex',
-        species: 'Chien',
-        breed: 'Golden Retriever',
-        dateOfBirth: '2018-06-15',
-        photo: 'https://example.com/photos/rex.jpg',
-        tasks: ['task_01', 'task_02'],
-        isActive: true,
-        createdAt: '2024-11-10T09:00:00Z'
-    },
-    {
-        id: 2,
-        ownerId: '01',
-        name: 'Bella',
-        species: 'Chien',
-        breed: 'Labrador Retriever',
-        dateOfBirth: '2019-03-10',
-        photo: 'https://example.com/photos/bella.jpg',
-        tasks: ['task_03', 'task_04'],
-        isActive: true,
-        createdAt: '2024-11-10T09:15:00Z'
-    },
-    {
-        id: 3,
-        ownerId: '02',
-        name: 'Max',
-        species: 'Chien',
-        breed: 'German Shepherd',
-        dateOfBirth: '2017-12-22',
-        photo: 'https://example.com/photos/max.jpg',
-        tasks: ['task_05'],
-        isActive: true,
-        createdAt: '2024-11-10T09:30:00Z'
-    },
-    {
-        id: 4,
-        ownerId: '03',
-        name: 'Lucy',
-        species: 'Chien',
-        breed: 'Bulldog',
-        dateOfBirth: '2020-08-08',
-        photo: 'https://example.com/photos/lucy.jpg',
-        tasks: ['task_06', 'task_07'],
-        isActive: true,
-        createdAt: '2024-11-10T09:45:00Z'
-    },
-    {
-        id: 5,
-        ownerId: '01',
-        name: 'Mimi',
-        species: 'Chat',
-        breed: 'Siamese',
-        dateOfBirth: '2021-04-12',
-        photo: 'https://example.com/photos/mimi.jpg',
-        tasks: ['task_08'],
-        isActive: true,
-        createdAt: '2024-11-10T10:00:00Z'
-    },
-    {
-        id: 6,
-        ownerId: '02',
-        name: 'Tom',
-        species: 'Chat',
-        breed: 'Maine Coon',
-        dateOfBirth: '2019-11-25',
-        photo: 'https://example.com/photos/tom.jpg',
-        tasks: ['task_09'],
-        isActive: true,
-        createdAt: '2024-11-10T10:15:00Z'
-    },
-    {
-        id: 7,
-        ownerId: '03',
-        name: 'Luna',
-        species: 'Chat',
-        breed: 'Persian',
-        dateOfBirth: '2020-01-30',
-        photo: 'https://example.com/photos/luna.jpg',
-        tasks: ['task_10', 'task_11'],
-        isActive: true,
-        createdAt: '2024-11-10T10:30:00Z'
-    },
-    {
-        id: 8,
-        ownerId: '01',
-        name: 'Simba',
-        species: 'Chat',
-        breed: 'Bengal',
-        dateOfBirth: '2018-07-19',
-        photo: 'https://example.com/photos/simba.jpg',
-        tasks: ['task_12'],
-        isActive: true,
-        createdAt: '2024-11-10T10:45:00Z'
-    },
-    {
-        id: 9,
-        ownerId: '02',
-        name: 'Shadow',
-        species: 'Chat',
-        breed: 'Sphinx',
-        dateOfBirth: '2019-05-06',
-        photo: 'https://example.com/photos/shadow.jpg',
-        tasks: ['task_13', 'task_14'],
-        isActive: true,
-        createdAt: '2024-11-10T11:00:00Z'
-    },
-    {
-        id: 10,
-        ownerId: '03',
-        name: 'Mochi',
-        species: 'Chat',
-        breed: 'British Short-hair',
-        dateOfBirth: '2022-02-18',
-        photo: 'https://example.com/photos/mochi.jpg',
-        tasks: ['task_15'],
-        isActive: true,
-        createdAt: '2024-11-10T11:15:00Z'
-    },
-    {
-        id: 11,
-        ownerId: '01',
-        name: 'Nala',
-        species: 'Chat',
-        breed: 'Russian Blue',
-        dateOfBirth: '2020-10-20',
-        photo: 'https://example.com/photos/nala.jpg',
-        tasks: ['task_16'],
-        isActive: true,
-        createdAt: '2024-11-10T11:30:00Z'
-    },
-    {
-        id: 12,
-        ownerId: '02',
-        name: 'Cleo',
-        species: 'Chat',
-        breed: 'Ragdoll',
-        dateOfBirth: '2021-06-14',
-        photo: 'https://example.com/photos/cleo.jpg',
-        tasks: ['task_17'],
-        createdAt: '2024-11-10T11:45:00Z'
-    }
-];
-
 function Pets() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+
     const [search, setSearch] = useState('');
+    const [pets, setPets] = useState<Pet[]>([]);
 
+    const fetchPets = async () => {
+        try {
+            // Create a query to fetch data sorted by 'order'
+            const petsQuery = query(collection(db, "pets"), orderBy("order", "asc")); // Use 'desc' for descending order
+            const querySnapshot = await getDocs(petsQuery);
 
-    const filteredData = rowData.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
+            const petsList: Pet[] = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            })) as Pet[];
 
-    const generateActions = (id: number) => {
-        const pet = rowData.find((pet) => pet.id == id);
+            setPets(petsList);
+        } catch (error) {
+            console.error("Error fetching pets:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPets();
+    }, []);
+
+    const filteredData = pets.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
+
+    const generateActions = (id: string) => {
+        const pet = pets.find((pet) => pet.id == id);
+        console.log('id', id);
         return [
             {
                 label: 'Edit',
@@ -207,44 +84,44 @@ function Pets() {
     };
 
     // Method to handle edit
-    const handleEdit = (id: number) => {
+    const handleEdit = (id: string) => {
         console.log(`Editing animal with ID: ${id}`);
         navigate(`/content/pets/${id}`);
         // Add your logic to open an edit form/modal
     };
 
     // Method to toggle active/inactive status
-    const toggleActiveStatus = (id: number) => {
+    const toggleActiveStatus = (id: string) => {
         console.log(`Toggling active status for animal ID: ${id}`);
         // Add logic to toggle the animal's active status
     };
 
     // Method to set the animal as deceased
-    const setDeceased = (id: number) => {
+    const setDeceased = (id: string) => {
         console.log(`Setting animal ID: ${id} as deceased`);
         // Add your logic to update the deceased status
     };
 
     // Method to delete the animal
-    const deleteAnimal = (id: number) => {
+    const deleteAnimal = (id: string) => {
         console.log(`Deleting animal with ID: ${id}`);
         // Add logic to delete the animal
     };
 
     // Method to add a treatment
-    const addTreatment = (id: number) => {
+    const addTreatment = (id: string) => {
         console.log(`Adding treatment for animal ID: ${id}`);
         // Add logic to handle treatment addition
     };
 
     // Method to add a menu
-    const addMenu = (id: number) => {
+    const addMenu = (id: string) => {
         console.log(`Adding menu for animal ID: ${id}`);
         // Add logic to handle menu addition
     };
 
     // Method to add a rendezvous
-    const addRendezvous = (id: number) => {
+    const addRendezvous = (id: string) => {
         console.log(`Adding rendezvous for animal ID: ${id}`);
         // Add logic to handle rendezvous scheduling
     };
@@ -290,6 +167,8 @@ function Pets() {
                             // @ts-ignore
                             filteredData.map((pet: Pet) => {
                                 let actions = generateActions(pet.id);
+
+                                console.log(    'pet', pet);
                                 return (
                                     <PetsCard
                                         key={pet.id || Math.random()} // Utiliser une clé de secours
