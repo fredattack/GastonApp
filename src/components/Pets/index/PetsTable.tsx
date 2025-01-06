@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
+
 type Column = {
     accessor: string;
     title: string;
@@ -24,7 +25,9 @@ function PetsTable({ data, hiddenColumns, pageSize, onPageSizeChange,columns }: 
     }, [data, sortStatus, page, pageSize]);*/
 
     return (
+        //@ts-ignore
         <DataTable
+            withBorder
             records={sortedData}
             columns={visibleColumns}
             totalRecords={data.length}

@@ -4,10 +4,10 @@ import React, {
 
 import PetsTable
 // @ts-ignore
-    from '@c/Pets/PetsTable';
+    from '@c/Pets/index/PetsTable';
 import PetsCard
 // @ts-ignore
-    from '@c/Pets/PetsCard';
+    from '@c/Pets/index/PetsCard';
 import ColumnSelector
 // @ts-ignore
     from '@c/Shared/ColumnSelector';
@@ -384,29 +384,11 @@ function Pets() {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)} />
                             </div>
-                            <button
-                                onClick={() => setDisplayMode(displayMode === 'table' ? 'cards' : 'table')}
-                                className="flex items-center hover:border font-semibold rounded-md px-4 py-2 text-sm dark:bg-[#1b2e4b] dark:text-white-dark"
-                            >
-                                {displayMode === 'table' ?
-                                    <IconMenuPages
-                                        className="w-5 h-5" /> :
-                                    <IconMenuTables
-                                        className="w-5 h-5" />}
-                            </button>
+
                         </div>
                     </div>
                 </div>
-                {displayMode === 'table' ? (
-                    <PetsTable
-                        data={filteredData}
-                        hiddenColumns={hiddenColumns}
-                        columns={cols}
-                        pageSize={pageSize}
-                        onPageSizeChange={setPageSize}
-                        actions={(pet: Pet) => generateActions(pet.id)}
-                    />
-                ) : (
+                { (
                     <div
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {
