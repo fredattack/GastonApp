@@ -22,6 +22,7 @@
         "@types/node": "^22.4.0",
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
+        "firebase": "^11.1.0",
         "mantine-datatable": "^1.7.17",
         "react": "^18.2.0",
         "react-beautiful-dnd": "^13.1.1",
