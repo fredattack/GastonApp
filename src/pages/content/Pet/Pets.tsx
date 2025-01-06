@@ -202,6 +202,10 @@ function Pets() {
         ];
     };
 
+    const handleCreate = () => {
+        navigate('/content/pets/create');
+    };
+
     // Method to handle edit
     const handleEdit = (id: number) => {
         console.log(`Editing animal with ID: ${id}`);
@@ -250,27 +254,36 @@ function Pets() {
         <div>
             <div
                 className="panel mt-6">
-                <div
-                    className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light capitalize">{t('my_pets')}</h5>
-                    <div
-                        className="flex items-center gap-5 ltr:ml-auto rtl:mr-auto">
-                        <div
-                            className="flex md:items-center md:flex-row flex-col gap-5">
-                            <div
-                                className="text-right">
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="Search..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)} />
-                            </div>
 
+                <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
+                    {/* Titre */}
+                    <h5 className="font-semibold text-lg dark:text-white-light capitalize">
+                        {t('my_pets')}
+                    </h5>
+
+                    {/* Bouton et Search */}
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-2 w-full md:w-auto">
+                        {/* Bouton */}
+                        <button
+                            onClick={handleCreate}
+                            className="btn btn-primary self-end md:self-auto"
+                        >
+                            +
+                        </button>
+
+                        {/* Search Input */}
+                        <div className="flex items-center justify-end w-full">
+                            <input
+                                type="text"
+                                className="form-input w-full md:w-auto md:ml-2"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
-                { (
+                {(
                     <div
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {

@@ -72,18 +72,6 @@ const PetFormInfo = ({
                     />
                 </div>
                 <div>
-                    <label htmlFor="photo">URL de la photo</label>
-                    <input
-                        id="photo"
-                        name="photo"
-                        type="url"
-                        value={formData.photo}
-                        onChange={handleChange}
-                        placeholder="Entrez l'URL de la photo"
-                        className="form-input"
-                    />
-                </div>
-                <div>
                     <label htmlFor="isActive" className="inline-flex items-center">
                         <input
                             id="isActive"
