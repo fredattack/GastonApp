@@ -9,7 +9,7 @@ declare global {
         name: string;
         species: string;
         breed: string;
-        dateOfBirth: string;
+        birthDate: string;
         photo: string;
         tasks: string[];
         isActive: boolean;

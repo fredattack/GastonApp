@@ -1,38 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../../firebaseConfig";
+
 import PetFormInfo
 // @ts-ignore
     from '@c/Pets/form/PetFormInfo';
 
-const PetForm = ({ animal, onSubmit }: { animal?: { name?: string; species?: string; breed?: string; dateOfBirth?: string; photo?: string; isActive?: boolean }; onSubmit: (formData: any) => void }) => {
+//@ts-ignore
+import {Pet} from "@/types/global";
+
+const PetForm = ({ pet, onSubmit }: { pet?: Pet; onSubmit: (formData: any) => void }) => {
+
     const { id } = useParams();
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
-        species: "Chien",
+        species: "",
         breed: "",
-        dateOfBirth: "",
-        photo: "",
+        birthDate: "",
         isActive: true,
     });
     const [activeTab, setActiveTab] = useState("infos");
+    const fetchPetById = async (id:string) => {
+        try {
+            const petRef = doc(db, "pets", id); // Accès au document Pet par ID
+            const petSnap = await getDoc(petRef);
 
-    // Pré-remplir les champs si un animal est fourni ou si l'ID est présent
+            if (petSnap.exists()) {
+                const petData = petSnap.data();
+                setFormData({
+                    name: petData.name || "",
+                    species: petData.species || "dog",
+                    breed: petData.breed || "",
+                    birthDate: petData.birth_date || "",
+                    isActive: petData.isActive ?? true,
+                });
+            } else {
+                console.log("No pet found with the given ID.");
+            }
+        } catch (error) {
+            console.error("Error fetching pet data:", error);
+        }
+    };
+
+    // Pré-remplir les champs si un pet est fourni ou si l'ID est présent
     useEffect(() => {
-        if (animal) {
+        if (pet) {
             setFormData({
-                name: animal.name || "",
-                species: animal.species || "Chien",
-                breed: animal.breed || "",
-                dateOfBirth: animal.dateOfBirth || "",
-                photo: animal.photo || "",
-                isActive: animal.isActive ?? true,
+                name: pet.name || "",
+                species: pet.species || "Chien",
+                breed: pet.breed || "",
+                birthDate: pet.birthDate || "",
+
+                isActive: pet.isActive ?? true,
             });
         } else if (id) {
-            console.log(`Fetching animal data for ID: ${id}`);
-            // Logique pour récupérer les données d'un animal par ID
+            fetchPetById(id);
+            console.log(`Fetching pet data for ID: ${id}`);
         }
-    }, [animal, id]);
+    }, [pet, id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -76,6 +104,7 @@ const PetForm = ({ animal, onSubmit }: { animal?: { name?: string; species?: str
         }
     };
 
+    let title = id ? "Modifier un animal" : "Créer un animal";
     return (
         <div className="pet-form-container">
             <ul className="flex space-x-2 rtl:space-x-reverse">
@@ -85,14 +114,14 @@ const PetForm = ({ animal, onSubmit }: { animal?: { name?: string; species?: str
                     </a>
                 </li>
                 <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-                    <span>{id ? "Modifier un animal" : "Créer un animal"}</span>
+                    <span>{title}</span>
                 </li>
             </ul>
 
             <div className="pt-5">
                 <div className="flex items-center justify-between mb-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">
-                        {id ? "Modifier un animal" : "Créer un animal"}
+                        {title}
                     </h5>
                 </div>
 

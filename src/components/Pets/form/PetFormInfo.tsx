@@ -1,5 +1,5 @@
 import React from "react";
-
+import { format } from "date-fns";
 const PetFormInfo = ({
     formData,
     handleChange,
@@ -10,8 +10,7 @@ const PetFormInfo = ({
         name: string;
         species: string;
         breed?: string;
-        dateOfBirth?: string;
-        photo?: string;
+        birthDate?: { seconds: number; nanoseconds?: number };
         isActive: boolean;
     };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -60,13 +59,18 @@ const PetFormInfo = ({
                         className="form-input"
                     />
                 </div>
+
                 <div>
                     <label htmlFor="dateOfBirth">Date de naissance</label>
                     <input
                         id="dateOfBirth"
                         name="dateOfBirth"
                         type="date"
-                        value={formData.dateOfBirth}
+                        value={
+                            formData.birthDate
+                                ? new Date(formData.birthDate.seconds * 1000).toISOString().split('T')[0]
+                                : ''
+                        }
                         onChange={handleChange}
                         className="form-input"
                     />
