@@ -2,38 +2,30 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+
+
 import i18next from 'i18next';
 import { IRootState } from '../../store';
+
 import { toggleRTL, toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
+
 import Dropdown from '../Dropdown';
+
 import IconMenu from '../Icon/IconMenu';
-import IconCalendar from '../Icon/IconCalendar';
-import IconEdit from '../Icon/IconEdit';
-import IconChatNotification from '../Icon/IconChatNotification';
-import IconSearch from '../Icon/IconSearch';
-import IconXCircle from '../Icon/IconXCircle';
-import IconSun from '../Icon/IconSun';
-import IconMoon from '../Icon/IconMoon';
-import IconLaptop from '../Icon/IconLaptop';
-import IconMailDot from '../Icon/IconMailDot';
-import IconArrowLeft from '../Icon/IconArrowLeft';
-import IconInfoCircle from '../Icon/IconInfoCircle';
-import IconBellBing from '../Icon/IconBellBing';
 import IconUser from '../Icon/IconUser';
 import IconMail from '../Icon/IconMail';
 import IconLockDots from '../Icon/IconLockDots';
 import IconLogout from '../Icon/IconLogout';
-import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
-import IconCaretDown from '../Icon/IconCaretDown';
-import IconMenuApps from '../Icon/Menu/IconMenuApps';
-import IconMenuComponents from '../Icon/Menu/IconMenuComponents';
-import IconMenuElements from '../Icon/Menu/IconMenuElements';
-import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
-import IconMenuForms from '../Icon/Menu/IconMenuForms';
-import IconMenuPages from '../Icon/Menu/IconMenuPages';
-import IconMenuMore from '../Icon/Menu/IconMenuMore';
+
+import {
+    FontAwesomeIcon
+} from '@fortawesome/react-fontawesome';
+import { useIcons } from '../../providers/FontawesomeProvider';
+
 
 function Header() {
+    const icons = useIcons();
+
     const location = useLocation();
     useEffect(() => {
         const selector = document.querySelector(`ul.horizontal-menu a[href="${window.location.pathname}"]`);
@@ -138,6 +130,11 @@ function Header() {
 
     const { t } = useTranslation();
 
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        alert("La reconnaissance vocale n'est pas prise en charge par ce navigateur.");
+        return;
+    }
+
     return (
         <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
             <div className="shadow-sm">
@@ -156,6 +153,7 @@ function Header() {
                         >
                             <IconMenu className="w-5 h-5" />
                         </button>
+
                     </div>
 
                     <div className="ltr:mr-2 rtl:ml-2 hidden sm:block">
@@ -414,12 +412,114 @@ function Header() {
                                     </ul>
                                 </Dropdown>
                             </div> */}
-                        <div className="dropdown shrink-0 flex">
+                        {/*        <div className="dropdown shrink-0">
+                                <Dropdown
+                                    offset={[0, 8]}
+                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                    btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
+                                    button={<img className="w-5 h-5 object-cover rounded-full" src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="flag" />}
+                                >
+                                    <ul className="!px-2 text-dark dark:text-white-dark grid grid-cols-2 gap-2 font-semibold dark:text-white-light/90 w-[280px]">
+                                        {themeConfig.languageList.map((item: any) => {
+                                            return (
+                                                <li key={item.code}>
+                                                    <button
+                                                        type="button"
+                                                        className={`flex w-full hover:text-primary rounded-lg ${i18next.language === item.code ? 'bg-primary/10 text-primary' : ''}`}
+                                                        onClick={() => {
+                                                            i18next.changeLanguage(item.code);
+                                                            // setFlag(item.code);
+                                                            setLocale(item.code);
+                                                        }}
+                                                    >
+                                                        <img src={`/assets/images/flags/${item.code.toUpperCase()}.svg`} alt="flag" className="w-5 h-5 object-cover rounded-full" />
+                                                        <span className="ltr:ml-3 rtl:mr-3">{item.name}</span>
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </Dropdown>
+                            </div>
+                            <div className="dropdown shrink-0">
+                                <Dropdown
+                                    offset={[0, 8]}
+                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                    btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
+                                    button={<IconMailDot />}
+                                >
+                                    <ul className="!py-0 text-dark dark:text-white-dark w-[300px] sm:w-[375px] text-xs">
+                                        <li className="mb-5" onClick={(e) => e.stopPropagation()}>
+                                            <div className="hover:!bg-transparent overflow-hidden relative rounded-t-md p-5 text-white w-full !h-[68px]">
+                                                <div
+                                                    className="absolute h-full w-full bg-no-repeat bg-center bg-cover inset-0 bg-"
+                                                    style={{
+                                                        backgroundImage: `url('/assets/images/menu-heade.jpg')`,
+                                                        backgroundRepeat: 'no-repeat',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                    }}
+                                                ></div>
+                                                <h4 className="font-semibold relative z-10 text-lg">Messages</h4>
+                                            </div>
+                                        </li>
+                                        {messages.length > 0 ? (
+                                            <>
+                                                <li onClick={(e) => e.stopPropagation()}>
+                                                    {messages.map((message) => {
+                                                        return (
+                                                            <div key={message.id} className="flex items-center py-3 px-5">
+                                                                <div dangerouslySetInnerHTML={createMarkup(message.image)}></div>
+                                                                <span className="px-3 dark:text-gray-500">
+                                                                    <div className="font-semibold text-sm dark:text-white-light/90">{message.title}</div>
+                                                                    <div>{message.message}</div>
+                                                                </span>
+                                                                <span className="font-semibold bg-white-dark/20 rounded text-dark/60 px-1 ltr:ml-auto rtl:mr-auto whitespace-pre dark:text-white-dark ltr:mr-2 rtl:ml-2">
+                                                                    {message.time}
+                                                                </span>
+                                                                <button type="button" className="text-neutral-300 hover:text-danger" onClick={() => removeMessage(message.id)}>
+                                                                    <IconXCircle />
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </li>
+                                                <li className="border-t border-white-light text-center dark:border-white/10 mt-5">
+                                                    <button type="button" className="text-primary font-semibold group dark:text-gray-400 justify-center !py-4 !h-[48px]">
+                                                        <span className="group-hover:underline ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
+                                                        <IconArrowLeft className="group-hover:translate-x-1 transition duration-300 ltr:ml-1 rtl:mr-1" />
+                                                    </button>
+                                                </li>
+                                            </>
+                                        ) : (
+                                            <li className="mb-5" onClick={(e) => e.stopPropagation()}>
+                                                <button type="button" className="!grid place-content-center hover:!bg-transparent text-lg min-h-[200px]">
+                                                    <div className="mx-auto ring-4 ring-primary/30 rounded-full mb-4 text-primary">
+                                                        <IconInfoCircle fill={true} className="w-10 h-10" />
+                                                    </div>
+                                                    No data available.
+                                                </button>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </Dropdown>
+                            </div>*/}
+                        <div
+                            className="dropdown shrink-0">
+                            <SpeechButton />
+
+                        </div>
+                        <div
+                            className="dropdown shrink-0 flex">
                             <Dropdown
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative group block"
-                                button={<img className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={
+                                    <img
+                                        className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
+                                        src="/assets/images/user-profile.jpeg"
+                                        alt="userProfile" />}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>
@@ -990,3 +1090,8 @@ function Header() {
 }
 
 export default Header;
+import SpeechButton from './SpeechButton';
+
+// ...
+
+                            <SpeechButton />
