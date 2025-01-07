@@ -42,10 +42,9 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                             value={transcription}
                             onChange={(e) => {
                                 if (isManualInput) {
-                                    setTranscription(e.target.value); // Mettre à jour pour l'entrée manuelle
+                                    setTranscription(e.target.value);
                                 }
                             }}
-                            readOnly={!isManualInput} // Lecture seule sauf pour l'entrée manuelle
                         ></textarea>
                         <p className="text-sm text-gray-600 mt-2">
                             {isManualInput
@@ -57,12 +56,8 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 
                 {step === 1 && (
                     <div>
-                        <h2 className="text-xl font-bold mb-4">Étape 2 : Modification</h2>
-                        <textarea
-                            className="w-full h-32 p-2 border rounded"
-                            value={transcription}
-                            onChange={(e) => setTranscription(e.target.value)} // Permet la modification
-                        ></textarea>
+                        <h2 className="text-xl font-bold mb-4">Étape 2 : analysée</h2>
+                       <p>{transcription}</p>
                         <p className="text-sm text-gray-600 mt-2">Modifiez le texte si nécessaire.</p>
                     </div>
                 )}
