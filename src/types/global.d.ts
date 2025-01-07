@@ -1,5 +1,6 @@
 declare global {
     interface Action {
+        icon: string;
         label: string;
         onClick: () => void;
     }
@@ -13,7 +14,8 @@ declare global {
         order: number;
         ownerId: string;
         species: string;
-        tasks: string[];
+        photo: string;
+        galerie: string[];
     }
 }
 

@@ -6,32 +6,15 @@ import AnimateHeight from 'react-animate-height';
 import { useState, useEffect } from 'react';
 import { toggleSidebar } from '../../store/themeConfigSlice';
 import { IRootState } from '../../store';
+
 import IconCaretsDown from '../Icon/IconCaretsDown';
 import IconCaretDown from '../Icon/IconCaretDown';
 import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
 import IconMinus from '../Icon/IconMinus';
-import IconMenuChat from '../Icon/Menu/IconMenuChat';
-import IconMenuMailbox from '../Icon/Menu/IconMenuMailbox';
-import IconMenuTodo from '../Icon/Menu/IconMenuTodo';
-import IconMenuNotes from '../Icon/Menu/IconMenuNotes';
-import IconMenuScrumboard from '../Icon/Menu/IconMenuScrumboard';
-import IconMenuContacts from '../Icon/Menu/IconMenuContacts';
-import IconMenuInvoice from '../Icon/Menu/IconMenuInvoice';
-import IconMenuCalendar from '../Icon/Menu/IconMenuCalendar';
-import IconMenuComponents from '../Icon/Menu/IconMenuComponents';
-import IconMenuElements from '../Icon/Menu/IconMenuElements';
-import IconMenuCharts from '../Icon/Menu/IconMenuCharts';
-import IconMenuWidgets from '../Icon/Menu/IconMenuWidgets';
-import IconMenuFontIcons from '../Icon/Menu/IconMenuFontIcons';
-import IconMenuDragAndDrop from '../Icon/Menu/IconMenuDragAndDrop';
-import IconMenuTables from '../Icon/Menu/IconMenuTables';
-import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
-import IconMenuForms from '../Icon/Menu/IconMenuForms';
-import IconMenuUsers from '../Icon/Menu/IconMenuUsers';
-import IconMenuPages from '../Icon/Menu/IconMenuPages';
-import IconMenuAuthentication from '../Icon/Menu/IconMenuAuthentication';
-import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// @ts-ignore
+import { useIcons } from '@/providers/FontawesomeProvider';
 function Sidebar() {
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const [errorSubMenu, setErrorSubMenu] = useState(false);
@@ -69,7 +52,7 @@ function Sidebar() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
-
+    const icons = useIcons();
     return (
         <div className={semidark ? 'dark' : ''}>
             <nav
@@ -87,7 +70,8 @@ function Sidebar() {
                             className="collapse-icon w-8 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180"
                             onClick={() => dispatch(toggleSidebar())}
                         >
-                            <IconCaretsDown className="m-auto rotate-90" />
+                            <FontAwesomeIcon icon={icons.anglesLeft} className="m-auto"/>
+
                         </button>
                     </div>
                     <PerfectScrollbar className="h-[calc(100vh-80px)] relative">
@@ -95,12 +79,12 @@ function Sidebar() {
                             <li className="menu nav-item">
                                 <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
                                     <div className="flex items-center">
-                                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
+                                        <FontAwesomeIcon icon={icons.gauge} />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('dashboard')}</span>
                                     </div>
 
                                     <div className={currentMenu !== 'dashboard' ? 'rtl:rotate-90 -rotate-90' : ''}>
-                                        <IconCaretDown />
+                                        <FontAwesomeIcon icon={icons.angleUp} />
                                     </div>
                                 </button>
 
@@ -132,7 +116,7 @@ function Sidebar() {
                                     <li className="nav-item">
                                         <NavLink to="/content/pets" className="group">
                                             <div className="flex items-center">
-                                                <IconMenuTables className="group-hover:!text-primary shrink-0" />
+                                                <FontAwesomeIcon icon={icons.paw} />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('animals')}</span>
                                             </div>
                                         </NavLink>
@@ -140,7 +124,7 @@ function Sidebar() {
                                     <li className="nav-item">
                                         <NavLink to="/apps/mailbox" className="group">
                                             <div className="flex items-center">
-                                                <IconMenuMailbox className="group-hover:!text-primary shrink-0" />
+                                                <FontAwesomeIcon icon={icons.utensils} />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('alimentation')}</span>
                                             </div>
                                         </NavLink>
@@ -148,7 +132,7 @@ function Sidebar() {
                                     <li className="nav-item">
                                         <NavLink to="/apps/todolist" className="group">
                                             <div className="flex items-center">
-                                                <IconMenuTodo className="group-hover:!text-primary shrink-0" />
+                                                <FontAwesomeIcon icon={icons.capsules} />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('care')}</span>
                                             </div>
                                         </NavLink>

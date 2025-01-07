@@ -1,8 +1,32 @@
-import { PropsWithChildren, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import store, { IRootState } from './store';
-import { toggleRTL, toggleTheme, toggleLocale, toggleMenu, toggleLayout, toggleAnimation, toggleNavbar, toggleSemidark } from './store/themeConfigSlice';
-import { ToastProvider } from "./providers/ToastProvider";
+import {
+    PropsWithChildren,
+    useEffect
+} from 'react';
+import {
+    useDispatch,
+    useSelector
+} from 'react-redux';
+import store, {
+    IRootState
+} from './store';
+import {
+    toggleRTL,
+    toggleTheme,
+    toggleLocale,
+    toggleMenu,
+    toggleLayout,
+    toggleAnimation,
+    toggleNavbar,
+    toggleSemidark
+} from './store/themeConfigSlice';
+
+import {
+    ToastProvider
+} from './providers/ToastProvider';
+import {
+    IconProvider
+} from './providers/FontawesomeProvider';
+
 
 function App({ children }: PropsWithChildren) {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -20,15 +44,17 @@ function App({ children }: PropsWithChildren) {
     }, [dispatch, themeConfig.theme, themeConfig.menu, themeConfig.layout, themeConfig.rtlClass, themeConfig.animation, themeConfig.navbar, themeConfig.locale, themeConfig.semidark]);
 
     return (
-        <ToastProvider>
-        <div
-            className={`${(store.getState().themeConfig.sidebar && 'toggle-sidebar') || ''} ${themeConfig.menu} ${themeConfig.layout} ${
-                themeConfig.rtlClass
-            } main-section antialiased relative font-nunito text-sm font-normal`}
-        >
-            {children}
-        </div>
-        </ToastProvider>
+        <IconProvider>
+            <ToastProvider>
+                <div
+                    className={`${(store.getState().themeConfig.sidebar && 'toggle-sidebar') || ''} ${themeConfig.menu} ${themeConfig.layout} ${
+                        themeConfig.rtlClass
+                    } main-section antialiased relative font-nunito text-sm font-normal`}
+                >
+                    {children}
+                </div>
+            </ToastProvider>
+        </IconProvider>
     );
 }
 

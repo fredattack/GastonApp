@@ -4,10 +4,10 @@ import IconHorizontalDots
 import Dropdown
     from '../Dropdown';
 
-interface Action {
-    label: string;
-    onClick: () => void;
-}
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+//@ts-ignore
+import { useIcons } from '../../providers/FontawesomeProvider';
+
 
 const DropdownMenu: ({ id, actions, openingDirection }: {
     id: number;
@@ -18,19 +18,22 @@ const DropdownMenu: ({ id, actions, openingDirection }: {
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+    const icons = useIcons();
     return (
         <Dropdown
             offset={[0, 5]}
             placement={`${openingDirection == 'left' ? 'bottom-start' : 'bottom-end'}`}
-            btnClassName="text-primary"
-            button={<IconHorizontalDots className="rotate-90 opacity-70 hover:opacity-100" />}
+            btnClassName="text-black"
+            //@ts-ignore
+            button={<FontAwesomeIcon icon={icons.bars} />}
+            //<IconHorizontalDots className="rotate-90 opacity-70 hover:opacity-100" />
         >
             <ul className="text-sm font-medium bg-white">
                 {actions.map((action, index) => (
 
-                <li key={index}>
-                    <button type="button" onClick={() => action.onClick()} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        {action.label}
+                <li key={index} className="w-full">
+                    <button type="button" onClick={() => action.onClick()} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+                        {action.icon}{action.label}
                     </button>
                 </li>
                 ))}

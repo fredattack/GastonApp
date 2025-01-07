@@ -32,6 +32,10 @@ import {
     useNavigate
 } from 'react-router-dom';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useIcons } from '../../../providers/FontawesomeProvider';
+
+
 type DeletionQueueItem = {
     id: string;
     timeout: NodeJS.Timeout | null;
@@ -234,6 +238,7 @@ function Pets() {
         // Add logic to handle rendezvous scheduling
     };
 
+    const icons = useIcons();
 
     return (
         <div>
@@ -244,7 +249,8 @@ function Pets() {
                     className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
-                        {t('my_pets')}
+                        {/*// @ts-ignore*/}
+                        <FontAwesomeIcon icon={icons.paw} />  {t('my_pets')}
                     </h5>
 
                     {/* Bouton et Search */}
