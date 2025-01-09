@@ -1,36 +1,26 @@
 import React, {
     useState,
-    useEffect
+    useEffect,
+    forwardRef,
+    useImperativeHandle,
 } from 'react';
+
+import { modelService } from "../../services";
 
 import SingleSelect
     from '../Form/SingleSelect';
 
-import {
-    doc,
-    collection,
-    getDocs,
-    query,
-    where,
-    orderBy
-} from 'firebase/firestore';
-
-import {
-    db
-} from '../../../firebaseConfig';
-
-
+import Toggle
+    from '../Form/Toggle';
 import {
     transformOptions,
     updateNestedObject
 } from '../../helpers';
+import MultiSelect
+    from '../Form/MultiSelect';
 import {
     EventTypes
 } from '../../enums/EventTypes';
-
-import Toggle
-    from '../Form/Toggle';
-
 
 import {
     FrequencyTypes
@@ -38,21 +28,13 @@ import {
 import {
     DaysOfWeek
 } from '../../enums/Days';
-import MultiSelect
-    from '../Form/MultiSelect';
 
-export default function EventForm({
-                                      initialData: event = {} as Event,
-                                      onChange
-                                  }: {
-    initialData?: Event;
-    onSubmit?: (data: EventFormData) => void;
-    onChange?: (data: EventFormData) => void;
-    onCancel?: () => void;
-})
-{
+const EventForm = forwardRef(({ onSubmit, onChange, onCancel }: any, ref) => {
+
+    const event = {} as EventFormData;;
 
     const [eventFormData, setEventFormData] = useState<EventFormData>({
+        id: event?.id || null,
         petId: event?.petId || '',
         type: event?.type || '',
         startDate: event?.startDate || '',
@@ -78,23 +60,10 @@ export default function EventForm({
         // Fetch the pet options from Firestore
         const fetchPets = async () => {
             try {
-                const authId = 'vB6WiAAmU8PsKg9chwip';
-                const ownerRef = doc(db, 'users', authId);
-                const petsRef = collection(db, 'pets');
-                const petsQuery = query(
-                    petsRef,
-                    where('owner_id', '==', ownerRef),
-                    orderBy('order', 'desc')
-                );
-
-                const querySnapshot = await getDocs(petsQuery);
-                const options = querySnapshot.docs.map((doc) => ({
-                    value: doc.id,
-                    label: doc.data().name
-                }));
-                setPetOptions(options);
+                const pets = await modelService.asOptions("pets");
+                setPetOptions( pets );
             } catch (error) {
-                console.error('Error fetching pets:', error);
+                console.error("Error fetching pets:", error);
             }
         };
 
@@ -102,7 +71,6 @@ export default function EventForm({
     }, []);
 
     useEffect(() => {
-        console.log('isRecurring changed:', eventFormData.isRecurring, eventFormData.recurrence);
         if (!eventFormData.isRecurring) {
             setEventFormData((prev) => ({
                 ...prev,
@@ -114,13 +82,39 @@ export default function EventForm({
                     endRecurrenceDate: event?.recurrence?.endRecurrenceDate || ''
                 }
             }));
-            console.log('recurrence:', eventFormData.recurrence);
         }
     }, [eventFormData.isRecurring]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('handleSubmit ', eventFormData);
+
+        try {
+            if (!eventFormData.type || !eventFormData.startDate) {
+                alert("Les champs Type et Date de début sont obligatoires !");
+                return;
+            }
+
+            if (eventFormData.id) {
+                // Mise à jour
+                await modelService.update("events", eventFormData.id, eventFormData);
+                alert("Événement mis à jour avec succès !");
+            } else {
+                // Création
+                const newId = await modelService.add("events", eventFormData);
+                alert(`Événement créé avec succès ! ID : ${newId}`);
+            }
+
+            if (onSubmit) {
+                onSubmit(eventFormData);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la soumission :", error);
+            alert("Une erreur est survenue lors de la soumission.");
+        }
     };
+
+    useImperativeHandle(ref, () => ({
+        handleSubmit,
+    }));
 
     function handleChange(key: string, e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | string | boolean) {
         setEventFormData((prev) => ({
@@ -450,4 +444,5 @@ export default function EventForm({
     );
 
 
-}
+});
+export default EventForm;

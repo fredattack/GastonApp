@@ -12,11 +12,6 @@ const SpeechButton = () => {
     const [transcription, setTranscription] = useState(''); // État local pour la transcription
     const [manualInput, setManualInput] = useState(false); // Différencier mode vocal et prompt
 
-    const handleSave = () => {
-        console.log("Texte final enregistré :", transcription);
-        setIsModalOpen(false);
-        setTranscription(''); // Réinitialise la transcription après sauvegarde
-    };
 
     const handleClose = () => {
         setIsModalOpen(false); // Fermer la modal
@@ -88,7 +83,6 @@ const SpeechButton = () => {
                 onClose={handleClose} // Réinitialise et ferme la modal
                 transcription={transcription}
                 setTranscription={setTranscription} // Met à jour la transcription
-                onSave={handleSave} // Sauvegarde la transcription
                 isManualInput={manualInput} // Passe le mode manuel ou vocal
             />
         </>
