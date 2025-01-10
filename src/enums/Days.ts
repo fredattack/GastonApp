@@ -1,5 +1,5 @@
 // Export the class
-export class DaysOfWeek {
+export class Days {
     static readonly Monday = 'monday';
     static readonly Tuesday = 'tuesday';
     static readonly Wednesday = 'wednesday';
@@ -10,13 +10,13 @@ export class DaysOfWeek {
 
     static values(): string[] {
         return [
-            DaysOfWeek.Monday,
-            DaysOfWeek.Tuesday,
-            DaysOfWeek.Wednesday,
-            DaysOfWeek.Thursday,
-            DaysOfWeek.Friday,
-            DaysOfWeek.Saturday,
-            DaysOfWeek.Sunday,
+            Days.Monday,
+            Days.Tuesday,
+            Days.Wednesday,
+            Days.Thursday,
+            Days.Friday,
+            Days.Saturday,
+            Days.Sunday,
         ];
     }
 
@@ -24,7 +24,7 @@ export class DaysOfWeek {
         label: string;
         value: string
     }[] {
-        return DaysOfWeek.values().map(value => ({
+        return Days.values().map(value => ({
             label: value.charAt(0).toUpperCase() + value.slice(1),
             value,
         }));

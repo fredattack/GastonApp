@@ -26,13 +26,10 @@ import {
     FrequencyTypes
 } from '../../enums/FrequencyTypes';
 import {
-    DaysOfWeek
+    Days
 } from '../../enums/Days';
 
-const EventForm = forwardRef(({ onSubmit, onChange, onCancel }: any, ref) => {
-
-    const event = {} as EventFormData;;
-
+const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref) => {
     const [eventFormData, setEventFormData] = useState<EventFormData>({
         id: event?.id || null,
         petId: event?.petId || '',
@@ -363,7 +360,7 @@ const EventForm = forwardRef(({ onSubmit, onChange, onCancel }: any, ref) => {
                                                 <div
                                                     className="col-span-3">
                                                     <MultiSelect
-                                                        options={DaysOfWeek.asOptionArray()}
+                                                        options={Days.asOptionArray()}
                                                         //@ts-ignore
                                                         value={eventFormData.recurrence?.days ?? []}
                                                         onChange={(value) => handelChangeRecurrence('days', value)}

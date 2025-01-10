@@ -19,6 +19,7 @@ export default class ModelService {
     async asOptions(collection: string) {
         try {
             const models = await this.getModels(collection);
+
             const mapModels = models.map((model) => ({
                 //@ts-ignore
                 value: model.id,

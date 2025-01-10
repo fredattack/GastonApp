@@ -19,6 +19,18 @@ declare global {
         galerie: string[];
     }
 
+    interface PetFormData {
+        birthDate: string; // YYYY-MM-DD
+        breed: string;
+        createdAt: string; // YYYY-MM-DD hh:ii
+        id: ?string; // null if new pet
+        is_active: boolean; // default true
+        name: string; // unique
+        order: number;  // last order of pets
+        ownerId: string; //auth user id
+        species:  'dog' | 'cat' ;
+    }
+
     interface Recurrence {
         frequencyType: 'weekly' | 'monthly' | 'daily'; // Fréquence de l'événement
         frequency: number; // 1: chaque semaine, 2: toutes les deux semaines, etc.
