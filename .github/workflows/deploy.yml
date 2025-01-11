@@ -11,27 +11,41 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            # 1️⃣ - Récupère le code du dépôt
+            # 1️⃣ - Récupérer le code
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            # 2️⃣ - Configure Node.js
+            # 2️⃣ - Configurer Node.js
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version: '18'  # Adapté selon ta version de Node.js
+                  node-version: '18'  # Adapte si besoin
 
-            # 3️⃣ - Installe les dépendances
+            # 3️⃣ - Générer le fichier .env avec les clés Firebase et OpenAI
+            -   name: Generate .env file
+                run: |
+                    cat <<EOF > .env
+                    VITE_FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}
+                    VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+                    VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+                    VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+                    VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+                    VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
+                    VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+                    VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}
+                    EOF
+
+# 4️⃣ - Installer les dépendances
             - name: Install dependencies
               run: npm install
 
-            # 4️⃣ - Génère le build de production
+            # 5️⃣ - Construire l'app
             - name: Build project
               run: npm run build
 
-            # 5️⃣ - Déploiement via SSH
+            # 6️⃣ - Déployer les fichiers buildés sur le serveur
             - name: Deploy to DigitalOcean
-              uses: appleboy/scp-action@v0.1.6
+              uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{ secrets.SERVER_IP }}
                   username: ${{ secrets.SERVER_USER }}
@@ -39,7 +53,7 @@ jobs:
                   source: "dist/*"
                   target: "/var/www/GastonApp"
 
-            # 6️⃣ - Redémarrer Nginx ou autre service
+            # 7️⃣ - Redémarrer Nginx
             - name: Restart Nginx
               uses: appleboy/ssh-action@v1.0.0
               with:
