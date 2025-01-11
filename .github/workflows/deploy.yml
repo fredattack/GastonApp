@@ -1,0 +1,50 @@
+name: Deploy to DigitalOcean
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    deploy:
+        name: Deploy Application
+        runs-on: ubuntu-latest
+
+        steps:
+            # 1️⃣ - Récupère le code du dépôt
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            # 2️⃣ - Configure Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'  # Adapté selon ta version de Node.js
+
+            # 3️⃣ - Installe les dépendances
+            - name: Install dependencies
+              run: npm install
+
+            # 4️⃣ - Génère le build de production
+            - name: Build project
+              run: npm run build
+
+            # 5️⃣ - Déploiement via SSH
+            - name: Deploy to DigitalOcean
+              uses: appleboy/scp-action@v0.1.6
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  source: "dist/*"
+                  target: "/var/www/GastonApp"
+
+            # 6️⃣ - Redémarrer Nginx ou autre service
+            - name: Restart Nginx
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.SERVER_IP }}
+                  username: ${{ secrets.SERVER_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  script: |
+                      sudo systemctl restart nginx
