@@ -16,7 +16,8 @@ import IconUser from '../Icon/IconUser';
 import IconMail from '../Icon/IconMail';
 import IconLockDots from '../Icon/IconLockDots';
 import IconLogout from '../Icon/IconLogout';
-
+import SpeechButton
+    from './SpeechButton';
 import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
@@ -130,10 +131,6 @@ function Header() {
 
     const { t } = useTranslation();
 
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        alert("La reconnaissance vocale n'est pas prise en charge par ce navigateur.");
-        return;
-    }
 
     return (
         <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
@@ -1090,8 +1087,4 @@ function Header() {
 }
 
 export default Header;
-import SpeechButton from './SpeechButton';
 
-// ...
-
-                            <SpeechButton />

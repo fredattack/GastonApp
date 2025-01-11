@@ -1,28 +1,13 @@
-import React from "react";
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
+    useImperativeHandle,} from 'react';
+import {
+    modelService
+} from '../../../services';
 
-const PetFormInfo = ({
-    formData,
-    handleChange,
-    onCancel,
-    onSubmit,
-}: {
-    formData: {
-        name: string;
-        species: string;
-        breed?: string;
-        birthDate?: { seconds: number; nanoseconds?: number };
-        isActive: boolean;
-    };
-    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    onCancel: () => void;
-    onSubmit: (formData: {
-        name: string;
-        species: string;
-        breed?: string;
-        birthDate?: { seconds: number; nanoseconds?: number };
-        isActive: boolean;
-    }) => void;
-}) => {
+const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submitable=false }: any, ref) => {
     const formatBirthDate = (birthDate: { seconds?: number } | string | null): string => {
         if (!birthDate) return '';
         if (typeof birthDate === 'string') return birthDate;
@@ -31,6 +16,38 @@ const PetFormInfo = ({
         }
         return '';
     };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        console.log('handleSubmit', petFormData);
+        try {
+            if (!petFormData.name || !petFormData.breed || !petFormData.species) {
+                alert("Les champs name ,espece et race  sont obligatoires !");
+                return;
+            }
+
+            if (petFormData.id) {
+                // Mise à jour
+                await modelService.update("pets", petFormData.id, petFormData);
+                alert("Événement mis à jour avec succès !");
+            } else {
+                // Création
+                const newId = await modelService.add("pets", petFormData);
+                alert(`Animal créé avec succès ! ID : ${newId}`);
+            }
+
+            if (onSubmit) {
+                onSubmit(petFormData);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la soumission :", error);
+            alert("Une erreur est survenue lors de la soumission.");
+        }
+    };
+
+    useImperativeHandle(ref, () => ({
+        handleSubmit,
+    }));
+
     return (
         <div>
             <h6 className="text-lg font-bold mb-5">Informations générales</h6>
@@ -41,8 +58,8 @@ const PetFormInfo = ({
                         id="name"
                         name="name"
                         type="text"
-                        value={formData.name}
-                        onChange={handleChange}
+                        value={petFormData.name}
+                        onChange={onChange}
                         placeholder="Entrez le nom de l'animal"
                         className="form-input"
                         required
@@ -53,8 +70,8 @@ const PetFormInfo = ({
                     <select
                         id="species"
                         name="species"
-                        value={formData.species}
-                        onChange={handleChange}
+                        value={petFormData.species}
+                        onChange={onChange}
                         className="form-select text-white-dark"
                     >
                         <option value="dog">Chien</option>
@@ -67,8 +84,8 @@ const PetFormInfo = ({
                         id="breed"
                         name="breed"
                         type="text"
-                        value={formData.breed}
-                        onChange={handleChange}
+                        value={petFormData.breed}
+                        onChange={onChange}
                         placeholder="Entrez la race"
                         className="form-input"
                     />
@@ -80,8 +97,8 @@ const PetFormInfo = ({
                         id="birthDate"
                         name="birthDate"
                         type="date"
-                        value={formatBirthDate(formData.birthDate ?? null)}
-                        onChange={handleChange}
+                        value={formatBirthDate(petFormData.birthDate ?? null)}
+                        onChange={onChange}
                         className="form-input"
                     />
                 </div>
@@ -91,15 +108,17 @@ const PetFormInfo = ({
                             id="isActive"
                             name="isActive"
                             type="checkbox"
-                            checked={formData.isActive}
-                            onChange={handleChange}
+                            checked={petFormData.isActive}
+                            onChange={onChange}
                             className="form-checkbox"
                         />
                         <span className="ml-2">Actif</span>
                     </label>
                 </div>
             </div>
-            <div className="flex justify-end space-x-4 mt-5">
+
+            {submitable && <div
+                className="flex justify-end space-x-4 mt-5">
                 <button
                     type="button"
                     onClick={onCancel}
@@ -111,14 +130,14 @@ const PetFormInfo = ({
                     type="submit"
                     onSubmit={(e) => {
                         e.preventDefault();
-                        onSubmit(formData);
+                        onSubmit(petFormData);
                     }}
                     className="btn btn-primary">
                     Enregistrer
                 </button>
-            </div>
+            </div>}
         </div>
     );
-};
+});
 
-export default PetFormInfo;
+export default PetForm;

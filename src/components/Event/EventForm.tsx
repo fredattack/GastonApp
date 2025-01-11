@@ -14,8 +14,8 @@ import Toggle
     from '../Form/Toggle';
 import {
     transformOptions,
-    updateNestedObject
 } from '../../helpers';
+
 import MultiSelect
     from '../Form/MultiSelect';
 import {
@@ -25,6 +25,7 @@ import {
 import {
     FrequencyTypes
 } from '../../enums/FrequencyTypes';
+
 import {
     Days
 } from '../../enums/Days';
@@ -442,4 +443,5 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
 
 
 });
+
 export default EventForm;

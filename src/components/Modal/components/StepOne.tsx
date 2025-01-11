@@ -83,6 +83,7 @@ const StepOne = forwardRef(({
 
 
     const handleSubmit = async () => {
+        console.log('handleSubmit', prompt);
         const response = await sendPrompt(prompt);
         onSubmit(removeMarkdown(response));
     };

@@ -7,6 +7,21 @@ export default class ModelService {
         this.modelRepository = new ModelRepository();
     }
 
+    async getModel(collection: string, id: string) {
+        try {
+            const model = await this.modelRepository.getModelById(id, collection);
+            if (!model) {
+                throw new Error(`Model with ID ${id} not found in collection ${collection}`);
+            }
+            return {
+                ...model,
+            };
+        } catch (error) {
+            console.error(`Error fetching model with ID ${id}:`, error);
+            throw error;
+        }
+    }
+
     async getModels(collection: string) {
         const ownerId = this.getAuthenticatedOwnerId();
         const events = await this.modelRepository.getModelsByOwner(ownerId,collection);
@@ -55,6 +70,7 @@ export default class ModelService {
     async delete(collection:string,eventId: string) {
         await this.modelRepository.delete(collection,eventId);
     }
+
     private getAuthenticatedOwnerId(): string | null {
         // Placeholder for authentication logic; replace with your actual auth logic
         const authId = "vB6WiAAmU8PsKg9chwip"; // Replace with dynamic user auth

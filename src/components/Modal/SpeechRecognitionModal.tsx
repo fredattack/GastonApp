@@ -6,17 +6,17 @@ import React, {
 
 import EventForm
     from '../../components/Event/EventForm';
+import PetForm
+    from '../../components/Pets/form/PetForm';
 import StepOne
     from './components/StepOne';
-import {
-    removeMarkdown
-} from '../../helpers';
 
 interface SpeechRecognitionModalProps {
     initialStep: number;
     isOpen: boolean;
     onClose: () => void;
     transcription: string;
+    setTranscription: React.Dispatch<React.SetStateAction<string>>;  // Ajout de cette ligne
     isManualInput: boolean;
 }
 
@@ -27,7 +27,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                                                                            transcription,
                                                                            isManualInput
                                                                        }) => {
-    const [currentStep, setCurrentStep] = useState(initialStep);
+    const [currentStep, setCurrentStep] = useState(1);
 
     const [eventData, setEventData] = useState<EventFormData>({
         id: null,
@@ -52,51 +52,53 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
         breed: '',
         createdAt: '', // YYYY-MM-DD hh:ii
         id: '', // null if new pet
-        is_active:true, // default true
+        isActive: true, // default true
         name: '', // unique
         order: 1,  // last order of pets
         ownerId: '', //auth user id
-        species:  'dog'
+        species: 'dog'
     });
 
     const eventFormRef = useRef<any>(null); // Référence pour EventForm
-    const stepOneRef = useRef<any>(null); // Référence pour EventForm
+    const stepOneRef = useRef<any>(null); // Référence pour setOne
+    const petRef = useRef<any>(null); // Référence pour petForm
+
     const [load, setLoad] = useState(false);
-    const [promptType, setPromptType] = useState('');
-    // Synchroniser initialStep avec currentStep
+    const [prompt, setPrompt] = useState<string>('');
+    const [promptType, setPromptType] = useState('createPet');
+
     useEffect(() => {
         setCurrentStep(initialStep);
     }, [initialStep]);
-    const [prompt, setPrompt] = useState<string>('');
+
     if (!isOpen) return null;
 
     const handleNext = () => {
-
         console.log('handleNext', prompt);
-        // if (currentStep < 2) setCurrentStep((prev) => prev + 1);
+      if (currentStep < 2) setCurrentStep((prev) => prev + 1);
     };
 
     const handleBack = () => {
         if (currentStep > 0) setCurrentStep((prev) => prev - 1);
     };
 
-     async function handlePostSubmit(data:any) {
-         setLoad(false);
-         console.log('handlePostSubmit',JSON.parse( data ),currentStep);
-let responseObject = JSON.parse( data );
-         setPromptType(responseObject.requestType);
-         console.log('responseObject.response', responseObject.response);
-         if (currentStep === 0) {
-             if(promptType == 'createEvent'){
-                setEventData(responseObject.response)
-             }
-             if(promptType == 'createPet'){
-                 setPetData(responseObject.response)
-             }
-             setCurrentStep(1);
-         }
-         console.log('eventData', eventData);
-     }
+    async function handlePostSubmit(data: any) {
+        setLoad(false);
+        let responseObject = JSON.parse(data);
+        console.table(responseObject)
+        setPromptType(responseObject.requestType);
+        if (currentStep === 0) {
+            if (promptType == 'createEvent') {
+                setEventData(responseObject.response);
+            }
+            if (promptType == 'createPet') {
+                setPetData(responseObject.response);
+            }
+            setCurrentStep(1);
+        }
+
+    }
+
     const handleSave = () => {
         setLoad(!load);
         if (currentStep === 2) return;
@@ -105,8 +107,15 @@ let responseObject = JSON.parse( data );
             /*setCurrentStep(1);*/
             return;
         }
+
         if (currentStep === 1) {
-            eventFormRef.current.handleSubmit(); // Appeler handleSubmit dans EventForm
+
+            if(promptType == 'createPet') {
+                petRef.current.handleSubmit(); // Appeler handleSubmit dans PetForm
+            }
+            if(promptType == 'createEvent') {
+                eventFormRef.current.handleSubmit(); // Appeler handleSubmit dans EventForm
+            }
         }
 
     };
@@ -118,23 +127,33 @@ let responseObject = JSON.parse( data );
     return (
         <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
+
             <div
-                className="bg-white p-6 rounded-lg h-full w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
+                className="bg-white p-6 rounded-lg  w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
+
+                <div className="float-right">
+
+                <button
+                    onClick={onClose}
+                    className="btn btn-outline-dark px-4 py-2"
+                >
+                    X
+                </button>
+                </div>
+                <div>
                 {currentStep === 0 && (
                     <StepOne
                         ref={stepOneRef}
                         prompt={prompt}
                         isManualInput={true}
-                        onSubmit={(data: any) => { handlePostSubmit(data); }}
+                        onSubmit={(data: any) => {
+                            handlePostSubmit(data);
+                        }}
                         onChange={handlePromptChange}
                         onCancel={handleBack} />
                 )}
-                {currentStep === 1 && (
+                {currentStep === 1 && promptType === 'createEvent' && (
                     <div>
-                        <h2 className="text-xl font-bold mb-4">Étape
-                            2
-                            :
-                            analysée</h2>
                         <EventForm
                             event={eventData}
                             ref={eventFormRef}
@@ -146,6 +165,28 @@ let responseObject = JSON.parse( data );
                             }}
                             onCancel={() => setCurrentStep(0)}
                         />
+                        <p className="text-sm text-gray-600 mt-2">Modifiez
+                            le
+                            texte
+                            si
+                            nécessaire.</p>
+                    </div>
+                )}
+
+                {currentStep === 1 && promptType === 'createPet' && (
+                    <div>
+                        <PetForm
+                            petFormData={petData}
+                            ref={petRef}
+                            onChange={(updatedData: any) => {
+                                setEventData((prevData: any) => ({
+                                    ...prevData,
+                                    ...updatedData
+                                }));
+                            }}
+                            onCancel={() => setCurrentStep(0)}
+                        />
+
                         <p className="text-sm text-gray-600 mt-2">Modifiez
                             le
                             texte
@@ -177,6 +218,7 @@ let responseObject = JSON.parse( data );
                             confirmer.</p>
                     </div>
                 )}
+                </div>
                 <div
                     className="flex justify-between mt-6">
                     {currentStep > 0 && (
@@ -185,14 +227,6 @@ let responseObject = JSON.parse( data );
                             className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
                         >
                             Retour
-                        </button>
-                    )}
-                    {currentStep < 2 && (
-                        <button
-                            onClick={handleNext}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            Suivant
                         </button>
                     )}
                     {currentStep <= 1 && (
@@ -204,15 +238,18 @@ let responseObject = JSON.parse( data );
                                 <span
                                     className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>
                             }
-                            Enregistrer
+                            {promptType ? 'Générer' : 'Enregistrer'}
                         </button>
                     )}
-                    <button
-                        onClick={onClose}
-                        className="bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                        Fermer
-                    </button>
+                    {currentStep < 2 && (
+                        <button
+                            onClick={handleNext}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            Suivant
+                        </button>
+                    )}
+
                 </div>
             </div>
         </div>

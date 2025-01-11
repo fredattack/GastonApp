@@ -45,15 +45,15 @@ class PromptProvider {
                 notes: ''
             },
            {
-                birthDate: "",
+                birthDate: "",//YYYY-MM-DD
                 breed: "",
-                createdAt: "",
+                createdAt: "", // YYYY-MM-DD hh:ii (now)
                 id: "",
                 is_active: true,
                 name: "",
                 order: 0,
                 ownerId: "",
-                species: "dog"
+                species: "dog" // dog|cat
             }
         ];
     }
@@ -79,10 +79,11 @@ class PromptProvider {
                 "le format de la response sera :  " +
                 "{\n" +
                 "score:\"\",\n" +
-                "requestType: \"\",\n" +
+                "requestType: \"\", (createPet,updatePet,createEvent,updateEvent)\n " +
                 "description: \"\",\n" +
                 "response: {}\n" +
                 "}" +
+            " les dates doivent avoir ce format : YYYY-MM-DD et les datetimes : YYYY-MM-DD hh:ii" +
                 "si le nom de l'animal est défini, il devra toujours apparaitre dasn title si il y a une clef title" +
             "respecte le plus possible 'parameters.language' pour la langue de la réponse." +
             "!!!!! La réponse sera un json brut sans style ou decoration markedown!!!!! "    ;

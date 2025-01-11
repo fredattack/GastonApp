@@ -10,7 +10,7 @@ declare global {
         breed: string;
         createdAt: string;
         id: string;
-        is_active: boolean;
+        isActive: boolean;
         name: string;
         order: number;
         ownerId: string;
@@ -24,11 +24,11 @@ declare global {
         breed: string;
         createdAt: string; // YYYY-MM-DD hh:ii
         id: ?string; // null if new pet
-        is_active: boolean; // default true
+        isActive: boolean; // default true
         name: string; // unique
         order: number;  // last order of pets
         ownerId: string; //auth user id
-        species:  'dog' | 'cat' ;
+        species: string | 'dog' | 'cat' ;
     }
 
     interface Recurrence {

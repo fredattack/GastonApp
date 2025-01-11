@@ -6,8 +6,6 @@ export class OpenAiService {
                 apiKey: import.meta.env.VITE_OPENAI_API_KEY,
                 dangerouslyAllowBrowser: true
             });
-            console.log('mess', messages);
-            return;
             // On attend la réponse de l'API
             const response = await client.chat.completions.create({
                 model: "gpt-4o",

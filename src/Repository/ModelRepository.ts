@@ -3,9 +3,8 @@ import {
     updateDoc,
     deleteDoc,
     getDocs,
+    getDoc,
     query,
-    where,
-    doc,
     DocumentData,
 } from "firebase/firestore";
 import FirebaseRepository from "./FirebaseRepository";
@@ -27,6 +26,22 @@ export default class ModelRepository extends FirebaseRepository {
         const q = query(collectionRef);
         const snapshot = await getDocs(q);
         return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    }
+
+    async getModelById(id: string | null, collection: string): Promise<DocumentData | null> {
+        if (!id) {
+            throw new Error("Document ID is required");
+        }
+
+        const docRef = this.getDocRef(collection, id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return { id: docSnap.id, ...docSnap.data() };
+        } else {
+            console.warn("No document found with the provided ID.");
+            return null;
+        }
     }
 
     async getModelsByOwner(ownerId: string | null, collection: string): Promise<DocumentData[]> {

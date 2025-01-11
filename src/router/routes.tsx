@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 const Index = lazy(() => import('../pages/Index'));
 // @ts-ignore
 const Pets = lazy(() => import('../pages/content/Pet/Pets'));
-const PetForm = lazy(() => import('../pages/content/Pet/PetForm'));
+const PetForm = lazy(() => import('../pages/content/Pet/ThePetFormPage'));
 
 const routes = [
     // dashboard

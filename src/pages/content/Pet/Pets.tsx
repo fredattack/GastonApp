@@ -1,12 +1,7 @@
 import {
-    collection,
     deleteDoc,
     doc,
     getDoc,
-    getDocs,
-    orderBy,
-    query,
-    where
 } from 'firebase/firestore';
 import {
     db
@@ -34,6 +29,9 @@ import {
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useIcons } from '../../../providers/FontawesomeProvider';
+import {
+    modelService
+} from '../../../services';
 
 
 type DeletionQueueItem = {
@@ -55,23 +53,8 @@ function Pets() {
 
     const fetchPets = async () => {
         try {
-            const authId = 'vB6WiAAmU8PsKg9chwip';
-            const ownerRef = doc(db, 'users', authId);
-            const petsRef = collection(db, 'pets');
-            const petsQuery = query(
-                petsRef,
-                where('owner_id', '==', ownerRef),
-                orderBy('order', 'desc')
-            );
-
-            const querySnapshot = await getDocs(petsQuery);
-
-            const petsList: Pet[] = querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data()
-            })) as Pet[];
-
-            setPets(petsList);
+           const petsList: any = await modelService.getModels('pets');
+           setPets(petsList);
         } catch (error) {
             console.error('Error fetching pets:', error);
         }
@@ -91,7 +74,7 @@ function Pets() {
                 onClick: () => handleEdit(id)
             },
             {
-                label: pet?.is_active ? 'Set Inactive' : 'Set Active',
+                label: pet?.isActive ? 'Set Inactive' : 'Set Active',
                 onClick: () => toggleActiveStatus(id)
             },
             {
