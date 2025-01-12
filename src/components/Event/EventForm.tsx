@@ -30,7 +30,13 @@ import {
     Days
 } from '../../enums/Days';
 
+import {
+    useToast
+} from '../../providers/ToastProvider';
+
 const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref) => {
+    const { addToast } = useToast();
+
     const [eventFormData, setEventFormData] = useState<EventFormData>({
         id: event?.id || null,
         petId: event?.petId || '',
@@ -94,11 +100,17 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
             if (eventFormData.id) {
                 // Mise à jour
                 await modelService.update("events", eventFormData.id, eventFormData);
-                alert("Événement mis à jour avec succès !");
+                addToast({
+                    message: 'Event successfully created!',
+                    type: 'success'
+                });
             } else {
                 // Création
                 const newId = await modelService.add("events", eventFormData);
-                alert(`Événement créé avec succès ! ID : ${newId}`);
+                addToast({
+                    message: 'Event successfully created!',
+                    type: 'success'
+                });
             }
 
             if (onSubmit) {

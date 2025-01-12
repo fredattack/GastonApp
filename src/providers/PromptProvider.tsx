@@ -83,6 +83,7 @@ class PromptProvider {
                 "description: \"\",\n" +
                 "response: {}\n" +
                 "}" +
+            "nous sommes le " + new Date().toISOString() +
             " les dates doivent avoir ce format : YYYY-MM-DD et les datetimes : YYYY-MM-DD hh:ii" +
                 "si le nom de l'animal est défini, il devra toujours apparaitre dasn title si il y a une clef title" +
             "respecte le plus possible 'parameters.language' pour la langue de la réponse." +

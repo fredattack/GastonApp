@@ -10,6 +10,8 @@ import PetForm
     from '../../components/Pets/form/PetForm';
 import StepOne
     from './components/StepOne';
+import PreviewAiResponse
+    from './components/PreviewAiResponse';
 
 interface SpeechRecognitionModalProps {
     initialStep: number;
@@ -66,6 +68,8 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     const [load, setLoad] = useState(false);
     const [prompt, setPrompt] = useState<string>('');
     const [promptType, setPromptType] = useState('createPet');
+    const [viewMode, setViewMode] = useState('preview');
+    const [aiResponse, setAiResponse] = useState('preview');
 
     useEffect(() => {
         setCurrentStep(initialStep);
@@ -85,6 +89,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     async function handlePostSubmit(data: any) {
         setLoad(false);
         let responseObject = JSON.parse(data);
+        setAiResponse(responseObject);
         console.table(responseObject)
         setPromptType(responseObject.requestType);
         if (currentStep === 0) {
@@ -117,7 +122,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                 eventFormRef.current.handleSubmit(); // Appeler handleSubmit dans EventForm
             }
         }
-
+        setLoad(!load);
     };
 
     const handlePromptChange = (value: any) => {
@@ -147,12 +152,19 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                         prompt={prompt}
                         isManualInput={true}
                         onSubmit={(data: any) => {
-                            handlePostSubmit(data);
+                        handlePostSubmit(data);
                         }}
                         onChange={handlePromptChange}
                         onCancel={handleBack} />
                 )}
-                {currentStep === 1 && promptType === 'createEvent' && (
+                    {currentStep === 1  && viewMode === 'preview' && (
+                        <div>
+                            <PreviewAiResponse
+                                aiResponse={aiResponse}
+                            />
+                        </div>
+                    )}
+                {currentStep === 1 && promptType === 'createEvent' && viewMode != 'preview' && (
                     <div>
                         <EventForm
                             event={eventData}
@@ -163,6 +175,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                                     ...updatedData
                                 }));
                             }}
+                            onSubmit={() => onClose()}
                             onCancel={() => setCurrentStep(0)}
                         />
                         <p className="text-sm text-gray-600 mt-2">Modifiez
@@ -173,7 +186,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                     </div>
                 )}
 
-                {currentStep === 1 && promptType === 'createPet' && (
+                {currentStep === 1 && promptType === 'createPet' && viewMode != 'preview' && (
                     <div>
                         <PetForm
                             petFormData={petData}
@@ -247,6 +260,14 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                             className="bg-blue-500 text-white px-4 py-2 rounded"
                         >
                             Suivant
+                        </button>
+                    )} {currentStep ==1   && viewMode === 'preview' && (
+
+                        <button
+                            onClick={()=>setViewMode('edit')}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            Preview
                         </button>
                     )}
 

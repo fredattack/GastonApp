@@ -58,6 +58,7 @@ const StepOne = forwardRef(({
                 frequencyTypes: FrequencyTypes.asOptionArray()
             };
         }
+
     async function sendPrompt(prompt: string) {
         const provider = new PromptProvider();
         const parameters = await initializeParameters();
@@ -80,11 +81,10 @@ const StepOne = forwardRef(({
         }
     }
 
-
-
     const handleSubmit = async () => {
         console.log('handleSubmit', prompt);
         const response = await sendPrompt(prompt);
+        console.log('removeMarkdown(response)', removeMarkdown(response));
         onSubmit(removeMarkdown(response));
     };
 
