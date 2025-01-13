@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { faAngleUp,faAnglesLeft, faBars, faMicrophone,faPaw, faUtensils,faCapsules,faGauge } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp,faAnglesLeft, faAnglesRight, faBars, faMicrophone,faPaw, faUtensils,faCapsules,faGauge } from '@fortawesome/free-solid-svg-icons';
 
 const IconContext = createContext<Record<string, unknown> | undefined>(undefined);
 
@@ -7,6 +7,7 @@ export const IconProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const icons = {
         angleUp: faAngleUp,
         anglesLeft: faAnglesLeft,
+        anglesRight: faAnglesRight,
         bars:faBars,
         capsules: faCapsules,
         gauge: faGauge,

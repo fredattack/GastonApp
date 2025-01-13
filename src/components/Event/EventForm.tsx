@@ -41,17 +41,16 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
         id: event?.id || null,
         petId: event?.petId || '',
         type: event?.type || '',
-        startDate: event?.startDate || '',
+        start_date: event?.start_date || '',
         title: event?.title || '',
-        endDate: event?.endDate || '',
-        isRecurring: event?.isRecurring || false,
-        isFullDay: event?.isFullDay || false,
+        end_date: event?.end_date || '',
+        is_recurring: event?.is_recurring || false,
+        is_full_day: event?.is_full_day || false,
         recurrence: {
-            frequencyType: event?.recurrence?.frequencyType || '',
+            frequency_type: event?.recurrence?.frequency_type || '',
             frequency: event?.recurrence?.frequency || 1,
             days: event?.recurrence?.days || [],
-            hasEndRecurrence: event?.recurrence?.hasEndRecurrence || false,
-            endRecurrenceDate: event?.recurrence?.endRecurrenceDate || ''
+            end_date: event?.recurrence?.end_date || ''
         },
         notes: event?.notes || ''
     });
@@ -75,24 +74,23 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
     }, []);
 
     useEffect(() => {
-        if (!eventFormData.isRecurring) {
+        if (!eventFormData.is_recurring) {
             setEventFormData((prev) => ({
                 ...prev,
                 recurrence: {
-                    frequencyType: event?.recurrence?.frequencyType || '',
+                    frequency_type: event?.recurrence?.frequency_type || '',
                     frequency: event?.recurrence?.frequency || 1,
                     days: event?.recurrence?.days || [],
-                    hasEndRecurrence: event?.recurrence?.hasEndRecurrence || false,
-                    endRecurrenceDate: event?.recurrence?.endRecurrenceDate || ''
+                    end_date: event?.recurrence?.end_date || ''
                 }
             }));
         }
-    }, [eventFormData.isRecurring]);
+    }, [eventFormData.is_recurring]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         try {
-            if (!eventFormData.type || !eventFormData.startDate) {
+            if (!eventFormData.type || !eventFormData.start_date) {
                 alert("Les champs Type et Date de début sont obligatoires !");
                 return;
             }
@@ -273,15 +271,15 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 className="sm:col-span-6">
                                 <Toggle
                                     label="full day"
-                                    initialState={eventFormData.isFullDay}
-                                    onChange={(e) => handleChange('isFullDay', e)}
+                                    initialState={eventFormData.is_full_day}
+                                    onChange={(e) => handleChange('is_full_day', e)}
                                 />
                             </div>
                             {/* #region date start*/}
                             <div
                                 className="sm:col-span-3">
                                 <label
-                                    htmlFor="startDate"
+                                    htmlFor="start_date"
                                     className="block text-sm/6 font-medium text-gray-900">
                                     Start
                                     Date
@@ -289,11 +287,11 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 <div
                                     className="mt-2">
                                     <input
-                                        id="endDate"
-                                        name="startDate"
-                                        type={eventFormData.isFullDay ? 'date' : 'datetime-local'}
-                                        value={eventFormData.startDate instanceof Date ? eventFormData.startDate.toISOString().split('T')[0] : eventFormData.startDate}
-                                        onChange={(e) => handleChange('startDate', e)}
+                                        id="end_date"
+                                        name="start_date"
+                                        type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
+                                        value={eventFormData.start_date instanceof Date ? eventFormData.start_date.toISOString().split('T')[0] : eventFormData.start_date}
+                                        onChange={(e) => handleChange('start_date', e)}
 
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
@@ -303,7 +301,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                             <div
                                 className="sm:col-span-3">
                                 <label
-                                    htmlFor="endDate"
+                                    htmlFor="end_date"
                                     className="block text-sm/6 font-medium text-gray-900">
                                     End
                                     Date
@@ -311,11 +309,11 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 <div
                                     className="mt-2">
                                     <input
-                                        id="endDate"
-                                        name="endDate"
-                                        type={eventFormData.isFullDay ? 'date' : 'datetime-local'}
-                                        value={eventFormData.endDate instanceof Date ? eventFormData.endDate.toISOString().split('T')[0] : eventFormData.endDate}
-                                        onChange={(e) => handleChange('endDate', e)}
+                                        id="end_date"
+                                        name="end_date"
+                                        type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
+                                        value={eventFormData.end_date instanceof Date ? eventFormData.end_date.toISOString().split('T')[0] : eventFormData.end_date}
+                                        onChange={(e) => handleChange('end_date', e)}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -328,18 +326,18 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                     className="mt-2">
                                     <Toggle
                                         label="Recurring"
-                                        onChange={(e) => handleChange('isRecurring', e)}
+                                        onChange={(e) => handleChange('is_recurring', e)}
 
                                     />
 
                                 </div>
                             </div>
 
-                            {eventFormData.isRecurring && (
+                            {eventFormData.is_recurring && (
                                 <div
                                     className="sm:col-span-6">
                                     <label
-                                        htmlFor="frequencyType"
+                                        htmlFor="frequency_type"
                                         className="block text-sm/6 font-medium text-gray-900">
                                         Recurrence
                                         Details
@@ -360,13 +358,13 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                             <SingleSelect
                                                 placeholder="Select a frequency"
                                                 options={FrequencyTypes.asOptionArray()}
-                                                onChange={(value) => handelChangeRecurrence('frequencyType', value)}
-                                                value={eventFormData.recurrence?.frequencyType?.toString() ?? ''}
+                                                onChange={(value) => handelChangeRecurrence('frequency_type', value)}
+                                                value={eventFormData.recurrence?.frequency_type?.toString() ?? ''}
                                             />
                                         </div>
 
                                     </div>
-                                    {eventFormData.recurrence?.frequencyType === FrequencyTypes.Weekly &&
+                                    {eventFormData.recurrence?.frequency_type === FrequencyTypes.Weekly &&
                                         (
                                             <div
                                                 className="mt-2 grid grid-cols-4 gap-4">
@@ -391,18 +389,18 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                                 className="mt-2">
                                                 <Toggle
                                                     label="until"
-                                                    onChange={(value) => handleChangeNested('recurrence.hasEndRecurrence', value)} />
+                                                    onChange={(value) => handleChangeNested('recurrence.has_end_reccurence', value)} />
 
                                             </div>
                                         </div>
 
 
-                                            { eventFormData.recurrence?.hasEndRecurrence === true &&
+                                            { eventFormData.recurrence?.has_end_reccurence === true &&
 
                                         <div
                                             className="col-span-3">
                                             <label
-                                                htmlFor="endDate"
+                                                htmlFor="end_date"
                                                 className="block text-sm/6 font-medium text-gray-900">
                                                 End
                                                 Date
@@ -410,8 +408,8 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                                 <div
                                                     className="mt-2">
                                                     <input
-                                                        id="endDate"
-                                                        name="endDate"
+                                                        id="end_date"
+                                                        name="end_date"
                                                         type={'date'}
                                                         value={eventFormData.recurrence?.endRecurrenceDate instanceof Date ? eventFormData.recurrence?.endRecurrenceDate.toISOString().split('T')[0] : eventFormData.recurrence?.endRecurrenceDate}
                                                         onChange={(e) => handleChangeNested('recurrence.endRecurrenceDate', e.target.value)}

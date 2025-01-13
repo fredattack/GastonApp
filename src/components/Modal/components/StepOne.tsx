@@ -5,9 +5,7 @@ import React
 } from 'react';
 
 import { OpenAiService } from '../../../services/OpenAIService';
-import axios from 'axios';
-import PromptProvider
-    from '../../../providers/PromptProvider';
+
 import {
     modelService
 } from '../../../services';
@@ -60,21 +58,9 @@ const StepOne = forwardRef(({
         }
 
     async function sendPrompt(prompt: string) {
-        const provider = new PromptProvider();
-        const parameters = await initializeParameters();
-        const formatedPrompt = provider.generatePrompt(prompt, parameters);
-
-
         try {
-            // On attend la réponse de l'OpenAiService
-            const responseFunction = await OpenAiService.sendPrompt([
-                {
-                    role: 'assistant',
-                    content: formatedPrompt
-                }
-            ]);
-
-            return responseFunction;  // Retourne la réponse traitée
+            const openAiService = new OpenAiService();
+           return await openAiService.sendPromptApi(prompt);
         } catch (error) {
             console.error('Error while sending prompt:', error);
             throw error;
@@ -82,10 +68,8 @@ const StepOne = forwardRef(({
     }
 
     const handleSubmit = async () => {
-        console.log('handleSubmit', prompt);
         const response = await sendPrompt(prompt);
-        console.log('removeMarkdown(response)', removeMarkdown(response));
-        onSubmit(removeMarkdown(response));
+        onSubmit(response);
     };
 
     useImperativeHandle(ref, () => ({

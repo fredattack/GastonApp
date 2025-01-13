@@ -1,7 +1,12 @@
+import EventCalendar
+    from '../components/Event/list/EventCalendar';
+
 function Index() {
     return (
-        <div>
-            <h1>starter page</h1>
+        <div className={`p-4 border rounded shadow-md `}>
+            <div>
+                <EventCalendar />
+            </div>
         </div>
     );
 }

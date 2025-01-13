@@ -1,4 +1,4 @@
-import ModelRepository from "../Repository/ModelRepository";
+import ModelRepository from "../Repository/RestModelRepository";
 
 export default class ModelService {
     private modelRepository: ModelRepository;
@@ -13,6 +13,7 @@ export default class ModelService {
             if (!model) {
                 throw new Error(`Model with ID ${id} not found in collection ${collection}`);
             }
+
             return {
                 ...model,
             };
@@ -26,7 +27,7 @@ export default class ModelService {
         const ownerId = this.getAuthenticatedOwnerId();
         const events = await this.modelRepository.getModelsByOwner(ownerId,collection);
 
-        return events.map((event) => ({
+        return events?.data.map((event) => ({
             ...event,
         }));
     }
@@ -53,7 +54,7 @@ export default class ModelService {
         // Format modelData if necessary
         const formattedData = {
             ...modelData,
-            createdAt: new Date().toISOString(),
+            created_at: new Date().toISOString(),
         };
         return await this.modelRepository.add(collection,formattedData);
     }

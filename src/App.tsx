@@ -26,6 +26,9 @@ import {
 import {
     IconProvider
 } from './providers/FontawesomeProvider';
+import {
+    GlobalProvider
+} from './contexts/GlobalContext';
 
 
 function App({ children }: PropsWithChildren) {
@@ -45,7 +48,7 @@ function App({ children }: PropsWithChildren) {
 
     return (
         <IconProvider>
-            <ToastProvider>
+            <GlobalProvider>
                 <div
                     className={`${(store.getState().themeConfig.sidebar && 'toggle-sidebar') || ''} ${themeConfig.menu} ${themeConfig.layout} ${
                         themeConfig.rtlClass
@@ -53,7 +56,7 @@ function App({ children }: PropsWithChildren) {
                 >
                     {children}
                 </div>
-            </ToastProvider>
+            </GlobalProvider>
         </IconProvider>
     );
 }

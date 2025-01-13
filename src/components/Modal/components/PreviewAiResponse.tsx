@@ -1,27 +1,35 @@
+import { usePets } from '../../../contexts/PetsContext';
 
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export default function PreviewAiResponse(aiResponse: any) {
+export default function PreviewAiResponse({ aiResponse }: any) {
+    const { pets, refreshPets } = usePets();
+    console.log('aiResponse', aiResponse );
+    const eventForm = aiResponse.response
+    console.log('eventForm', eventForm);
+
     const recurrenceDetails = [
-        `Type de récurrence : ${aiResponse.recurrence.frequencyType}`,
-        `Fréquence : ${aiResponse.recurrence.frequency} jour(s)`,
-        `Date de fin : ${aiResponse.recurrence.endRecurrenceDate}`
+        `Type de récurrence : ${eventForm.recurrence?.frequencyType}`,
+        `Fréquence : ${eventForm.recurrence?.frequency} jour(s)`,
+        `Date de fin : ${eventForm.recurrence?.endRecurrenceDate}`
     ];
 
     const generalDetails = [
-        `Type : ${aiResponse.type === "medical" ? "Médical" : aiResponse.type}`,
-        `Début : ${aiResponse.startDate}`,
-        `Fin : ${aiResponse.endDate}`,
-        `Récurrence : ${aiResponse.isRecurring ? "Oui" : "Non"}`,
-        `Toute la journée : ${aiResponse.isFullDay ? "Oui" : "Non"}`,
+        `Type : ${eventForm.type === 'medical' ? 'Médical' : eventForm.type}`,
+        'Animal :'+ pets.find((pet) => pet.id == eventForm.petId)?.name || 'Inconnu' ,
+        'Début : '+ new Date(eventForm.startDate).toLocaleString() || 'Inconnu',
+        eventForm.endDate? `Fin : `+new Date(eventForm.end).toLocaleString() :null,
+        `Récurrence : ${eventForm.is_recurring ? 'Oui' : 'Non'}`,
+        `Toute la journée : ${eventForm.isFullDay ? 'Oui' : 'Non'}`
     ];
 
     return (
-        <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
-            {aiResponse}
+        <div
+            className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
+
             <div
                 aria-hidden="true"
                 className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
@@ -38,12 +46,12 @@ export default function PreviewAiResponse(aiResponse: any) {
             <div className="mx-auto max-w-4xl text-center">
                 <h2 className="text-base font-semibold text-indigo-600">Aperçu de l'Événement</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                    {aiResponse.title}
+                    {eventForm.title}
                 </p>
             </div>
 
             <p className="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-gray-600 sm:text-xl">
-                {aiResponse.notes}
+                {eventForm.notes}
             </p>
 
             <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 gap-y-6 sm:mt-20 lg:max-w-4xl lg:grid-cols-2">
@@ -60,7 +68,7 @@ export default function PreviewAiResponse(aiResponse: any) {
                 </div>
 
                 {/* Détails de la récurrence */}
-                {aiResponse.isRecurring && (
+                {eventForm.is_recurring && (
                     <div className="rounded-3xl bg-white/60 p-8 ring-1 ring-gray-900/10 sm:p-10">
                         <h3 className="text-indigo-600 text-base font-semibold">Récurrence</h3>
                         <ul className="mt-8 space-y-3 text-gray-600 text-sm">

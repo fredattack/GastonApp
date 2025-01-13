@@ -51,7 +51,7 @@ const ThePetFormPage = ({ pet }: {
 
     const [formData, setFormData] = useState<PetFormData>({
         birthDate: pet?.birthDate ?? '', // YYYY-MM-DD
-        createdAt: pet?.createdAt ?? '', // YYYY-MM-DD hh:ii
+        created_at: pet?.created_at ?? '', // YYYY-MM-DD hh:ii
         id: pet?.id ?? null, // null if new pet
         isActive: pet?.isActive ?? true, // default true
         name: pet?.name ?? '', // unique
@@ -68,7 +68,7 @@ const ThePetFormPage = ({ pet }: {
             modelService.getModel('pets', id).then((pet) => {
                 setFormData({
                     birthDate: pet.birthDate || '',
-                    createdAt: pet.createdAt || '',
+                    created_at: pet.created_at || '',
                     id: pet.id || null,
                     isActive: pet.isActive ?? true,
                     name: pet.name || '',

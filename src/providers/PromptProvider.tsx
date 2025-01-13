@@ -9,7 +9,6 @@ interface BaseResponseFormat {
 
 interface PromptStructure {
     parameters: any,
-    message: string;
     baseResponseFormat: BaseResponseFormat;
     typedResponse:any;
 }
@@ -33,11 +32,10 @@ class PromptProvider {
                 type: "",
                 startDate: "",
                 endDate: "",
-                isRecurring: false,
+                is_recurring: false,
                 isFullDay: false,
                 recurrence: {
                     frequencyType: "daily",
-                    hasEndRecurrence: false,
                     endRecurrenceDate: "",
                     frequency: 1,
                     days: []
@@ -47,7 +45,7 @@ class PromptProvider {
            {
                 birthDate: "",//YYYY-MM-DD
                 breed: "",
-                createdAt: "", // YYYY-MM-DD hh:ii (now)
+                created_at: "", // YYYY-MM-DD hh:ii (now)
                 id: "",
                 is_active: true,
                 name: "",
@@ -59,11 +57,10 @@ class PromptProvider {
     }
 
 
-    generatePrompt(message: string,parameters:any): string {
+    generatePrompt(message: string,parameters:any): object {
 
         const prompt: PromptStructure = {
             parameters: parameters,
-            message: message,
             baseResponseFormat: this.baseResponseFormat,
             typedResponse: this.typedResponse
         };
@@ -72,7 +69,7 @@ class PromptProvider {
             '\n#########################################################################################\n' +
                 'consignes : ' +
             "À l'aide du message ci-joint, et en te basant sur les paramètres, passer passer dans paramètres. " +
-            "Peux-tu me générer une réponse au format Jason ayant la structure suivante :" +
+            "Peux-tu me générer une réponse au format Json ayant la structure suivante :" +
         "   baseformatResponses concatenee a un  typedResponse que tu déterminera suivant le message." +
             "score contiendra un % de certitude que tu peux déterminer suivant le message et les infos qui te sont passées" +
             "decriptions contiendra un court résumé de ce que tu as compris." +
@@ -84,11 +81,23 @@ class PromptProvider {
                 "response: {}\n" +
                 "}" +
             "nous sommes le " + new Date().toISOString() +
-            " les dates doivent avoir ce format : YYYY-MM-DD et les datetimes : YYYY-MM-DD hh:ii" +
+            "les dates doivent avoir ce format YYYY-MM-DDThh:ii si aucun moment de la journée n'est préciser choisir 08:00" +
+            "le matin = 08:00, le midi = 13:00, le soir = 18:00" +
+            "voici les types d'event : 'medical' | 'feeding' | 'appointment' | 'training' | 'social'" +
+            "si l'event est de type feeding end date = startDate + 15 min " +
                 "si le nom de l'animal est défini, il devra toujours apparaitre dasn title si il y a une clef title" +
             "respecte le plus possible 'parameters.language' pour la langue de la réponse." +
             "!!!!! La réponse sera un json brut sans style ou decoration markedown!!!!! "    ;
-        return JSON.stringify(prompt, null, 2) +  superPrompt;
+
+        return [
+            {
+                role: 'developer',
+                content: JSON.stringify(prompt, null, 2)  +  superPrompt
+            }, {
+                role: 'user',
+                content: message
+            },
+        ]
     }
 
 }

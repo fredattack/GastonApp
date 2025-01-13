@@ -8,7 +8,7 @@ declare global {
     interface Pet {
         birthDate: string;
         breed: string;
-        createdAt: string;
+        created_at: string;
         id: string;
         isActive: boolean;
         name: string;
@@ -22,7 +22,7 @@ declare global {
     interface PetFormData {
         birthDate: string; // YYYY-MM-DD
         breed: string;
-        createdAt: string; // YYYY-MM-DD hh:ii
+        created_at: string; // YYYY-MM-DD hh:ii
         id: ?string; // null if new pet
         isActive: boolean; // default true
         name: string; // unique
@@ -31,12 +31,6 @@ declare global {
         species: string | 'dog' | 'cat' ;
     }
 
-    interface Recurrence {
-        frequencyType: 'weekly' | 'monthly' | 'daily'; // Fréquence de l'événement
-        frequency: number; // 1: chaque semaine, 2: toutes les deux semaines, etc.
-        days?: string[]; // Jours de la semaine, e.g., ["Monday", "Wednesday"]
-        endDate?: Date; // Date de fin pour les événements récurrents
-    };
 
     interface EventItem {
         type: 'medication' | 'food' | 'prestataire' | 'other'; // Type d'entité associée
@@ -55,17 +49,17 @@ declare global {
         type: 'medical' | 'feeding' | 'appointment' | 'training' | 'social'; // Type d'événement
         startDate: Date; // Date et heure de début
         endDate?: Date; // Date et heure de fin (facultatif)
-        isRecurring: boolean; // Indique si l'événement est récurrent
+        is_recurring: boolean; // Indique si l'événement est récurrent
         recurrence?: Recurrence; // Détails des récurrences
         eventItems?: EventItem[]; // Entités associées à l'événement
         notes?: string; // Notes supplémentaires
-        createdAt: Date; // Date de création
+        created_at: Date; // Date de création
     };
 
     interface Recurrence {
-        frequencyType: 'weekly' | 'monthly' | 'daily' | string;
-        hasEndRecurrence: boolean;
-        endRecurrenceDate: Date | string;
+        frequency_type: 'weekly' | 'monthly' | 'daily' | string;
+        end_date: Date | string;
+        occurences:number
         frequency: number;
         days: string[];
     }
@@ -75,19 +69,12 @@ declare global {
         title: string; // Titre de l'événement
         petId: string;
         type: string;
-        startDate: Date | string;
-        endDate: Date | string;
-        isRecurring: boolean;
-        isFullDay: boolean;
-        recurrence: {
-            frequencyType: 'weekly' | 'monthly' | 'daily' | string;
-            hasEndRecurrence: boolean;
-            endRecurrenceDate: Date | string;
-            frequency: number;
-            days: string[];
-        };
+        start_date: Date | string;
+        end_date: Date | string;
+        is_recurring: boolean;
+        is_full_day: boolean;
+        recurrence: Recurrence;
         notes: string
-
     }
 
 }

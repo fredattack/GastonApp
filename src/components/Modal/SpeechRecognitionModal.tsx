@@ -1,7 +1,7 @@
 import React, {
-    useState,
     useEffect,
-    useRef
+    useRef,
+    useState
 } from 'react';
 
 import EventForm
@@ -35,24 +35,24 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
         id: null,
         petId: '',
         type: '',
-        startDate: '',
+        start_date: '',
         title: '',
-        endDate: '',
-        isRecurring: false,
-        isFullDay: false,
+        end_date: '',
+        is_recurring: false,
+        is_full_day: false,
         recurrence: {
-            frequencyType: '',
+            frequency_type: '',
             frequency: 1,
             days: [],
-            hasEndRecurrence: false,
-            endRecurrenceDate: ''
+            end_date: '',
+            occurences: 1,
         },
         notes: ''
     });
     const [petData, setPetData] = useState<PetFormData>({
         birthDate: '',// YYYY-MM-DD
         breed: '',
-        createdAt: '', // YYYY-MM-DD hh:ii
+        created_at: '', // YYYY-MM-DD hh:ii
         id: '', // null if new pet
         isActive: true, // default true
         name: '', // unique
@@ -69,7 +69,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     const [prompt, setPrompt] = useState<string>('');
     const [promptType, setPromptType] = useState('createPet');
     const [viewMode, setViewMode] = useState('preview');
-    const [aiResponse, setAiResponse] = useState('preview');
+    const [aiResponse, setAiResponse] = useState(Object);
 
     useEffect(() => {
         setCurrentStep(initialStep);
@@ -79,25 +79,29 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     const handleNext = () => {
         console.log('handleNext', prompt);
-      if (currentStep < 2) setCurrentStep((prev) => prev + 1);
+        if (currentStep < 2) setCurrentStep((prev) => prev + 1);
     };
 
     const handleBack = () => {
         if (currentStep > 0) setCurrentStep((prev) => prev - 1);
     };
 
-    async function handlePostSubmit(data: any) {
+    async function handlePostSubmit(responseObject:any) {
         setLoad(false);
-        let responseObject = JSON.parse(data);
+
+        console.log('responseObject ---------', responseObject);
         setAiResponse(responseObject);
-        console.table(responseObject)
-        setPromptType(responseObject.requestType);
-        if (currentStep === 0) {
-            if (promptType == 'createEvent') {
-                setEventData(responseObject.response);
+       await setPromptType(responseObject.requestType);
+        console.log('currentStep', currentStep);
+        console.log('promptType', promptType);
+        if (currentStep == 0) {
+                console.log('in if 1');
+            if (responseObject.requestType == 'createEvent') {
+                console.log('in if 2');
+                setEventData(responseObject?.response);
             }
-            if (promptType == 'createPet') {
-                setPetData(responseObject.response);
+            if (responseObject.requestType == 'createPet') {
+                setPetData(responseObject?.response);
             }
             setCurrentStep(1);
         }
@@ -105,6 +109,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     }
 
     const handleSave = () => {
+        console.log('handleSave');
         setLoad(!load);
         if (currentStep === 2) return;
         if (currentStep === 0) {
@@ -114,11 +119,11 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
         }
 
         if (currentStep === 1) {
-
-            if(promptType == 'createPet') {
+            setViewMode('edit');
+            if (promptType == 'createPet') {
                 petRef.current.handleSubmit(); // Appeler handleSubmit dans PetForm
             }
-            if(promptType == 'createEvent') {
+            if (promptType == 'createEvent') {
                 eventFormRef.current.handleSubmit(); // Appeler handleSubmit dans EventForm
             }
         }
@@ -129,6 +134,12 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
         setPrompt(value);
     };
 
+    const handleRecallAi = ()=>{
+        setLoad(!load);
+        stepOneRef.current.handleSubmit();
+        setLoad(!load);
+    }
+
     return (
         <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
@@ -136,101 +147,110 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
             <div
                 className="bg-white p-6 rounded-lg  w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
 
-                <div className="float-right">
+                <div
+                    className="float-right">
 
-                <button
-                    onClick={onClose}
-                    className="btn btn-outline-dark px-4 py-2"
-                >
-                    X
-                </button>
+                    <button
+                        onClick={onClose}
+                        className="btn btn-outline-dark px-4 py-2"
+                    >
+                        X
+                    </button>
                 </div>
                 <div>
-                {currentStep === 0 && (
-                    <StepOne
-                        ref={stepOneRef}
-                        prompt={prompt}
-                        isManualInput={true}
-                        onSubmit={(data: any) => {
-                        handlePostSubmit(data);
-                        }}
-                        onChange={handlePromptChange}
-                        onCancel={handleBack} />
-                )}
-                    {currentStep === 1  && viewMode === 'preview' && (
+                    {currentStep === 0 && (
+                        <StepOne
+                            ref={stepOneRef}
+                            prompt={prompt}
+                            isManualInput={true}
+                            onSubmit={(data: any) => {
+                                handlePostSubmit(data);
+                            }}
+                            onChange={handlePromptChange}
+                            onCancel={handleBack} />
+                    )}
+                    {currentStep === 1 && viewMode === 'preview' && aiResponse && (
                         <div>
+                                                <pre
+                                                    className="bg-gray-100 p-4 rounded overflow-auto">
+    {JSON.stringify(aiResponse, null, 2)}
+</pre>
                             <PreviewAiResponse
                                 aiResponse={aiResponse}
                             />
                         </div>
                     )}
-                {currentStep === 1 && promptType === 'createEvent' && viewMode != 'preview' && (
-                    <div>
-                        <EventForm
-                            event={eventData}
-                            ref={eventFormRef}
-                            onChange={(updatedData: any) => {
-                                setEventData((prevData: any) => ({
-                                    ...prevData,
-                                    ...updatedData
-                                }));
-                            }}
-                            onSubmit={() => onClose()}
-                            onCancel={() => setCurrentStep(0)}
-                        />
-                        <p className="text-sm text-gray-600 mt-2">Modifiez
-                            le
-                            texte
-                            si
-                            nécessaire.</p>
-                    </div>
-                )}
+                    {currentStep === 1 && promptType === 'createEvent' && viewMode != 'preview' && (
+                        <div>
+                        <pre
+                            className="bg-gray-100 p-4 rounded overflow-auto">
+    {JSON.stringify(aiResponse, null, 2)}
+</pre>
+                            <EventForm
+                                event={eventData}
+                                ref={eventFormRef}
+                                onChange={(updatedData: any) => {
+                                    setEventData((prevData: any) => ({
+                                        ...prevData,
+                                        ...updatedData
+                                    }));
+                                }}
+                                onSubmit={() => onClose()}
+                                onCancel={() => setCurrentStep(0)}
+                            />
+                            <p className="text-sm text-gray-600 mt-2">Modifiez
+                                le
+                                texte
+                                si
+                                nécessaire.</p>
+                        </div>
+                    )}
 
-                {currentStep === 1 && promptType === 'createPet' && viewMode != 'preview' && (
-                    <div>
-                        <PetForm
-                            petFormData={petData}
-                            ref={petRef}
-                            onChange={(updatedData: any) => {
-                                setEventData((prevData: any) => ({
-                                    ...prevData,
-                                    ...updatedData
-                                }));
-                            }}
-                            onCancel={() => setCurrentStep(0)}
-                        />
+                    {currentStep === 1 && promptType === 'createPet' && viewMode != 'preview' && (
+                        <div>
+                            <PetForm
+                                petFormData={petData}
+                                ref={petRef}
+                                onChange={(updatedData: any) => {
+                                    setEventData((prevData: any) => ({
+                                        ...prevData,
+                                        ...updatedData
+                                    }));
+                                }}
+                                onCancel={() => setCurrentStep(0)}
+                            />
 
-                        <p className="text-sm text-gray-600 mt-2">Modifiez
-                            le
-                            texte
-                            si
-                            nécessaire.</p>
-                    </div>
-                )}
-                {currentStep === 2 && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-4">Étape
-                            3
-                            :
-                            Confirmation</h2>
-                        <p className="mb-4">Le
-                            texte
-                            suivant
-                            sera
-                            enregistré
-                            :</p>
-                        <textarea
-                            className="w-full h-32 p-2 border rounded"
-                            value={transcription}
-                            readOnly
-                        ></textarea>
-                        <p className="text-sm text-gray-600 mt-2">Cliquez
-                            sur
-                            "Enregistrer"
-                            pour
-                            confirmer.</p>
-                    </div>
-                )}
+                            <p className="text-sm text-gray-600 mt-2">Modifiez
+                                le
+                                texte
+                                si
+                                nécessaire.</p>
+                        </div>
+                    )}
+                    {currentStep === 2 && (
+                        <div>
+                            <h2 className="text-xl font-bold mb-4">Étape
+                                3
+                                :
+                                Confirmation</h2>
+                            <p className="mb-4">Le
+                                texte
+                                suivant
+                                sera
+                                enregistré
+                                :</p>
+                            <textarea
+                                className="w-full h-32 p-2 border rounded"
+                                value={transcription}
+                                readOnly
+                            ></textarea>
+                            <p className="text-sm text-gray-600 mt-2">Cliquez
+                                sur
+                                "Enregistrer"
+                                pour
+                                confirmer.</p>
+                        </div>
+                    )}
                 </div>
                 <div
                     className="flex justify-between mt-6">
@@ -254,22 +274,38 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                             {promptType ? 'Générer' : 'Enregistrer'}
                         </button>
                     )}
-                    {currentStep < 2 && (
-                        <button
-                            onClick={handleNext}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            Suivant
-                        </button>
-                    )} {currentStep ==1   && viewMode === 'preview' && (
 
-                        <button
-                            onClick={()=>setViewMode('edit')}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            Preview
-                        </button>
-                    )}
+                    {currentStep == 1 && (
+
+                    <button
+                        onClick={handleRecallAi}
+                        className="bg-amber-300 text-white px-4 py-2 rounded"
+                    >
+                        {load &&
+                            <span
+                                className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>
+                        }
+                        reCall AI
+                    </button>
+                )}
+                    {currentStep == 1 && viewMode === 'preview' && (
+
+                    <button
+                        onClick={() => setViewMode('edit')}
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        edit form
+                    </button>
+                )}
+                    {currentStep == 1 && viewMode === 'edit' && (
+
+                    <button
+                        onClick={() => setViewMode('preview')}
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        preview
+                    </button>
+                )}
 
                 </div>
             </div>

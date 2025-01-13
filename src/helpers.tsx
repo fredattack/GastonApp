@@ -101,6 +101,12 @@ export function removeMarkdown(text:string) {
         .replace(/\n{2,}/g, '\n')
         .trim();
 }
-
+export function dateStartOfDay(date : Date) {
+    const startDate = new Date(date.setHours(0, 0, 0, 0));
+    return startDate;
+}
+export function dateEndOfDay(date : Date) {
+    return new Date(date.setHours(23, 59, 59, 999));
+}
 // Attach helpers to the global `window` object
 
