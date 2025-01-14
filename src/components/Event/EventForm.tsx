@@ -209,14 +209,14 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                             {/* #region select pet*/}
                             <div
                                 className="sm:col-span-3">
-                                <SingleSelect
+                                <MultiSelect
                                     label="Pet"
                                     placeholder="Select a pet"
                                     options={petOptions}
-                                    value={eventFormData.petId}
-                                    onChange={(e) => handleChange('petId', e)}
+                                    //@ts-ignore
+                                    value={eventFormData.pets ?? []}
+                                    onChange={(e) => handleChange('pets', e as unknown as string)}
                                 />
-
                             </div>
                             {/* #region select type*/}
                             <div
@@ -232,50 +232,6 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 />
 
                             </div>
-                            {/* #region toggle dropdown date */}
-                            {/*<div className="sm:col-span-3 ">
-                                bb
-                        <Dropdown
-                                        placement={`${true ? 'bottom-start' : 'bottom-end'}`}
-                                        btnClassName="btn btn-outline-primary dropdown-toggle"
-                                        button={
-                                            <>
-                                                Action
-                                                <span>
-                            <svg>...</svg>
-                        </span>
-                                            </>
-                                        }
-                                    >
-                                        <ul className="!min-w-[170px]">
-                                            <li>
-                                                <button
-                                                    type="button">Action
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    type="button">Another
-                                                    action
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    type="button">Something
-                                                    else
-                                                    here
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    type="button">Separated
-                                                    link
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </Dropdown>
-
-                            </div>*/}
                             {/* #region toggle fullday */}
                             <div
                                 className="sm:col-span-6">
