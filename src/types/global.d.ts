@@ -54,6 +54,7 @@ declare global {
         eventItems?: EventItem[]; // Entités associées à l'événement
         notes?: string; // Notes supplémentaires
         created_at: Date; // Date de création
+        pets: Pet[]; // Animaux associés
     };
 
     interface Recurrence {

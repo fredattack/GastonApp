@@ -30,7 +30,7 @@ export default class RestEventRepository {
         }
 
         try {
-            const response: AxiosResponse = await this.apiClient.get(this.endpoint, {
+            const response: AxiosResponse = await this.apiClient.get(this.endpoint + '/for-calendar', {
                 params: {
                     filters:{
                         start_date: startDate,
