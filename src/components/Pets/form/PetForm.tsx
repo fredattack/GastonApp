@@ -11,7 +11,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
     const formatBirthDate = (birthDate: { seconds?: number } | string | null): string => {
         if (!birthDate) return '';
         if (typeof birthDate === 'string') return birthDate;
-        if (birthDate.seconds) {
+        if (birthDate?.seconds) {
             return new Date(birthDate.seconds * 1000).toISOString().split('T')[0];
         }
         return '';
@@ -20,14 +20,14 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         console.log('handleSubmit', petFormData);
         try {
-            if (!petFormData.name || !petFormData.breed || !petFormData.species) {
+            if (!petFormData?.name || !petFormData?.breed || !petFormData?.species) {
                 alert("Les champs name ,espece et race  sont obligatoires !");
                 return;
             }
 
-            if (petFormData.id) {
+            if (petFormData?.id) {
                 // Mise à jour
-                await modelService.update("pets", petFormData.id, petFormData);
+                await modelService.update("pets", petFormData?.id, petFormData);
                 alert("Événement mis à jour avec succès !");
             } else {
                 // Création
@@ -58,7 +58,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
                         id="name"
                         name="name"
                         type="text"
-                        value={petFormData.name}
+                        value={petFormData?.name}
                         onChange={onChange}
                         placeholder="Entrez le nom de l'animal"
                         className="form-input"
@@ -70,7 +70,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
                     <select
                         id="species"
                         name="species"
-                        value={petFormData.species}
+                        value={petFormData?.species}
                         onChange={onChange}
                         className="form-select text-white-dark"
                     >
@@ -84,7 +84,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
                         id="breed"
                         name="breed"
                         type="text"
-                        value={petFormData.breed}
+                        value={petFormData?.breed}
                         onChange={onChange}
                         placeholder="Entrez la race"
                         className="form-input"
@@ -97,7 +97,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
                         id="birthDate"
                         name="birthDate"
                         type="date"
-                        value={formatBirthDate(petFormData.birthDate ?? null)}
+                        value={formatBirthDate(petFormData?.birthDate ?? null)}
                         onChange={onChange}
                         className="form-input"
                     />
@@ -108,7 +108,7 @@ const PetForm = forwardRef(({ petFormData , onSubmit, onChange, onCancel,submita
                             id="isActive"
                             name="isActive"
                             type="checkbox"
-                            checked={petFormData.isActive}
+                            checked={petFormData?.isActive}
                             onChange={onChange}
                             className="form-checkbox"
                         />

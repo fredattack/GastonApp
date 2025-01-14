@@ -18,6 +18,8 @@ interface SpeechRecognitionModalProps {
     isOpen: boolean;
     onClose: () => void;
     transcription: string;
+    initialPromptType: string;
+    initialViewMode: string;
     setTranscription: React.Dispatch<React.SetStateAction<string>>;  // Ajout de cette ligne
     isManualInput: boolean;
 }
@@ -27,6 +29,8 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
                                                                            isOpen,
                                                                            onClose,
                                                                            transcription,
+                                                                           initialViewMode ,
+                                                                            initialPromptType,
                                                                            isManualInput
                                                                        }) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -67,8 +71,8 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     const [load, setLoad] = useState(false);
     const [prompt, setPrompt] = useState<string>('');
-    const [promptType, setPromptType] = useState('createPet');
-    const [viewMode, setViewMode] = useState('preview');
+    const [promptType, setPromptType] = useState(initialPromptType);
+    const [viewMode, setViewMode] = useState(initialViewMode);
     const [aiResponse, setAiResponse] = useState(Object);
 
     useEffect(() => {
@@ -76,6 +80,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     }, [initialStep]);
 
     if (!isOpen) return null;
+
 
     const handleNext = () => {
         console.log('handleNext', prompt);
@@ -93,11 +98,9 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 
         if (currentStep == 0) {
             if (responseObject.requestType == 'createEvent') {
-                console.log('in if setEventData',);
                 await setEventData(responseObject?.response);
             }
             if (responseObject.requestType == 'createPet') {
-                console.log('in if setPetData',);
                 setPetData(responseObject?.response);
             }
             setCurrentStep(1);

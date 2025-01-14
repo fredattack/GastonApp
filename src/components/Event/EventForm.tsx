@@ -154,7 +154,6 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
         }
     }
 
-    console.log('petOptions', petOptions);
     if (isLoadingPets) {
         return (
             <div className="flex justify-center items-center h-64">

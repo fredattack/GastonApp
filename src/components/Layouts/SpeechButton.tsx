@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import useSpeechRecognition from '../../hooks/useSpeechRecognition';
 import SpeechRecognitionModal from '../Modal/SpeechRecognitionModal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrophone, faKeyboard,faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import Dropdown from '../../components/Dropdown';
+import { faMicrophone, faKeyboard, faCalendarDays,faPlus } from '@fortawesome/free-solid-svg-icons';
+
+
 
 const SpeechButton = () => {
     const { isRecording, startRecording, stopRecording } = useSpeechRecognition();
@@ -11,7 +14,15 @@ const SpeechButton = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transcription, setTranscription] = useState(''); // État local pour la transcription
     const [manualInput, setManualInput] = useState(false); // Différencier mode vocal et prompt
+    const [viewMode, setViewMode] = useState(''); // Différencier mode vocal et prompt
 
+    const [promptType, setPromptType] = useState<string | null>(null); // Différencier mode vocal et prompt
+
+    useEffect(() => {
+        setTranscription('');
+        setManualInput(true);
+        setIsModalOpen(true);
+    }, [promptType]);
 
     const handleClose = () => {
         setIsModalOpen(false); // Fermer la modal
@@ -34,57 +45,91 @@ const SpeechButton = () => {
         setManualInput(true); // Activer le mode manuel
         setIsModalOpen(true); // Ouvrir la modal
     };
-    const handleDateInput = () => {
+
+    const handleModelInput = async (val:string) => {
+        const newPromptType = val === 'event' ? 'createEvent' : 'createPet';
+        setPromptType(newPromptType);
+
         setStep(1);
-        setTranscription(''); // Réinitialise la transcription
-        setManualInput(true); // Activer le mode manuel
-        setIsModalOpen(true); // Ouvrir la modal
+        setViewMode('edit');
+        setTranscription('');
+        setManualInput(true);
+        setIsModalOpen(true);
     };
 
     return (
         <>
-            <div className="flex gap-4">
-                {/* Bouton pour l'enregistrement vocal */}
-                <button
-                    className={`flex items-center justify-center w-9 h-9 rounded-full ${
-                            isRecording ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-amber-300 text-white hover:bg-amber-700'
-                    }`}
-                    onClick={() => {
-                        if (isRecording) {
-                            stopRecording();
-                        } else {
-                            handleStartRecording();
-                        }
-                    }}
-                >
-                    <FontAwesomeIcon icon={faMicrophone} className="w-5 h-5" />
-                </button>
+            <Dropdown
+                placement={`bottom-end`}
+                btnClassName="btn btn-primary dropdown-toggle flex items-center justify-center w-9 h-9 "
+                button={
+                    <>
+                        <FontAwesomeIcon icon={faPlus} className="w-5 h-5" />
+                    </>
+                }
+            >
+                <ul className="!min-w-[170px]">
+                    <li>
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                            onClick={() => {
+                                if (isRecording) {
+                                    stopRecording();
+                                } else {
+                                    handleStartRecording();
+                                }
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faMicrophone} />
+                            {isRecording ? 'Stop Recording' : 'Start Recording'}
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                            onClick={handlePromptInput}
+                        >
+                            <FontAwesomeIcon icon={faKeyboard} />
+                            Manual Input
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                            onClick={() => handleModelInput('event')}
+                        >
+                            <FontAwesomeIcon icon={faCalendarDays} />
+                            Add Event
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+                            onClick={() => handleModelInput('Pet')}
+                        >
+                            <FontAwesomeIcon icon={faCalendarDays} />
+                            Add Pet
+                        </button>
+                    </li>
+                </ul>
+            </Dropdown>
 
-                {/* Bouton pour l'entrée manuelle */}
-                <button
-                    className="flex items-center justify-center w-9 h-9 rounded-full bg-lime-300 text-white hover:bg-lime-700"
-                    onClick={handlePromptInput}
-                >
-                    <FontAwesomeIcon icon={faKeyboard} className="w-5 h-5" />
-                </button>    {/* Bouton pour l'entrée manuelle */}
-
-                <button
-                    className="flex items-center justify-center w-9 h-9 rounded-full bg-purple-300 text-white hover:bg-purple-700"
-                    onClick={handleDateInput}
-                >
-                    <FontAwesomeIcon icon={faCalendarDays} className="w-5 h-5" />
-                </button>
-
-            </div>
-
-            <SpeechRecognitionModal
-                initialStep={step} // Passer step comme prop
-                isOpen={isModalOpen}
-                onClose={handleClose} // Réinitialise et ferme la modal
-                transcription={transcription}
-                setTranscription={setTranscription} // Met à jour la transcription
-                isManualInput={manualInput} // Passe le mode manuel ou vocal
-            />
+            { promptType &&
+                <SpeechRecognitionModal
+                    key={promptType}
+                    initialStep={step} // Passer step comme prop
+                    isOpen={isModalOpen}
+                    onClose={handleClose} // Réinitialise et ferme la modal
+                    transcription={transcription}
+                    initialPromptType={promptType}
+                    initialViewMode={viewMode}
+                    setTranscription={setTranscription} // Met à jour la transcription
+                    isManualInput={manualInput} // Passe le mode manuel ou vocal
+                />}
         </>
     );
 };
