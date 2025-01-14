@@ -14,7 +14,6 @@ export default class EventRepository extends ModelRepository {
      * @returns Promise<DocumentData[]> - List of events within the period.
      */
     async fetchEventsForPeriod(startDate: string, endDate: string): Promise<DocumentData[]> {
-        console.log('fetchEventsForPeriod',startDate,endDate);
         if (!startDate || !endDate) {
             throw new Error("Both startDate and endDate are required.");
         }

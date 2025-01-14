@@ -88,19 +88,16 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     async function handlePostSubmit(responseObject:any) {
         setLoad(false);
-
-        console.log('responseObject ---------', responseObject);
-        setAiResponse(responseObject);
+        await setAiResponse(responseObject);
        await setPromptType(responseObject.requestType);
-        console.log('currentStep', currentStep);
-        console.log('promptType', promptType);
+
         if (currentStep == 0) {
-                console.log('in if 1');
             if (responseObject.requestType == 'createEvent') {
-                console.log('in if 2');
-                setEventData(responseObject?.response);
+                console.log('in if setEventData',);
+                await setEventData(responseObject?.response);
             }
             if (responseObject.requestType == 'createPet') {
+                console.log('in if setPetData',);
                 setPetData(responseObject?.response);
             }
             setCurrentStep(1);
@@ -109,7 +106,7 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
     }
 
     const handleSave = () => {
-        console.log('handleSave');
+
         setLoad(!load);
         if (currentStep === 2) return;
         if (currentStep === 0) {

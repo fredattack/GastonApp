@@ -17,7 +17,6 @@ export default class ModelRepository extends FirebaseRepository {
     }
 
     async getModels(ownerId: string | null, collection: string): Promise<DocumentData[]> {
-        console.log('this.getModelsByOwner');
         if (!ownerId) {
             throw new Error("User not authenticated");
         }

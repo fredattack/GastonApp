@@ -23,7 +23,7 @@ export default class RestEventRepository {
      * @returns Promise<any[]> - List of events within the period.
      */
     async fetchEventsForPeriod(startDate: string, endDate: string): Promise<any[]> {
-        console.log('fetchEventsForPeriod', startDate, endDate);
+
 
         if (!startDate || !endDate) {
             throw new Error("Both startDate and endDate are required.");
@@ -38,8 +38,7 @@ export default class RestEventRepository {
                     },
                 },
             });
-
-            return response.data;
+            return response.data.data;
         } catch (error: any) {
             console.error("Error fetching events for period:", error);
             throw new Error(`Failed to fetch events: ${error.message}`);

@@ -34,15 +34,16 @@ export default class ModelService {
 
     async asOptions(collection: string) {
         try {
+
             const models = await this.getModels(collection);
 
-            const mapModels = models.map((model) => ({
+            return  models.map((model) => ({
                 //@ts-ignore
                 value: model.id,
                 //@ts-ignore
                 label: model.name,
             }));
-            return mapModels;
+
 
         } catch (error) {
             console.error("Error fetching options:", error);

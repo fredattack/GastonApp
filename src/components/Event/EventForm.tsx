@@ -50,7 +50,8 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
             frequency_type: event?.recurrence?.frequency_type || '',
             frequency: event?.recurrence?.frequency || 1,
             days: event?.recurrence?.days || [],
-            end_date: event?.recurrence?.end_date || ''
+            end_date: event?.recurrence?.end_date || '',
+            occurences: event?.recurrence?.occurences || 0
         },
         notes: event?.notes || ''
     });
@@ -58,15 +59,18 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
         value: string;
         label: string
     }[]>([]);
+    const [isLoadingPets, setIsLoadingPets] = useState<boolean>(true); // ⚡️ Ajout de l'état de chargement
 
     useEffect(() => {
         // Fetch the pet options from Firestore
         const fetchPets = async () => {
             try {
                 const pets = await modelService.asOptions("pets");
-                setPetOptions( pets );
+                setPetOptions(pets);
             } catch (error) {
                 console.error("Error fetching pets:", error);
+            } finally {
+                setIsLoadingPets(false); // ✅ Arrêter le chargement après la récupération
             }
         };
 
@@ -81,7 +85,8 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                     frequency_type: event?.recurrence?.frequency_type || '',
                     frequency: event?.recurrence?.frequency || 1,
                     days: event?.recurrence?.days || [],
-                    end_date: event?.recurrence?.end_date || ''
+                    end_date: event?.recurrence?.end_date || '',
+                    occurences: event?.recurrence?.occurences || 0
                 }
             }));
         }
@@ -149,6 +154,14 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
         }
     }
 
+    console.log('petOptions', petOptions);
+    if (isLoadingPets) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <p className="text-gray-500">Loading pets...</p>
+            </div>
+        );
+    }
     return (
         <div
             className="space-y-10 divide-y divide-gray-900/10 mb-3">
@@ -171,10 +184,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                 <form
                     className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
                 >
-                    <button
-                        type="button"
-                        onClick={() => handleSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>)}>test
-                    </button>
+
                     <div
                         className="px-4 py-6 sm:p-8">
                         <div
@@ -290,7 +300,13 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                         id="end_date"
                                         name="start_date"
                                         type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
-                                        value={eventFormData.start_date instanceof Date ? eventFormData.start_date.toISOString().split('T')[0] : eventFormData.start_date}
+                                        value={
+                                            eventFormData.start_date
+                                                ? new Date(eventFormData.start_date)
+                                                    .toISOString()
+                                                    .slice(0, eventFormData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
+                                                : ''
+                                        }
                                         onChange={(e) => handleChange('start_date', e)}
 
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -312,7 +328,13 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                         id="end_date"
                                         name="end_date"
                                         type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
-                                        value={eventFormData.end_date instanceof Date ? eventFormData.end_date.toISOString().split('T')[0] : eventFormData.end_date}
+                                        value={
+                                            eventFormData.end_date
+                                                ? new Date(eventFormData.start_date)
+                                                    .toISOString()
+                                                    .slice(0, eventFormData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
+                                                : ''
+                                        }
                                         onChange={(e) => handleChange('end_date', e)}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
