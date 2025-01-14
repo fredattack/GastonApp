@@ -26,14 +26,15 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     const { title, type, startDate, endDate, notes } = event;
     const style = EVENT_TYPE_STYLES[type as keyof typeof EVENT_TYPE_STYLES] || {};
     return (
+
         <div className={`event-card p-4 border-2 border-${style.bg} rounded shadow-md`}>
             <div className="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon={style.icon} className={`text-xl ${style.color}`} />
                 <h3 className={`text-lg font-bold ${style.color}`}>{title}</h3>
             </div>
-            <p><strong>Animal :</strong> {event.pets.map((pet) => pet.name) || 'Inconnu'}</p>
+            <p><strong>Animal :</strong> {event.pets.map((pet) => pet.name).join(',') || 'Inconnu'}</p>
             {/*<p><strong>Type :</strong> {type}</p>*/}
-            <p><strong>Du :</strong> {startDate ? new Date(startDate).toLocaleDateString('fr-FR') + ' ' + new Date(startDate).toLocaleTimeString('fr-FR') : 'N/A'}</p>
+            <p><strong>Du :</strong> {startDate ? new Date(startDate).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' ' + new Date(startDate).toLocaleTimeString('fr-FR', { timeZone: 'UTC' }) : 'N/A'}</p>
 
             {event.type !== 'feeding' && <p>
                 <strong>Au
