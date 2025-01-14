@@ -205,6 +205,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 />
 
                             </div>
+                            {eventFormData.petId}
                             {/* #region select pet*/}
                             <div
                                 className="sm:col-span-3">
@@ -213,8 +214,8 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                     placeholder="Select a pet"
                                     options={petOptions}
                                     //@ts-ignore
-                                    value={eventFormData.pets ?? []}
-                                    onChange={(e) => handleChange('pets', e as unknown as string)}
+                                    value={eventFormData.petId ?? []}
+                                    onChange={(e) => handleChange('petId', e as unknown as string)}
                                 />
                             </div>
                             {/* #region select type*/}

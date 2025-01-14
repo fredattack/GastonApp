@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import useSpeechRecognition from '../../hooks/useSpeechRecognition';
-import SpeechRecognitionModal from '../Modal/SpeechRecognitionModal';
+import ActionModal from '../Modal/ActionModal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Dropdown from '../../components/Dropdown';
@@ -8,7 +8,7 @@ import { faMicrophone, faKeyboard, faCalendarDays,faPlus } from '@fortawesome/fr
 
 
 
-const SpeechButton = () => {
+const CTAButton = () => {
     const { isRecording, startRecording, stopRecording } = useSpeechRecognition();
     const [step, setStep] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,11 +39,15 @@ const SpeechButton = () => {
     };
 
     const handlePromptInput = () => {
-
-        setStep(0);
-        setTranscription(''); // Réinitialise la transcription
-        setManualInput(true); // Activer le mode manuel
-        setIsModalOpen(true); // Ouvrir la modal
+        try {
+            setViewMode('edit');
+            setStep(0);
+            setTranscription('');
+            setManualInput(true);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('Erreur dans handlePromptInput:', error);
+        }
     };
 
     const handleModelInput = async (val:string) => {
@@ -89,7 +93,7 @@ const SpeechButton = () => {
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={handlePromptInput}
+                            onClick={()=>handlePromptInput()}
                         >
                             <FontAwesomeIcon icon={faKeyboard} />
                             Manual Input
@@ -119,7 +123,7 @@ const SpeechButton = () => {
             </Dropdown>
 
             { promptType &&
-                <SpeechRecognitionModal
+                <ActionModal
                     key={promptType}
                     initialStep={step} // Passer step comme prop
                     isOpen={isModalOpen}
@@ -134,6 +138,6 @@ const SpeechButton = () => {
     );
 };
 
-export default SpeechButton;
+export default CTAButton;
 
 

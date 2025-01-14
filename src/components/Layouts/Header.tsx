@@ -16,8 +16,8 @@ import IconUser from '../Icon/IconUser';
 import IconMail from '../Icon/IconMail';
 import IconLockDots from '../Icon/IconLockDots';
 import IconLogout from '../Icon/IconLogout';
-import SpeechButton
-    from './SpeechButton';
+import CTAButton
+    from './CTAButton';
 import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
@@ -503,7 +503,7 @@ function Header() {
                             </div>*/}
                         <div
                             className="dropdown shrink-0">
-                            <SpeechButton />
+                            <CTAButton />
 
                         </div>
                         <div

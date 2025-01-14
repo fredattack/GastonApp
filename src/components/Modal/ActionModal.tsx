@@ -24,7 +24,7 @@ interface SpeechRecognitionModalProps {
     isManualInput: boolean;
 }
 
-const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
+const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                                                                            initialStep,
                                                                            isOpen,
                                                                            onClose,
@@ -314,4 +314,4 @@ const SpeechRecognitionModal: React.FC<SpeechRecognitionModalProps> = ({
 };
 
 
-export default SpeechRecognitionModal;
+export default ActionModal;
