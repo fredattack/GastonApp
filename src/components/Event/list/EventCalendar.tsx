@@ -13,37 +13,25 @@ import {
 } from '../../../services';
 
 
-const initialEvents = [
-    {
-        title: 'Médicament pour Pablo',
-        type: 'medical',
-        startDate: '2023-11-01',
-        endDate: '2023-11-10',
-        is_recurring: true,
-        isFullDay: false,
-        recurrence: {
-            frequencyType: 'daily',
-            endRecurrenceDate: '2023-11-10',
-            frequency: 1,
-            days: []
-        },
-        notes: 'Pablo doit prendre un médicament et demie par jour.'
-    }
-];
 import {
     FontAwesomeIcon
 } from '@fortawesome/react-fontawesome';
 
 const VIEW_MODES = {
-    DAY: 'Jour',
-    WEEK: 'Semaine',
-    MONTH: 'Mois'
+    DAY: 'day',
+    WEEK: 'week',
+    MONTH: 'month'
 };
 import {
     useIcons
 } from '../../../providers/FontawesomeProvider';
 import EventCard
     from './EventCard';
+
+
+import DisplaySettingsDropdown
+    from '../../Calendar/DisplaySettingsDropdown';
+
 
 
 const EventCalendar = () => {
@@ -105,17 +93,24 @@ const EventCalendar = () => {
     const formatDate = (date: any) => {
         if (viewMode === VIEW_MODES.DAY) {
             return date.toLocaleDateString('fr-FR', {
-                weekday: 'long',
+                weekday: 'short',
                 year: 'numeric',
-                month: 'long',
+                month: 'short',
                 day: 'numeric'
             });
         } else if (viewMode === VIEW_MODES.WEEK) {
+
             const startOfWeek = new Date(date);
             startOfWeek.setDate(date.getDate() - date.getDay());
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
-            return `${startOfWeek.toLocaleDateString('fr-FR')} - ${endOfWeek.toLocaleDateString('fr-FR')}`;
+            return `${startOfWeek.toLocaleDateString('fr-FR', {
+                month: 'short',
+                day: 'numeric'
+            })} - ${endOfWeek.toLocaleDateString('fr-FR', {
+                month: 'short',
+                day: 'numeric'
+            })}`;
         } else {
             return date.toLocaleDateString('fr-FR', {
                 year: 'numeric',
@@ -126,9 +121,8 @@ const EventCalendar = () => {
 
     const handleSetViewMode = async (mode: any) => {
 
-        setViewMode(mode);
+        await setViewMode(mode);
 
-        console.log('viewMode', viewMode);
 
         const {
             startDate,
@@ -178,90 +172,82 @@ const EventCalendar = () => {
     };
 
     const filteredEvents = events;
-
     return (
         <div
-            className="event-calendar">
+            key={viewMode}
+            className="event-calendar"
+        >
+            <div
+                className="toolbar flex items-center justify-end mb-4 mx-3">
+               <DisplaySettingsDropdown
+                   key={viewMode}
+                onChangeViewMode={handleSetViewMode}
+                viewMode={viewMode}
+               />
+
+            </div>
             <div
                 className="toolbar flex items-center justify-between mb-4 mx-3">
 
-                <Dropdown
-                    offset={[0, 8]}
-                    placement={'right-start'}
-                    btnClassName="relative group block"
-                    button={
-                        <div
-                            className="btn btn-outline-dark dropdown-toggle btn-sm cursor-pointer">{viewMode}</div>}
-                >
-                    <ul className="text-dark dark:text-white-dark bg-white !py-0 w-[150px] font-semibold dark:text-white-light/90">
-                        {Object.values(VIEW_MODES).map((mode) => (
-                            <li key={mode}>
-                                <button
-                                    onClick={() => handleSetViewMode(mode)}
-                                    className={`w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${viewMode === mode ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-                                >
-                                    {mode}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </Dropdown>
+
+
+                    <div
+                        className="navigation-buttons flex items-center gap-2">
+                        <button
+                            onClick={handlePrev}
+                            className="text-gray-500">
+                            {/*@ts-ignore*/}
+                            <FontAwesomeIcon
+                                // @ts-ignore
+                                icon={icons?.anglesLeft}
+                                className="m-auto" />
+                        </button>
+
+                        <span>{formatDate(currentDate)}</span>
+
+
+                        <button
+                            onClick={handleNext}
+                            className="text-gray-500">
+                            {/*@ts-ignore*/}
+                            <FontAwesomeIcon
+                                // @ts-ignore
+                                icon={icons?.anglesRight}
+                                className="m-auto" />
+                        </button>
+                    </div>
+                    <div>
+                        <button
+                            onClick={handleToday}
+                            className="btn btn-outline-dark btn-sm">
+                            Today
+                        </button>
+                    </div>
+                </div>
 
                 <div
-                    className="navigation-buttons flex items-center gap-2">
-                    <button
-                        onClick={handlePrev}
-                        className="btn btn-outline-dark btn-sm">
-                        {/*@ts-ignore*/}
-                        <FontAwesomeIcon
-                            // @ts-ignore
-                            icon={icons?.anglesLeft}
-                            className="m-auto" />
-                    </button>
-
-                    <span>{formatDate(currentDate)}</span>
-
-
-                    <button
-                        onClick={handleNext}
-                        className="btn btn-outline-dark btn-sm">
-                        {/*@ts-ignore*/}
-                        <FontAwesomeIcon
-                            // @ts-ignore
-                            icon={icons?.anglesRight}
-                            className="m-auto" />
-                    </button>
-                </div>
-                <div>
-                    <button
-                        onClick={handleToday}
-                        className="btn btn-outline-dark btn-sm">
-                        Today
-                    </button>
+                    className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {events.length > 0 ? (
+                        events.map((event, index) => (
+                            <div
+                                key={index}
+                                className="event-card">
+                                <EventCard
+                                    // @ts-ignore
+                                    event={event} />
+                            </div>
+                        ))
+                    ) : (
+                        <p>Aucun
+                            événement
+                            à
+                            afficher.</p>
+                    )}
                 </div>
             </div>
+            );
+            };
 
-            <div
-                className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {events.length > 0 ? (
-                    events.map((event, index) => (
-                        <div
-                            key={index}
-                            className="event-card">
-                            <EventCard
-                                // @ts-ignore
-                                event={event} />
-                        </div>
-                    ))
-                ) : (
-                    <p>Aucun
-                        événement
-                        à
-                        afficher.</p>
-                )}
-            </div>
-        </div>
-    );
-};
-
-export default EventCalendar;
+            export
+            default
+            EventCalendar;
