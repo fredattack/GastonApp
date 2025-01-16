@@ -1,5 +1,6 @@
 // src/contexts/GlobalContext.tsx
 import React from 'react';
+import { MessageProvider } from './MessageContext';
 import { PetsProvider } from './PetsContext';
 import {
     ToastProvider
@@ -8,11 +9,13 @@ import {
 
 export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <ToastProvider>
+        <MessageProvider>
+        <ToastProvider >
         <PetsProvider>
             {/* Ajouter ici d'autres Providers si nécessaire */}
             {children}
         </PetsProvider>
         </ToastProvider>
+        </MessageProvider>
     );
 };

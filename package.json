@@ -32,6 +32,7 @@
         "date-fns": "^4.1.0",
         "firebase": "^11.1.0",
         "mantine-datatable": "^1.7.17",
+        "mitt": "^3.0.1",
         "openai": "^4.78.0",
         "react": "^18.2.0",
         "react-beautiful-dnd": "^13.1.1",

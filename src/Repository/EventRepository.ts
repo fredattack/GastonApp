@@ -8,24 +8,24 @@ export default class EventRepository extends ModelRepository {
 
     /**
      * Fetch events within a specific period.
-     * @param startDate - The start date of the period (ISO string).
-     * @param endDate - The end date of the period (ISO string).
+     * @param start_date - The start date of the period (ISO string).
+     * @param end_date - The end date of the period (ISO string).
      * @param collection - The collection name where events are stored.
      * @returns Promise<DocumentData[]> - List of events within the period.
      */
-    async fetchEventsForPeriod(startDate: string, endDate: string): Promise<DocumentData[]> {
-        if (!startDate || !endDate) {
-            throw new Error("Both startDate and endDate are required.");
+    async fetchEventsForPeriod(start_date: string, end_date: string): Promise<DocumentData[]> {
+        if (!start_date || !end_date) {
+            throw new Error("Both start_date and end_date are required.");
         }
 
         const collectionRef = this.getCollectionRef('events');
 
         const q = query(
             collectionRef,
-            where("startDate", "<=", endDate),
-            where("endDate", ">=", startDate),
-            orderBy("startDate"),
-            orderBy("endDate")
+            where("start_date", "<=", end_date),
+            where("end_date", ">=", start_date),
+            orderBy("start_date"),
+            orderBy("end_date")
         );
 
 

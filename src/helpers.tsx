@@ -102,8 +102,8 @@ export function removeMarkdown(text:string) {
         .trim();
 }
 export function dateStartOfDay(date : Date) {
-    const startDate = new Date(date.setHours(0, 0, 0, 0));
-    return startDate;
+    const start_date = new Date(date.setHours(0, 0, 0, 0));
+    return start_date;
 }
 export function dateEndOfDay(date : Date) {
     return new Date(date.setHours(23, 59, 59, 999));

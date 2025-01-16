@@ -5,11 +5,18 @@ import ActionModal from '../Modal/ActionModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Dropdown from '../../components/Dropdown';
 import { faMicrophone, faKeyboard, faCalendarDays,faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+    useMessage
+} from '../../contexts/MessageContext';
 
 
 
 const CTAButton = () => {
+    const { handelOpenModal } = useMessage();
+    const { registerHandelOpenModal } = useMessage();
+
     const { isRecording, startRecording, stopRecording } = useSpeechRecognition();
+    const [localEvent, setLocalEvent] = useState<Event | null>(null);
     const [step, setStep] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [transcription, setTranscription] = useState(''); // État local pour la transcription
@@ -17,6 +24,9 @@ const CTAButton = () => {
     const [viewMode, setViewMode] = useState(''); // Différencier mode vocal et prompt
 
     const [promptType, setPromptType] = useState<string | null>(null); // Différencier mode vocal et prompt
+    useEffect(() => {
+        registerHandelOpenModal(localHandleModelInput);
+    }, []);
 
     useEffect(() => {
         setTranscription('');
@@ -40,6 +50,7 @@ const CTAButton = () => {
 
     const handlePromptInput = () => {
         try {
+            setPromptType('newPrompt');
             setViewMode('edit');
             setStep(0);
             setTranscription('');
@@ -50,15 +61,17 @@ const CTAButton = () => {
         }
     };
 
-    const handleModelInput = async (val:string) => {
-        const newPromptType = val === 'event' ? 'createEvent' : 'createPet';
+    const localHandleModelInput = async (model:string,vmode:string = 'edit', event:Event|null = null) => {
+        console.log('event', event);
+        await setLocalEvent(event);
+        const newPromptType = model === 'event' ? 'createEvent' : 'createPet';
         setPromptType(newPromptType);
-
         setStep(1);
-        setViewMode('edit');
+        setViewMode(vmode);
         setTranscription('');
         setManualInput(true);
         setIsModalOpen(true);
+        console.log('localEvent', localEvent);
     };
 
     return (
@@ -103,7 +116,7 @@ const CTAButton = () => {
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => handleModelInput('event')}
+                            onClick={() => localHandleModelInput('event')}
                         >
                             <FontAwesomeIcon icon={faCalendarDays} />
                             Add Event
@@ -113,7 +126,7 @@ const CTAButton = () => {
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => handleModelInput('Pet')}
+                            onClick={() => localHandleModelInput('Pet')}
                         >
                             <FontAwesomeIcon icon={faCalendarDays} />
                             Add Pet
@@ -124,15 +137,16 @@ const CTAButton = () => {
 
             { promptType &&
                 <ActionModal
-                    key={promptType}
-                    initialStep={step} // Passer step comme prop
+                    key={promptType+localEvent}
+                    event={localEvent}
+                    initialStep={step}
                     isOpen={isModalOpen}
-                    onClose={handleClose} // Réinitialise et ferme la modal
+                    onClose={handleClose}
                     transcription={transcription}
                     initialPromptType={promptType}
                     initialViewMode={viewMode}
-                    setTranscription={setTranscription} // Met à jour la transcription
-                    isManualInput={manualInput} // Passe le mode manuel ou vocal
+                    setTranscription={setTranscription}
+                    isManualInput={manualInput}
                 />}
         </>
     );

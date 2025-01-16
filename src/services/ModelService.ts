@@ -27,7 +27,7 @@ export default class ModelService {
         const ownerId = this.getAuthenticatedOwnerId();
         const events = await this.modelRepository.getModelsByOwner(ownerId,collection);
 
-        return events?.data.map((event) => ({
+        return events?.data.map((event:any) => ({
             ...event,
         }));
     }
@@ -37,7 +37,7 @@ export default class ModelService {
 
             const models = await this.getModels(collection);
 
-            return  models.map((model) => ({
+            return  models.map((model:any) => ({
                 //@ts-ignore
                 value: model.id,
                 //@ts-ignore

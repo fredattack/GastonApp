@@ -20,10 +20,10 @@ export default function PreviewAiResponse({ aiResponse }: any) {
     const generalDetails = [
         `Type : ${eventForm.type === 'medical' ? 'Médical' : eventForm.type}`,
         'Animal :'+ pets.find((pet) => pet.id == eventForm.petId)?.name || 'Inconnu' ,
-        'Début : '+ new Date(eventForm.startDate).toLocaleString() || 'Inconnu',
-        eventForm.endDate? `Fin : `+new Date(eventForm.end).toLocaleString() :null,
+        'Début : '+ new Date(eventForm.start_date).toLocaleString() || 'Inconnu',
+        eventForm.end_date? `Fin : `+new Date(eventForm.end).toLocaleString() :null,
         `Récurrence : ${eventForm.is_recurring ? 'Oui' : 'Non'}`,
-        `Toute la journée : ${eventForm.isFullDay ? 'Oui' : 'Non'}`
+        `Toute la journée : ${eventForm.is_full_day ? 'Oui' : 'Non'}`
     ];
 
     return (

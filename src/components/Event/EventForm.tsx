@@ -51,7 +51,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
             frequency: event?.recurrence?.frequency || 1,
             days: event?.recurrence?.days || [],
             end_date: event?.recurrence?.end_date || '',
-            occurences: event?.recurrence?.occurences || 0
+            occurrences: event?.recurrence?.occurrences || 0
         },
         notes: event?.notes || ''
     });
@@ -86,7 +86,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                     frequency: event?.recurrence?.frequency || 1,
                     days: event?.recurrence?.days || [],
                     end_date: event?.recurrence?.end_date || '',
-                    occurences: event?.recurrence?.occurences || 0
+                    occurrences: event?.recurrence?.occurrences || 0
                 }
             }));
         }
@@ -163,29 +163,22 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
     }
     return (
         <div
-            className="space-y-10 divide-y divide-gray-900/10 mb-3">
+            className="mb-3">
             <div
-                className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
+                className="">
                 <div
                     className="px-4 sm:px-0">
-                    <h2 className="text-base/7 font-semibold text-gray-900">Event
+                    <h2 className="text-lg font-semibold text-gray-900">Event
                         Details</h2>
-                    <p className="mt-1 text-sm/6 text-gray-600">Fill
-                        in
-                        the
-                        details
-                        for
-                        the
-                        event
-                        below.</p>
+                    <p className="mt-1 text-sm/6 text-gray-600"></p>
                 </div>
 
                 <form
-                    className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+                    className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl "
                 >
 
                     <div
-                        className="px-4 py-6 sm:p-8">
+                        className="px-4 py-6 sm:p-8 flex justify-center">
                         <div
                             className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             {/* #region select title*/}
@@ -205,7 +198,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 />
 
                             </div>
-                            {eventFormData.petId}
+
                             {/* #region select pet*/}
                             <div
                                 className="sm:col-span-3">
@@ -247,8 +240,7 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                 <label
                                     htmlFor="start_date"
                                     className="block text-sm/6 font-medium text-gray-900">
-                                    Start
-                                    Date
+                                    When
                                 </label>
                                 <div
                                     className="mt-2">
@@ -269,34 +261,37 @@ const EventForm = forwardRef(({ event , onSubmit, onChange, onCancel }: any, ref
                                     />
                                 </div>
                             </div>
-                            {/* #region date end*/}
-                            <div
-                                className="sm:col-span-3">
-                                <label
-                                    htmlFor="end_date"
-                                    className="block text-sm/6 font-medium text-gray-900">
-                                    End
-                                    Date
-                                </label>
-                                <div
-                                    className="mt-2">
-                                    <input
-                                        id="end_date"
-                                        name="end_date"
-                                        type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
-                                        value={
-                                            eventFormData.end_date
-                                                ? new Date(eventFormData.start_date)
-                                                    .toISOString()
-                                                    .slice(0, eventFormData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
-                                                : ''
-                                        }
-                                        onChange={(e) => handleChange('end_date', e)}
-                                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
 
+                            {/* #region date end*/}
+
+                            { !['feeding'].includes(eventFormData.type) &&
+                                <div
+                                    className="sm:col-span-3">
+                                    <label
+                                        htmlFor="end_date"
+                                        className="block text-sm/6 font-medium text-gray-900">
+                                        End
+                                        Date
+                                    </label>
+                                    <div
+                                        className="mt-2">
+                                        <input
+                                            id="end_date"
+                                            name="end_date"
+                                            type={eventFormData.is_full_day ? 'date' : 'datetime-local'}
+                                            value={
+                                                eventFormData.end_date
+                                                    ? new Date(eventFormData.start_date)
+                                                        .toISOString()
+                                                        .slice(0, eventFormData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
+                                                    : ''
+                                            }
+                                            onChange={(e) => handleChange('end_date', e)}
+                                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                                        />
+                                    </div>
+                                </div>
+                            }
                             {/* recurence*/}
                             <div
                                 className="sm:col-span-6">

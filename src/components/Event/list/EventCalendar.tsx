@@ -2,8 +2,7 @@ import React, {
     useEffect,
     useState
 } from 'react';
-import Dropdown
-    from '../../Dropdown'; // Assumed Dropdown component path
+
 import {
     dateStartOfDay,
     dateEndOfDay
@@ -22,15 +21,25 @@ const VIEW_MODES = {
     WEEK: 'week',
     MONTH: 'month'
 };
+const VIEW_STYLES = {
+    CARD: 'card',
+    FEEDING: 'feeding',
+    CARE: 'care'
+};
 import {
     useIcons
 } from '../../../providers/FontawesomeProvider';
 import EventCard
     from './EventCard';
+import EventSummary
+    from './EventSummary';
 
 
 import DisplaySettingsDropdown
     from '../../Calendar/DisplaySettingsDropdown';
+import {
+    EventTypes
+} from '../../../enums/EventTypes';
 
 
 
@@ -38,21 +47,25 @@ const EventCalendar = () => {
     const icons = useIcons();
 
     const [viewMode, setViewMode] = useState(VIEW_MODES.DAY);
+    const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [events, setEvents] = useState<EventFormData[]>([]);
 
 
     useEffect(() => {
         const {
-            startDate,
-            endDate
+            start_date,
+            end_date
         } = getDateRange(currentDate);
-        fetchEvents(startDate, endDate);
+        fetchEvents(start_date, end_date);
     }, []);
 
-    const fetchEvents = async (startDate: any, endDate: any) => {
-        let events = await eventService.getEventsForPeriod(formatDateToIso(startDate), formatDateToIso(endDate));
-        setEvents(events);
+    const fetchEvents = async (start_date: any, end_date: any) => {
+        let events = await eventService.getEventsForPeriod(formatDateToIso(start_date), formatDateToIso(end_date));
+        setEvents(events.map((event: EventFormData) => ({
+            ...event,
+            // Ensure all required Event type fields are set here, as necessary
+        })));
     };
 
     const formatDateToIso = (date: any) => {
@@ -65,8 +78,8 @@ const EventCalendar = () => {
 
         if (mode === VIEW_MODES.DAY) {
             return {
-                startDate: dateStartOfDay(new Date(date)),  // Start of the day (00:00:00.000)
-                endDate: dateEndOfDay(new Date(date))
+                start_date: dateStartOfDay(new Date(date)),  // Start of the day (00:00:00.000)
+                end_date: dateEndOfDay(new Date(date))
             };
         } else if (mode === VIEW_MODES.WEEK) {
             const startOfWeek = new Date(date);
@@ -74,8 +87,8 @@ const EventCalendar = () => {
             const endOfWeek = new Date(date);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             return {
-                startDate: dateStartOfDay(startOfWeek),
-                endDate: dateEndOfDay(endOfWeek)
+                start_date: dateStartOfDay(startOfWeek),
+                end_date: dateEndOfDay(endOfWeek)
             };
         } else {
             const startOfMonth = new Date(currentDate);
@@ -84,8 +97,8 @@ const EventCalendar = () => {
             endOfMonth.setMonth(startOfMonth.getMonth() + 1);
             endOfMonth.setDate(0);
             return {
-                startDate: dateStartOfDay(startOfMonth),
-                endDate: dateEndOfDay(endOfMonth)
+                start_date: dateStartOfDay(startOfMonth),
+                end_date: dateEndOfDay(endOfMonth)
             };
         }
     };
@@ -123,14 +136,20 @@ const EventCalendar = () => {
 
         await setViewMode(mode);
 
-
         const {
-            startDate,
-            endDate
+            start_date,
+            end_date
         } = getDateRange(currentDate,mode);
 
-        fetchEvents(startDate, endDate);
+        fetchEvents(start_date, end_date);
     };
+
+    const handleSetViewStyle = async (style: any) => {
+
+        await setViewStyle(style);
+    };
+
+
     const handlePrev = async () => {
         const newDate = new Date(currentDate);
         if (viewMode === VIEW_MODES.DAY) newDate.setDate(newDate.getDate() - 1);
@@ -140,10 +159,10 @@ const EventCalendar = () => {
         await setCurrentDate(newDate);
 
         const {
-            startDate,
-            endDate
+            start_date,
+            end_date
         } = getDateRange(newDate);
-        fetchEvents(startDate, endDate);
+        fetchEvents(start_date, end_date);
     };
 
     const handleNext = async () => {
@@ -154,10 +173,10 @@ const EventCalendar = () => {
         await setCurrentDate(newDate);
 
         const {
-            startDate,
-            endDate
+            start_date,
+            end_date
         } = getDateRange(newDate);
-        fetchEvents(startDate, endDate);
+        fetchEvents(start_date, end_date);
     };
 
     const handleToday = async () => {
@@ -165,13 +184,11 @@ const EventCalendar = () => {
         await setCurrentDate(newDate);
 
         const {
-            startDate,
-            endDate
+            start_date,
+            end_date
         } = getDateRange(newDate);
-        fetchEvents(startDate, endDate);
+        fetchEvents(start_date, end_date);
     };
-
-    const filteredEvents = events;
     return (
         <div
             key={viewMode}
@@ -182,6 +199,7 @@ const EventCalendar = () => {
                <DisplaySettingsDropdown
                    key={viewMode}
                 onChangeViewMode={handleSetViewMode}
+                   onChangeViewStyle={handleSetViewStyle}
                 viewMode={viewMode}
                />
 
@@ -225,9 +243,12 @@ const EventCalendar = () => {
                     </div>
                 </div>
 
+            {
+
+                events.length > 0 ?
                 <div
                     className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {events.length > 0 ? (
+                    { viewStyle === VIEW_STYLES.CARD  && (
                         events.map((event, index) => (
                             <div
                                 key={index}
@@ -237,13 +258,13 @@ const EventCalendar = () => {
                                     event={event} />
                             </div>
                         ))
-                    ) : (
-                        <p>Aucun
-                            événement
-                            à
-                            afficher.</p>
-                    )}
+                    )
+                    }
+                    { viewStyle === VIEW_STYLES.FEEDING && <EventSummary events={events.filter((event)=>event.type === EventTypes.Feeding)}/>}
+                    { viewStyle === VIEW_STYLES.CARE && <p>care</p>}
                 </div>
+            : <p>Aucun événement à afficher.</p>
+            }
             </div>
             );
             };

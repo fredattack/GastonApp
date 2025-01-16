@@ -5,6 +5,20 @@ declare global {
         onClick: () => void;
     }
 
+
+
+    interface PetFormData {
+        birthDate: string; // YYYY-MM-DD
+        breed: string;
+        created_at: string; // YYYY-MM-DD hh:ii
+        id: ?string; // null if new pet
+        isActive: boolean; // default true
+        name: string; // unique
+        order: number;  // last order of pets
+        ownerId: string; //auth user id
+        species: string | 'dog' | 'cat' ;
+    }
+
     interface Pet {
         birthDate: string;
         breed: string;
@@ -19,19 +33,6 @@ declare global {
         galerie: string[];
     }
 
-    interface PetFormData {
-        birthDate: string; // YYYY-MM-DD
-        breed: string;
-        created_at: string; // YYYY-MM-DD hh:ii
-        id: ?string; // null if new pet
-        isActive: boolean; // default true
-        name: string; // unique
-        order: number;  // last order of pets
-        ownerId: string; //auth user id
-        species: string | 'dog' | 'cat' ;
-    }
-
-
     interface EventItem {
         type: 'medication' | 'food' | 'prestataire' | 'other'; // Type d'entité associée
         id: string; // Identifiant de l'entité
@@ -45,13 +46,13 @@ declare global {
         id: string; // Identifiant unique de l'événement
         petId: string; // Identifiant de l'animal associé
         title: string; // Titre de l'événement
-        isFullDay: boolean; // Indique si l'événement dure toute la journée
+        is_full_day: boolean; // Indique si l'événement dure toute la journée
         type: 'medical' | 'feeding' | 'appointment' | 'training' | 'social'; // Type d'événement
-        startDate: Date; // Date et heure de début
-        endDate?: Date; // Date et heure de fin (facultatif)
+        start_date: Date; // Date et heure de début
+        end_date?: Date; // Date et heure de fin (facultatif)
         is_recurring: boolean; // Indique si l'événement est récurrent
         recurrence?: Recurrence; // Détails des récurrences
-        eventItems?: EventItem[]; // Entités associées à l'événement
+        event_items?: EventItem[]; // Entités associées à l'événement
         notes?: string; // Notes supplémentaires
         created_at: Date; // Date de création
         pets: Pet[]; // Animaux associés
@@ -60,7 +61,7 @@ declare global {
     interface Recurrence {
         frequency_type: 'weekly' | 'monthly' | 'daily' | string;
         end_date: Date | string;
-        occurences:number
+        occurrences:number
         frequency: number;
         days: string[];
     }

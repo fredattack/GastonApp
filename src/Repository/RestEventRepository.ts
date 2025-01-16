@@ -18,23 +18,23 @@ export default class RestEventRepository {
 
     /**
      * Fetch events within a specific period.
-     * @param startDate - The start date of the period (ISO string).
-     * @param endDate - The end date of the period (ISO string).
+     * @param start_date - The start date of the period (ISO string).
+     * @param end_date - The end date of the period (ISO string).
      * @returns Promise<any[]> - List of events within the period.
      */
-    async fetchEventsForPeriod(startDate: string, endDate: string): Promise<any[]> {
+    async fetchEventsForPeriod(start_date: string, end_date: string): Promise<any[]> {
 
 
-        if (!startDate || !endDate) {
-            throw new Error("Both startDate and endDate are required.");
+        if (!start_date || !end_date) {
+            throw new Error("Both start_date and end_date are required.");
         }
 
         try {
             const response: AxiosResponse = await this.apiClient.get(this.endpoint + '/for-calendar', {
                 params: {
                     filters:{
-                        start_date: startDate,
-                        end_date: endDate,
+                        start_date: start_date,
+                        end_date: end_date,
                     },
                 },
             });

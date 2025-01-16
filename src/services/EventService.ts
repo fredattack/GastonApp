@@ -9,15 +9,15 @@ export default class EventService {
 
     /**
      * Fetch and format events within a specific period, including past recurrences.
-     * @param startDate - The start date of the period (ISO string).
-     * @param endDate - The end date of the period (ISO string).
+     * @param start_date - The start date of the period (ISO string).
+     * @param end_date - The end date of the period (ISO string).
      * @param collection - The collection name where events are stored.
      * @returns Promise<EventFormData[]> - List of formatted events.
      */
-    async getEventsForPeriod(startDate: string, endDate: string): Promise<EventFormData[]> {
+    async getEventsForPeriod(start_date: string, end_date: string): Promise<EventFormData[]> {
         try {
 
-            return   await this.eventRepository.fetchEventsForPeriod(startDate, endDate);
+            return   await this.eventRepository.fetchEventsForPeriod(start_date, end_date);
         } catch (error) {
             console.error("Error fetching events for period:", error);
             throw error;

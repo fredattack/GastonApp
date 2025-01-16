@@ -110,7 +110,7 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
 
     return (
         <div>
-            <label htmlFor="startDate" className="block text-sm font-medium text-gray-900">
+            <label htmlFor="start_date" className="block text-sm font-medium text-gray-900">
                 {label}
             </label>
             <section className="bg-white mt-2 dark:bg-dark">

@@ -54,6 +54,8 @@ const EVENT_TYPE_STYLES = {
 import {
     useIcons
 } from '../../../providers/FontawesomeProvider';
+import EventDropdown
+    from './EventDropdown';
 
 const EventCard: React.FC<{
     event: Event
@@ -63,8 +65,8 @@ const EventCard: React.FC<{
     const {
         title,
         type,
-        startDate,
-        endDate,
+        start_date,
+        end_date,
         notes
     } = event;
 
@@ -98,11 +100,11 @@ const EventCard: React.FC<{
                             className={`text-xl ${style.color}`} />
                     </div>
                     <div
-                        className="col-span-8 px-3">
-                        <a href="#"
-                           className="font-medium  hover:text-indigo-600 transition duration-500 ease-in-out inline-block ">{title}</a>
-                        <p className="text-gray-500 text-sm">
-                            {event.pets.map((pet) => pet.name).join(',') || 'Inconnu'}
+                        className="col-span-8 px-3 overflow-hidden">
+                        <div
+                           className="font-medium  hover:text-indigo-600 transition duration-500 ease-in-out inline-block ">{title}</div>
+                        <p className="pets-list text-gray-500 text-sm whitespace-normal break-normal overflow-hidden">
+                            {event.pets.map((pet) => pet.name).join(', ') || 'Inconnu'}
                         </p>
                     </div>
                     <div
@@ -120,13 +122,13 @@ const EventCard: React.FC<{
                         className="px-6 py-4 mb-auto text-sm">
                         <p className="text-xs">
                             <strong>Du
-                                :</strong> {startDate ? new Date(startDate).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' ' + new Date(startDate).toLocaleTimeString('fr-FR', { timeZone: 'UTC' }) : 'N/A'}
+                                :</strong> {start_date ? new Date(start_date).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' ' + new Date(start_date).toLocaleTimeString('fr-FR', { timeZone: 'UTC' }) : 'N/A'}
                         </p>
 
                         {event.type !== 'feeding' &&
                             <p className="text-xs">
                                 <strong>Au
-                                    :</strong> {endDate ? new Date(endDate).toLocaleDateString('fr-FR') : 'N/A'}
+                                    :</strong> {end_date ? new Date(end_date).toLocaleDateString('fr-FR') : 'N/A'}
                             </p>}
                         <p className="italic text-xs">{notes}</p>
 
@@ -143,49 +145,12 @@ const EventCard: React.FC<{
                     </div>
                     <div className="p-2 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center col-span-8">
                         <span
-                            className="ml-1">{startDate ? new Date(startDate).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' ' + new Date(startDate).toLocaleTimeString('fr-FR', { timeZone: 'UTC' }) : 'N/A'}</span>
+                            className="ml-1">{start_date ? new Date(start_date).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) + ' ' + new Date(start_date).toLocaleTimeString('fr-FR', { timeZone: 'UTC' }) : 'N/A'}</span>
                     </div>
 
 
-                    <div
-                        className="dropdown flex justify-center items-center ">
-                        <Dropdown
-                            placement={`top-end`}
-                            btnClassName="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
-                            button={
-                                <FontAwesomeIcon
-                                    icon={faEllipsisH}
-                                    className="m-auto" />
-                            }
-                        >
-                            <ul className="!min-w-[170px] z-50">
-                                <li>
-                                    <button
-                                        type="button">Action
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button">Another
-                                        action
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button">Something
-                                        else
-                                        here
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        type="button">Separated
-                                        link
-                                    </button>
-                                </li>
-                            </ul>
-                        </Dropdown>
-                    </div>
+                    { /* EventDropdown*/}
+                    <EventDropdown event={event} onDelete={() => { }} onEdit={() => { }} onViewDetails={() => { }} />
                 </div>
             </div>
 

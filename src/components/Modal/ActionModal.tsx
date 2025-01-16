@@ -1,7 +1,8 @@
 import React, {
     useEffect,
     useRef,
-    useState
+    useState,
+    useContext
 } from 'react';
 
 import EventForm
@@ -13,7 +14,16 @@ import StepOne
 import PreviewAiResponse
     from './components/PreviewAiResponse';
 
+import { useMessage } from "../../contexts/MessageContext"; // ✅ Use the custom hook
+
+
+type Events = {
+    message: string;
+};
+
+
 interface SpeechRecognitionModalProps {
+    event: Event|null
     initialStep: number;
     isOpen: boolean;
     onClose: () => void;
@@ -24,34 +34,39 @@ interface SpeechRecognitionModalProps {
     isManualInput: boolean;
 }
 
+
 const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
-                                                                           initialStep,
+                                                                            event,
                                                                            isOpen,
                                                                            onClose,
+                                                                           initialStep,
                                                                            transcription,
                                                                            initialViewMode ,
                                                                             initialPromptType,
                                                                            isManualInput
                                                                        }) => {
+
+
+
     const [currentStep, setCurrentStep] = useState(1);
 
     const [eventData, setEventData] = useState<EventFormData>({
-        id: null,
-        petId: '',
-        type: '',
-        start_date: '',
-        title: '',
-        end_date: '',
-        is_recurring: false,
-        is_full_day: false,
-        recurrence: {
+        id: event?.id ??  null,
+        petId: event?.petId ??'',
+        type: event?.type ??'',
+        start_date: event?.start_date ??'',
+        title: event?.title ??'',
+        end_date: event?.end_date ??'',
+        is_recurring: event?.is_recurring ??false,
+        is_full_day: event?.is_full_day ??false,
+        recurrence: event?.recurrence ??{
             frequency_type: '',
             frequency: 1,
             days: [],
             end_date: '',
-            occurences: 1,
+            occurrences: 1,
         },
-        notes: ''
+        notes: event?.notes ??''
     });
     const [petData, setPetData] = useState<PetFormData>({
         birthDate: '',// YYYY-MM-DD
@@ -171,10 +186,13 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                     )}
                     {currentStep === 1 && viewMode === 'preview' && aiResponse && (
                         <div>
-                                                <pre
-                                                    className="bg-gray-100 p-4 rounded overflow-auto">
+                            {
+                                aiResponse.length &&
+                                <pre
+                                    className="bg-gray-100 p-4 rounded overflow-auto">
     {JSON.stringify(aiResponse, null, 2)}
 </pre>
+                            }
                             <PreviewAiResponse
                                 aiResponse={aiResponse}
                             />
@@ -182,10 +200,14 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                     )}
                     {currentStep === 1 && promptType === 'createEvent' && viewMode != 'preview' && (
                         <div>
-                        <pre
-                            className="bg-gray-100 p-4 rounded overflow-auto">
+                            {
+                                aiResponse.length &&
+                                <pre
+                                    className="bg-gray-100 p-4 rounded overflow-auto">
     {JSON.stringify(aiResponse, null, 2)}
 </pre>
+                            }
+
                             <EventForm
                                 event={eventData}
                                 ref={eventFormRef}
@@ -198,11 +220,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                                 onSubmit={() => onClose()}
                                 onCancel={() => setCurrentStep(0)}
                             />
-                            <p className="text-sm text-gray-600 mt-2">Modifiez
-                                le
-                                texte
-                                si
-                                nécessaire.</p>
                         </div>
                     )}
 
