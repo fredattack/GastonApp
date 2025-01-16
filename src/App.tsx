@@ -6,6 +6,15 @@ import {
     useDispatch,
     useSelector
 } from 'react-redux';
+
+import React from 'react'
+import Bugsnag from '@bugsnag/js'
+
+import BugsnagPluginReact from '@bugsnag/plugin-react'
+
+import BugsnagPerformance from '@bugsnag/browser-performance'
+
+
 import store, {
     IRootState
 } from './store';
@@ -21,9 +30,6 @@ import {
 } from './store/themeConfigSlice';
 
 import {
-    ToastProvider
-} from './providers/ToastProvider';
-import {
     IconProvider
 } from './providers/FontawesomeProvider';
 import {
@@ -31,9 +37,23 @@ import {
 } from './contexts/GlobalContext';
 
 
+
 function App({ children }: PropsWithChildren) {
+
+    Bugsnag.start({
+        apiKey: '05ccd85ddac435639e21692be85d8bf8',
+        plugins: [new BugsnagPluginReact()]
+    })
+    BugsnagPerformance.start({ apiKey: '05ccd85ddac435639e21692be85d8bf8' })
+
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
+
+    const ErrorBoundary = Bugsnag.getPlugin('react')?.createErrorBoundary(React);
+
+    if (!ErrorBoundary) {
+        throw new Error("Bugsnag React plugin is not available");
+    }
 
     useEffect(() => {
         dispatch(toggleTheme(localStorage.getItem('theme') || themeConfig.theme));
@@ -47,6 +67,7 @@ function App({ children }: PropsWithChildren) {
     }, [dispatch, themeConfig.theme, themeConfig.menu, themeConfig.layout, themeConfig.rtlClass, themeConfig.animation, themeConfig.navbar, themeConfig.locale, themeConfig.semidark]);
 
     return (
+        <ErrorBoundary>
         <IconProvider>
             <GlobalProvider>
                 <div
@@ -58,6 +79,8 @@ function App({ children }: PropsWithChildren) {
                 </div>
             </GlobalProvider>
         </IconProvider>
+        </ErrorBoundary>
+
     );
 }
 
