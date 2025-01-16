@@ -25,9 +25,9 @@ export default class ModelService {
 
     async getModels(collection: string) {
         const ownerId = this.getAuthenticatedOwnerId();
-        const events = await this.modelRepository.getModelsByOwner(ownerId,collection);
+        const events:any = await this.modelRepository.getModelsByOwner(ownerId,collection);
 
-        return events?.data.map((event:any) => ({
+        return events?.data?.map((event:any) => ({
             ...event,
         }));
     }
