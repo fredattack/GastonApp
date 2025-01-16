@@ -7,6 +7,7 @@ export default class RestModelRepository {
     constructor() {
         const apiUrl="";
         this.baseUrl = import.meta.env.VITE_API_URL + apiUrl;
+        console.log('this.baseUrl', this.baseUrl);
     }
 
     async getModels(ownerId: string | null, collection: string): Promise<any[]> {
