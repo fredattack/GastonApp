@@ -15,6 +15,7 @@ import {
 import PetsCard
 // @ts-ignore
     from '@c/Pets/index/PetsCard';
+
 import {
     useToast
 } from '../../../providers/ToastProvider';
@@ -64,7 +65,7 @@ function Pets() {
         fetchPets();
     }, []);
 
-    const filteredData = pets.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
+    const filteredData = pets?.filter((pet) => (search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true));
 
     const generateActions = (id: string) => {
         const pet = pets.find((pet) => pet.id == id);
@@ -265,7 +266,7 @@ function Pets() {
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {
                             // @ts-ignore
-                            filteredData.map((pet: Pet) => {
+                            filteredData?.map((pet: Pet) => {
                                 let actions = generateActions(pet.id);
                                 return (
                                     <PetsCard
