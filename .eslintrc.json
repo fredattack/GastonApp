@@ -5,6 +5,8 @@
         "node": true
     },
     "extends": [
+        "prettier",
+        "plugin:node/recommended",
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
@@ -23,7 +25,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "settings": {
         "react": {

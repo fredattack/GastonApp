@@ -1,4 +1,4 @@
-import ModelService from "./ModelService";
+import ModelService from './ModelService';
 import EventService from './EventService';
 
 export const modelService = new ModelService();
