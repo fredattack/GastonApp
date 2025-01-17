@@ -1,8 +1,6 @@
 // src/contexts/PetsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {
-    modelService
-} from '../services/index';
+import { modelService } from '../services/index';
 
 // TypeScript type for a Pet
 interface Pet {
@@ -41,11 +39,7 @@ export const PetsProvider: React.FC<{ children: React.ReactNode }> = ({ children
         fetchPets();
     }, []);
 
-    return (
-        <PetsContext.Provider value={{ pets, refreshPets: fetchPets }}>
-            {children}
-        </PetsContext.Provider>
-    );
+    return <PetsContext.Provider value={{ pets, refreshPets: fetchPets }}>{children}</PetsContext.Provider>;
 };
 
 export const usePets = (): PetsContextType => {
