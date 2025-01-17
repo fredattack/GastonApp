@@ -1,4 +1,4 @@
-import ModelRepository from "../Repository/RestModelRepository";
+import ModelRepository from "../repository/RestModelRepository";
 
 export default class ModelService {
     private modelRepository: ModelRepository;
