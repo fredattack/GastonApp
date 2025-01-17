@@ -1,8 +1,14 @@
 import React from 'react';
-import { faEllipsisH,faEye,faEdit,faTrash,faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH,faEye,faEdit,faTrash,faCopy ,faCheckSquare, faTimes} from '@fortawesome/free-solid-svg-icons';
 import { useMessage } from "../../../contexts/MessageContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Dropdown from '../../Dropdown';
+import {
+    eventService
+} from '../../../services';
+import {
+    useToast
+} from '../../../providers/ToastProvider';
 
 interface EventDropdownProps {
     event:Event,
@@ -12,7 +18,8 @@ interface EventDropdownProps {
 }
 
 const EventDropdown = ({event, onEdit, onDelete, onViewDetails }: EventDropdownProps)=> {
-
+    const { addToast } = useToast();
+    console.log('event', event);
     if (!onEdit && !onDelete && !onViewDetails) {
         return <></>;
     }
@@ -22,6 +29,23 @@ const EventDropdown = ({event, onEdit, onDelete, onViewDetails }: EventDropdownP
         handelOpenModal("event","edit",event);
     };
 
+    const handleChangeDoneStatus = () => {
+        try {
+            console.log('event', event);
+     let resp =   eventService.changeDoneStatus(event);
+            console.log('resp', resp);
+        addToast({
+            message: 'Event successfully updated!',
+            type: 'success'
+        });
+        } catch (error) {
+            addToast({
+                message: 'Error updating event!',
+                type: 'error'
+            });
+        }
+
+    }
 
 
     return (
@@ -37,6 +61,19 @@ const EventDropdown = ({event, onEdit, onDelete, onViewDetails }: EventDropdownP
                 }
             >
                 <ul className="!min-w-[170px] z-50 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2">
+                    <li>
+                        <button
+                            type="button"
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={handleChangeDoneStatus}
+                        >
+                            <FontAwesomeIcon
+                                icon={event.is_done ? faTimes : faCheckSquare }
+                                className="mr-2"
+                            />
+                            {event.is_done ? "Mark as Undone" : "Mark as Done"}
+                        </button>
+                    </li>
                     <li>
                         <button
                             type="button"

@@ -38,9 +38,9 @@ export default class RestEventRepository {
      * @param eventData - Data for the new event.
      * @returns Promise<string> - ID of the created event.
      */
-    async addEvent(eventData: any): Promise<string> {
+    async changeDoneStatus(payload:any): Promise<string> {
         try {
-            const response: any = await axiosClient.post('events', eventData);
+            const response: any = await axiosClient.post('events/change-done-status', payload);
             return response.data.id;
         } catch (error: any) {
             console.error("Error adding event:", error);

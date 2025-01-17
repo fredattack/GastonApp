@@ -44,6 +44,7 @@ declare global {
 
     interface Event {
         id: string; // Identifiant unique de l'événement
+        master_id: string; // Identifiant de l'événement maître (pour les événements récurrents)
         petId: string; // Identifiant de l'animal associé
         title: string; // Titre de l'événement
         is_full_day: boolean; // Indique si l'événement dure toute la journée
@@ -56,6 +57,7 @@ declare global {
         notes?: string; // Notes supplémentaires
         created_at: Date; // Date de création
         pets: Pet[]; // Animaux associés
+        is_done: boolean; // Indique si l'événement est récurrent
     };
 
     interface Recurrence {
