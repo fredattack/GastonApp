@@ -1,20 +1,8 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axiosClient
+    from '../providers/apiClientProvider/axiosClient';
 
 export default class RestEventRepository {
-    private apiClient: AxiosInstance;
-    private endpoint: string;
 
-    constructor() {
-        const apiUrl="";
-       const baseUrl = import.meta.env.VITE_API_URL + apiUrl;
-        this.endpoint = "/events";
-        this.apiClient = axios.create({
-            baseURL: baseUrl,
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-    }
 
     /**
      * Fetch events within a specific period.
@@ -30,7 +18,7 @@ export default class RestEventRepository {
         }
 
         try {
-            const response: AxiosResponse = await this.apiClient.get(this.endpoint + '/for-calendar', {
+            const response: any = await axiosClient.get( 'events/for-calendar', {
                 params: {
                     filters:{
                         start_date: start_date,
@@ -52,7 +40,7 @@ export default class RestEventRepository {
      */
     async addEvent(eventData: any): Promise<string> {
         try {
-            const response: AxiosResponse = await this.apiClient.post(this.endpoint, eventData);
+            const response: any = await axiosClient.post('events', eventData);
             return response.data.id;
         } catch (error: any) {
             console.error("Error adding event:", error);
@@ -68,7 +56,7 @@ export default class RestEventRepository {
      */
     async updateEvent(eventId: string, updatedData: any): Promise<void> {
         try {
-            await this.apiClient.put(`${this.endpoint}/${eventId}`, updatedData);
+            await axiosClient.put(`events/${eventId}`, updatedData);
         } catch (error: any) {
             console.error("Error updating event:", error);
             throw new Error(`Failed to update event: ${error.message}`);
@@ -82,7 +70,7 @@ export default class RestEventRepository {
      */
     async deleteEvent(eventId: string): Promise<void> {
         try {
-            await this.apiClient.delete(`${this.endpoint}/${eventId}`);
+            await axiosClient.delete(`events/${eventId}`);
         } catch (error: any) {
             console.error("Error deleting event:", error);
             throw new Error(`Failed to delete event: ${error.message}`);
