@@ -40,7 +40,7 @@ export default class RestModelRepository {
     }
 
     async getModelsByOwner(ownerId: string | null, collection: string,initialFilters:Object = []): Promise<any[]> {
-        const url = import.meta.env.VITE_API_URL;
+
         if (!ownerId) {
             throw new Error("User not authenticated");
         }

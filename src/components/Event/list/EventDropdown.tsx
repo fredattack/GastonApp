@@ -47,7 +47,7 @@ const EventDropdown = ({event, onEdit, onDelete, onViewDetails }: EventDropdownP
 
     }
 
-
+    const donestyle = event.is_done ? "text-red-600" : "text-green-600";
     return (
         <div className="dropdown flex justify-center items-center">
             <Dropdown
@@ -64,7 +64,7 @@ const EventDropdown = ({event, onEdit, onDelete, onViewDetails }: EventDropdownP
                     <li>
                         <button
                             type="button"
-                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 ${donestyle}`}
                             onClick={handleChangeDoneStatus}
                         >
                             <FontAwesomeIcon
