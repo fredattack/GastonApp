@@ -1,22 +1,19 @@
-import axiosClient
-    from '../providers/apiClientProvider/axiosClient';
-
-
+import axiosClient from "../providers/apiClientProvider/axiosClient";
 
 export default class RestModelRepository {
+    constructor() {}
 
-
-    constructor() {
-
-    }
-    async getModels(ownerId: string | null, collection: string): Promise<any[]> {
+    async getModels(
+        ownerId: string | null,
+        collection: string,
+    ): Promise<any[]> {
         if (!ownerId) {
             throw new Error("User not authenticated");
         }
 
         try {
             const response = await axiosClient.get(`/${collection}`, {
-                params: { ownerId }
+                params: { ownerId },
             });
             return response.data;
         } catch (error) {
@@ -25,7 +22,10 @@ export default class RestModelRepository {
         }
     }
 
-    async getModelById(id: string | null, collection: string): Promise<any | null> {
+    async getModelById(
+        id: string | null,
+        collection: string,
+    ): Promise<any | null> {
         if (!id) {
             throw new Error("Document ID is required");
         }
@@ -34,35 +34,47 @@ export default class RestModelRepository {
             const response = await axiosClient.get(`/${collection}/${id}`);
             return response.data;
         } catch (error) {
-            console.error(`Error fetching model with ID ${id} from ${collection}:`, error);
+            console.error(
+                `Error fetching model with ID ${id} from ${collection}:`,
+                error,
+            );
             throw error;
         }
     }
 
-    async getModelsByOwner(ownerId: string | null, collection: string,initialFilters:Object = []): Promise<any[]> {
-
+    async getModelsByOwner(
+        ownerId: string | null,
+        collection: string,
+        initialFilters: Object = [],
+    ): Promise<any[]> {
         if (!ownerId) {
             throw new Error("User not authenticated");
         }
         const filters = {
             ...initialFilters,
-            ownerId
+            ownerId,
         };
 
         try {
             const response = await axiosClient.get(`${collection}`, {
-                params: filters
+                params: filters,
             });
             return response.data;
         } catch (error) {
-            console.error(`Error fetching models by owner from ${collection}:`, error);
+            console.error(
+                `Error fetching models by owner from ${collection}:`,
+                error,
+            );
             throw error;
         }
     }
 
     async add(collection: string, eventData: any): Promise<string> {
         try {
-            const response = await axiosClient.post(`/${collection}`, eventData);
+            const response = await axiosClient.post(
+                `/${collection}`,
+                eventData,
+            );
             return response.data.id;
         } catch (error) {
             console.error(`Error adding model to ${collection}:`, error);
@@ -70,11 +82,18 @@ export default class RestModelRepository {
         }
     }
 
-    async update(collection: string, eventId: string, updatedData: any): Promise<void> {
+    async update(
+        collection: string,
+        eventId: string,
+        updatedData: any,
+    ): Promise<void> {
         try {
             await axiosClient.put(`/${collection}/${eventId}`, updatedData);
         } catch (error) {
-            console.error(`Error updating model with ID ${eventId} in ${collection}:`, error);
+            console.error(
+                `Error updating model with ID ${eventId} in ${collection}:`,
+                error,
+            );
             throw error;
         }
     }
@@ -83,7 +102,10 @@ export default class RestModelRepository {
         try {
             await axiosClient.delete(`/${collection}/${eventId}`);
         } catch (error) {
-            console.error(`Error deleting model with ID ${eventId} from ${collection}:`, error);
+            console.error(
+                `Error deleting model with ID ${eventId} from ${collection}:`,
+                error,
+            );
             throw error;
         }
     }
