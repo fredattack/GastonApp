@@ -3,7 +3,7 @@ import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-
+import { faPlus, faPaw } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -212,9 +212,7 @@ const Pets = () => {
                 <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
-                        {/* //@ts-ignore */}
-                        {/* //@ts-ignore */}
-                        <FontAwesomeIcon icon={icons.paw} /> {t("my_pets")}
+                        <FontAwesomeIcon icon={faPaw} /> {t("my_pets")}
                     </h5>
 
                     {/* Bouton et Search */}
@@ -224,7 +222,7 @@ const Pets = () => {
                             onClick={handleCreate}
                             className="btn btn-primary self-end md:self-auto"
                         >
-                            +
+                            <FontAwesomeIcon icon={faPlus} />
                         </button>
 
                         {/* Search Input */}
