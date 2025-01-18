@@ -80,7 +80,7 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
     };
     const addPet = async (petData: PetFormData) => {
         try {
-            const authId = "vB6WiAAmU8PsKg9chwip";
+            const authId = "1";
 
             const petsRef = collection(db, "pets");
             const ownerRef = doc(db, "users", authId);
@@ -185,7 +185,10 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
                         handleChange={handleChange}
                         onCancel={handleCancel}
                         onSubmit={(formData: any) =>
-                            handleSubmit({ ...formData, ownerId: "" })
+                            handleSubmit({
+                                ...formData,
+                                ownerId: "",
+                            })
                         }
                         submitable
                     />

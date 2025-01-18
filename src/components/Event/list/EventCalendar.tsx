@@ -161,9 +161,9 @@ const EventCalendar = () => {
         const { start_date, end_date } = getDateRange(newDate);
         fetchEvents(start_date, end_date);
     };
-    console.log("filters", filters);
+    // console.log("filters", filters);
     return (
-        <div key={viewMode + filters} className="event-calendar">
+        <div key={viewMode} className="event-calendar">
             <div className="toolbar flex items-center justify-end mb-4 mx-3">
                 <DisplaySettingsDropdown
                     key={viewMode}
@@ -206,7 +206,7 @@ const EventCalendar = () => {
                     <EventCalendarDropdown
                         filters={filters}
                         onFiltersChange={(filters: any) => {
-                            console.log("filters in calendar", filters);
+                            // console.log("filters in calendar", filters);
                             setFilters(filters);
                         }}
                     />

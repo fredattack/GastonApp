@@ -80,7 +80,7 @@ export default class ModelService {
 
     private getAuthenticatedOwnerId(): string | null {
         // Placeholder for authentication logic; replace with your actual auth logic
-        const authId = "vB6WiAAmU8PsKg9chwip"; // Replace with dynamic user auth
+        const authId = "1"; // Replace with dynamic user auth
         return authId;
     }
 }
