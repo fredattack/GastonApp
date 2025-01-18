@@ -44,6 +44,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         end_date: event?.end_date ?? "",
         is_recurring: event?.is_recurring ?? false,
         is_full_day: event?.is_full_day ?? false,
+        is_done: event?.is_done ?? false,
         recurrence: event?.recurrence ?? {
             frequency_type: "",
             frequency: 1,
@@ -53,6 +54,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         },
         notes: event?.notes ?? "",
     });
+
     const [petData, setPetData] = useState<PetFormData>({
         birthDate: "", // YYYY-MM-DD
         breed: "",

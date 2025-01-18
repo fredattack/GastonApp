@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import DropdownMenu from "../../Shared/DropdownMenu";
 
-const PetCard = ({ pet, actions }: { pet: Pet; actions: Action[] }) => {
+const PetCard = ({ pet, actions }: { pet: Pet; actions: any }) => {
     const { t } = useTranslation();
 
     return (

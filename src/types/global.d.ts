@@ -1,7 +1,6 @@
 declare global {
     interface Action {
         icon: string;
-        label: string;
         onClick: () => void;
     }
 

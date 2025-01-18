@@ -2,13 +2,12 @@ import { deleteDoc, doc, getDoc } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
 
-import PetsCard from "@c/Pets/index/PetsCard"; // @ts-ignore
-
 import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
 import { db } from "../../../../firebaseConfig";
 import { useIcons } from "../../../providers/FontawesomeProvider";
@@ -213,7 +212,8 @@ const Pets = () => {
                 <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
-                        {/* // @ts-ignore */}
+                        {/* //@ts-ignore */}
+                        {/* //@ts-ignore */}
                         <FontAwesomeIcon icon={icons.paw} /> {t("my_pets")}
                     </h5>
 
