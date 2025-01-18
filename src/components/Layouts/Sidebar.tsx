@@ -19,12 +19,16 @@ import { useIcons } from "@/providers/FontawesomeProvider";
 const Sidebar = () => {
     const [currentMenu, setCurrentMenu] = useState<string>("");
     const [errorSubMenu, setErrorSubMenu] = useState(false);
+
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+
     const semidark = useSelector(
         (state: IRootState) => state.themeConfig.semidark,
     );
+
     const location = useLocation();
     const dispatch = useDispatch();
+
     const { t } = useTranslation();
     const toggleMenu = (value: string) => {
         setCurrentMenu((oldValue) => {
@@ -58,7 +62,9 @@ const Sidebar = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
+
     const icons = useIcons();
+
     return (
         <div className={semidark ? "dark" : ""}>
             <nav

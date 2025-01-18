@@ -64,6 +64,7 @@ const Header = () => {
     function createMarkup(messages: any) {
         return { __html: messages };
     }
+
     const [messages, setMessages] = useState([
         {
             id: 1,
@@ -158,7 +159,7 @@ const Header = () => {
                                 alt="logo"
                             />
                             <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">
-                                Gatson App
+                                Gaston App
                             </span>
                         </Link>
                         <button
