@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconCoffeeProps {
     className?: string;
@@ -6,19 +6,35 @@ interface IconCoffeeProps {
     duotone?: boolean;
 }
 
-const IconCoffee: FC<IconCoffeeProps> = ({ className, fill = false, duotone = true }) => {
+const IconCoffee: FC<IconCoffeeProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <>
             {!fill ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M2.3153 12.6978C2.26536 12.2706 2.2404 12.057 2.2509 11.8809C2.30599 10.9577 2.98677 10.1928 3.89725 10.0309C4.07094 10 4.286 10 4.71612 10H15.2838C15.7139 10 15.929 10 16.1027 10.0309C17.0132 10.1928 17.694 10.9577 17.749 11.8809C17.7595 12.057 17.7346 12.2706 17.6846 12.6978L17.284 16.1258C17.1031 17.6729 16.2764 19.0714 15.0081 19.9757C14.0736 20.6419 12.9546 21 11.8069 21H8.19303C7.04537 21 5.9263 20.6419 4.99182 19.9757C3.72352 19.0714 2.89681 17.6729 2.71598 16.1258L2.3153 12.6978Z"
                         stroke="currentColor"
                         strokeWidth="1.5"
                     />
-                    <path opacity={duotone ? '0.5' : '1'} d="M17 17H19C20.6569 17 22 15.6569 22 14C22 12.3431 20.6569 11 19 11H17.5" stroke="currentColor" strokeWidth="1.5" />
                     <path
-                        opacity={duotone ? '0.5' : '1'}
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M17 17H19C20.6569 17 22 15.6569 22 14C22 12.3431 20.6569 11 19 11H17.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                    />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
                         d="M10.0002 2C9.44787 2.55228 9.44787 3.44772 10.0002 4C10.5524 4.55228 10.5524 5.44772 10.0002 6"
                         stroke="currentColor"
                         strokeWidth="1.5"
@@ -41,14 +57,21 @@ const IconCoffee: FC<IconCoffeeProps> = ({ className, fill = false, duotone = tr
                     />
                 </svg>
             ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"
                         d="M2.2509 11.8809C2.2404 12.057 2.26536 12.2706 2.3153 12.6978L2.71598 16.1258C2.89681 17.6729 3.72352 19.0714 4.99182 19.9757C5.9263 20.6419 7.04537 21 8.19303 21H11.8069C12.9546 21 14.0736 20.6419 15.0081 19.9757C15.8116 19.4028 16.4378 18.6317 16.8349 17.75H19C21.0711 17.75 22.75 16.0711 22.75 14C22.75 11.9289 21.0711 10.25 19 10.25H16.7212C16.5325 10.1455 16.3244 10.0703 16.1027 10.0309C15.929 10 15.7139 10 15.2838 10H4.71612C4.286 10 4.07094 10 3.89725 10.0309C2.98677 10.1928 2.30599 10.9577 2.2509 11.8809ZM17.7369 11.75C17.7424 11.7932 17.7464 11.8369 17.749 11.8809C17.7595 12.057 17.7346 12.2706 17.6847 12.6977L17.284 16.1258C17.2791 16.1673 17.2738 16.2087 17.268 16.25H19C20.2426 16.25 21.25 15.2426 21.25 14C21.25 12.7574 20.2426 11.75 19 11.75H17.7369Z"
                         fill="currentColor"
                     />
-                    <g opacity={duotone ? '0.5' : '1'}>
+                    <g opacity={duotone ? "0.5" : "1"}>
                         <path
                             fillRule="evenodd"
                             clipRule="evenodd"

@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode, FC } from "react";
-import ToastContainer from '../components/Layouts/Toasts/ToastContainer'
+import React, {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    FC,
+} from "react";
+import ToastContainer from "../components/Layouts/Toasts/ToastContainer";
+
 type ToastType = "success" | "error" | "info";
 
 export interface Toast {

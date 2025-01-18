@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconMenuContactsProps {
     className?: string;
@@ -6,7 +6,14 @@ interface IconMenuContactsProps {
 
 const IconMenuContacts: FC<IconMenuContactsProps> = ({ className }) => {
     return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+        >
             <path
                 opacity="0.5"
                 d="M19.7165 20.3624C21.143 19.5846 22 18.5873 22 17.5C22 16.3475 21.0372 15.2961 19.4537 14.5C17.6226 13.5794 14.9617 13 12 13C9.03833 13 6.37738 13.5794 4.54631 14.5C2.96285 15.2961 2 16.3475 2 17.5C2 18.6525 2.96285 19.7039 4.54631 20.5C6.37738 21.4206 9.03833 22 12 22C15.1066 22 17.8823 21.3625 19.7165 20.3624Z"

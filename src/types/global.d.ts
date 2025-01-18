@@ -5,8 +5,6 @@ declare global {
         onClick: () => void;
     }
 
-
-
     interface PetFormData {
         birthDate: string; // YYYY-MM-DD
         breed: string;
@@ -14,9 +12,9 @@ declare global {
         id: ?string; // null if new pet
         isActive: boolean; // default true
         name: string; // unique
-        order: number;  // last order of pets
-        ownerId: string; //auth user id
-        species: string | 'dog' | 'cat' ;
+        order: number; // last order of pets
+        ownerId: string; // auth user id
+        species: string | "dog" | "cat";
     }
 
     interface Pet {
@@ -34,13 +32,13 @@ declare global {
     }
 
     interface EventItem {
-        type: 'medication' | 'food' | 'prestataire' | 'other'; // Type d'entité associée
+        type: "medication" | "food" | "prestataire" | "other"; // Type d'entité associée
         id: string; // Identifiant de l'entité
         parent_id: string; // Identifiant de l'entité
         unit: string; //
         quantity: string; // Identifiant de l'entité
         notes: string; // Notes supplémentaires
-    };
+    }
 
     interface Event {
         id: string; // Identifiant unique de l'événement
@@ -48,7 +46,7 @@ declare global {
         petId: string; // Identifiant de l'animal associé
         title: string; // Titre de l'événement
         is_full_day: boolean; // Indique si l'événement dure toute la journée
-        type: 'medical' | 'feeding' | 'appointment' | 'training' | 'social'; // Type d'événement
+        type: "medical" | "feeding" | "appointment" | "training" | "social"; // Type d'événement
         start_date: Date; // Date et heure de début
         end_date?: Date; // Date et heure de fin (facultatif)
         is_recurring: boolean; // Indique si l'événement est récurrent
@@ -57,19 +55,19 @@ declare global {
         notes?: string; // Notes supplémentaires
         created_at: Date; // Date de création
         pets: Pet[]; // Animaux associés
-        is_done: boolean; // Indique si l'événement est récurrent
-    };
+        is_done: boolean;
+    }
 
     interface Recurrence {
-        frequency_type: 'weekly' | 'monthly' | 'daily' | string;
+        frequency_type: "weekly" | "monthly" | "daily" | string;
         end_date: Date | string;
-        occurrences:number
+        occurrences: number;
         frequency: number;
         days: string[];
     }
 
     interface EventFormData {
-        id: ?string,
+        id: ?string;
         title: string; // Titre de l'événement
         petId: string;
         type: string;
@@ -78,9 +76,9 @@ declare global {
         is_recurring: boolean;
         is_full_day: boolean;
         recurrence: Recurrence;
-        notes: string
+        notes: string;
+        is_done: boolean;
     }
-
 }
 
 // Required to make this a module and avoid errors in a global declaration file

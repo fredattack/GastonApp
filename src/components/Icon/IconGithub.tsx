@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconGithubProps {
     className?: string;
@@ -6,15 +6,19 @@ interface IconGithubProps {
     duotone?: boolean;
 }
 
-const IconGithub: FC<IconGithubProps> = ({ className, fill = false, duotone = true }) => {
+const IconGithub: FC<IconGithubProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
             viewBox="0 0 24 24"
-            fill={fill ? 'currentColor' : 'none'}
-            stroke={!fill ? 'currentColor' : 'none'}
+            fill={fill ? "currentColor" : "none"}
+            stroke={!fill ? "currentColor" : "none"}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconGalleryProps {
     className?: string;
@@ -6,19 +6,37 @@ interface IconGalleryProps {
     duotone?: boolean;
 }
 
-const IconGallery: FC<IconGalleryProps> = ({ className, fill = false, duotone = true }) => {
+const IconGallery: FC<IconGalleryProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <>
             {!fill ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
                         stroke="currentColor"
                         strokeWidth="1.5"
                     />
-                    <circle opacity={duotone ? '0.5' : '1'} cx="16" cy="8" r="2" stroke="currentColor" strokeWidth="1.5" />
+                    <circle
+                        opacity={duotone ? "0.5" : "1"}
+                        cx="16"
+                        cy="8"
+                        r="2"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                    />
                     <path
-                        opacity={duotone ? '0.5' : '1'}
+                        opacity={duotone ? "0.5" : "1"}
                         d="M2 12.5001L3.75159 10.9675C4.66286 10.1702 6.03628 10.2159 6.89249 11.0721L11.1822 15.3618C11.8694 16.0491 12.9512 16.1428 13.7464 15.5839L14.0446 15.3744C15.1888 14.5702 16.7369 14.6634 17.7765 15.599L21 18.5001"
                         stroke="currentColor"
                         strokeWidth="1.5"
@@ -26,8 +44,18 @@ const IconGallery: FC<IconGalleryProps> = ({ className, fill = false, duotone = 
                     />
                 </svg>
             ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-                    <path d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z" fill="currentColor" />
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
+                    <path
+                        d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z"
+                        fill="currentColor"
+                    />
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"
@@ -35,7 +63,7 @@ const IconGallery: FC<IconGalleryProps> = ({ className, fill = false, duotone = 
                         fill="currentColor"
                     />
                     <path
-                        opacity={duotone ? '0.4' : '1'}
+                        opacity={duotone ? "0.4" : "1"}
                         d="M20.6069 19.1463L17.7765 16.599C16.737 15.6634 15.1889 15.5702 14.0446 16.3744L13.7464 16.5839C12.9513 17.1428 11.8695 17.0491 11.1822 16.3618L6.89252 12.0721C6.03631 11.2159 4.66289 11.1702 3.75162 11.9675L2.75049 12.8435C2.75077 13.0665 2.75128 13.2835 2.7522 13.4949C2.7604 15.369 2.80229 16.7406 2.99032 17.7978C3.17451 18.8333 3.48788 19.4981 3.99494 20.0052C4.5646 20.5749 5.33532 20.9018 6.61372 21.0736C7.9137 21.2484 9.62192 21.25 12.0001 21.25C14.3784 21.25 16.0866 21.2484 17.3866 21.0736C18.665 20.9018 19.4357 20.5749 20.0054 20.0052C20.2153 19.7953 20.3873 19.5631 20.5303 19.2976C20.5568 19.2485 20.5823 19.1981 20.6069 19.1463Z"
                         fill="currentColor"
                     />

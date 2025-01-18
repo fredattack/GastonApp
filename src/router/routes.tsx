@@ -1,31 +1,32 @@
-import React, { lazy } from 'react';
+import React, { lazy } from "react";
 
-const Index = lazy(() => import('../pages/Index'));
+const Index = lazy(() => import("../pages/Index"));
 // @ts-ignore
-const Pets = lazy(() => import('../pages/content/Pet/Pets'));
-const PetForm = lazy(() => import('../pages/content/Pet/ThePetFormPage'));
+const Pets = lazy(() => import("../pages/content/Pet/Pets"));
+const PetForm = lazy(() => import("../pages/content/Pet/ThePetFormPage"));
 
 const routes = [
     // dashboard
     {
-        path: '/',
+        path: "/",
         element: <Index />,
-        layout: 'default',
+        layout: "default",
     },
     // content
     {
-        path: '/content/pets',
+        path: "/content/pets",
         element: <Pets />,
-        layout: 'default',
+        layout: "default",
     },
     {
-        path: '/content/pets/create',
+        path: "/content/pets/create",
         element: <PetForm pet={undefined} />,
-        layout: 'default',
-    },{
-        path: '/content/pets/:id',
-        element: <PetForm pet={undefined}  />,
-        layout: 'default',
+        layout: "default",
+    },
+    {
+        path: "/content/pets/:id",
+        element: <PetForm pet={undefined} />,
+        layout: "default",
     },
 ];
 

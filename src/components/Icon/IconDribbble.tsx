@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconDribbbleProps {
     className?: string;
@@ -6,18 +6,29 @@ interface IconDribbbleProps {
     duotone?: boolean;
 }
 
-const IconDribbble: FC<IconDribbbleProps> = ({ className, fill = false, duotone = true }) => {
+const IconDribbble: FC<IconDribbbleProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <>
             {!fill ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M3.33946 16.9997C6.10089 21.7826 12.2168 23.4214 16.9997 20.66C18.9493 19.5344 20.3765 17.8514 21.1962 15.9286C22.3875 13.1341 22.2958 9.83304 20.66 6.99972C19.0242 4.1664 16.2112 2.43642 13.1955 2.07088C11.1204 1.81935 8.94932 2.21386 6.99972 3.33946C2.21679 6.10089 0.578039 12.2168 3.33946 16.9997Z"
                         stroke="currentColor"
                         strokeWidth="1.5"
                     />
                     <path
-                        opacity={duotone ? '0.5' : '1'}
+                        opacity={duotone ? "0.5" : "1"}
                         d="M16.9497 20.5732C16.9497 20.5732 16.0107 13.9821 14.0004 10.5001C11.99 7.01803 7.05018 3.42681 7.05018 3.42681M7.57711 20.8175C9.05874 16.3477 16.4525 11.3931 21.8635 12.5801M16.4139 3.20898C14.926 7.63004 7.67424 12.5123 2.28857 11.4516"
                         stroke="currentColor"
                         strokeWidth="1.5"
@@ -25,7 +36,14 @@ const IconDribbble: FC<IconDribbbleProps> = ({ className, fill = false, duotone 
                     />
                 </svg>
             ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M13.4525 8.39737C15.1812 6.92813 16.5396 5.18645 17.1247 3.44812L17.1351 3.41699C18.5508 4.26236 19.7768 5.47026 20.6598 6.99965C21.5426 8.52866 21.9757 10.1939 22.0001 11.8422C20.0045 11.4109 17.8139 11.7412 15.7443 12.5213C15.4235 11.6576 15.0594 10.8344 14.6498 10.125C14.3136 9.54268 13.9035 8.96187 13.4525 8.39737Z"
                         fill="currentColor"
@@ -36,7 +54,7 @@ const IconDribbble: FC<IconDribbbleProps> = ({ className, fill = false, duotone 
                         d="M3.33931 16.9997C4.22245 18.5293 5.44869 19.7374 6.86469 20.5827L6.86513 20.5814C7.68322 18.1134 10.065 15.6355 12.8569 13.9367C13.3429 13.6409 13.8473 13.3652 14.3647 13.1148C14.0626 12.2923 13.7245 11.5222 13.3508 10.875C13.0527 10.3586 12.6827 9.83536 12.2695 9.31938C11.9235 9.56655 11.5679 9.80234 11.2053 10.025C8.44759 11.7181 5.09262 12.7682 2.14358 12.1874L1.99902 12.1589C2.02377 13.8066 2.45687 15.4712 3.33931 16.9997Z"
                         fill="currentColor"
                     />
-                    <g opacity={duotone ? '0.5' : '1'}>
+                    <g opacity={duotone ? "0.5" : "1"}>
                         <path
                             d="M16.2258 13.9425C18.1134 13.2236 20.0374 12.9473 21.7027 13.3127L21.9074 13.3576C21.7856 14.2418 21.5463 15.1071 21.1961 15.9286C20.4717 17.6278 19.2729 19.1396 17.6585 20.2451L17.6461 20.166C17.6158 19.9748 17.5705 19.699 17.5099 19.3578C17.3887 18.6757 17.2059 17.7295 16.9592 16.672C16.7602 15.8192 16.5166 14.8803 16.2258 13.9425Z"
                             fill="currentColor"

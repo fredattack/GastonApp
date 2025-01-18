@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconSolanaProps {
     className?: string;
@@ -6,16 +6,49 @@ interface IconSolanaProps {
     duotone?: boolean;
 }
 
-const IconSolana: FC<IconSolanaProps> = ({ className, fill = false, duotone = true }) => {
+const IconSolana: FC<IconSolanaProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 508.07 398.17" className={className}>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            width="100%"
+            height="100%"
+            viewBox="0 0 508.07 398.17"
+            className={className}
+        >
             <defs>
-                <linearGradient id="linear-gradient" x1="463" y1="205.16" x2="182.39" y2="742.62" gradientTransform="translate(0 -198)" gradientUnits="userSpaceOnUse">
+                <linearGradient
+                    id="linear-gradient"
+                    x1="463"
+                    y1="205.16"
+                    x2="182.39"
+                    y2="742.62"
+                    gradientTransform="translate(0 -198)"
+                    gradientUnits="userSpaceOnUse"
+                >
                     <stop offset="0" stopColor="#00ffa3" />
                     <stop offset="1" stopColor="#dc1fff" />
                 </linearGradient>
-                <linearGradient id="linear-gradient-2" x1="340.31" y1="141.1" x2="59.71" y2="678.57" xlinkHref="#linear-gradient" />
-                <linearGradient id="linear-gradient-3" x1="401.26" y1="172.92" x2="120.66" y2="710.39" xlinkHref="#linear-gradient" />
+                <linearGradient
+                    id="linear-gradient-2"
+                    x1="340.31"
+                    y1="141.1"
+                    x2="59.71"
+                    y2="678.57"
+                    xlinkHref="#linear-gradient"
+                />
+                <linearGradient
+                    id="linear-gradient-3"
+                    x1="401.26"
+                    y1="172.92"
+                    x2="120.66"
+                    y2="710.39"
+                    xlinkHref="#linear-gradient"
+                />
             </defs>
             <path
                 className="cls-1 fill-[url(#linear-gradient)]"

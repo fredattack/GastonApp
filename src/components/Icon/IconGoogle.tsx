@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconGoogleProps {
     className?: string;
@@ -6,9 +6,19 @@ interface IconGoogleProps {
     duotone?: boolean;
 }
 
-const IconGoogle: FC<IconGoogleProps> = ({ className, fill = false, duotone = true }) => {
+const IconGoogle: FC<IconGoogleProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className={className}>
+        <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            className={className}
+        >
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"

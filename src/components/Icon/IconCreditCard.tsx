@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconCreditCardProps {
     className?: string;
@@ -6,24 +6,60 @@ interface IconCreditCardProps {
     duotone?: boolean;
 }
 
-const IconCreditCard: FC<IconCreditCardProps> = ({ className, fill = false, duotone = true }) => {
+const IconCreditCard: FC<IconCreditCardProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <>
             {!fill ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z"
                         stroke="currentColor"
                         strokeWidth="1.5"
                     />
-                    <path opacity={duotone ? '0.5' : '1'} d="M10 16H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <path opacity={duotone ? '0.5' : '1'} d="M14 16H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <path opacity={duotone ? '0.5' : '1'} d="M2 10L22 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M10 16H6"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                    />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M14 16H12.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                    />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M2 10L22 10"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                    />
                 </svg>
             ) : duotone ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
-                        opacity={duotone ? '0.5' : '1'}
+                        opacity={duotone ? "0.5" : "1"}
                         d="M9.99976 20H13.9998C17.771 20 19.6566 20 20.8282 18.8284C21.9998 17.6569 21.9998 15.7712 21.9998 12C21.9998 11.5581 21.9981 10.392 21.9962 10H2C1.99811 10.392 1.99976 11.5581 1.99976 12C1.99976 15.7712 1.99976 17.6569 3.17133 18.8284C4.34291 20 6.22852 20 9.99976 20Z"
                         fill="currentColor"
                     />
@@ -41,7 +77,14 @@ const IconCreditCard: FC<IconCreditCardProps> = ({ className, fill = false, duot
                     />
                 </svg>
             ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M14 4H10C6.22876 4 4.34315 4 3.17157 5.17157C2.32803 6.01511 2.09185 7.22882 2.02572 9.25H21.9743C21.9082 7.22882 21.672 6.01511 20.8284 5.17157C19.6569 4 17.7712 4 14 4Z"
                         fill="currentColor"

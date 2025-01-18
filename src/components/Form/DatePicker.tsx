@@ -21,7 +21,7 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
     }, [currentDate, isCalendarOpen]);
 
     const renderCalendar = () => {
-        console.log('currentDate',currentDate );
+        console.log("currentDate", currentDate);
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -42,9 +42,9 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                 "flex h-[38px] w-[38px] items-center justify-center rounded-[7px] border-[.5px] border-transparent text-dark hover:border-stroke hover:bg-gray-2 sm:h-[46px] sm:w-[47px] dark:text-white dark:hover:border-dark-3 dark:hover:bg-dark mb-2";
             dayDiv.textContent = i.toString();
             dayDiv.addEventListener("click", () => {
-
                 const selectedDay = i < 10 ? `0${i}` : i;
-                let selectedMonth = (month + 1) < 10 ? `0${month + 1}` : month + 1;
+                const selectedMonth =
+                    month + 1 < 10 ? `0${month + 1}` : month + 1;
                 const selectedDateValue = `${selectedDay}/${selectedMonth}/${year}`;
 
                 setSelectedDate(selectedDateValue);
@@ -53,8 +53,14 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
 
                 daysContainer
                     .querySelectorAll("div")
-                    .forEach((d) => d.classList.remove("bg-primary", "text-white"));
-                dayDiv.classList.add("bg-primary", "text-white", "dark:text-white");
+                    .forEach((d) =>
+                        d.classList.remove("bg-primary", "text-white"),
+                    );
+                dayDiv.classList.add(
+                    "bg-primary",
+                    "text-white",
+                    "dark:text-white",
+                );
             });
             daysContainer.appendChild(dayDiv);
         }
@@ -62,18 +68,18 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
 
     const handlePrevMonth = () => {
         setCurrentDate(
-            (prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() - 1))
+            (prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() - 1)),
         );
     };
 
     const handleNextMonth = () => {
         setCurrentDate(
-            (prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() + 1))
+            (prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() + 1)),
         );
     };
 
     const handleApply = () => {
-        console.log('selectedDate', selectedDate);
+        console.log("selectedDate", selectedDate);
         if (selectedDate) {
             setIsCalendarOpen(false);
         }
@@ -110,7 +116,10 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
 
     return (
         <div>
-            <label htmlFor="start_date" className="block text-sm font-medium text-gray-900">
+            <label
+                htmlFor="start_date"
+                className="block text-sm font-medium text-gray-900"
+            >
                 {label}
             </label>
             <section className="bg-white mt-2 dark:bg-dark">
@@ -131,8 +140,8 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                                 onClick={handleToggleCalendar}
                                 className="absolute inset-y-0 flex h-12 w-12 items-center justify-center text-dark-5 cursor-pointer"
                             >
-                <FontAwesomeIcon icon={faCalendarDays}  />
-              </span>
+                                <FontAwesomeIcon icon={faCalendarDays} />
+                            </span>
                         </div>
 
                         {isCalendarOpen && (
@@ -153,11 +162,14 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                                         id="currentMonth"
                                         className="text-xl font-medium capitalize text-dark dark:text-white"
                                     >
-                    {currentDate.toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                    })}
-                  </span>
+                                        {currentDate.toLocaleDateString(
+                                            "en-US",
+                                            {
+                                                month: "long",
+                                                year: "numeric",
+                                            },
+                                        )}
+                                    </span>
                                     <button
                                         id="nextMonth"
                                         className="flex h-[38px] w-[38px] cursor-pointer items-center justify-center rounded-[7px] border-[.5px] border-stroke bg-gray-2 text-dark hover:border-primary hover:bg-primary hover:text-white sm:h-[46px] sm:w-[46px] dark:border-dark-3 dark:bg-dark dark:text-white"
@@ -168,10 +180,21 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                                 </div>
 
                                 <div className="grid grid-cols-7 text-center text-sm font-medium sm:text-lg">
-                                    {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
-                                        <span key={day} className="h-[38px] w-[38px] flex items-center justify-center">
-                      {day}
-                    </span>
+                                    {[
+                                        "Mo",
+                                        "Tu",
+                                        "We",
+                                        "Th",
+                                        "Fr",
+                                        "Sa",
+                                        "Su",
+                                    ].map((day) => (
+                                        <span
+                                            key={day}
+                                            className="h-[38px] w-[38px] flex items-center justify-center"
+                                        >
+                                            {day}
+                                        </span>
                                     ))}
                                 </div>
 
@@ -179,7 +202,7 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                                     ref={daysContainerRef}
                                     id="days-container"
                                     className="grid grid-cols-7 text-center text-sm font-medium sm:text-lg"
-                                ></div>
+                                />
 
                                 <div className="flex items-center space-x-3 pt-4 sm:space-x-5">
                                     <button

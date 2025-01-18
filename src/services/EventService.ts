@@ -1,4 +1,4 @@
-import RestEventRepository from '../repository/RestEventRepository';
+import RestEventRepository from "../repository/RestEventRepository";
 
 export default class EventService {
     private eventRepository: RestEventRepository;
@@ -7,11 +7,17 @@ export default class EventService {
         this.eventRepository = new RestEventRepository();
     }
 
-    async getEventsForPeriod(start_date: string, end_date: string): Promise<EventFormData[]> {
+    async getEventsForPeriod(
+        start_date: string,
+        end_date: string,
+    ): Promise<EventFormData[]> {
         try {
-            return await this.eventRepository.fetchEventsForPeriod(start_date, end_date);
+            return await this.eventRepository.fetchEventsForPeriod(
+                start_date,
+                end_date,
+            );
         } catch (error) {
-            console.error('Error fetching events for period:', error);
+            console.error("Error fetching events for period:", error);
             throw error;
         }
     }
@@ -24,12 +30,14 @@ export default class EventService {
             date: event.start_date,
         };
         try {
-            return await this.eventRepository.changeDoneStatus(payload).then((resp) => {
-                console.log('resp in service', resp);
-                return true;
-            });
+            return await this.eventRepository
+                .changeDoneStatus(payload)
+                .then((resp) => {
+                    console.log("resp in service", resp);
+                    return true;
+                });
         } catch (error) {
-            console.error('Error changing done status:', error);
+            console.error("Error changing done status:", error);
             throw error;
         }
     }

@@ -11,16 +11,15 @@ interface MultiSelectProps {
 }
 
 const MultiSelect = ({
-                         label = null,
-                         options,
-                         value,
-                         onChange,
-                         placeholder = null,
-                         required = false, // Optionnel
-                     }: MultiSelectProps) => {
-
+    label = null,
+    options,
+    value,
+    onChange,
+    placeholder = null,
+    required = false, // Optionnel
+}: MultiSelectProps) => {
     function getValue() {
-        console.log('value', value);
+        console.log("value", value);
         return options.filter((option) => value.includes(option.value));
     }
 
@@ -40,9 +39,14 @@ const MultiSelect = ({
                     isMulti // Active le mode MultiSelect
                     required={required}
                     id="multiSelect"
-                    defaultValue={options.filter((option) => value.includes(option.value))} // Définit les options sélectionnées
-                    onChange={(selectedOptions) =>
-                        onChange(selectedOptions.map((option) => option.value)) // Retourne un tableau des valeurs
+                    defaultValue={options.filter((option) =>
+                        value.includes(option.value),
+                    )} // Définit les options sélectionnées
+                    onChange={
+                        (selectedOptions) =>
+                            onChange(
+                                selectedOptions.map((option) => option.value),
+                            ) // Retourne un tableau des valeurs
                     }
                     options={options}
                     placeholder={placeholder ?? "Sélectionner..."}

@@ -12,13 +12,7 @@ const ToastContainer: FC<ToastContainerProps> = ({ toasts, onRemove }) => {
             {toasts.map(({ id, message, type, action, actionLabel }) => (
                 <div
                     key={id}
-                    className={`flex items-center justify-between px-4 py-3 rounded-md shadow-lg text-white ${
-                        type === "success"
-                            ? "bg-green-500"
-                            : type === "error"
-                                ? "bg-red-500"
-                                : "bg-blue-500"
-                    }`}
+                    className={`flex items-center justify-between px-4 py-3 rounded-md shadow-lg text-white ${type === "success" ? "bg-green-500" : type === "error" ? "bg-red-500" : "bg-blue-500"}`}
                 >
                     <span>{message}</span>
                     <div className="flex items-center space-x-2">
@@ -33,7 +27,10 @@ const ToastContainer: FC<ToastContainerProps> = ({ toasts, onRemove }) => {
                                 {actionLabel}
                             </button>
                         )}
-                        <button onClick={() => onRemove(id)} className="ml-2 text-xl">
+                        <button
+                            onClick={() => onRemove(id)}
+                            className="ml-2 text-xl"
+                        >
                             &times;
                         </button>
                     </div>

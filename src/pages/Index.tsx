@@ -1,7 +1,6 @@
-import EventCalendar
-    from '../components/Event/list/EventCalendar';
+import EventCalendar from "../components/Event/list/EventCalendar";
 
-function Index() {
+const Index = () => {
     return (
         <div className={`p-4 border rounded shadow-md `}>
             <div>
@@ -9,6 +8,6 @@ function Index() {
             </div>
         </div>
     );
-}
+};
 
 export default Index;

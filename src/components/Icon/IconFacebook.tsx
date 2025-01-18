@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconFacebookProps {
     className?: string;
@@ -6,15 +6,19 @@ interface IconFacebookProps {
     duotone?: boolean;
 }
 
-const IconFacebook: FC<IconFacebookProps> = ({ className, fill = false, duotone = true }) => {
+const IconFacebook: FC<IconFacebookProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             viewBox="0 0 24 24"
-            fill={fill ? 'currentColor' : 'none'}
-            stroke={!fill ? 'currentColor' : 'none'}
+            fill={fill ? "currentColor" : "none"}
+            stroke={!fill ? "currentColor" : "none"}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

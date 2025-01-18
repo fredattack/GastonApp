@@ -1,15 +1,19 @@
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
 const useSpeechRecognition = () => {
     const [isRecording, setIsRecording] = useState(false);
-    const [transcription, setTranscription] = useState('');
+    const [transcription, setTranscription] = useState("");
     const recognitionRef = useRef<any>(null);
 
-    const startRecording = (lang: string = 'fr-FR') => {
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const startRecording = (lang: string = "fr-FR") => {
+        const SpeechRecognition =
+            (window as any).SpeechRecognition ||
+            (window as any).webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            alert("La reconnaissance vocale n'est pas prise en charge par votre navigateur.");
+            alert(
+                "La reconnaissance vocale n'est pas prise en charge par votre navigateur.",
+            );
             return;
         }
 
@@ -28,7 +32,7 @@ const useSpeechRecognition = () => {
         recognition.onresult = (event: any) => {
             const newTranscript = Array.from(event.results)
                 .map((result: any) => result[0].transcript)
-                .join('');
+                .join("");
             setTranscription((prev) => `${prev} ${newTranscript}`.trim()); // Concaténer le texte
         };
 

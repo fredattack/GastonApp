@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconLitecoinProps {
     className?: string;
@@ -6,9 +6,19 @@ interface IconLitecoinProps {
     duotone?: boolean;
 }
 
-const IconLitecoin: FC<IconLitecoinProps> = ({ className, fill = false, duotone = true }) => {
+const IconLitecoin: FC<IconLitecoinProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0.847 0.876 329.254 329.256" className={className}>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            height="100%"
+            viewBox="0.847 0.876 329.254 329.256"
+            className={className}
+        >
             <title>Litecoin</title>
             <path
                 d="M330.102 165.503c0 90.922-73.705 164.629-164.626 164.629C74.554 330.132.848 256.425.848 165.503.848 74.582 74.554.876 165.476.876c90.92 0 164.626 73.706 164.626 164.627"

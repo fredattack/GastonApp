@@ -1,41 +1,47 @@
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useLocation } from 'react-router-dom';
-import AnimateHeight from 'react-animate-height';
-import { useState, useEffect } from 'react';
-import { toggleSidebar } from '../../store/themeConfigSlice';
-import { IRootState } from '../../store';
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useLocation } from "react-router-dom";
+import AnimateHeight from "react-animate-height";
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toggleSidebar } from "../../store/themeConfigSlice";
+import { IRootState } from "../../store";
 
-import IconCaretsDown from '../Icon/IconCaretsDown';
-import IconCaretDown from '../Icon/IconCaretDown';
-import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
-import IconMinus from '../Icon/IconMinus';
+import IconCaretsDown from "../Icon/IconCaretsDown";
+import IconCaretDown from "../Icon/IconCaretDown";
+import IconMenuDashboard from "../Icon/Menu/IconMenuDashboard";
+import IconMinus from "../Icon/IconMinus";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // @ts-ignore
-import { useIcons } from '@/providers/FontawesomeProvider';
-function Sidebar() {
-    const [currentMenu, setCurrentMenu] = useState<string>('');
+import { useIcons } from "@/providers/FontawesomeProvider";
+
+const Sidebar = () => {
+    const [currentMenu, setCurrentMenu] = useState<string>("");
     const [errorSubMenu, setErrorSubMenu] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-    const semidark = useSelector((state: IRootState) => state.themeConfig.semidark);
+    const semidark = useSelector(
+        (state: IRootState) => state.themeConfig.semidark,
+    );
     const location = useLocation();
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const toggleMenu = (value: string) => {
         setCurrentMenu((oldValue) => {
-            return oldValue === value ? '' : value;
+            return oldValue === value ? "" : value;
         });
     };
 
     useEffect(() => {
-        const selector = document.querySelector(`.sidebar ul a[href="${window.location.pathname}"]`);
+        const selector = document.querySelector(
+            `.sidebar ul a[href="${window.location.pathname}"]`,
+        );
         if (selector) {
-            selector.classList.add('active');
-            const ul: any = selector.closest('ul.sub-menu');
+            selector.classList.add("active");
+            const ul: any = selector.closest("ul.sub-menu");
             if (ul) {
-                let ele: any = ul.closest('li.menu').querySelectorAll('.nav-link') || [];
+                let ele: any =
+                    ul.closest("li.menu").querySelectorAll(".nav-link") || [];
                 if (ele.length) {
                     ele = ele[0];
                     setTimeout(() => {
@@ -54,15 +60,24 @@ function Sidebar() {
     }, [location]);
     const icons = useIcons();
     return (
-        <div className={semidark ? 'dark' : ''}>
+        <div className={semidark ? "dark" : ""}>
             <nav
-                className={`sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] z-50 transition-all duration-300 ${semidark ? 'text-white-dark' : ''}`}
+                className={`sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] z-50 transition-all duration-300 ${semidark ? "text-white-dark" : ""}`}
             >
                 <div className="bg-white dark:bg-black h-full">
                     <div className="flex justify-between items-center px-4 py-3">
-                        <NavLink to="/" className="main-logo flex items-center shrink-0">
-                            <img className="w-8 ml-[5px] flex-none" src="/assets/images/logo.svg" alt="logo" />
-                            <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">Gaston App</span>
+                        <NavLink
+                            to="/"
+                            className="main-logo flex items-center shrink-0"
+                        >
+                            <img
+                                className="w-8 ml-[5px] flex-none"
+                                src="/assets/images/logo.svg"
+                                alt="logo"
+                            />
+                            <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">
+                                Gaston App
+                            </span>
                         </NavLink>
 
                         <button
@@ -70,37 +85,64 @@ function Sidebar() {
                             className="collapse-icon w-8 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180"
                             onClick={() => dispatch(toggleSidebar())}
                         >
-                            <FontAwesomeIcon icon={icons.anglesLeft} className="m-auto"/>
-
+                            <FontAwesomeIcon
+                                icon={icons.anglesLeft}
+                                className="m-auto"
+                            />
                         </button>
                     </div>
                     <PerfectScrollbar className="h-[calc(100vh-80px)] relative">
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
                             <li className="menu nav-item">
-                                <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
+                                <button
+                                    type="button"
+                                    className={`${currentMenu === "dashboard" ? "active" : ""} nav-link group w-full`}
+                                    onClick={() => toggleMenu("dashboard")}
+                                >
                                     <div className="flex items-center">
                                         <FontAwesomeIcon icon={icons.gauge} />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('dashboard')}</span>
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                                            {t("dashboard")}
+                                        </span>
                                     </div>
 
-                                    <div className={currentMenu !== 'dashboard' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                    <div
+                                        className={
+                                            currentMenu !== "dashboard"
+                                                ? "rtl:rotate-90 -rotate-90"
+                                                : ""
+                                        }
+                                    >
                                         <FontAwesomeIcon icon={icons.angleUp} />
                                     </div>
                                 </button>
 
-                                <AnimateHeight duration={300} height={currentMenu === 'dashboard' ? 'auto' : 0}>
+                                <AnimateHeight
+                                    duration={300}
+                                    height={
+                                        currentMenu === "dashboard" ? "auto" : 0
+                                    }
+                                >
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('sales')}</NavLink>
+                                            <NavLink to="/">
+                                                {t("sales")}
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/analytics">{t('analytics')}</NavLink>
+                                            <NavLink to="/analytics">
+                                                {t("analytics")}
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/finance">{t('finance')}</NavLink>
+                                            <NavLink to="/finance">
+                                                {t("finance")}
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/crypto">{t('crypto')}</NavLink>
+                                            <NavLink to="/crypto">
+                                                {t("crypto")}
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>
@@ -108,32 +150,53 @@ function Sidebar() {
 
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                                <span>{t('content')}</span>
+                                <span>{t("content")}</span>
                             </h2>
 
                             <li className="nav-item">
                                 <ul>
                                     <li className="nav-item">
-                                        <NavLink to="/content/pets" className="group">
+                                        <NavLink
+                                            to="/content/pets"
+                                            className="group"
+                                        >
                                             <div className="flex items-center">
-                                                <FontAwesomeIcon icon={icons.paw} />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('animals')}</span>
+                                                <FontAwesomeIcon
+                                                    icon={icons.paw}
+                                                />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">
+                                                    {t("animals")}
+                                                </span>
                                             </div>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/apps/mailbox" className="group">
+                                        <NavLink
+                                            to="/apps/mailbox"
+                                            className="group"
+                                        >
                                             <div className="flex items-center">
-                                                <FontAwesomeIcon icon={icons.utensils} />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('alimentation')}</span>
+                                                <FontAwesomeIcon
+                                                    icon={icons.utensils}
+                                                />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">
+                                                    {t("alimentation")}
+                                                </span>
                                             </div>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/apps/todolist" className="group">
+                                        <NavLink
+                                            to="/apps/todolist"
+                                            className="group"
+                                        >
                                             <div className="flex items-center">
-                                                <FontAwesomeIcon icon={icons.capsules} />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">{t('care')}</span>
+                                                <FontAwesomeIcon
+                                                    icon={icons.capsules}
+                                                />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">
+                                                    {t("care")}
+                                                </span>
                                             </div>
                                         </NavLink>
                                     </li>
@@ -696,6 +759,6 @@ function Sidebar() {
             </nav>
         </div>
     );
-}
+};
 
 export default Sidebar;

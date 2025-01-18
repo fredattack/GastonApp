@@ -9,9 +9,14 @@ export default class ModelService {
 
     async getModel(collection: string, id: string) {
         try {
-            const model = await this.modelRepository.getModelById(id, collection);
+            const model = await this.modelRepository.getModelById(
+                id,
+                collection,
+            );
             if (!model) {
-                throw new Error(`Model with ID ${id} not found in collection ${collection}`);
+                throw new Error(
+                    `Model with ID ${id} not found in collection ${collection}`,
+                );
             }
 
             return {
@@ -25,52 +30,52 @@ export default class ModelService {
 
     async getModels(collection: string) {
         const ownerId = this.getAuthenticatedOwnerId();
-        const events:any = await this.modelRepository.getModelsByOwner(ownerId,collection);
+        const events: any = await this.modelRepository.getModelsByOwner(
+            ownerId,
+            collection,
+        );
 
-        return events?.data?.map((event:any) => ({
+        return events?.data?.map((event: any) => ({
             ...event,
         }));
     }
 
     async asOptions(collection: string) {
         try {
-
             const models = await this.getModels(collection);
 
-            return  models.map((model:any) => ({
-                //@ts-ignore
+            return models.map((model: any) => ({
+                // @ts-ignore
                 value: model.id,
-                //@ts-ignore
+                // @ts-ignore
                 label: model.name,
             }));
-
-
         } catch (error) {
             console.error("Error fetching options:", error);
             throw error;
         }
     }
 
-    async add(collection:string,modelData: any) {
+    async add(collection: string, modelData: any) {
         // Format modelData if necessary
         const formattedData = {
             ...modelData,
             created_at: new Date().toISOString(),
         };
-        return await this.modelRepository.add(collection,formattedData);
+        return this.modelRepository.add(collection, formattedData);
     }
 
-    async update(collection:string,eventId: string, updatedData: any) {
+    async update(collection: string, eventId: string, updatedData: any) {
         // Format updatedData if necessary
         const formattedData = {
             ...updatedData,
             updatedAt: new Date().toISOString(),
         };
-        await this.modelRepository.update(collection,eventId, formattedData);
+        await this.modelRepository.update(collection, eventId, formattedData);
     }
 
-    async delete(collection:string,eventId: string) {
-        await this.modelRepository.delete(collection,eventId);
+    async delete(collection: string, eventId: string) {
+        await this.modelRepository.delete(collection, eventId);
     }
 
     private getAuthenticatedOwnerId(): string | null {
@@ -79,4 +84,3 @@ export default class ModelService {
         return authId;
     }
 }
-

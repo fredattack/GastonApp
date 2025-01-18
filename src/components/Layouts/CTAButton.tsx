@@ -1,27 +1,29 @@
-import React, { useState,useEffect } from 'react';
-import useSpeechRecognition from '../../hooks/useSpeechRecognition';
-import ActionModal from '../Modal/ActionModal';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Dropdown from '../../components/Dropdown';
-import { faMicrophone, faKeyboard, faCalendarDays,faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    useMessage
-} from '../../contexts/MessageContext';
+    faMicrophone,
+    faKeyboard,
+    faCalendarDays,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import useSpeechRecognition from "../../hooks/useSpeechRecognition";
+import ActionModal from "../Modal/ActionModal";
 
-
+import Dropdown from "../Dropdown";
+import { useMessage } from "../../contexts/MessageContext";
 
 const CTAButton = () => {
     const { handelOpenModal } = useMessage();
     const { registerHandelOpenModal } = useMessage();
 
-    const { isRecording, startRecording, stopRecording } = useSpeechRecognition();
+    const { isRecording, startRecording, stopRecording } =
+        useSpeechRecognition();
     const [localEvent, setLocalEvent] = useState<Event | null>(null);
     const [step, setStep] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [transcription, setTranscription] = useState(''); // État local pour la transcription
+    const [transcription, setTranscription] = useState(""); // État local pour la transcription
     const [manualInput, setManualInput] = useState(false); // Différencier mode vocal et prompt
-    const [viewMode, setViewMode] = useState(''); // Différencier mode vocal et prompt
+    const [viewMode, setViewMode] = useState(""); // Différencier mode vocal et prompt
 
     const [promptType, setPromptType] = useState<string | null>(null); // Différencier mode vocal et prompt
     useEffect(() => {
@@ -29,20 +31,20 @@ const CTAButton = () => {
     }, []);
 
     useEffect(() => {
-        setTranscription('');
+        setTranscription("");
         setManualInput(true);
         setIsModalOpen(true);
     }, [promptType]);
 
     const handleClose = () => {
         setIsModalOpen(false); // Fermer la modal
-        setTranscription(''); // Réinitialise la transcription lorsque la modal est fermée
+        setTranscription(""); // Réinitialise la transcription lorsque la modal est fermée
         setManualInput(false); // Réinitialise le mode manuel
     };
 
     const handleStartRecording = () => {
         setStep(0);
-        setTranscription(''); // Réinitialise la transcription avant de commencer
+        setTranscription(""); // Réinitialise la transcription avant de commencer
         setManualInput(false); // Désactiver le mode manuel
         startRecording();
         setIsModalOpen(true); // Ouvrir la modal
@@ -50,40 +52,40 @@ const CTAButton = () => {
 
     const handlePromptInput = () => {
         try {
-            setPromptType('newPrompt');
-            setViewMode('edit');
+            setPromptType("newPrompt");
+            setViewMode("edit");
             setStep(0);
-            setTranscription('');
+            setTranscription("");
             setManualInput(true);
             setIsModalOpen(true);
         } catch (error) {
-            console.error('Erreur dans handlePromptInput:', error);
+            console.error("Erreur dans handlePromptInput:", error);
         }
     };
 
-    const localHandleModelInput = async (model:string,vmode:string = 'edit', event:Event|null = null) => {
-        console.log('event', event);
+    const localHandleModelInput = async (
+        model: string,
+        vmode: string = "edit",
+        event: Event | null = null,
+    ) => {
+        console.log("event", event);
         await setLocalEvent(event);
-        const newPromptType = model === 'event' ? 'createEvent' : 'createPet';
+        const newPromptType = model === "event" ? "createEvent" : "createPet";
         setPromptType(newPromptType);
         setStep(1);
         setViewMode(vmode);
-        setTranscription('');
+        setTranscription("");
         setManualInput(true);
         setIsModalOpen(true);
-        console.log('localEvent', localEvent);
+        console.log("localEvent", localEvent);
     };
 
     return (
         <>
             <Dropdown
-                placement={`bottom-end`}
+                placement="bottom-end"
                 btnClassName="btn btn-primary dropdown-toggle flex items-center justify-center w-9 h-9 "
-                button={
-                    <>
-                        <FontAwesomeIcon icon={faPlus} className="w-5 h-5" />
-                    </>
-                }
+                button={<FontAwesomeIcon icon={faPlus} className="w-5 h-5" />}
             >
                 <ul className="!min-w-[170px]">
                     <li>
@@ -99,14 +101,14 @@ const CTAButton = () => {
                             }}
                         >
                             <FontAwesomeIcon icon={faMicrophone} />
-                            {isRecording ? 'Stop Recording' : 'Start Recording'}
+                            {isRecording ? "Stop Recording" : "Start Recording"}
                         </button>
                     </li>
                     <li>
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={()=>handlePromptInput()}
+                            onClick={() => handlePromptInput()}
                         >
                             <FontAwesomeIcon icon={faKeyboard} />
                             Manual Input
@@ -116,7 +118,7 @@ const CTAButton = () => {
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => localHandleModelInput('event')}
+                            onClick={() => localHandleModelInput("event")}
                         >
                             <FontAwesomeIcon icon={faCalendarDays} />
                             Add Event
@@ -126,7 +128,7 @@ const CTAButton = () => {
                         <button
                             type="button"
                             className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => localHandleModelInput('Pet')}
+                            onClick={() => localHandleModelInput("Pet")}
                         >
                             <FontAwesomeIcon icon={faCalendarDays} />
                             Add Pet
@@ -135,9 +137,9 @@ const CTAButton = () => {
                 </ul>
             </Dropdown>
 
-            { promptType &&
+            {promptType && (
                 <ActionModal
-                    key={promptType+localEvent}
+                    key={promptType + localEvent}
                     event={localEvent}
                     initialStep={step}
                     isOpen={isModalOpen}
@@ -147,11 +149,10 @@ const CTAButton = () => {
                     initialViewMode={viewMode}
                     setTranscription={setTranscription}
                     isManualInput={manualInput}
-                />}
+                />
+            )}
         </>
     );
 };
 
 export default CTAButton;
-
-

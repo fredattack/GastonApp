@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconLaptopProps {
     className?: string;
@@ -6,21 +6,51 @@ interface IconLaptopProps {
     duotone?: boolean;
 }
 
-const IconLaptop: FC<IconLaptopProps> = ({ className, fill = false, duotone = true }) => {
+const IconLaptop: FC<IconLaptopProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <>
             {!fill ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         d="M3 9C3 6.17157 3 4.75736 3.87868 3.87868C4.75736 3 6.17157 3 9 3H15C17.8284 3 19.2426 3 20.1213 3.87868C21 4.75736 21 6.17157 21 9V14C21 15.8856 21 16.8284 20.4142 17.4142C19.8284 18 18.8856 18 17 18H7C5.11438 18 4.17157 18 3.58579 17.4142C3 16.8284 3 15.8856 3 14V9Z"
                         stroke="currentColor"
                         strokeWidth="1.5"
                     />
-                    <path opacity={duotone ? '0.5' : '1'} d="M22 21H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <path opacity={duotone ? '0.5' : '1'} d="M15 15H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M22 21H2"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                    />
+                    <path
+                        opacity={duotone ? "0.5" : "1"}
+                        d="M15 15H9"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                    />
                 </svg>
             ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={className}
+                >
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"
@@ -28,7 +58,7 @@ const IconLaptop: FC<IconLaptopProps> = ({ className, fill = false, duotone = tr
                         fill="currentColor"
                     />
                     <path
-                        opacity={duotone ? '0.5' : '1'}
+                        opacity={duotone ? "0.5" : "1"}
                         d="M3.69013 3.8904C2.79102 4.78079 2.79102 6.21386 2.79102 9.08V14.1467C2.79102 16.0574 2.79102 17.0128 3.39042 17.6064C3.98983 18.2 4.95457 18.2 6.88404 18.2H17.1166C19.0461 18.2 20.0108 18.2 20.6102 17.6064C21.2096 17.0128 21.2096 16.0574 21.2096 14.1467V9.08C21.2096 6.21386 21.2096 4.78079 20.3105 3.8904C19.4114 3 17.9643 3 15.0701 3H8.93055C6.03635 3 4.58924 3 3.69013 3.8904Z"
                         fill="currentColor"
                     />

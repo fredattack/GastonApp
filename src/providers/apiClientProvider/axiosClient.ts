@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 // import store from '../store';
 // import { helper } from './helper';
 // import { i18n } from '../i18n.js';
 import Bugsnag from "@bugsnag/js";
 
-let baseURL = import.meta.env.VITE_API_URL;
+const baseURL = import.meta.env.VITE_API_URL;
 //
 // if (localStorage.getItem('url') !== null) {
 //     baseURL = localStorage.getItem('url');
@@ -16,20 +16,20 @@ let baseURL = import.meta.env.VITE_API_URL;
 // }
 
 const axiosClient = axios.create({
-    baseURL: baseURL,
+    baseURL,
     headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
     },
 });
 
 axiosClient.interceptors.response.use(
-    response => response,
-    error => {
+    (response) => response,
+    (error) => {
         Bugsnag.notify(error);
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    window.location.href = '/connect';
+                    window.location.href = "/connect";
                     break;
                 case 422:
                     // helper.toastify('Des erreurs sont présentes dans le formulaire', { className: 'toastify-content warning' });
@@ -48,7 +48,7 @@ axiosClient.interceptors.response.use(
             // helper.toastify('Erreur serveur', { className: 'toastify-content danger' });
             return Promise.reject(error);
         }
-    }
+    },
 );
 
 export default axiosClient;

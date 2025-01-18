@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconBitcoinProps {
     className?: string;
@@ -6,7 +6,11 @@ interface IconBitcoinProps {
     duotone?: boolean;
 }
 
-const IconBitcoin: FC<IconBitcoinProps> = ({ className, fill = false, duotone = true }) => {
+const IconBitcoin: FC<IconBitcoinProps> = ({
+    className,
+    fill = false,
+    duotone = true,
+}) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

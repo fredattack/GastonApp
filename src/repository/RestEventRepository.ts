@@ -1,28 +1,26 @@
-import axiosClient
-    from '../providers/apiClientProvider/axiosClient';
+import axiosClient from "../providers/apiClientProvider/axiosClient";
 
 export default class RestEventRepository {
-
-
     /**
      * Fetch events within a specific period.
      * @param start_date - The start date of the period (ISO string).
      * @param end_date - The end date of the period (ISO string).
      * @returns Promise<any[]> - List of events within the period.
      */
-    async fetchEventsForPeriod(start_date: string, end_date: string): Promise<any[]> {
-
-
+    async fetchEventsForPeriod(
+        start_date: string,
+        end_date: string,
+    ): Promise<any[]> {
         if (!start_date || !end_date) {
             throw new Error("Both start_date and end_date are required.");
         }
 
         try {
-            const response: any = await axiosClient.get( 'events/for-calendar', {
+            const response: any = await axiosClient.get("events/for-calendar", {
                 params: {
-                    filters:{
-                        start_date: start_date,
-                        end_date: end_date,
+                    filters: {
+                        start_date,
+                        end_date,
                     },
                 },
             });
@@ -38,9 +36,12 @@ export default class RestEventRepository {
      * @param eventData - Data for the new event.
      * @returns Promise<string> - ID of the created event.
      */
-    async changeDoneStatus(payload:any): Promise<string> {
+    async changeDoneStatus(payload: any): Promise<string> {
         try {
-            const response: any = await axiosClient.post('events/change-done-status', payload);
+            const response: any = await axiosClient.post(
+                "events/change-done-status",
+                payload,
+            );
             return response.data.id;
         } catch (error: any) {
             console.error("Error adding event:", error);

@@ -7,7 +7,12 @@ interface ToggleProps {
     initialState?: boolean;
 }
 
-const Toggle: React.FC<ToggleProps> = ({ label, labelPosition = "right", onChange,  initialState = false }) => {
+const Toggle: React.FC<ToggleProps> = ({
+    label,
+    labelPosition = "right",
+    onChange,
+    initialState = false,
+}) => {
     const [isEnabled, setIsEnabled] = useState(initialState);
 
     const handleToggle = () => {
@@ -19,7 +24,9 @@ const Toggle: React.FC<ToggleProps> = ({ label, labelPosition = "right", onChang
     return (
         <div className="flex items-center">
             {labelPosition === "left" && (
-                <span className="mr-2 text-sm font-medium text-gray-700">{label}</span>
+                <span className="mr-2 text-sm font-medium text-gray-700">
+                    {label}
+                </span>
             )}
 
             <button
@@ -37,45 +44,43 @@ const Toggle: React.FC<ToggleProps> = ({ label, labelPosition = "right", onChang
                         isEnabled ? "translate-x-5" : "translate-x-0"
                     }`}
                 >
-          <span
-              className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in ${
-                  isEnabled ? "opacity-0" : "opacity-100"
-              }`}
-              aria-hidden="true"
-          >
-            <svg
-                className="h-3 w-3 text-gray-400"
-                fill="none"
-                viewBox="0 0 12 12"
-            >
-              <path
-                  d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-          <span
-              className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in ${
-                  isEnabled ? "opacity-100" : "opacity-0"
-              }`}
-              aria-hidden="true"
-          >
-            <svg
-                className="h-3 w-3 text-indigo-600"
-                fill="currentColor"
-                viewBox="0 0 12 12"
-            >
-              <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
-            </svg>
-          </span>
-        </span>
+                    <span
+                        className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in ${isEnabled ? "opacity-0" : "opacity-100"}`}
+                        aria-hidden="true"
+                    >
+                        <svg
+                            className="h-3 w-3 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 12 12"
+                        >
+                            <path
+                                d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                    </span>
+                    <span
+                        className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in ${isEnabled ? "opacity-100" : "opacity-0"}`}
+                        aria-hidden="true"
+                    >
+                        <svg
+                            className="h-3 w-3 text-indigo-600"
+                            fill="currentColor"
+                            viewBox="0 0 12 12"
+                        >
+                            <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
+                        </svg>
+                    </span>
+                </span>
             </button>
 
             {labelPosition === "right" && (
-                <span className="ml-2 text-sm font-medium text-gray-700">{label}</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                    {label}
+                </span>
             )}
         </div>
     );
