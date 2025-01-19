@@ -165,12 +165,12 @@ const EventCalendar = () => {
     return (
         <div key={viewMode} className="event-calendar">
             <div className="toolbar flex items-center justify-end mb-4 mx-3">
-                <DisplaySettingsDropdown
-                    key={viewMode}
-                    onChangeViewMode={handleSetViewMode}
-                    onChangeViewStyle={handleSetViewStyle}
-                    viewMode={viewMode}
-                />
+                {/* <DisplaySettingsDropdown */}
+                {/*    key={viewMode} */}
+                {/*    onChangeViewMode={handleSetViewMode} */}
+                {/*    onChangeViewStyle={handleSetViewStyle} */}
+                {/*    viewMode={viewMode} */}
+                {/* /> */}
             </div>
             <div className="toolbar flex items-center justify-between mb-4 mx-3">
                 <div className="navigation-buttons flex items-center gap-2">

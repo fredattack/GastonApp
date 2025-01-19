@@ -154,8 +154,8 @@ const Header = () => {
                             className="main-logo flex items-center shrink-0"
                         >
                             <img
-                                className="w-8 ltr:-ml-1 rtl:-mr-1 inline"
-                                src="/assets/images/logo.svg"
+                                className="w-10 ltr:-ml-1 rtl:-mr-1 inline"
+                                src="/assets/images/logo_gas_tp.png"
                                 alt="logo"
                             />
                             <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">
@@ -169,7 +169,7 @@ const Header = () => {
                                 dispatch(toggleSidebar());
                             }}
                         >
-                            <IconMenu className="w-5 h-5" />
+                            <IconMenu className="w-15 h-15" />
                         </button>
                     </div>
 

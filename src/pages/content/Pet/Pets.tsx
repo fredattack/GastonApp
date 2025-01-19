@@ -27,6 +27,7 @@ const Pets = () => {
 
     const [search, setSearch] = useState("");
     const [pets, setPets] = useState<Pet[]>([]);
+
     const [deletionQueue, setDeletionQueue] = useState<DeletionQueueItem[]>([]);
 
     const fetchPets = async () => {

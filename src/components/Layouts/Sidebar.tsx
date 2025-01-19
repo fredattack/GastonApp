@@ -55,13 +55,11 @@ const Sidebar = () => {
             }
         }
     }, []);
-
-    useEffect(() => {
-        if (window.innerWidth < 1024 && themeConfig.sidebar) {
-            dispatch(toggleSidebar());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
+    // useEffect(() => {
+    //     if (window.innerWidth < 1024 && themeConfig.sidebar) {
+    //         dispatch(toggleSidebar());
+    //     }
+    // }, [location, themeConfig.sidebar]);
 
     const icons = useIcons();
 
@@ -77,9 +75,9 @@ const Sidebar = () => {
                             className="main-logo flex items-center shrink-0"
                         >
                             <img
-                                className="w-8 ml-[5px] flex-none"
-                                src="/assets/images/logo.svg"
-                                alt="logo"
+                                className="w-10 ml-[5px] flex-none"
+                                src="/assets/images/logo_gas_tp.png"
+                                alt="logo gaston"
                             />
                             <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">
                                 Gaston App
@@ -88,7 +86,7 @@ const Sidebar = () => {
 
                         <button
                             type="button"
-                            className="collapse-icon w-8 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180"
+                            className="collapse-icon w-14 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180"
                             onClick={() => dispatch(toggleSidebar())}
                         >
                             <FontAwesomeIcon
@@ -97,7 +95,20 @@ const Sidebar = () => {
                             />
                         </button>
                     </div>
-                    <PerfectScrollbar className="h-[calc(100vh-80px)] relative">
+                    <PerfectScrollbar
+                        options={{
+                            wheelPropagation: false,
+                            suppressScrollX: true,
+                            handlers: [
+                                "click-rail",
+                                "drag-thumb",
+                                "keyboard",
+                                "wheel",
+                                "touch",
+                            ],
+                        }}
+                        className="h-[calc(100vh-80px)] relative"
+                    >
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
                             <li className="menu nav-item">
                                 <button

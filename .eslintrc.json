@@ -31,15 +31,34 @@
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "import/resolver": {
+            "node": {
+                "paths": [
+                    "src"
+                ],
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
         }
     },
     "rules": {
+        "node/no-missing-import": "off",
         "jsx-a11y/control-has-associated-label": "off",
         "react/jsx-filename-extension": [
             1,
-            { "extensions": [".tsx"] }
+            {
+                "extensions": [
+                    ".tsx"
+                ]
+            }
         ],
-        "react/react-in-jsx-scope": "off", // Avec React 17+, importer React n’est plus nécessaire
+        "react/react-in-jsx-scope": "off",
+        // Avec React 17+, importer React n’est plus nécessaire
         "import/extensions": [
             "error",
             "ignorePackages",
@@ -50,7 +69,12 @@
         ],
         "import/no-extraneous-dependencies": [
             "error",
-            { "devDependencies": ["**/*.test.tsx", "**/*.test.ts"] }
+            {
+                "devDependencies": [
+                    "**/*.test.tsx",
+                    "**/*.test.ts"
+                ]
+            }
         ],
         "react/function-component-definition": [
             2,
