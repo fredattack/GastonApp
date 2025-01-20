@@ -1,5 +1,4 @@
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
-import { usePets } from "../../../contexts/PetsContext";
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -7,6 +6,7 @@ import { faPlus, faPaw } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePets } from "../../../contexts/PetsContext";
 import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
 import { db } from "../../../../firebaseConfig";
@@ -38,7 +38,7 @@ const Pets = () => {
         search ? pet.name.toLowerCase().includes(search.toLowerCase()) : true,
     );
 
-    const generateActions = (id: string) => {
+    const generateActions = (id: number | string) => {
         const pet = pets.find((pet) => pet.id == id);
         return [
             {
@@ -77,26 +77,26 @@ const Pets = () => {
     };
 
     // Method to handle edit
-    const handleEdit = (id: string) => {
+    const handleEdit = (id: number | string) => {
         console.log(`Editing animal with ID: ${id}`);
         navigate(`/content/pets/${id}`);
         // Add your logic to open an edit form/modal
     };
 
     // Method to toggle active/inactive status
-    const toggleActiveStatus = (id: string) => {
+    const toggleActiveStatus = (id: number | string) => {
         console.log(`Toggling active status for animal ID: ${id}`);
         // Add logic to toggle the animal's active status
     };
 
     // Method to set the animal as deceased
-    const setDeceased = (id: string) => {
+    const setDeceased = (id: number | string) => {
         console.log(`Setting animal ID: ${id} as deceased`);
         // Add your logic to update the deceased status
     };
 
     // Method to delete the animal
-    const deleteAnimal = async (id: string) => {
+    const deleteAnimal = async (id: number | string) => {
         console.log(`Deleting animal with ID: ${id}`);
         /*
                 const petRef = doc(db, 'pets', id);
@@ -114,31 +114,17 @@ const Pets = () => {
         const petToDelete = pets.find((pet) => pet.id === id);
 
         // Ajouter l'animal à la file d'attente
-        setDeletionQueue((prevQueue) => [
+        setDeletionQueue((prevQueue: any) => [
             ...prevQueue,
             {
-                id,
+                id: String(id),
                 timeout: null,
                 data: petToDelete,
             },
         ]);
 
-        setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
-
-        const petRef = doc(db, "pets", id);
-        const petSnap = await getDoc(petRef);
-        const petData = petSnap.data();
-
-        addToast({
-            message: `Animal ${petData?.name ?? "Unknown"} successfully deleted.`,
-            type: "info",
-            action: () => undoDelete(id),
-            actionLabel: "Undo",
-        });
-
         const timeout = setTimeout(async () => {
             try {
-                await deleteDoc(petRef);
                 console.log(`Animal with ID: ${id} successfully deleted.`);
 
                 // Supprimer l'animal de la file d'attente
@@ -162,7 +148,7 @@ const Pets = () => {
         );
     };
 
-    const undoDelete = (id: string) => {
+    const undoDelete = (id: number | string) => {
         const item = deletionQueue.find((entry) => entry.id === id);
         console.log("item", item);
         if (item) {
@@ -170,28 +156,22 @@ const Pets = () => {
             setDeletionQueue((prevQueue) =>
                 prevQueue.filter((entry) => entry.id !== id),
             );
-
-            setPets((prevPets) =>
-                [...prevPets, item.data!].sort(
-                    (a: Pet, b: Pet) => (b.order || 0) - (a.order || 0),
-                ),
-            );
         }
     };
     // Method to add a treatment
-    const addTreatment = (id: string) => {
+    const addTreatment = (id: number | string) => {
         console.log(`Adding treatment for animal ID: ${id}`);
         // Add logic to handle treatment addition
     };
 
     // Method to add a menu
-    const addMenu = (id: string) => {
+    const addMenu = (id: number | string) => {
         console.log(`Adding menu for animal ID: ${id}`);
         // Add logic to handle menu addition
     };
 
     // Method to add a rendezvous
-    const addRendezvous = (id: string) => {
+    const addRendezvous = (id: number | string) => {
         console.log(`Adding rendezvous for animal ID: ${id}`);
         // Add logic to handle rendezvous scheduling
     };
