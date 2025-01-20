@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAngleDown,
     faAngleUp,
-    faTimes,
     faPills, // medical
     faHeart, // care
+    faUtensils,
     faBone, // feeding
     faCalendarCheck, // appointment
     faDumbbell, // training
@@ -13,25 +13,24 @@ import {
     faClock,
     faCheckSquare, // social
 } from "@fortawesome/free-solid-svg-icons";
-import Dropdown from "../../Dropdown";
 import { useIcons } from "../../../providers/FontawesomeProvider";
 import EventDropdown from "./EventDropdown";
 
 const EVENT_TYPE_STYLES = {
     medical: {
         icon: faPills,
-        color: "text-red-200",
-        bg: "red-200",
+        color: "text-danger",
+        bg: "danger",
     },
     care: {
         icon: faHeart,
-        color: "text-pink-500",
-        bg: "pink-100",
+        color: "text-danger-light",
+        bg: "danger-light",
     },
     feeding: {
-        icon: faBone,
-        color: "text-lime-500",
-        bg: "lime-500",
+        icon: faUtensils,
+        color: "text-info",
+        bg: "info",
     },
     appointment: {
         icon: faCalendarCheck,
@@ -40,13 +39,13 @@ const EVENT_TYPE_STYLES = {
     },
     training: {
         icon: faDumbbell,
-        color: "text-green-500",
-        bg: "green-100",
+        color: "text-success",
+        bg: "success",
     },
     social: {
         icon: faUsers,
-        color: "text-purple-500",
-        bg: "purple-100",
+        color: "text-warning",
+        bg: "warning",
     },
 };
 

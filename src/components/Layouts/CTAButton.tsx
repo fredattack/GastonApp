@@ -84,7 +84,7 @@ const CTAButton = () => {
         <>
             <Dropdown
                 placement="bottom-end"
-                btnClassName="btn btn-primary dropdown-toggle flex items-center justify-center w-9 h-9 "
+                btnClassName="btn btn-primary dropdown-toggle flex items-center justify-center w-9 h-9 p-0 rounded-full"
                 button={<FontAwesomeIcon icon={faPlus} className="w-5 h-5" />}
             >
                 <ul className="!min-w-[170px]">

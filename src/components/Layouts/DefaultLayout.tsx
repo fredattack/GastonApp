@@ -33,7 +33,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     };
 
     useEffect(() => {
-        window.addEventListener("scroll", onScrollHandler, { passive: true });
+        // window.addEventListener("scroll", onScrollHandler, { passive: true });
 
         const screenLoader = document.getElementsByClassName("screen_loader");
         if (screenLoader?.length) {

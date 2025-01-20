@@ -1,5 +1,5 @@
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
-
+import { usePets } from "../../../contexts/PetsContext";
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -26,21 +26,12 @@ const Pets = () => {
     const navigate = useNavigate();
 
     const [search, setSearch] = useState("");
-    const [pets, setPets] = useState<Pet[]>([]);
+    const { pets, refreshPets } = usePets();
 
     const [deletionQueue, setDeletionQueue] = useState<DeletionQueueItem[]>([]);
 
-    const fetchPets = async () => {
-        try {
-            const petsList: any = await modelService.getModels("pets");
-            setPets(petsList);
-        } catch (error) {
-            console.error("Error fetching pets:", error);
-        }
-    };
-
     useEffect(() => {
-        fetchPets();
+        refreshPets();
     }, []);
 
     const filteredData = pets?.filter((pet) =>

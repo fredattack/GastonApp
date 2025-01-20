@@ -95,7 +95,7 @@ const Sidebar = () => {
                             />
                         </button>
                     </div>
-                    <PerfectScrollbar
+                    <div
                         options={{
                             wheelPropagation: false,
                             suppressScrollX: true,
@@ -771,7 +771,7 @@ const Sidebar = () => {
                                 </NavLink>
                             </li> */}
                         </ul>
-                    </PerfectScrollbar>
+                    </div>
                 </div>
             </nav>
         </div>
