@@ -27,7 +27,10 @@ const VIEW_STYLES = {
 const EventCalendar = () => {
     const icons = useIcons();
 
-    const [filters, setFilters] = useState([]);
+    const [filters, setFilters] = useState({
+        pet_species: ["cat", "dog"],
+        is_done: false,
+    });
 
     const [viewMode, setViewMode] = useState(VIEW_MODES.DAY);
     const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
@@ -51,6 +54,13 @@ const EventCalendar = () => {
             })),
         );
     };
+
+    const filteredEvents = events.filter((event: EventFormData) => {
+        if ("is_done" in filters && filters.is_done) {
+            return event.is_done;
+        }
+        return true;
+    });
 
     const formatDateToIso = (date: any) => {
         return new Date(
@@ -165,12 +175,12 @@ const EventCalendar = () => {
     return (
         <div key={viewMode} className="event-calendar">
             <div className="toolbar flex items-center justify-end mb-4 mx-3">
-                {/* <DisplaySettingsDropdown */}
-                {/*    key={viewMode} */}
-                {/*    onChangeViewMode={handleSetViewMode} */}
-                {/*    onChangeViewStyle={handleSetViewStyle} */}
-                {/*    viewMode={viewMode} */}
-                {/* /> */}
+                <DisplaySettingsDropdown
+                    key={viewMode}
+                    onChangeViewMode={handleSetViewMode}
+                    onChangeViewStyle={handleSetViewStyle}
+                    viewMode={viewMode}
+                />
             </div>
             <div className="toolbar flex items-center justify-between mb-4 mx-3">
                 <div className="navigation-buttons flex items-center gap-2">
@@ -213,10 +223,10 @@ const EventCalendar = () => {
                 </div>
             </div>
 
-            {events.length > 0 ? (
+            {filteredEvents.length > 0 ? (
                 <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {viewStyle === VIEW_STYLES.CARD &&
-                        events.map((event, index) => (
+                        filteredEvents.map((event, index) => (
                             <div key={index} className="event-card">
                                 <EventCard
                                     // @ts-ignore
@@ -226,7 +236,7 @@ const EventCalendar = () => {
                         ))}
                     {viewStyle === VIEW_STYLES.FEEDING && (
                         <EventSummary
-                            events={events.filter(
+                            events={filteredEvents.filter(
                                 (event) => event.type === EventTypes.Feeding,
                             )}
                         />

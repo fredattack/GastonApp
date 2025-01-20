@@ -66,23 +66,19 @@ const EventCard: React.FC<{
     const style =
         EVENT_TYPE_STYLES[type as keyof typeof EVENT_TYPE_STYLES] || {};
     return (
-        <div className=" overflow-visible flex flex-col rounded-sm border ">
+        <div className=" overflow-visible flex flex-col border rounded-md">
             <a href="#" />
-            <div className="relative">
-                <a href="#">
-                    {/* <img className="w-full"
-                     src="https://images.pexels.com/photos/61180/pexels-photo-61180.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                     alt="Sunset in the mountains" /> */}
-                    <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25" />
-                </a>
-                <a href="#!" />
-            </div>
-            <div className="mb-auto border  grid grid-cols-12">
+
+            <div className="mb-auto border grid grid-cols-12 py-3">
                 <div className="text-xs flex items-center justify-center  col-span-2 hover:bg-white  transition duration-500 ease-in-out">
-                    <FontAwesomeIcon
-                        icon={style.icon}
-                        className={`text-xl ${style.color}`}
-                    />
+                    <div
+                        className={`btn btn-outline-${style.bg} flex items-center justify-center w-9 h-9 p-0 rounded-full`}
+                    >
+                        <FontAwesomeIcon
+                            icon={style.icon}
+                            className={`${style.color}`}
+                        />
+                    </div>
                 </div>
                 <div className="col-span-8 px-3 overflow-hidden">
                     <div className="font-medium  hover:text-indigo-600 transition duration-500 ease-in-out inline-block ">

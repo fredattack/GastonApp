@@ -16,10 +16,11 @@ import Toggle from "../../Form/Toggle";
 import Dropdown from "../../Dropdown";
 import { eventService } from "../../../services";
 import { useToast } from "../../../providers/ToastProvider";
+import MultiSelect from "../../Form/MultiSelect";
 
 interface EventDropdownProps {
-    filters: string[];
-    onFiltersChange: (filters: string[]) => void;
+    filters: object;
+    onFiltersChange: (filters: object) => void;
 }
 
 const EventCalendarDropdown = ({
@@ -34,10 +35,12 @@ const EventCalendarDropdown = ({
     // };
 
     const handleChange = (key: string, value: any) => {
+        console.log("e", value);
         if (value) {
-            onFiltersChange(filters);
-        } else {
-            onFiltersChange(filters.filter((filter) => filter !== key));
+            onFiltersChange({
+                ...filters,
+                [key]: value,
+            });
         }
 
         console.log(filters);
@@ -59,11 +62,34 @@ const EventCalendarDropdown = ({
                         >
                             <Toggle
                                 label="Show done"
-                                initialState={filters.includes("is_done")}
+                                initialState={
+                                    "is_done" in filters
+                                        ? Boolean(filters.is_done)
+                                        : undefined
+                                }
                                 onChange={(e) => handleChange("is_done", e)}
                             />
                         </button>
                     </li>
+                    <li className={"border-b"}></li>
+                    <li className={"pb-2 px-2"}>
+                        <MultiSelect
+                            options={[
+                                {
+                                    label: "Cat",
+                                    value: "cat",
+                                },
+                                {
+                                    label: "Dog",
+                                    value: "dog",
+                                },
+                            ]}
+                            // @ts-ignore
+                            value={filters.pet_species ?? []}
+                            onChange={(e) => handleChange("pet_species", e)}
+                        />
+                    </li>
+                    <li className={"border-b"}></li>
                     <li>
                         <button
                             type="button"

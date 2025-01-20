@@ -5,6 +5,7 @@ import {
     faAnglesRight,
     faBars,
     faMicrophone,
+    faHome,
     faPaw,
     faUtensils,
     faCapsules,
@@ -15,9 +16,9 @@ const IconContext = createContext<Record<string, unknown> | undefined>(
     undefined,
 );
 
-export const IconProvider: React.FC<{ children: React.ReactNode }> = ({
-    children,
-}) => {
+export const IconProvider: React.FC<{
+    children: React.ReactNode;
+}> = ({ children }) => {
     const icons = {
         angleUp: faAngleUp,
         anglesLeft: faAnglesLeft,
@@ -25,6 +26,7 @@ export const IconProvider: React.FC<{ children: React.ReactNode }> = ({
         bars: faBars,
         capsules: faCapsules,
         gauge: faGauge,
+        home: faHome,
         microphone: faMicrophone,
         paw: faPaw,
         utensils: faUtensils,

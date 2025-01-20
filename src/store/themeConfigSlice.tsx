@@ -241,7 +241,7 @@ const themeConfigSlice = createSlice({
         },
 
         setPageTitle(state, { payload }) {
-            document.title = `${payload} | Gaston App`;
+            document.title = `${payload} | Gaston`;
         },
     },
 });

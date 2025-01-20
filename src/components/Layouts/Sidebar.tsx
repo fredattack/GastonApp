@@ -80,7 +80,7 @@ const Sidebar = () => {
                                 alt="logo gaston"
                             />
                             <span className="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light">
-                                Gaston App
+                                Gaston
                             </span>
                         </NavLink>
 
@@ -96,7 +96,8 @@ const Sidebar = () => {
                         </button>
                     </div>
                     <div
-                        options={{
+                        className="h-[calc(100vh-80px)] relative"
+                        data-options={JSON.stringify({
                             wheelPropagation: false,
                             suppressScrollX: true,
                             handlers: [
@@ -106,65 +107,145 @@ const Sidebar = () => {
                                 "wheel",
                                 "touch",
                             ],
-                        }}
-                        className="h-[calc(100vh-80px)] relative"
+                        })}
                     >
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
-                            <li className="menu nav-item">
-                                <button
-                                    type="button"
-                                    className={`${currentMenu === "dashboard" ? "active" : ""} nav-link group w-full`}
-                                    onClick={() => toggleMenu("dashboard")}
-                                >
-                                    <div className="flex items-center">
-                                        <FontAwesomeIcon icon={icons.gauge} />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                                            {t("dashboard")}
-                                        </span>
-                                    </div>
+                            {/*<li className="menu nav-item">*/}
+                            {/*    <button*/}
+                            {/*        type="button"*/}
+                            {/*        className={`${currentMenu === "dashboard" ? "active" : ""} nav-link group w-full`}*/}
+                            {/*        onClick={() => toggleMenu("dashboard")}*/}
+                            {/*    >*/}
+                            {/*        <div className="flex items-center">*/}
+                            {/*            <FontAwesomeIcon icon={icons.gauge} />*/}
+                            {/*            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">*/}
+                            {/*                {t("dashboard")}*/}
+                            {/*            </span>*/}
+                            {/*        </div>*/}
 
-                                    <div
-                                        className={
-                                            currentMenu !== "dashboard"
-                                                ? "rtl:rotate-90 -rotate-90"
-                                                : ""
-                                        }
-                                    >
-                                        <FontAwesomeIcon icon={icons.angleUp} />
-                                    </div>
-                                </button>
+                            {/*        <div*/}
+                            {/*            className={*/}
+                            {/*                currentMenu !== "dashboard"*/}
+                            {/*                    ? "rtl:rotate-90 -rotate-90"*/}
+                            {/*                    : ""*/}
+                            {/*            }*/}
+                            {/*        >*/}
+                            {/*            <FontAwesomeIcon icon={icons.angleUp} />*/}
+                            {/*        </div>*/}
+                            {/*    </button>*/}
 
-                                <AnimateHeight
-                                    duration={300}
-                                    height={
-                                        currentMenu === "dashboard" ? "auto" : 0
-                                    }
-                                >
-                                    <ul className="sub-menu text-gray-500">
-                                        <li>
-                                            <NavLink to="/">
-                                                {t("sales")}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/analytics">
-                                                {t("analytics")}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/finance">
-                                                {t("finance")}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/crypto">
-                                                {t("crypto")}
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </AnimateHeight>
+                            {/*    <AnimateHeight*/}
+                            {/*        duration={300}*/}
+                            {/*        height={*/}
+                            {/*            currentMenu === "dashboard" ? "auto" : 0*/}
+                            {/*        }*/}
+                            {/*    >*/}
+                            {/*        <ul className="sub-menu text-gray-500">*/}
+                            {/*            <li>*/}
+                            {/*                <NavLink to="/">*/}
+                            {/*                    {t("sales")}*/}
+                            {/*                </NavLink>*/}
+                            {/*            </li>*/}
+                            {/*            <li>*/}
+                            {/*                <NavLink to="/analytics">*/}
+                            {/*                    {t("analytics")}*/}
+                            {/*                </NavLink>*/}
+                            {/*            </li>*/}
+                            {/*            <li>*/}
+                            {/*                <NavLink to="/finance">*/}
+                            {/*                    {t("finance")}*/}
+                            {/*                </NavLink>*/}
+                            {/*            </li>*/}
+                            {/*            <li>*/}
+                            {/*                <NavLink to="/crypto">*/}
+                            {/*                    {t("crypto")}*/}
+                            {/*                </NavLink>*/}
+                            {/*            </li>*/}
+                            {/*        </ul>*/}
+                            {/*    </AnimateHeight>*/}
+                            {/*</li>*/}
+                            <li className="nav-item">
+                                <ul>
+                                    <li className="nav-item">
+                                        <NavLink to="/" className="group">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon
+                                                    icon={icons.home}
+                                                />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark capitalize-first">
+                                                    {t("home")}
+                                                </span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+
+                                    {/* <li className="nav-item">
+                                        <NavLink to="/apps/notes" className="group">
+                                            <div className="flex items-center">
+                                                <IconMenuNotes className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('notes')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+
+
+                                    <li className="nav-item">
+                                        <NavLink to="/apps/scrumboard" className="group">
+                                            <div className="flex items-center">
+                                                <IconMenuScrumboard className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('scrumboard')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/apps/contacts" className="group">
+                                            <div className="flex items-center">
+                                                <IconMenuContacts className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('contacts')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+
+                                    <li className="menu nav-item">
+                                        <button type="button" className={`${currentMenu === 'invoice' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('invoice')}>
+                                            <div className="flex items-center">
+                                                <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('invoice')}</span>
+                                            </div>
+
+                                            <div className={currentMenu !== 'invoice' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                                <IconCaretDown />
+                                            </div>
+                                        </button>
+
+                                        <AnimateHeight duration={300} height={currentMenu === 'invoice' ? 'auto' : 0}>
+                                            <ul className="sub-menu text-gray-500">
+                                                <li>
+                                                    <NavLink to="/apps/invoice/list">{t('list')}</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to="/apps/invoice/preview">{t('preview')}</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to="/apps/invoice/add">{t('add')}</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to="/apps/invoice/edit">{t('edit')}</NavLink>
+                                                </li>
+                                            </ul>
+                                        </AnimateHeight>
+                                    </li>
+
+                                    <li className="nav-item">
+                                        <NavLink to="/apps/calendar" className="group">
+                                            <div className="flex items-center">
+                                                <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('calendar')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li> */}
+                                </ul>
                             </li>
-
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
                                 <span>{t("content")}</span>
