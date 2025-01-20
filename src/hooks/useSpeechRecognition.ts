@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-const useSpeechRecognition = () => {
+const useSpeechRecognition = (onTranscriptionUpdate: any) => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcription, setTranscription] = useState("");
     const recognitionRef = useRef<any>(null);
@@ -20,7 +20,9 @@ const useSpeechRecognition = () => {
         const recognition = new SpeechRecognition();
         recognition.lang = lang;
         recognition.interimResults = true;
+        recognition.continuous = true;
         recognition.maxAlternatives = 1;
+        recognition.duration = 500000;
 
         recognitionRef.current = recognition;
 
@@ -33,7 +35,8 @@ const useSpeechRecognition = () => {
             const newTranscript = Array.from(event.results)
                 .map((result: any) => result[0].transcript)
                 .join("");
-            setTranscription((prev) => `${prev} ${newTranscript}`.trim()); // Concaténer le texte
+            setTranscription((prev) => `${newTranscript}`.trim()); // Concaténer le texte
+            onTranscriptionUpdate(newTranscript);
         };
 
         recognition.onerror = (event: any) => {
@@ -57,7 +60,12 @@ const useSpeechRecognition = () => {
         }
     };
 
-    return { isRecording, transcription, startRecording, stopRecording };
+    return {
+        isRecording,
+        transcription,
+        startRecording,
+        stopRecording,
+    };
 };
 
 export default useSpeechRecognition;

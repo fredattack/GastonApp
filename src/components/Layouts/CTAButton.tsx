@@ -16,8 +16,6 @@ const CTAButton = () => {
     const { handelOpenModal } = useMessage();
     const { registerHandelOpenModal } = useMessage();
 
-    const { isRecording, startRecording, stopRecording } =
-        useSpeechRecognition();
     const [localEvent, setLocalEvent] = useState<Event | null>(null);
     const [step, setStep] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +34,14 @@ const CTAButton = () => {
         setIsModalOpen(true);
     }, [promptType]);
 
+    const handleTranscriptionUpdate = (newTranscription: string) => {
+        setTranscription(newTranscription);
+    };
+
+    const { isRecording, startRecording, stopRecording } = useSpeechRecognition(
+        handleTranscriptionUpdate,
+    );
+
     const handleClose = () => {
         setIsModalOpen(false); // Fermer la modal
         setTranscription(""); // Réinitialise la transcription lorsque la modal est fermée
@@ -43,11 +49,21 @@ const CTAButton = () => {
     };
 
     const handleStartRecording = () => {
+        setPromptType("newPrompt");
+        setViewMode("speech");
         setStep(0);
         setTranscription(""); // Réinitialise la transcription avant de commencer
         setManualInput(false); // Désactiver le mode manuel
         startRecording();
         setIsModalOpen(true); // Ouvrir la modal
+    };
+
+    const handleSwitchRecording = () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
     };
 
     const handlePromptInput = () => {
@@ -139,10 +155,12 @@ const CTAButton = () => {
 
             {promptType && (
                 <ActionModal
-                    key={promptType + localEvent}
+                    key={promptType + localEvent + transcription + isRecording}
                     event={localEvent}
                     initialStep={step}
                     isOpen={isModalOpen}
+                    isRecording={isRecording}
+                    onSwitchRecording={handleSwitchRecording}
                     onClose={handleClose}
                     transcription={transcription}
                     initialPromptType={promptType}

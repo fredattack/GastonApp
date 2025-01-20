@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStop } from "@fortawesome/free-solid-svg-icons";
 import EventForm from "../Event/EventForm";
 import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 
-import { useMessage } from "../../contexts/MessageContext"; // ✅ Use the custom hook
+import { useMessage } from "../../contexts/MessageContext";
+import RecordingButton from "../RecordingButton";
 
 type Events = {
     message: string;
@@ -15,6 +18,8 @@ interface SpeechRecognitionModalProps {
     event: Event | null;
     initialStep: number;
     isOpen: boolean;
+    isRecording: boolean;
+    onSwitchRecording: () => void;
     onClose: () => void;
     transcription: string;
     initialPromptType: string;
@@ -26,7 +31,9 @@ interface SpeechRecognitionModalProps {
 const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
     event,
     isOpen,
+    isRecording,
     onClose,
+    onSwitchRecording,
     initialStep,
     transcription,
     initialViewMode,
@@ -54,7 +61,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         },
         notes: event?.notes ?? "",
     });
-
     const [petData, setPetData] = useState<PetFormData>({
         birthDate: "", // YYYY-MM-DD
         breed: "",
@@ -72,7 +78,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
     const petRef = useRef<any>(null); // Référence pour petForm
 
     const [load, setLoad] = useState(false);
-    const [prompt, setPrompt] = useState<string>("");
+    const [prompt, setPrompt] = useState<string>(transcription);
     const [promptType, setPromptType] = useState(initialPromptType);
     const [viewMode, setViewMode] = useState(initialViewMode);
     const [aiResponse, setAiResponse] = useState(Object);
@@ -139,6 +145,8 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         setLoad(!load);
     };
 
+    const handleRecordingSwitch = () => {};
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
             <div className="bg-white p-6 rounded-lg  w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
@@ -153,6 +161,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                 <div>
                     {currentStep === 0 && (
                         <StepOne
+                            key={prompt}
                             ref={stepOneRef}
                             prompt={prompt}
                             isManualInput
@@ -257,7 +266,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                             {load && (
                                 <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle" />
                             )}
-                            {promptType ? "Générer" : "Enregistrer"}
+                            {promptType ? "Générer par IA" : "Enregistrer"}
                         </button>
                     )}
 
@@ -287,6 +296,14 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                         >
                             preview
                         </button>
+                    )}
+                    {currentStep <= 1 && viewMode == "speech" && (
+                        <div>
+                            <RecordingButton
+                                isRecording={isRecording}
+                                onClickButton={() => onSwitchRecording()}
+                            />
+                        </div>
                     )}
                 </div>
             </div>

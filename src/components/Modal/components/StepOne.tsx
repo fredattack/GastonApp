@@ -16,14 +16,17 @@ interface StepOneProps {
 }
 
 const StepOne = forwardRef(
-    ({ onSubmit, onCancel, onChange, isManualInput }: StepOneProps, ref) => {
-        const [prompt, setPrompt] = useState<string>("");
+    (
+        { prompt, onSubmit, onCancel, onChange, isManualInput }: StepOneProps,
+        ref,
+    ) => {
+        const [localPrompt, setLocalPrompt] = useState<string>(prompt);
 
         const handlePromptChange = (
             e: React.ChangeEvent<HTMLTextAreaElement>,
         ) => {
             if (isManualInput) {
-                setPrompt(e.target.value);
+                setLocalPrompt(e.target.value);
             }
         };
 
@@ -49,7 +52,7 @@ const StepOne = forwardRef(
         }
 
         const handleSubmit = async () => {
-            const response = await sendPrompt(prompt);
+            const response = await sendPrompt(localPrompt);
             onSubmit(response);
         };
 
@@ -66,7 +69,7 @@ const StepOne = forwardRef(
                 </h2>
                 <textarea
                     className="w-full h-32 p-2 border rounded"
-                    value={prompt}
+                    value={localPrompt}
                     onChange={handlePromptChange}
                 />
                 <p className="text-sm text-gray-600 mt-2">

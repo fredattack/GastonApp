@@ -110,60 +110,60 @@ const Sidebar = () => {
                         })}
                     >
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
-                            {/*<li className="menu nav-item">*/}
-                            {/*    <button*/}
-                            {/*        type="button"*/}
-                            {/*        className={`${currentMenu === "dashboard" ? "active" : ""} nav-link group w-full`}*/}
-                            {/*        onClick={() => toggleMenu("dashboard")}*/}
-                            {/*    >*/}
-                            {/*        <div className="flex items-center">*/}
-                            {/*            <FontAwesomeIcon icon={icons.gauge} />*/}
-                            {/*            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">*/}
-                            {/*                {t("dashboard")}*/}
-                            {/*            </span>*/}
-                            {/*        </div>*/}
+                            {/* <li className="menu nav-item"> */}
+                            {/*    <button */}
+                            {/*        type="button" */}
+                            {/*        className={`${currentMenu === "dashboard" ? "active" : ""} nav-link group w-full`} */}
+                            {/*        onClick={() => toggleMenu("dashboard")} */}
+                            {/*    > */}
+                            {/*        <div className="flex items-center"> */}
+                            {/*            <FontAwesomeIcon icon={icons.gauge} /> */}
+                            {/*            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"> */}
+                            {/*                {t("dashboard")} */}
+                            {/*            </span> */}
+                            {/*        </div> */}
 
-                            {/*        <div*/}
-                            {/*            className={*/}
-                            {/*                currentMenu !== "dashboard"*/}
-                            {/*                    ? "rtl:rotate-90 -rotate-90"*/}
-                            {/*                    : ""*/}
-                            {/*            }*/}
-                            {/*        >*/}
-                            {/*            <FontAwesomeIcon icon={icons.angleUp} />*/}
-                            {/*        </div>*/}
-                            {/*    </button>*/}
+                            {/*        <div */}
+                            {/*            className={ */}
+                            {/*                currentMenu !== "dashboard" */}
+                            {/*                    ? "rtl:rotate-90 -rotate-90" */}
+                            {/*                    : "" */}
+                            {/*            } */}
+                            {/*        > */}
+                            {/*            <FontAwesomeIcon icon={icons.angleUp} /> */}
+                            {/*        </div> */}
+                            {/*    </button> */}
 
-                            {/*    <AnimateHeight*/}
-                            {/*        duration={300}*/}
-                            {/*        height={*/}
-                            {/*            currentMenu === "dashboard" ? "auto" : 0*/}
-                            {/*        }*/}
-                            {/*    >*/}
-                            {/*        <ul className="sub-menu text-gray-500">*/}
-                            {/*            <li>*/}
-                            {/*                <NavLink to="/">*/}
-                            {/*                    {t("sales")}*/}
-                            {/*                </NavLink>*/}
-                            {/*            </li>*/}
-                            {/*            <li>*/}
-                            {/*                <NavLink to="/analytics">*/}
-                            {/*                    {t("analytics")}*/}
-                            {/*                </NavLink>*/}
-                            {/*            </li>*/}
-                            {/*            <li>*/}
-                            {/*                <NavLink to="/finance">*/}
-                            {/*                    {t("finance")}*/}
-                            {/*                </NavLink>*/}
-                            {/*            </li>*/}
-                            {/*            <li>*/}
-                            {/*                <NavLink to="/crypto">*/}
-                            {/*                    {t("crypto")}*/}
-                            {/*                </NavLink>*/}
-                            {/*            </li>*/}
-                            {/*        </ul>*/}
-                            {/*    </AnimateHeight>*/}
-                            {/*</li>*/}
+                            {/*    <AnimateHeight */}
+                            {/*        duration={300} */}
+                            {/*        height={ */}
+                            {/*            currentMenu === "dashboard" ? "auto" : 0 */}
+                            {/*        } */}
+                            {/*    > */}
+                            {/*        <ul className="sub-menu text-gray-500"> */}
+                            {/*            <li> */}
+                            {/*                <NavLink to="/"> */}
+                            {/*                    {t("sales")} */}
+                            {/*                </NavLink> */}
+                            {/*            </li> */}
+                            {/*            <li> */}
+                            {/*                <NavLink to="/analytics"> */}
+                            {/*                    {t("analytics")} */}
+                            {/*                </NavLink> */}
+                            {/*            </li> */}
+                            {/*            <li> */}
+                            {/*                <NavLink to="/finance"> */}
+                            {/*                    {t("finance")} */}
+                            {/*                </NavLink> */}
+                            {/*            </li> */}
+                            {/*            <li> */}
+                            {/*                <NavLink to="/crypto"> */}
+                            {/*                    {t("crypto")} */}
+                            {/*                </NavLink> */}
+                            {/*            </li> */}
+                            {/*        </ul> */}
+                            {/*    </AnimateHeight> */}
+                            {/* </li> */}
                             <li className="nav-item">
                                 <ul>
                                     <li className="nav-item">
