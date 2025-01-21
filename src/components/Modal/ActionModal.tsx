@@ -1,18 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStop } from "@fortawesome/free-solid-svg-icons";
-import EventForm from "../Event/EventForm";
+import EventForm from "../Event/Form/EventForm";
 import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
-
-import { useMessage } from "../../contexts/MessageContext";
 import RecordingButton from "../RecordingButton";
 
-type Events = {
-    message: string;
-};
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;
@@ -60,6 +55,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
             occurrences: 1,
         },
         notes: event?.notes ?? "",
+        pets: event?.pets ?? [],
     });
     const [petData, setPetData] = useState<PetFormData>({
         birthDate: "", // YYYY-MM-DD
@@ -119,17 +115,16 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         if (currentStep === 2) return;
         if (currentStep === 0) {
             stepOneRef.current.handleSubmit();
-            /* setCurrentStep(1); */
             return;
         }
 
         if (currentStep === 1) {
             setViewMode("edit");
             if (promptType == "createPet") {
-                petRef.current.handleSubmit(); // Appeler handleSubmit dans PetForm
+                petRef.current.handleSubmit();
             }
             if (promptType == "createEvent") {
-                eventFormRef.current.handleSubmit(); // Appeler handleSubmit dans EventForm
+                eventFormRef.current.handleSubmit();
             }
         }
         setLoad(!load);
@@ -149,16 +144,16 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
-            <div className="bg-white p-6 rounded-lg  w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
-                <div className="float-right">
+            <div className="bg-white p-6 rounded-lg w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
+                <div className="flex justify-end w-full">
                     <button
                         onClick={onClose}
-                        className="btn btn-outline-dark px-4 py-2"
+                        className=" text-white-dark hover:text-dark dark:text-white dark:hover:text-white-dark"
                     >
-                        X
+                        <FontAwesomeIcon size="xl" icon={faTimes} />
                     </button>
                 </div>
-                <div>
+                <div className="mt-2">
                     {currentStep === 0 && (
                         <StepOne
                             key={prompt}

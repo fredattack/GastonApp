@@ -78,6 +78,7 @@ declare global {
         recurrence: Recurrence;
         notes: string;
         is_done: boolean;
+        pets: any;
     }
 }
 
