@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { dateStartOfDay, dateEndOfDay } from "../../../helpers";
 import { eventService } from "../../../services";
 
@@ -67,6 +66,7 @@ const EventCalendar = () => {
             date.getTime() - date.getTimezoneOffset() * 60000,
         ).toISOString();
     };
+
     const getDateRange = (date: Date, mode: string | null = null) => {
         if (!mode) {
             mode = viewMode;

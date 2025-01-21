@@ -31,7 +31,7 @@ const EventRecurrence = ({
             </div>
 
             {formData.is_recurring && (
-                <div className={"space-y-2"}>
+                <div className="space-y-2">
                     <div className="grid grid-cols-4 gap-4">
                         <div className="col-span-2">
                             <SingleSelect

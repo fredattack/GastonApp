@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import EventForm from "../Event/Form/EventForm";
 import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 import RecordingButton from "../RecordingButton";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;

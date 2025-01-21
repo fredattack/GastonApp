@@ -28,7 +28,7 @@ const RecordingButton = ({
                         ? "w-10 h-10 bg-white rounded-md"
                         : "w-16 h-16 bg-red-500 rounded-full"
                 }`}
-            ></div>
+            />
             <span className="sr-only">
                 {isLocalRecording ? "Stop Recording" : "Start Recording"}
             </span>

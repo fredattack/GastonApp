@@ -20,7 +20,7 @@ const EventDetails = ({
 
     return (
         <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
-            {/*Title*/}
+            {/* Title */}
             <div className="relative">
                 <label
                     htmlFor="name"
@@ -38,7 +38,7 @@ const EventDetails = ({
                 />
             </div>
 
-            {/*Type*/}
+            {/* Type */}
             <SingleSelect
                 label={t("type")}
                 options={EventTypes.asOptionArray()}

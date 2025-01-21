@@ -5,6 +5,7 @@ import React, {
     useImperativeHandle,
 } from "react";
 
+import { usePets } from "../../../contexts/PetsContext";
 import { modelService } from "../../../services";
 import { useToast } from "../../../providers/ToastProvider";
 
@@ -15,6 +16,11 @@ import PetDetails from "./PetDetails";
 const EventForm = forwardRef(
     ({ event, onSubmit, onChange, onCancel }: any, ref) => {
         const { addToast } = useToast();
+        const { pets, refreshPets } = usePets();
+        const petOptions = pets.map((pet) => ({
+            value: pet.id.toString(),
+            label: pet.name,
+        }));
 
         const [eventFormData, setEventFormData] = useState<EventFormData>({
             id: event?.id || null,
@@ -32,32 +38,12 @@ const EventForm = forwardRef(
                 end_date: "",
                 occurrences: 0,
             },
-            pets: event?.pets || [],
+            pets_details: event?.pets || [],
             notes: event?.notes || "",
             is_done: event?.is_done || false,
         });
 
-        const [petOptions, setPetOptions] = useState<
-            {
-                value: string;
-                label: string;
-            }[]
-        >([]);
         const [isLoadingPets, setIsLoadingPets] = useState<boolean>(true);
-
-        useEffect(() => {
-            const fetchPets = async () => {
-                try {
-                    const pets = await modelService.asOptions("pets");
-                    setPetOptions(pets);
-                } catch (error) {
-                    console.error("Error fetching pets:", error);
-                } finally {
-                    setIsLoadingPets(false);
-                }
-            };
-            fetchPets();
-        }, []);
 
         useEffect(() => {
             if (!eventFormData.is_recurring) {

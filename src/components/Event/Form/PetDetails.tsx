@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FrequencyTypes } from "../../../enums/FrequencyTypes";
 import SingleSelect from "../../Form/SingleSelect";
-import { useTranslation } from "react-i18next";
 
 const PetDetails = ({
     formData,
@@ -120,7 +120,7 @@ const PetDetails = ({
                                 handlePetChange(index, "notes", e.target.value)
                             }
                             className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
-                        ></textarea>
+                        />
                     </div>
                 </div>
             ))}

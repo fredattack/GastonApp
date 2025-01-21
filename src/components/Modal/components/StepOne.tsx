@@ -2,11 +2,6 @@ import React, { forwardRef, useState, useImperativeHandle } from "react";
 
 import { OpenAiService } from "../../../services/OpenAIService";
 
-import { modelService } from "../../../services";
-import { EventTypes } from "../../../enums/EventTypes";
-import { Days } from "../../../enums/Days";
-import { FrequencyTypes } from "../../../enums/FrequencyTypes";
-
 interface StepOneProps {
     prompt: string;
     isManualInput: boolean;
@@ -29,17 +24,6 @@ const StepOne = forwardRef(
                 setLocalPrompt(e.target.value);
             }
         };
-
-        async function initializeParameters() {
-            return {
-                language: "fr_FR",
-                pets: await modelService.asOptions("pets"),
-                users: await modelService.asOptions("users"),
-                eventTypes: EventTypes.asOptionArray(),
-                days: Days.asOptionArray(),
-                frequencyTypes: FrequencyTypes.asOptionArray(),
-            };
-        }
 
         async function sendPrompt(prompt: string) {
             try {
