@@ -71,8 +71,8 @@ const EventCalendarDropdown = ({
                             />
                         </button>
                     </li>
-                    <li className={"border-b"}></li>
-                    <li className={"pb-2 px-2"}>
+                    <li className="border-b" />
+                    <li className="pb-2 px-2">
                         <MultiSelect
                             options={[
                                 {
@@ -89,7 +89,7 @@ const EventCalendarDropdown = ({
                             onChange={(e) => handleChange("pet_species", e)}
                         />
                     </li>
-                    <li className={"border-b"}></li>
+                    <li className="border-b" />
                     <li>
                         <button
                             type="button"

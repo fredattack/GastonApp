@@ -78,7 +78,14 @@ declare global {
         recurrence: Recurrence;
         notes: string;
         is_done: boolean;
-        pets: any;
+        pets_details: PetDetails[];
+    }
+
+    interface PetDetails {
+        pet_id: number;
+        item: string;
+        quantity: string;
+        notes;
     }
 }
 

@@ -84,7 +84,9 @@ const EventDetails = ({
                                       .slice(0, formData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
                                 : ""
                         }
-                        onChange={(e) => handleChange("start_date", e)}
+                        onChange={(e) =>
+                            handleChange("start_date", e.target.value)
+                        }
                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                 </div>
@@ -110,7 +112,9 @@ const EventDetails = ({
                                       .slice(0, formData.is_full_day ? 10 : 16)
                                 : ""
                         }
-                        onChange={(e) => handleChange("end_date", e)}
+                        onChange={(e) =>
+                            handleChange("end_date", e.target.value)
+                        }
                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                 </div>

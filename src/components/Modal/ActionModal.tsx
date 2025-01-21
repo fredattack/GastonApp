@@ -144,7 +144,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
-            <div className="bg-white p-6 rounded-lg w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto">
+            <div className="bg-white p-6 rounded-lg w-[95vw] md:w-[50vw] max-h-[90vh] overflow-auto py-3">
                 <div className="flex justify-end w-full">
                     <button
                         onClick={onClose}
@@ -245,14 +245,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                     )}
                 </div>
                 <div className="flex justify-between mt-6">
-                    {currentStep > 0 && (
-                        <button
-                            onClick={handleBack}
-                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
-                        >
-                            Retour
-                        </button>
-                    )}
                     {currentStep <= 1 && (
                         <button
                             onClick={handleSave}

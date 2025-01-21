@@ -133,9 +133,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
                 <div className="mt-6 border-t border-gray-100">
                     {Object.values(groupedEvents).map(({ pet, events }) => (
                         <dl className="divide-y divide-gray-100">
-                            <div
-                                className={`flex justify-between bg-gray-50 px-2 py-3`}
-                            >
+                            <div className="flex justify-between bg-gray-50 px-2 py-3">
                                 <dt className="font-bold text-gray-900">
                                     {pet.name}
                                 </dt>
