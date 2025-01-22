@@ -45,7 +45,9 @@ const EventDetails = ({
                 value={formData.type}
                 onChange={(value) => handleChange("type", value)}
             />
-            {formData.type !== EventTypes.Feeding && (
+            {![EventTypes.Feeding, EventTypes.Medical].includes(
+                formData.type,
+            ) && (
                 <MultiSelect
                     label={t("pets")}
                     options={petOptions}

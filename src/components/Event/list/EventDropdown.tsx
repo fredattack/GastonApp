@@ -1,4 +1,6 @@
 import React from "react";
+import { useToast } from "../../../providers/ToastProvider";
+
 import {
     faEllipsisH,
     faEye,
@@ -12,36 +14,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMessage } from "../../../contexts/MessageContext";
 import Dropdown from "../../Dropdown";
 import { eventService } from "../../../services";
-import { useToast } from "../../../providers/ToastProvider";
+import ConfirmDeleteEventAlert from "../../Alerts/confirmDeleteEventAlert";
 
 interface EventDropdownProps {
     event: Event;
     onEdit?: () => void;
-    onDelete?: () => void;
+    onChange?: () => void;
     onViewDetails?: () => void;
 }
 
 const EventDropdown = ({
     event,
     onEdit,
-    onDelete,
+    onChange,
     onViewDetails,
 }: EventDropdownProps) => {
-    const { addToast } = useToast();
-    if (!onEdit && !onDelete && !onViewDetails) {
+    if (!onEdit && !onChange && !onViewDetails) {
         return <></>;
     }
     const { handelOpenModal } = useMessage();
-
+    const { addToast } = useToast();
     const handleEdit = () => {
         handelOpenModal("event", "edit", event);
     };
 
     const handleChangeDoneStatus = () => {
         try {
-            console.log("event", event);
-            const resp = eventService.changeDoneStatus(event);
-            console.log("resp", resp);
+            eventService.changeDoneStatus(event);
+
+            if (onChange) {
+                onChange();
+            }
             addToast({
                 message: "Event successfully updated!",
                 type: "success",
@@ -51,6 +54,12 @@ const EventDropdown = ({
                 message: "Error updating event!",
                 type: "error",
             });
+        }
+    };
+
+    const handleSuccess = () => {
+        if (onChange) {
+            onChange();
         }
     };
 
@@ -89,14 +98,10 @@ const EventDropdown = ({
                         </button>
                     </li>
                     <li>
-                        <button
-                            type="button"
-                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
-                            onClick={onDelete}
-                        >
-                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                            Delete Event
-                        </button>
+                        <ConfirmDeleteEventAlert
+                            event={event}
+                            onSuccess={() => handleSuccess()}
+                        />
                     </li>
                 </ul>
             </Dropdown>

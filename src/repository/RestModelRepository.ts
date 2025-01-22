@@ -98,12 +98,22 @@ export default class RestModelRepository {
         }
     }
 
-    async delete(collection: string, eventId: string): Promise<void> {
+    async delete(
+        collection: string,
+        model: any,
+        withRecurrence: boolean,
+    ): Promise<void> {
+        let id = model.id ?? model.master_id;
         try {
-            await axiosClient.delete(`/${collection}/${eventId}`);
+            await axiosClient.delete(
+                `/${collection}/${id}` +
+                    (withRecurrence
+                        ? "?with-recurrence=true"
+                        : "?date=" + model.start_date),
+            );
         } catch (error) {
             console.error(
-                `Error deleting model with ID ${eventId} from ${collection}:`,
+                `Error deleting model with ID ${id} from ${collection}:`,
                 error,
             );
             throw error;

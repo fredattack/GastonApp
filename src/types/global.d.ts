@@ -29,6 +29,7 @@ declare global {
         species: string;
         photo: string;
         galerie: string[];
+        pivot: PetDetails[];
     }
 
     interface EventItem {
@@ -78,7 +79,7 @@ declare global {
         recurrence: Recurrence;
         notes: string;
         is_done: boolean;
-        pets_details: PetDetails[];
+        pets: Pet[];
     }
 
     interface PetDetails {

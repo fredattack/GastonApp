@@ -74,8 +74,12 @@ export default class ModelService {
         await this.modelRepository.update(collection, eventId, formattedData);
     }
 
-    async delete(collection: string, eventId: string) {
-        await this.modelRepository.delete(collection, eventId);
+    async delete(
+        collection: string,
+        model: any,
+        withRecurrence: boolean = false,
+    ) {
+        await this.modelRepository.delete(collection, model, withRecurrence);
     }
 
     private getAuthenticatedOwnerId(): string | null {

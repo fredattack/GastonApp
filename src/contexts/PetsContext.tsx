@@ -2,20 +2,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { modelService } from "../services/index";
 
-// TypeScript type for a Pet
-interface Pet {
-    id: number;
-    ownerId: string;
-    name: string;
-    species: string;
-    breed: string;
-    dateOfBirth: string;
-    photo: string;
-    tasks: string[];
-    isActive: boolean;
-    created_at: string;
-}
-
 interface PetsContextType {
     pets: Pet[];
     refreshPets: () => void;

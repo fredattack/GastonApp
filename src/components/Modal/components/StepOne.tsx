@@ -20,9 +20,10 @@ const StepOne = forwardRef(
         const handlePromptChange = (
             e: React.ChangeEvent<HTMLTextAreaElement>,
         ) => {
-            if (isManualInput) {
-                setLocalPrompt(e.target.value);
-            }
+            // if (isManualInput) {
+            setLocalPrompt(e.target.value);
+            // }
+            onChange(e.target.value);
         };
 
         async function sendPrompt(prompt: string) {
@@ -56,11 +57,6 @@ const StepOne = forwardRef(
                     value={localPrompt}
                     onChange={handlePromptChange}
                 />
-                <p className="text-sm text-gray-600 mt-2">
-                    {isManualInput
-                        ? "Saisissez votre texte dans la zone ci-dessus."
-                        : "Parlez pour ajouter du texte."}
-                </p>
             </div>
         );
     },

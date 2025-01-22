@@ -46,12 +46,20 @@ const EventCalendar = () => {
             formatDateToIso(start_date),
             formatDateToIso(end_date),
         );
+        console.log("events", events);
         setEvents(
             events.map((event: EventFormData) => ({
                 ...event,
                 // Ensure all required Event type fields are set here, as necessary
             })),
         );
+    };
+
+    const handleRefetchEvents = () => {
+        console.log("currentDate", currentDate);
+        const { start_date, end_date } = getDateRange(currentDate);
+        console.log("handleRefetchEvents", start_date, end_date);
+        fetchEvents(start_date, end_date);
     };
 
     const filteredEvents = events.filter((event: EventFormData) => {
@@ -231,6 +239,7 @@ const EventCalendar = () => {
                                 <EventCard
                                     // @ts-ignore
                                     event={event}
+                                    onRefresh={handleRefetchEvents}
                                 />
                             </div>
                         ))}

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
 const RecordingButton = ({
     isRecording,
@@ -14,24 +16,33 @@ const RecordingButton = ({
 
         onClickButton();
     };
-    // console.log("isLocalRecording in button", isLocalRecording);
     return (
         <button
             onClick={toggleRecording}
-            className={`relative flex items-center justify-center w-20 h-20 rounded-full shadow-lg transition-all duration-300 ease-in-out ${
-                isLocalRecording ? "bg-red-500 animate-pulse" : "bg-gray-800"
+            className={`relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg transition-all duration-300 ease-in-out border ${
+                isLocalRecording
+                    ? "bg-white animate-pulse border-gray-700"
+                    : "bg-gray-700 border-white"
             }`}
         >
             <div
-                className={`absolute transition-all duration-300 ${
+                className={`absolute transition-all duration-300 flex justify-center items-center ${
                     isLocalRecording
-                        ? "w-10 h-10 bg-white rounded-md"
-                        : "w-16 h-16 bg-red-500 rounded-full"
+                        ? "w-8 h-8 bg-red-500 rounded-md"
+                        : "w-[60px] h-[60px] bg-white rounded-full"
                 }`}
-            />
-            <span className="sr-only">
-                {isLocalRecording ? "Stop Recording" : "Start Recording"}
-            </span>
+            >
+                {!isLocalRecording && (
+                    <FontAwesomeIcon
+                        size="3x"
+                        className="text-red-600"
+                        icon={faCircle}
+                    />
+                )}
+            </div>
+            {/*<span className="sr-only">*/}
+            {/*    {isLocalRecording ? "Stop Recording" : "Start Recording"}*/}
+            {/*</span>*/}
         </button>
     );
 };

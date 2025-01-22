@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faMicrophone,
+    faKitMedical,
     faKeyboard,
     faCalendarDays,
+    faPaw,
     faPlus,
+    faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import ActionModal from "../Modal/ActionModal";
 
-import Dropdown from "../Dropdown";
 import { useMessage } from "../../contexts/MessageContext";
+import { EventTypes } from "../../enums/EventTypes";
 
 const CTAButton = () => {
     const { handelOpenModal } = useMessage();
@@ -69,7 +74,7 @@ const CTAButton = () => {
     const handlePromptInput = () => {
         try {
             setPromptType("newPrompt");
-            setViewMode("edit");
+            setViewMode("write");
             setStep(0);
             setTranscription("");
             setManualInput(true);
@@ -84,78 +89,140 @@ const CTAButton = () => {
         vmode: string = "edit",
         event: Event | null = null,
     ) => {
-        console.log("event", event);
-        await setLocalEvent(event);
-        const newPromptType = model === "event" ? "createEvent" : "createPet";
+        if (model === "feeding" || model === "care") {
+            //@ts-ignore
+            let newEvent: Event = {
+                id: "",
+                master_id: "",
+                petId: "",
+                title: "",
+                is_full_day: false,
+                type:
+                    model === "feeding"
+                        ? EventTypes.Feeding
+                        : EventTypes.Medical,
+                start_date: new Date(),
+                is_recurring: false,
+                created_at: new Date(),
+                pets: [],
+                is_done: false,
+                end_date: undefined,
+                notes: undefined,
+                recurrence: undefined,
+                event_items: [], // Adding required property
+            };
+            await setLocalEvent(newEvent);
+        } else if (event) {
+            await setLocalEvent(event);
+        }
+        const newPromptType = model !== "pet" ? "createEvent" : "createPet";
         setPromptType(newPromptType);
         setStep(1);
         setViewMode(vmode);
         setTranscription("");
         setManualInput(true);
         setIsModalOpen(true);
-        console.log("localEvent", localEvent);
     };
 
     return (
-        <>
-            <Dropdown
-                placement="bottom-end"
-                btnClassName="btn btn-primary dropdown-toggle flex items-center justify-center w-9 h-9 p-0 rounded-full"
-                button={<FontAwesomeIcon icon={faPlus} className="w-5 h-5" />}
+        <Menu as="div" className="relative inline-block text-left">
+            <div>
+                <MenuButton className="btn btn-primary text-white w-10 h-10 P-0 rounded-full bg-primary ">
+                    <FontAwesomeIcon size="xl" icon={faPlus} />
+                </MenuButton>
+            </div>
+
+            <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
             >
-                <ul className="!min-w-[170px]">
-                    <li>
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => {
-                                if (isRecording) {
-                                    stopRecording();
-                                } else {
-                                    handleStartRecording();
-                                }
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faMicrophone} />
-                            {isRecording ? "Stop Recording" : "Start Recording"}
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => handlePromptInput()}
-                        >
-                            <FontAwesomeIcon icon={faKeyboard} />
-                            Manual Input
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => localHandleModelInput("event")}
-                        >
-                            <FontAwesomeIcon icon={faCalendarDays} />
-                            Add Event
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
-                            onClick={() => localHandleModelInput("Pet")}
-                        >
-                            <FontAwesomeIcon icon={faCalendarDays} />
-                            Add Pet
-                        </button>
-                    </li>
-                </ul>
-            </Dropdown>
+                <div className="py-1">
+                    <MenuItem>
+                        <div className="group">
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => {
+                                    if (isRecording) {
+                                        stopRecording();
+                                    } else {
+                                        handleStartRecording();
+                                    }
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faMicrophone}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                {isRecording
+                                    ? "Stop Recording"
+                                    : "Start Recording"}
+                            </div>
+
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => handlePromptInput()}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faKeyboard}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                Manual Input
+                            </div>
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => localHandleModelInput("feeding")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faUtensils}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                Add Feeding
+                            </div>
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => localHandleModelInput("care")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faKitMedical}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                Add Care
+                            </div>
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => localHandleModelInput("event")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faCalendarDays}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                Add Event
+                            </div>
+
+                            <div
+                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                onClick={() => localHandleModelInput("Pet")}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faPaw}
+                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                />
+                                Add Pet
+                            </div>
+                        </div>
+                    </MenuItem>
+                </div>
+            </MenuItems>
 
             {promptType && (
                 <ActionModal
-                    key={promptType + localEvent + transcription + isRecording}
+                    key={
+                        promptType +
+                        localEvent +
+                        transcription +
+                        isRecording +
+                        viewMode
+                    }
                     event={localEvent}
                     initialStep={step}
                     isOpen={isModalOpen}
@@ -169,7 +236,7 @@ const CTAButton = () => {
                     isManualInput={manualInput}
                 />
             )}
-        </>
+        </Menu>
     );
 };
 

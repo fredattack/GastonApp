@@ -1,19 +1,20 @@
 import React, { useState } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
     faAngleDown,
     faAngleUp,
     faPills, // medical
     faHeart, // care
     faUtensils,
-    faBone, // feeding
     faCalendarCheck, // appointment
     faDumbbell, // training
     faUsers,
     faClock,
     faCheckSquare, // social
 } from "@fortawesome/free-solid-svg-icons";
-import { useIcons } from "../../../providers/FontawesomeProvider";
+
 import EventDropdown from "./EventDropdown";
 
 const EVENT_TYPE_STYLES = {
@@ -51,9 +52,8 @@ const EVENT_TYPE_STYLES = {
 
 const EventCard: React.FC<{
     event: Event;
-}> = ({ event }) => {
-    const icons = useIcons();
-
+    onRefresh: () => void;
+}> = ({ event, onRefresh }) => {
     const { title, type, start_date, end_date, notes } = event;
 
     const [isExpanded, setIsExpanded] = useState(false);
@@ -65,6 +65,13 @@ const EventCard: React.FC<{
         : { class: "text-red-600" };
     const style =
         EVENT_TYPE_STYLES[type as keyof typeof EVENT_TYPE_STYLES] || {};
+
+    const handleDelete = () => {
+        if (onRefresh) {
+            onRefresh();
+        }
+    };
+
     return (
         <div className=" overflow-visible flex flex-col border rounded-md">
             <a href="#" />
@@ -145,7 +152,7 @@ const EventCard: React.FC<{
                 {/* EventDropdown */}
                 <EventDropdown
                     event={event}
-                    onDelete={() => {}}
+                    onChange={() => handleDelete()}
                     onEdit={() => {}}
                     onViewDetails={() => {}}
                 />

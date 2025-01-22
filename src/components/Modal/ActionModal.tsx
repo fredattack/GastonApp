@@ -7,6 +7,7 @@ import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 import RecordingButton from "../RecordingButton";
+import VoiceModulation from "../VoiceModulation";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;
@@ -106,6 +107,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                 setPetData(responseObject?.response);
             }
             setCurrentStep(1);
+            setViewMode("edit");
         }
     }
 
@@ -130,6 +132,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
     };
 
     const handlePromptChange = (value: any) => {
+        console.log("handlePromptChange", value);
         setPrompt(value);
     };
 
@@ -139,7 +142,19 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         setLoad(!load);
     };
 
-    const handleRecordingSwitch = () => {};
+    const shouldShowButton = (): boolean => {
+        const isSpeechMode = viewMode === "speech" && !isRecording;
+        const isWritingMode = viewMode === "write";
+        const isEditingMode = viewMode === "edit";
+        return (
+            currentStep <= 1 &&
+            prompt.length > 0 &&
+            (isSpeechMode || isWritingMode || isEditingMode)
+        );
+    };
+
+    const buttonText =
+        promptType && viewMode !== "edit" ? "Générer par IA" : "Enregistrer";
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center m-auto z-50">
@@ -155,7 +170,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                 <div className="mt-2">
                     {currentStep === 0 && (
                         <StepOne
-                            key={prompt}
                             ref={stepOneRef}
                             prompt={prompt}
                             isManualInput
@@ -202,7 +216,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                                 />
                             </div>
                         )}
-
                     {currentStep === 1 &&
                         promptType === "createPet" &&
                         viewMode != "preview" && (
@@ -218,53 +231,27 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                                     }}
                                     onCancel={() => setCurrentStep(0)}
                                 />
-
-                                <p className="text-sm text-gray-600 mt-2">
-                                    Modifiez le texte si nécessaire.
-                                </p>
                             </div>
                         )}
-                    {currentStep === 2 && (
+                </div>
+                <div className="flex justify-between items-center mt-6 ">
+                    {currentStep <= 1 && viewMode == "speech" && (
                         <div>
-                            <h2 className="text-xl font-bold mb-4">
-                                Étape 3 : Confirmation
-                            </h2>
-                            <p className="mb-4">
-                                Le texte suivant sera enregistré :
-                            </p>
-                            <textarea
-                                className="w-full h-32 p-2 border rounded"
-                                value={transcription}
-                                readOnly
+                            <RecordingButton
+                                isRecording={isRecording}
+                                onClickButton={() => onSwitchRecording()}
                             />
-                            <p className="text-sm text-gray-600 mt-2">
-                                Cliquez sur "Enregistrer" pour confirmer.
-                            </p>
                         </div>
                     )}
-                </div>
-                <div className="flex justify-between mt-6">
-                    {currentStep <= 1 && (
+                    {shouldShowButton() && (
                         <button
                             onClick={handleSave}
-                            className="bg-green-500 text-white px-4 py-2 rounded"
+                            className="bg-success text-white px-4 py-2 rounded max-h-[45px]"
                         >
                             {load && (
                                 <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle" />
                             )}
-                            {promptType ? "Générer par IA" : "Enregistrer"}
-                        </button>
-                    )}
-
-                    {currentStep == 1 && (
-                        <button
-                            onClick={handleRecallAi}
-                            className="bg-amber-300 text-white px-4 py-2 rounded"
-                        >
-                            {load && (
-                                <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle" />
-                            )}
-                            reCall AI
+                            {buttonText}
                         </button>
                     )}
                     {currentStep == 1 && viewMode === "preview" && (
@@ -282,14 +269,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                         >
                             preview
                         </button>
-                    )}
-                    {currentStep <= 1 && viewMode == "speech" && (
-                        <div>
-                            <RecordingButton
-                                isRecording={isRecording}
-                                onClickButton={() => onSwitchRecording()}
-                            />
-                        </div>
                     )}
                 </div>
             </div>

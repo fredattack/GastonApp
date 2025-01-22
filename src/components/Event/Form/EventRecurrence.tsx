@@ -18,7 +18,6 @@ const EventRecurrence = ({
     handleChange: (field: string, value: any) => void;
     handelChangeRecurrence: (field: string, value: any) => void;
 }) => {
-    console.log("formData", formData.recurrence);
     return (
         <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
             <div className="sm:col-span-6">
