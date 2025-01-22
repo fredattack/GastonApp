@@ -7,7 +7,6 @@ import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 import RecordingButton from "../RecordingButton";
-import VoiceModulation from "../VoiceModulation";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;
