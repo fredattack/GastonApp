@@ -47,9 +47,7 @@ const PetDetails = ({
     return (
         <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
             {formData.pets?.map((petDetail: any, index: number) => {
-                // const index = petDetail.pet_id ?? iteration;
-                // console.log('index', index);
-                // console.log('petDetail', petDetail);
+                console.log("petDetail", petDetail);
                 return (
                     <div
                         key={index}
@@ -64,13 +62,14 @@ const PetDetails = ({
                                 <FontAwesomeIcon icon={faTimes} />
                             </button>
                         </div>
+
                         <SingleSelect
                             label="pet"
                             options={pets}
                             onChange={(value) =>
                                 handlePetChange(index, "pet_id", value)
                             }
-                            value={petDetail.pivot.pet_id ?? ""}
+                            value={petDetail?.id?.toString()}
                         />
                         <div className="relative">
                             <label

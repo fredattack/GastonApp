@@ -142,13 +142,15 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
     };
 
     const shouldShowButton = (): boolean => {
+        console.log("event", event);
         const isSpeechMode = viewMode === "speech" && !isRecording;
         const isWritingMode = viewMode === "write";
         const isEditingMode = viewMode === "edit";
         return (
-            currentStep <= 1 &&
-            prompt.length > 0 &&
-            (isSpeechMode || isWritingMode || isEditingMode)
+            (currentStep <= 1 &&
+                prompt.length > 0 &&
+                (isSpeechMode || isWritingMode)) ||
+            isEditingMode
         );
     };
 
@@ -261,14 +263,17 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                             edit form
                         </button>
                     )}
-                    {currentStep == 1 && viewMode === "edit" && (
-                        <button
-                            onClick={() => setViewMode("preview")}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            preview
-                        </button>
-                    )}
+                    {currentStep == 1 &&
+                        viewMode === "edit" &&
+                        !event?.id &&
+                        !event?.master_id && (
+                            <button
+                                onClick={() => setViewMode("preview")}
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                preview
+                            </button>
+                        )}
                 </div>
             </div>
         </div>

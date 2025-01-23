@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Toggle from "../../Form/Toggle";
 import { eventService } from "../../../services";
 import { useToast } from "../../../providers/ToastProvider";
+import EventTable from "./EventTable";
 
 interface EventSummaryProps {
     events: EventFormData[] | Event[];
@@ -35,31 +36,47 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
         }
     };
 
-    const groupedEvents = (events as Event[])
-        .filter((event) => isInPeriod(event.start_date))
-        .reduce(
-            (acc, event) => {
-                event.pets.forEach((pet) => {
-                    if (!acc[pet.id]) {
-                        acc[pet.id] = {
-                            pet,
-                            events: [],
+    const groupedEvents = Object.values(
+        (events as Event[])
+            .filter((event) => isInPeriod(event.start_date))
+            .reduce(
+                (acc, event) => {
+                    event.pets.forEach((pet) => {
+                        if (!acc[pet.id]) {
+                            acc[pet.id] = {
+                                pet: {
+                                    name: pet.name,
+                                    //@ts-ignore
+                                    pivot: pet.pivot ?? {},
+                                },
+                                events: [],
+                            };
+                        }
+                        if (isInPeriod(event.start_date)) {
+                            acc[pet.id].events.push({
+                                id: event.id,
+                            });
+                        }
+                    });
+                    return acc;
+                },
+                {} as Record<
+                    string,
+                    {
+                        pet: {
+                            name: string;
+                            pivot?: {
+                                item?: string;
+                                quantity?: number;
+                            };
                         };
+                        events: {
+                            id: string;
+                        }[];
                     }
-                    if (isInPeriod(event.start_date)) {
-                        acc[pet.id].events.push(event);
-                    }
-                });
-                return acc;
-            },
-            {} as Record<
-                string,
-                {
-                    pet: Pet;
-                    events: Event[];
-                }
-            >,
-        );
+                >,
+            ),
+    );
 
     const handleSetPeriode = (periode: string) => () => {
         setPeriode(periode);
@@ -80,6 +97,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
             });
         }
     };
+
     const renderEventToggle = (event: Event) => (
         <div className="my-1" key={event.id}>
             <Toggle
@@ -130,117 +148,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
             </span>
             <div className="pet-summary  p-4 rounded-md shadow-md mb-4  border border-lime-300">
                 {(events as Event[]).map(renderEventToggle)}
-                <div className="mt-6 border-t border-gray-100">
-                    {Object.values(groupedEvents).map(({ pet, events }) => (
-                        <dl className="divide-y divide-gray-100">
-                            <div className="flex justify-between bg-gray-50 px-2 py-3">
-                                <dt className="font-bold text-gray-900">
-                                    {pet.name}
-                                </dt>
-                                <dd className="mt-1 text-gray-500 sm:col-span-2 sm:mt-0">
-                                    {events.map((event) => (
-                                        <div
-                                            key={event.id}
-                                            className="event-item"
-                                        >
-                                            {/* <h4 className="text-md font-semibold">{event.title}</h4> */}
-                                            {event.notes && (
-                                                <p className="text-sm italic">
-                                                    {event.notes}
-                                                </p>
-                                            )}
-                                            {event.event_items &&
-                                                event.event_items.length >
-                                                    0 && (
-                                                    <ul className="list-disc pl-5 mt-2">
-                                                        {event.event_items.map(
-                                                            (item) => (
-                                                                <li
-                                                                    key={
-                                                                        item.id
-                                                                    }
-                                                                >
-                                                                    {item.type ===
-                                                                        "food" && (
-                                                                        <span>
-                                                                            Repas
-                                                                            :{" "}
-                                                                            {
-                                                                                item.quantity
-                                                                            }{" "}
-                                                                            {
-                                                                                item.unit
-                                                                            }
-                                                                        </span>
-                                                                    )}
-                                                                    {item.notes && (
-                                                                        <p className="text-sm italic">
-                                                                            Note:{" "}
-                                                                            {
-                                                                                item.notes
-                                                                            }
-                                                                        </p>
-                                                                    )}
-                                                                </li>
-                                                            ),
-                                                        )}
-                                                    </ul>
-                                                )}
-                                        </div>
-                                    ))}
-                                </dd>
-                            </div>
-                        </dl>
-                        // <div key={pet.id} className="pet-summary">
-                        //     <div className="flex items-center">
-                        //         <div>
-                        //             <h3 className="text-lg font-bold">
-                        //
-                        //             </h3>
-                        //         </div>
-                        //     </div>
-                        //     <div className="event-details flex justify-end">
-                        //         {events.map((event) => (
-                        //             <div key={event.id} className="event-item">
-                        //                 {/* <h4 className="text-md font-semibold">{event.title}</h4> */}
-                        //                 {event.notes && (
-                        //                     <p className="text-sm italic">
-                        //
-                        //                     </p>
-                        //                 )}
-                        //                 {event.event_items &&
-                        //                     event.event_items.length > 0 && (
-                        //                         <ul className="list-disc pl-5 mt-2">
-                        //                             {event.event_items.map(
-                        //                                 (item) => (
-                        //                                     <li key={item.id}>
-                        //                                         {item.type ===
-                        //                                             "food" && (
-                        //                                             <span>
-                        //                                                 Repas :{" "}
-                        //                                                 {
-                        //                                                     item.quantity
-                        //                                                 }{" "}
-                        //                                                 {item.unit}
-                        //                                             </span>
-                        //                                         )}
-                        //                                         {item.notes && (
-                        //                                             <p className="text-sm italic">
-                        //                                                 Note:{" "}
-                        //                                                 {item.notes}
-                        //                                             </p>
-                        //                                         )}
-                        //                                     </li>
-                        //                                 ),
-                        //                             )}
-                        //                         </ul>
-                        //                     )}
-                        //             </div>
-                        //         ))}
-                        //     </div>
-                        // </div>
-                    ))}
-                </div>
+                <EventTable groupedEvents={groupedEvents} />
             </div>
         </div>
     );

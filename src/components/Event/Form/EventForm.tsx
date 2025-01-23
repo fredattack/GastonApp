@@ -2,67 +2,47 @@ import React, {
     useState,
     useEffect,
     forwardRef,
-    useImperativeHandle
-} from 'react';
+    useImperativeHandle,
+} from "react";
 
-import {
-    usePets
-} from '../../../contexts/PetsContext';
-import {
-    modelService
-} from '../../../services';
-import {
-    useToast
-} from '../../../providers/ToastProvider';
+import { usePets } from "../../../contexts/PetsContext";
+import { modelService } from "../../../services";
+import { useToast } from "../../../providers/ToastProvider";
 
-import EventDetails
-    from './EventDetails';
-import EventRecurrence
-    from './EventRecurrence';
-import PetDetails
-    from './PetDetails';
-import {
-    EventTypes
-} from '../../../enums/EventTypes';
+import EventDetails from "./EventDetails";
+import EventRecurrence from "./EventRecurrence";
+import PetDetails from "./PetDetails";
+import { EventTypes } from "../../../enums/EventTypes";
 
 const EventForm = forwardRef(
-    ({
-         event,
-         onSubmit,
-         onChange,
-         onCancel
-     }: any, ref) => {
-        console.log('event', event);
+    ({ event, onSubmit, onChange, onCancel }: any, ref) => {
         const { addToast } = useToast();
-        const {
-            pets,
-            refreshPets
-        } = usePets();
+        const { pets, refreshPets } = usePets();
 
         const petOptions = pets.map((pet) => ({
             value: pet.id.toString(),
-            label: pet.name
+            label: pet.name,
         }));
 
         const [eventFormData, setEventFormData] = useState<EventFormData>({
             id: event?.id || null,
-            petId: event?.petId || '',
-            type: event?.type || '',
-            start_date: event?.start_date || '',
-            title: event?.title || '',
-            end_date: event?.end_date || '',
+            petId: event?.petId || "",
+            type: event?.type || "",
+            start_date: event?.start_date || "",
+            title: event?.title || "",
+            end_date: event?.end_date || "",
             is_recurring: event?.is_recurring || false,
             is_full_day: event?.is_full_day || false,
             recurrence: event?.recurrence || {
-                frequency_type: '',
+                frequency_type: "",
                 frequency: 1,
                 days: [],
-                end_date: '',
-                occurrences: 0
+                end_date: "",
+                occurrences: 0,
             },
             pets: event?.pets || [],
-            notes: event?.notes || '',
-            is_done: event?.is_done || false
+            notes: event?.notes || "",
+            is_done: event?.is_done || false,
         });
 
         const [isLoadingPets, setIsLoadingPets] = useState<boolean>(false);
@@ -72,47 +52,46 @@ const EventForm = forwardRef(
                 setEventFormData((prev) => ({
                     ...prev,
                     recurrence: {
-                        frequency_type: '',
+                        frequency_type: "",
                         frequency: 1,
                         days: [],
-                        end_date: '',
-                        occurrences: 0
-                    }
+                        end_date: "",
+                        occurrences: 0,
+                    },
                 }));
             }
         }, [eventFormData.is_recurring]);
 
         useImperativeHandle(ref, () => ({
-            handleSubmit
+            handleSubmit,
         }));
 
         const handleChange = (key: string, value: any) => {
-            console.log('value', value);
             setEventFormData((prev) => ({
                 ...prev,
-                [key]: value
+                [key]: value,
             }));
             if (onChange) {
                 onChange({
                     ...eventFormData,
-                    [key]: value
+                    [key]: value,
                 });
             }
         };
 
         function handelChangeRecurrence(
             key: string,
-            value: string | string[] | number | boolean
+            value: string | string[] | number | boolean,
         ) {
-            console.log('key', key);
-            console.log('value', value);
+            console.log("key", key);
+            console.log("value", value);
 
             setEventFormData((prev) => ({
                 ...prev,
                 recurrence: {
                     ...prev.recurrence,
-                    [key]: value
-                }
+                    [key]: value,
+                },
             }));
         }
 
@@ -120,43 +99,40 @@ const EventForm = forwardRef(
             try {
                 if (!eventFormData.type || !eventFormData.start_date) {
                     alert(
-                        'Les champs Type et Date de début sont obligatoires !'
+                        "Les champs Type et Date de début sont obligatoires !",
                     );
                     return;
                 }
                 if (eventFormData.id) {
                     await modelService.update(
-                        'events',
+                        "events",
                         eventFormData.id,
-                        eventFormData
+                        eventFormData,
                     );
                 } else {
-                    await modelService.add('events', eventFormData);
+                    await modelService.add("events", eventFormData);
                 }
                 addToast({
-                    message: 'Event successfully created!',
-                    type: 'success'
+                    message: "Event successfully created!",
+                    type: "success",
                 });
                 if (onSubmit) onSubmit(eventFormData);
             } catch (error) {
-                console.error('Erreur lors de la soumission :', error);
-                alert('Une erreur est survenue lors de la soumission.');
+                console.error("Erreur lors de la soumission :", error);
+                alert("Une erreur est survenue lors de la soumission.");
             }
         };
 
         if (isLoadingPets) {
             return (
-                <div
-                    className="flex justify-center items-center h-64">
-                    <p className="text-gray-500">Loading
-                        pets...</p>
+                <div className="flex justify-center items-center h-64">
+                    <p className="text-gray-500">Loading pets...</p>
                 </div>
             );
         }
 
         return (
-            <form
-                className="shadow-sm ring-1 ring-gray-300 rounded-md py-3 divide-y">
+            <form className="shadow-sm ring-1 ring-gray-300 rounded-md py-3 divide-y">
                 <EventDetails
                     formData={eventFormData}
                     handleChange={handleChange}
@@ -171,7 +147,7 @@ const EventForm = forwardRef(
                 />
 
                 {[EventTypes.Feeding, EventTypes.Medical].includes(
-                    eventFormData.type
+                    eventFormData.type,
                 ) && (
                     <PetDetails
                         pets={petOptions}
@@ -182,10 +158,8 @@ const EventForm = forwardRef(
                 )}
 
                 {/* #region notes */}
-                <div
-                    className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
-                    <div
-                        className="relative">
+                <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
+                    <div className="relative">
                         <label
                             htmlFor="notes"
                             className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first"
@@ -197,14 +171,14 @@ const EventForm = forwardRef(
                             name="notes"
                             rows={3}
                             value={eventFormData.notes}
-                            onChange={(e) => handleChange('notes', e)}
+                            onChange={(e) => handleChange("notes", e)}
                             className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                         />
                     </div>
                 </div>
             </form>
         );
-    }
+    },
 );
 
 export default EventForm;
