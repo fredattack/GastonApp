@@ -19,13 +19,14 @@ const EventForm = forwardRef(
         const { addToast } = useToast();
         const { pets, refreshPets } = usePets();
 
-        const petOptions = pets.map((pet) => ({
+        const petOptions = pets?.map((pet) => ({
             value: pet.id.toString(),
             label: pet.name,
         }));
 
         const [eventFormData, setEventFormData] = useState<EventFormData>({
             id: event?.id || null,
+            master_id: event?.master_id || null,
             petId: event?.petId || "",
             type: event?.type || "",
             start_date: event?.start_date || "",
@@ -71,6 +72,7 @@ const EventForm = forwardRef(
                 ...prev,
                 [key]: value,
             }));
+
             if (onChange) {
                 onChange({
                     ...eventFormData,

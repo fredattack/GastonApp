@@ -27,6 +27,7 @@ export class OpenAiService {
                     filters: {},
                 },
             );
+            console.log("response", response.data);
             return typeof response.data === "string"
                 ? JSON.parse(response.data)
                 : response.data;

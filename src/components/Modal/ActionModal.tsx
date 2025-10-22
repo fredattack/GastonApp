@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 import EventForm from "../Event/Form/EventForm";
 import PetForm from "../Pets/form/PetForm";
 import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 import RecordingButton from "../RecordingButton";
+import { showConfirmUpdateEventAlert } from "../Alerts/confirmUpdateEventAlert";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;
@@ -38,6 +40,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
 
     const [eventData, setEventData] = useState<EventFormData>({
         id: event?.id ?? null,
+        master_id: event?.master_id ?? null,
         petId: event?.petId ?? "",
         type: event?.type ?? "",
         start_date: event?.start_date ?? "",
@@ -110,6 +113,11 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         }
     }
 
+    function succesUpdate() {
+        setLoad(false);
+        onClose();
+    }
+
     const handleSave = () => {
         setLoad(!load);
         if (currentStep === 2) return;
@@ -120,6 +128,13 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
 
         if (currentStep === 1) {
             setViewMode("edit");
+            if (event?.id || event?.master_id) {
+                showConfirmUpdateEventAlert(eventData, () => {
+                    console.log("Event updated successfully!");
+                    succesUpdate();
+                });
+                return;
+            }
             if (promptType == "createPet") {
                 petRef.current.handleSubmit();
             }
@@ -141,8 +156,15 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         setLoad(!load);
     };
 
+    const handleSetEventData = (data: any) => {
+        console.log("handleSetEventData", data);
+        setEventData((prevData: any) => ({
+            ...prevData,
+            ...data,
+        }));
+    };
+
     const shouldShowButton = (): boolean => {
-        console.log("event", event);
         const isSpeechMode = viewMode === "speech" && !isRecording;
         const isWritingMode = viewMode === "write";
         const isEditingMode = viewMode === "edit";
@@ -206,12 +228,9 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                                 <EventForm
                                     event={eventData}
                                     ref={eventFormRef}
-                                    onChange={(updatedData: any) => {
-                                        setEventData((prevData: any) => ({
-                                            ...prevData,
-                                            ...updatedData,
-                                        }));
-                                    }}
+                                    onChange={(updatedData: any) =>
+                                        handleSetEventData(updatedData)
+                                    }
                                     onSubmit={() => onClose()}
                                     onCancel={() => setCurrentStep(0)}
                                 />

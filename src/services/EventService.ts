@@ -41,4 +41,22 @@ export default class EventService {
             throw error;
         }
     }
+
+    async update(
+        event: EventFormData,
+        withRecurrences: boolean,
+        date: string | Date | null = null,
+    ) {
+        console.log("date", date);
+        try {
+            return await this.eventRepository.update(
+                event,
+                withRecurrences,
+                date,
+            );
+        } catch (error) {
+            console.error("Error updating event:", error);
+            throw error;
+        }
+    }
 }

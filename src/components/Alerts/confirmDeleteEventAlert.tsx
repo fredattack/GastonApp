@@ -1,8 +1,8 @@
 import React from "react";
 import Swal from "sweetalert2";
-import { modelService } from "../../services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { modelService } from "../../services";
 
 interface ConfirmationAlertProps {
     event: any;
@@ -13,7 +13,6 @@ const ConfirmDeleteEventAlert: React.FC<ConfirmationAlertProps> = ({
     event,
     onSuccess,
 }) => {
-    console.log("event.recurrence", event);
     const showAlert = async () => {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {

@@ -69,6 +69,7 @@ declare global {
 
     interface EventFormData {
         id: ?string;
+        master_id: ?string;
         title: string; // Titre de l'événement
         petId: string;
         type: string;
@@ -83,7 +84,7 @@ declare global {
     }
 
     interface PetDetails {
-        pet_id: number;
+        id: number;
         item: string;
         quantity: string;
         notes;

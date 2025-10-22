@@ -9,9 +9,9 @@ interface PetsContextType {
 
 const PetsContext = createContext<PetsContextType | undefined>(undefined);
 
-export const PetsProvider: React.FC<{ children: React.ReactNode }> = ({
-    children,
-}) => {
+export const PetsProvider: React.FC<{
+    children: React.ReactNode;
+}> = ({ children }) => {
     const [pets, setPets] = useState<Pet[]>([]);
 
     const fetchPets = async () => {
@@ -28,7 +28,12 @@ export const PetsProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []);
 
     return (
-        <PetsContext.Provider value={{ pets, refreshPets: fetchPets }}>
+        <PetsContext.Provider
+            value={{
+                pets,
+                refreshPets: fetchPets,
+            }}
+        >
             {children}
         </PetsContext.Provider>
     );

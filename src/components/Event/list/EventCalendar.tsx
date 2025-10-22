@@ -11,6 +11,7 @@ import EventCalendarDropdown from "./EventCalendarDropdown";
 
 import DisplaySettingsDropdown from "../../Calendar/DisplaySettingsDropdown";
 import { EventTypes } from "../../../enums/EventTypes";
+import { useEvents } from "../../../contexts/EventsContext";
 
 const VIEW_MODES = {
     DAY: "day",
@@ -25,6 +26,7 @@ const VIEW_STYLES = {
 
 const EventCalendar = () => {
     const icons = useIcons();
+    const { events, fetchEvents } = useEvents();
 
     const [filters, setFilters] = useState({
         pet_species: ["cat", "dog"],
@@ -34,31 +36,28 @@ const EventCalendar = () => {
     const [viewMode, setViewMode] = useState(VIEW_MODES.DAY);
     const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [events, setEvents] = useState<EventFormData[]>([]);
 
     useEffect(() => {
         const { start_date, end_date } = getDateRange(currentDate);
         fetchEvents(start_date, end_date);
     }, []);
 
-    const fetchEvents = async (start_date: any, end_date: any) => {
-        const events = await eventService.getEventsForPeriod(
-            formatDateToIso(start_date),
-            formatDateToIso(end_date),
-        );
-        console.log("events", events);
-        setEvents(
-            events.map((event: EventFormData) => ({
-                ...event,
-                // Ensure all required Event type fields are set here, as necessary
-            })),
-        );
-    };
+    // const fetchEvents = async (start_date: any, end_date: any) => {
+    //     const events = await eventService.getEventsForPeriod(
+    //         formatDateToIso(start_date),
+    //         formatDateToIso(end_date),
+    //     );
+    //
+    //     setEvents(
+    //         events.map((event: EventFormData) => ({
+    //             ...event,
+    //             // Ensure all required Event type fields are set here, as necessary
+    //         })),
+    //     );
+    // };
 
     const handleRefetchEvents = () => {
-        console.log("currentDate", currentDate);
         const { start_date, end_date } = getDateRange(currentDate);
-        console.log("handleRefetchEvents", start_date, end_date);
         fetchEvents(start_date, end_date);
     };
 
@@ -82,8 +81,8 @@ const EventCalendar = () => {
 
         if (mode === VIEW_MODES.DAY) {
             return {
-                start_date: dateStartOfDay(new Date(date)), // Start of the day (00:00:00.000)
-                end_date: dateEndOfDay(new Date(date)),
+                start_date: formatDateToIso(dateStartOfDay(new Date(date))), // Start of the day (00:00:00.000)
+                end_date: formatDateToIso(dateEndOfDay(new Date(date))),
             };
         }
         if (mode === VIEW_MODES.WEEK) {
@@ -92,8 +91,8 @@ const EventCalendar = () => {
             const endOfWeek = new Date(date);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             return {
-                start_date: dateStartOfDay(startOfWeek),
-                end_date: dateEndOfDay(endOfWeek),
+                start_date: formatDateToIso(dateStartOfDay(startOfWeek)),
+                end_date: formatDateToIso(dateEndOfDay(endOfWeek)),
             };
         }
         const startOfMonth = new Date(currentDate);
@@ -102,8 +101,8 @@ const EventCalendar = () => {
         endOfMonth.setMonth(startOfMonth.getMonth() + 1);
         endOfMonth.setDate(0);
         return {
-            start_date: dateStartOfDay(startOfMonth),
-            end_date: dateEndOfDay(endOfMonth),
+            start_date: formatDateToIso(dateStartOfDay(startOfMonth)),
+            end_date: formatDateToIso(dateEndOfDay(endOfMonth)),
         };
     };
 
@@ -140,7 +139,7 @@ const EventCalendar = () => {
 
         const { start_date, end_date } = getDateRange(currentDate, mode);
 
-        fetchEvents(start_date, end_date);
+        fetchEvents(formatDateToIso(start_date), formatDateToIso(end_date));
     };
 
     const handleSetViewStyle = async (style: any) => {

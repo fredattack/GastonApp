@@ -39,6 +39,17 @@ const CTAButton = () => {
         setIsModalOpen(true);
     }, [promptType]);
 
+    useEffect(() => {
+        if (localEvent) {
+            setPromptType("createEvent");
+            setStep(1);
+            setViewMode("edit");
+            setTranscription("");
+            setManualInput(true);
+            setIsModalOpen(true);
+        }
+    }, [localEvent]);
+
     const handleTranscriptionUpdate = (newTranscription: string) => {
         setTranscription(newTranscription);
     };
@@ -51,6 +62,7 @@ const CTAButton = () => {
         setIsModalOpen(false); // Fermer la modal
         setTranscription(""); // Réinitialise la transcription lorsque la modal est fermée
         setManualInput(false); // Réinitialise le mode manuel
+        setLocalEvent(null);
     };
 
     const handleStartRecording = () => {
@@ -90,8 +102,8 @@ const CTAButton = () => {
         event: Event | null = null,
     ) => {
         if (model === "feeding" || model === "care") {
-            //@ts-ignore
-            let newEvent: Event = {
+            // @ts-ignore
+            const newEvent: Event = {
                 id: "",
                 master_id: "",
                 petId: "",
@@ -112,15 +124,20 @@ const CTAButton = () => {
                 event_items: [], // Adding required property
             };
             await setLocalEvent(newEvent);
-        } else if (event) {
-            await setLocalEvent(event);
+            return;
         }
+        if (event) {
+            await setLocalEvent(event);
+            return;
+        }
+
         const newPromptType = model !== "pet" ? "createEvent" : "createPet";
         setPromptType(newPromptType);
         setStep(1);
         setViewMode(vmode);
         setTranscription("");
         setManualInput(true);
+        console.log("localEvent", localEvent);
         setIsModalOpen(true);
     };
 

@@ -18,7 +18,6 @@ const PetDetails = ({
 }) => {
     const { t } = useTranslation();
     const addPetDetail = () => {
-        console.log("formData.pets", formData.pets);
         handleChange("pets", [
             ...formData.pets,
             {
@@ -37,17 +36,15 @@ const PetDetails = ({
         handleChange("pets", newPets);
     };
     const handlePetChange = (index: number, field: string, value: any) => {
+        console.log("index: field: value: ", index, field, value);
         const updatedPets = [...formData.pets];
-        console.log("updatedPets", updatedPets);
-        console.log("indexed", updatedPets[index]);
-        updatedPets[index]["pivot"][field] = value;
+        updatedPets[index][field] = value;
         handleChange("pets", updatedPets);
     };
 
     return (
         <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
             {formData.pets?.map((petDetail: any, index: number) => {
-                console.log("petDetail", petDetail);
                 return (
                     <div
                         key={index}
@@ -82,7 +79,7 @@ const PetDetails = ({
                                 id="item"
                                 name="pets[${index}].item"
                                 type="text"
-                                value={petDetail?.pivot?.item}
+                                value={petDetail?.item}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,
@@ -104,7 +101,7 @@ const PetDetails = ({
                                 id="quantity"
                                 name="pets[${index}].quantity"
                                 type="text"
-                                value={petDetail?.pivot?.quantity}
+                                value={petDetail?.quantity}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,
@@ -122,7 +119,7 @@ const PetDetails = ({
                             </label>
                             <textarea
                                 name={`pets[${index}].notes`}
-                                value={petDetail?.pivot?.notes}
+                                value={petDetail?.notes}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,

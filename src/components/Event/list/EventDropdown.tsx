@@ -1,16 +1,13 @@
 import React from "react";
-import { useToast } from "../../../providers/ToastProvider";
 
 import {
     faEllipsisH,
-    faEye,
     faEdit,
-    faTrash,
-    faCopy,
     faCheckSquare,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useToast } from "../../../providers/ToastProvider";
 import { useMessage } from "../../../contexts/MessageContext";
 import Dropdown from "../../Dropdown";
 import { eventService } from "../../../services";
@@ -34,6 +31,7 @@ const EventDropdown = ({
     }
     const { handelOpenModal } = useMessage();
     const { addToast } = useToast();
+
     const handleEdit = () => {
         handelOpenModal("event", "edit", event);
     };

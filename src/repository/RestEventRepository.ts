@@ -33,8 +33,8 @@ export default class RestEventRepository {
 
     /**
      * Add a new event.
-     * @param eventData - Data for the new event.
      * @returns Promise<string> - ID of the created event.
+     * @param payload
      */
     async changeDoneStatus(payload: any): Promise<string> {
         try {
@@ -51,13 +51,22 @@ export default class RestEventRepository {
 
     /**
      * Update an existing event.
-     * @param eventId - ID of the event to update.
-     * @param updatedData - Updated event data.
+     * @param event
+     * @param withRecurrences
+     * @param date
      * @returns Promise<void>
      */
-    async updateEvent(eventId: string, updatedData: any): Promise<void> {
+    async update(
+        event: EventFormData,
+        withRecurrences: boolean = false,
+        date: string | Date | null = null,
+    ): Promise<void> {
+        console.log("date", date);
         try {
-            await axiosClient.put(`events/${eventId}`, updatedData);
+            await axiosClient.put(
+                `events/${event.id ?? event.master_id}?with_recurrences=${withRecurrences}&date=${date}`,
+                event,
+            );
         } catch (error: any) {
             console.error("Error updating event:", error);
             throw new Error(`Failed to update event: ${error.message}`);
