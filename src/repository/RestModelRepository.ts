@@ -103,13 +103,14 @@ export default class RestModelRepository {
         model: any,
         withRecurrence: boolean,
     ): Promise<void> {
-        let id = model.id ?? model.master_id;
+        const id = model.id ?? model.master_id;
         try {
             await axiosClient.delete(
-                `/${collection}/${id}` +
-                    (withRecurrence
+                `/${collection}/${id}${
+                    withRecurrence
                         ? "?with-recurrence=true"
-                        : "?date=" + model.start_date),
+                        : `?date=${model.start_date}`
+                }`,
             );
         } catch (error) {
             console.error(

@@ -40,9 +40,9 @@ const RecordingButton = ({
                     />
                 )}
             </div>
-            {/*<span className="sr-only">*/}
-            {/*    {isLocalRecording ? "Stop Recording" : "Start Recording"}*/}
-            {/*</span>*/}
+            {/* <span className="sr-only"> */}
+            {/*    {isLocalRecording ? "Stop Recording" : "Start Recording"} */}
+            {/* </span> */}
         </button>
     );
 };

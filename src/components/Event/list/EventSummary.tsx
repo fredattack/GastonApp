@@ -46,7 +46,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
                             acc[pet.id] = {
                                 pet: {
                                     name: pet.name,
-                                    //@ts-ignore
+                                    // @ts-ignore
                                     pivot: pet.pivot ?? {},
                                 },
                                 events: [],
