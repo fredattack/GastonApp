@@ -1,8 +1,8 @@
-# 🚀 GastonApp Deployment Guide
+# GastonApp Deployment Guide
 
 This document provides comprehensive instructions for deploying GastonApp to Digital Ocean and other platforms.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Monorepo Structure](#monorepo-structure)
@@ -15,7 +15,7 @@ This document provides comprehensive instructions for deploying GastonApp to Dig
 
 ---
 
-## 🔧 Prerequisites
+## Prerequisites
 
 ### Required Software
 - **Node.js**: 22.3.0 or later
@@ -42,7 +42,7 @@ docker-compose --version
 
 ---
 
-## 📁 Monorepo Structure
+## Monorepo Structure
 
 GastonApp uses a Turborepo-based monorepo structure:
 
@@ -67,7 +67,7 @@ GastonApp/
 
 ---
 
-## 💻 Local Development
+## Local Development
 
 ### Initial Setup
 
@@ -111,7 +111,7 @@ pnpm --filter @gastonapp/ui lint
 
 ---
 
-## 🏗️ Building for Production
+## Building for Production
 
 ### Build Web Application
 
@@ -136,7 +136,7 @@ pnpm build
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Quick Deployment
 
@@ -184,7 +184,7 @@ The deployment uses a **multi-stage Dockerfile**:
 
 ---
 
-## 🌊 Digital Ocean Deployment
+## Digital Ocean Deployment
 
 ### Option 1: App Platform (Recommended)
 
@@ -311,7 +311,7 @@ For a hybrid approach:
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 ### Web App (apps/web)
 
@@ -336,6 +336,8 @@ VITE_API_URL=https://your-backend-api.com
 VITE_NODE_ENV=production
 ```
 
+> **Important**: Never commit `.env` files to version control. Keep your API keys secure.
+
 ### Docker Environment
 
 Create `.env` file in the root:
@@ -346,7 +348,7 @@ NODE_ENV=production
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Build Failures
 
@@ -408,14 +410,19 @@ curl -H "Accept-Encoding: gzip" -I https://yourdomain.com
 
 ---
 
-## 📊 Monitoring & Maintenance
+## Monitoring & Maintenance
 
 ### Health Checks
 
-The deployment includes a health check endpoint:
+Docker Compose includes health checks for the web container. You can verify the container is running properly:
+
 ```bash
-curl http://your-domain.com/health
-# Should return: healthy
+# Check container health status
+docker ps
+# Look for "healthy" in the STATUS column
+
+# Check if the site is accessible
+curl http://localhost:80
 ```
 
 ### Logs
@@ -443,16 +450,16 @@ pnpm deploy
 
 ---
 
-## 🆘 Support
+## Support
 
 For issues or questions:
 1. Check the [troubleshooting section](#troubleshooting)
 2. Review logs for error messages
-3. Open an issue on GitHub
+3. Open an issue on [GitHub](https://github.com/fredattack/GastonApp/issues)
 
 ---
 
-## 📝 Additional Resources
+## Additional Resources
 
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [pnpm Documentation](https://pnpm.io/)

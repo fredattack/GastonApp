@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 GastonApp is a **Turborepo-based monorepo** containing multiple applications for pet event management and scheduling. The monorepo includes a React TypeScript web application and is prepared for a future React Native Expo mobile app. All apps share common code through workspace packages.
 
+This guide is intended for developers working with Claude Code (claude.ai/code) and provides detailed information about the project structure, architecture, conventions, and workflows.
+
 ## Monorepo Structure
 
 ```
@@ -256,9 +258,70 @@ The project includes testing setup with:
 - **Atomic Changes**: Update shared code and all apps in a single commit
 - **Faster Builds**: Turborepo caches and parallelizes builds
 
+### Common Development Workflows
+
+#### Adding a New Feature to Web App
+
+1. Create components in `apps/web/src/components/`
+2. Add business logic to `apps/web/src/services/` or `packages/shared/src/services/`
+3. Update types in `apps/web/src/types/` or `packages/shared/src/types/`
+4. Test locally: `pnpm dev:web`
+5. Run quality checks: `pnpm lint && pnpm type-check`
+
+#### Adding Shared Code
+
+When code needs to be shared between web and mobile:
+
+1. Move types to `packages/shared/src/types/`
+2. Move services to `packages/shared/src/services/`
+3. Move utilities to `packages/shared/src/utils/`
+4. Import from `@gastonapp/shared` in apps
+
+Example:
+```typescript
+// In apps/web/src/services/EventService.ts
+import { EventService } from '@gastonapp/shared';
+```
+
+#### Debugging Build Issues
+
+```bash
+# Clean everything and rebuild
+pnpm clean
+pnpm install
+pnpm build
+
+# Check for type errors
+pnpm type-check
+
+# Check specific package
+pnpm --filter @gastonapp/web type-check
+```
+
+#### Working with Environment Variables
+
+1. Copy `.env.example` to `.env` in `apps/web/`
+2. Add required values
+3. Access in code: `import.meta.env.VITE_*`
+4. Never commit `.env` files
+
+#### Deploying Changes
+
+```bash
+# Build and test locally
+pnpm build:web
+
+# Deploy with Docker
+pnpm deploy
+
+# Or deploy to Digital Ocean (see DEPLOYMENT.md)
+```
+
 ### Additional Resources
 
-- **Deployment Guide**: See DEPLOYMENT.md for detailed deployment instructions
-- **Turborepo Docs**: https://turbo.build/repo/docs
-- **pnpm Docs**: https://pnpm.io/
-- **Expo Docs** (for mobile app): https://docs.expo.dev/
+- **[Deployment Guide](DEPLOYMENT.md)** - Detailed deployment instructions
+- **[README](README.md)** - Quick start and project overview
+- **[Migration Guide](MONOREPO_MIGRATION.md)** - Monorepo migration details
+- **[Turborepo Docs](https://turbo.build/repo/docs)** - Turborepo documentation
+- **[pnpm Docs](https://pnpm.io/)** - pnpm documentation
+- **[Expo Docs](https://docs.expo.dev/)** - Expo documentation (for mobile app)

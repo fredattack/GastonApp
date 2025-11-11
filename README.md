@@ -1,8 +1,9 @@
-# 🐾 GastonApp - Multi-Platform Pet Management
+# GastonApp - Multi-Platform Pet Management
 
 <div align="center">
 
-![GastonApp Logo](https://via.placeholder.com/150)
+<!-- Logo: Replace with actual logo when available -->
+<!-- ![GastonApp Logo](./assets/logo.png) -->
 
 **AI-Powered Pet Care Management Platform**
 
@@ -11,47 +12,47 @@
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)](https://turbo.build/)
 [![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)](https://pnpm.io/)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Contributing](#contributing)
 
 </div>
 
 ---
 
-## 📋 Overview
+## Overview
 
 GastonApp is a **Turborepo-based monorepo** containing a comprehensive pet management platform with:
 
-- 🌐 **Web Application** (React + Vite + TypeScript)
-- 📱 **Mobile Application** (React Native + Expo) - *Coming Soon*
-- 🤖 **AI Integration** (OpenAI GPT-4)
-- 🔄 **Shared Code** across platforms
+- **Web Application** (React + Vite + TypeScript)
+- **Mobile Application** (React Native + Expo) - *Coming Soon*
+- **AI Integration** (OpenAI GPT-4)
+- **Shared Code** across platforms
 
-## ✨ Features
+## Features
 
-- 🐕 **Pet Profile Management** - Track multiple pets with detailed information
-- 📅 **Event Scheduling** - Create recurring events for feeding, medications, vet visits
-- 🎤 **Voice Assistant** - AI-powered voice commands for hands-free management
-- 🗓️ **Calendar Integration** - Visual calendar for all pet-related events
-- 🌍 **Multi-language Support** - Available in multiple languages (i18next)
-- 🌓 **Dark Mode** - Beautiful UI with light and dark themes
-- 📊 **Analytics** - Track pet care patterns and insights
+- **Pet Profile Management** - Track multiple pets with detailed information
+- **Event Scheduling** - Create recurring events for feeding, medications, vet visits
+- **Voice Assistant** - AI-powered voice commands for hands-free management
+- **Calendar Integration** - Visual calendar for all pet-related events
+- **Multi-language Support** - Available in multiple languages (i18next)
+- **Dark Mode** - Beautiful UI with light and dark themes
+- **Analytics** - Track pet care patterns and insights
 
-## 🏗️ Monorepo Structure
+## Monorepo Structure
 
 ```
 GastonApp/
 ├── apps/
-│   ├── web/                    # 🌐 React web application
-│   └── mobile/                 # 📱 React Native Expo app (future)
+│   ├── web/                    # React web application
+│   └── mobile/                 # React Native Expo app (future)
 ├── packages/
-│   ├── shared/                 # 📦 Shared code (types, services, utils)
-│   ├── ui/                     # 🎨 Shared UI components (future)
-│   ├── eslint-config/          # 🔍 ESLint configurations
-│   └── typescript-config/      # ⚙️ TypeScript configurations
-└── .deploy/                    # 🚀 Deployment configs (Docker, Nginx)
+│   ├── shared/                 # Shared code (types, services, utils)
+│   ├── ui/                     # Shared UI components (future)
+│   ├── eslint-config/          # ESLint configurations
+│   └── typescript-config/      # TypeScript configurations
+└── .deploy/                    # Deployment configs (Docker, Nginx)
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -79,7 +80,7 @@ pnpm dev:web
 
 The web app will be available at `http://localhost:4480`
 
-## 📦 Available Commands
+## Available Commands
 
 ### Development
 
@@ -114,7 +115,7 @@ pnpm docker:up        # Start containers
 pnpm docker:down      # Stop containers
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Web Application
 
@@ -142,15 +143,16 @@ pnpm docker:down      # Stop containers
 - **Deployment**: Docker + Nginx
 - **CI/CD**: GitHub Actions (future)
 
-## 📚 Documentation
+## Documentation
 
 - **[Deployment Guide](DEPLOYMENT.md)** - Detailed deployment instructions
 - **[Developer Guide](CLAUDE.md)** - Project architecture and conventions
 - **[Product Strategy](PRODUCT_STRATEGY_ANALYSIS.md)** - Product roadmap and strategy
 - **[MVP Definition](MVP_DEFINITION.md)** - Core features and priorities
-- **[Go-to-Market](GO_TO_MARKET_STRATEGY.md)** - Marketing and launch strategy
+- **[Go-to-Market Strategy](GO_TO_MARKET_STRATEGY.md)** - Marketing and launch strategy
+- **[Monorepo Migration](MONOREPO_MIGRATION.md)** - Migration summary and guide
 
-## 🌐 Applications
+## Applications
 
 ### Web App (`apps/web`)
 
@@ -179,7 +181,7 @@ cd apps/mobile
 pnpm start
 ```
 
-## 📦 Packages
+## Packages
 
 ### `@gastonapp/shared`
 
@@ -206,7 +208,7 @@ TypeScript configurations:
 - `react.json` - For React apps
 - `react-native.json` - For React Native apps
 
-## 🚢 Deployment
+## Deployment
 
 ### Docker (Recommended)
 
@@ -226,7 +228,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
 - Container Registry deployment
 - SSL configuration
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -244,7 +246,7 @@ We welcome contributions! Please follow these steps:
 - Add tests for new features
 - Update documentation as needed
 
-## 🔐 Environment Variables
+## Environment Variables
 
 Create `.env` files in the appropriate locations:
 
@@ -260,15 +262,17 @@ VITE_OPENAI_API_KEY=your_openai_key
 VITE_API_URL=your_backend_url
 ```
 
-## 📄 License
+> **Note**: Never commit `.env` files to version control. They are included in `.gitignore`.
+
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👥 Team
+## Team
 
-Created with ❤️ by the GastonApp Team
+Created with care by the GastonApp Team
 
-## 📧 Contact
+## Contact
 
 - **GitHub**: [@fredattack](https://github.com/fredattack)
 - **Issues**: [GitHub Issues](https://github.com/fredattack/GastonApp/issues)
@@ -277,7 +281,7 @@ Created with ❤️ by the GastonApp Team
 
 <div align="center">
 
-**[⬆ back to top](#-gastonapp---multi-platform-pet-management)**
+**[⬆ Back to top](#gastonapp---multi-platform-pet-management)**
 
 Made with TypeScript, React, and lots of ☕
 
