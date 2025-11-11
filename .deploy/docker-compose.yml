@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: .deploy/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - gastonapp-network
+    volumes:
+      # Mount SSL certificates if needed
+      - ./ssl:/etc/nginx/ssl:ro
+      # Mount logs
+      - ./logs:/var/log/nginx
+
+  # Add backend service here if needed
+  # backend:
+  #   image: your-backend-image
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   networks:
+  #     - gastonapp-network
+
+networks:
+  gastonapp-network:
+    driver: bridge
+
+volumes:
+  logs:

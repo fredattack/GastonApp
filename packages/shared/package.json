@@ -1,0 +1,22 @@
+{
+  "name": "@gastonapp/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@gastonapp/typescript-config": "workspace:*",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "firebase": "^11.1.0",
+    "openai": "^4.78.0"
+  }
+}

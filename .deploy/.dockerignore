@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.github
+.vscode
+.idea
+*.log
+.env*.local
+.DS_Store
+coverage
+.turbo
+apps/mobile
+.deploy/logs
+.deploy/ssl
