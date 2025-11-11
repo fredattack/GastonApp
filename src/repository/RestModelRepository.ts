@@ -56,7 +56,7 @@ export default class RestModelRepository {
         };
 
         try {
-            const response = await axiosClient.get(`${collection}`, {
+            const response = await axiosClient.get(`/${collection}`, {
                 params: filters,
             });
             return response.data;
