@@ -5,12 +5,27 @@ import React, {
     useImperativeHandle,
 } from "react";
 import { modelService } from "../../../services";
+import { useToast } from "../../../providers/ToastProvider";
+import {
+    validatePetForm,
+    formatValidationErrors,
+} from "../../../utils/validation";
 
-const PetForm = forwardRef(
+interface PetFormProps {
+    petFormData: PetFormData;
+    onSubmit?: (data: PetFormData) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    onCancel?: () => void;
+    submitable?: boolean;
+}
+
+const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
     (
-        { petFormData, onSubmit, onChange, onCancel, submitable = false }: any,
+        { petFormData, onSubmit, onChange, onCancel, submitable = false },
         ref,
     ) => {
+        const { addToast } = useToast();
+
         const formatBirthDate = (
             birthDate: { seconds?: number } | string | null,
         ): string => {
@@ -24,40 +39,49 @@ const PetForm = forwardRef(
             return "";
         };
 
-        const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-            console.log("handleSubmit", petFormData);
+        const handleSubmit = async () => {
             try {
-                if (
-                    !petFormData?.name ||
-                    !petFormData?.breed ||
-                    !petFormData?.species
-                ) {
-                    alert(
-                        "Les champs name ,espece et race  sont obligatoires !",
-                    );
+                // Validate form data
+                const validation = validatePetForm(petFormData);
+
+                if (!validation.isValid) {
+                    const errorMessage = formatValidationErrors(validation.errors);
+                    addToast({
+                        message: errorMessage,
+                        type: "error",
+                    });
                     return;
                 }
 
                 if (petFormData?.id) {
-                    // Mise à jour
+                    // Update
                     await modelService.update(
                         "pets",
-                        petFormData?.id,
+                        petFormData.id,
                         petFormData,
                     );
-                    alert("Événement mis à jour avec succès !");
+                    addToast({
+                        message: "Pet updated successfully!",
+                        type: "success",
+                    });
                 } else {
-                    // Création
+                    // Create
                     const newId = await modelService.add("pets", petFormData);
-                    alert(`Animal créé avec succès ! ID : ${newId}`);
+                    addToast({
+                        message: `Pet created successfully! ID: ${newId}`,
+                        type: "success",
+                    });
                 }
 
                 if (onSubmit) {
                     onSubmit(petFormData);
                 }
             } catch (error) {
-                console.error("Erreur lors de la soumission :", error);
-                alert("Une erreur est survenue lors de la soumission.");
+                console.error("Error submitting form:", error);
+                addToast({
+                    message: "An error occurred while saving the pet",
+                    type: "error",
+                });
             }
         };
 
