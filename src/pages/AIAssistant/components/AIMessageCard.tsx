@@ -38,7 +38,10 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         }
 
         return attachedEvent.pets.map((eventPet) => {
-            const pet = pets.find((p) => p.id === eventPet.id.toString());
+            // Essayer de trouver le pet dans le contexte, sinon utiliser directement eventPet
+            const contextPet = pets.find((p) => p.id === eventPet.id.toString());
+            const pet = contextPet || eventPet;
+
             return {
                 pet,
                 quantity: eventPet.pivot?.[0]?.quantity || "",
