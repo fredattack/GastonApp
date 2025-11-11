@@ -1,33 +1,105 @@
-import { usePets } from "../../../contexts/PetsContext";
+import { useMemo } from "react";
 
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(" ");
+import { usePets } from "../../../contexts/PetsContext";
+import { getEventTypeLabel } from "../../../utils/aiTransformers";
+
+interface PreviewAiResponseProps {
+    aiResponse: AIResponse;
 }
 
-export default function PreviewAiResponse({ aiResponse }: any) {
-    const { pets, refreshPets } = usePets();
-    console.log("aiResponse", aiResponse);
-    const eventForm = aiResponse.response;
-    console.log("eventForm", eventForm);
+const formatDate = (dateString: string | Date): string => {
+    try {
+        return new Date(dateString).toLocaleString("fr-FR", {
+            dateStyle: "short",
+            timeStyle: "short",
+        });
+    } catch {
+        return "Date invalide";
+    }
+};
 
-    const recurrenceDetails = [
-        `Type de récurrence : ${eventForm.recurrence?.frequencyType}`,
-        `Fréquence : ${eventForm.recurrence?.frequency} jour(s)`,
-        `Date de fin : ${eventForm.recurrence?.endRecurrenceDate}`,
-    ];
+const PreviewAiResponse = ({
+    aiResponse,
+}: PreviewAiResponseProps): JSX.Element => {
+    const { pets } = usePets();
+    const eventData = aiResponse.data;
 
-    const generalDetails = [
-        `Type : ${eventForm.type === "medical" ? "Médical" : eventForm.type}`,
-        `Animal :${pets.find((pet) => pet.id == eventForm.petId)?.name}` ||
-            "Inconnu",
-        `Début : ${new Date(eventForm.start_date).toLocaleString()}` ||
-            "Inconnu",
-        eventForm.end_date
-            ? `Fin : ${new Date(eventForm.end).toLocaleString()}`
-            : null,
-        `Récurrence : ${eventForm.is_recurring ? "Oui" : "Non"}`,
-        `Toute la journée : ${eventForm.is_full_day ? "Oui" : "Non"}`,
-    ];
+    const selectedPets = useMemo(() => {
+        if (!eventData.petId || eventData.petId.length === 0) {
+            return [];
+        }
+
+        return eventData.petId
+            .map((petId) => pets.find((pet) => pet.id === petId.toString()))
+            .filter((pet): pet is Pet => pet !== undefined);
+    }, [eventData.petId, pets]);
+
+    const petNames = useMemo(() => {
+        if (selectedPets.length === 0) {
+            return "Aucun animal sélectionné";
+        }
+
+        return selectedPets.map((pet) => pet.name).join(", ");
+    }, [selectedPets]);
+
+    const recurrenceDetails = useMemo(() => {
+        if (!eventData.recurrence) {
+            return [];
+        }
+
+        const details = [];
+
+        if (eventData.recurrence.frequency_type) {
+            const typeLabels: Record<string, string> = {
+                daily: "Quotidienne",
+                weekly: "Hebdomadaire",
+                monthly: "Mensuelle",
+            };
+            details.push(
+                `Type : ${typeLabels[eventData.recurrence.frequency_type] || eventData.recurrence.frequency_type}`,
+            );
+        }
+
+        if (eventData.recurrence.frequency) {
+            details.push(
+                `Fréquence : ${eventData.recurrence.frequency} jour(s)`,
+            );
+        }
+
+        if (eventData.recurrence.end_date) {
+            details.push(
+                `Date de fin : ${formatDate(eventData.recurrence.end_date)}`,
+            );
+        }
+
+        if (eventData.recurrence.days && eventData.recurrence.days.length > 0) {
+            details.push(`Jours : ${eventData.recurrence.days.join(", ")}`);
+        }
+
+        return details;
+    }, [eventData.recurrence]);
+
+    const generalDetails = useMemo(() => {
+        const details = [];
+
+        details.push(`Type : ${getEventTypeLabel(eventData.type)}`);
+        details.push(`Animal(aux) : ${petNames}`);
+
+        if (eventData.start_date) {
+            details.push(`Début : ${formatDate(eventData.start_date)}`);
+        }
+
+        if (eventData.end_date) {
+            details.push(`Fin : ${formatDate(eventData.end_date)}`);
+        }
+
+        details.push(`Récurrence : ${eventData.is_recurring ? "Oui" : "Non"}`);
+        details.push(
+            `Toute la journée : ${eventData.is_full_day ? "Oui" : "Non"}`,
+        );
+
+        return details.filter(Boolean);
+    }, [eventData, petNames]);
 
     return (
         <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
@@ -46,26 +118,26 @@ export default function PreviewAiResponse({ aiResponse }: any) {
 
             <div className="mx-auto max-w-4xl text-center">
                 <h2 className="text-base font-semibold text-indigo-600">
-                    Aperçu de l'Événement
+                    Aperçu de l&apos;Événement
                 </h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                    {eventForm.title}
+                    {eventData.title}
                 </p>
             </div>
 
             <p className="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-gray-600 sm:text-xl">
-                {eventForm.notes}
+                {eventData.notes || "Aucune note"}
             </p>
 
             <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 gap-y-6 sm:mt-20 lg:max-w-4xl lg:grid-cols-2">
                 {/* Détails généraux */}
                 <div className="rounded-3xl bg-white/60 p-8 ring-1 ring-gray-900/10 sm:p-10">
                     <h3 className="text-indigo-600 text-base font-semibold">
-                        Détails de l'Événement
+                        Détails de l&apos;Événement
                     </h3>
                     <ul className="mt-8 space-y-3 text-gray-600 text-sm">
-                        {generalDetails.map((detail, index) => (
-                            <li key={index} className="flex gap-x-3">
+                        {generalDetails.map((detail) => (
+                            <li key={detail} className="flex gap-x-3">
                                 {detail}
                             </li>
                         ))}
@@ -73,14 +145,14 @@ export default function PreviewAiResponse({ aiResponse }: any) {
                 </div>
 
                 {/* Détails de la récurrence */}
-                {eventForm.is_recurring && (
+                {eventData.is_recurring && recurrenceDetails.length > 0 && (
                     <div className="rounded-3xl bg-white/60 p-8 ring-1 ring-gray-900/10 sm:p-10">
                         <h3 className="text-indigo-600 text-base font-semibold">
                             Récurrence
                         </h3>
                         <ul className="mt-8 space-y-3 text-gray-600 text-sm">
-                            {recurrenceDetails.map((detail, index) => (
-                                <li key={index} className="flex gap-x-3">
+                            {recurrenceDetails.map((detail) => (
+                                <li key={detail} className="flex gap-x-3">
                                     {detail}
                                 </li>
                             ))}
@@ -90,4 +162,6 @@ export default function PreviewAiResponse({ aiResponse }: any) {
             </div>
         </div>
     );
-}
+};
+
+export default PreviewAiResponse;

@@ -9,7 +9,7 @@ declare global {
         birthDate: string; // YYYY-MM-DD
         breed: string;
         created_at: string; // YYYY-MM-DD hh:ii
-        id: ?string; // null if new pet
+        id: string | null; // null if new pet
         isActive: boolean; // default true
         name: string; // unique
         order: number; // last order of pets
@@ -68,8 +68,8 @@ declare global {
     }
 
     interface EventFormData {
-        id: ?string;
-        master_id: ?string;
+        id: string | null;
+        master_id: string | null;
         title: string; // Titre de l'événement
         petId: string;
         type: string;
@@ -87,7 +87,85 @@ declare global {
         id: number;
         item: string;
         quantity: string;
-        notes;
+        notes: string;
+    }
+
+    interface AIEventPivot {
+        item: string;
+        quantity: string;
+        notes: string;
+    }
+
+    interface AIEventPet {
+        id: number;
+        pivot: AIEventPivot;
+    }
+
+    interface AIEventData {
+        title: string;
+        type: string;
+        petId: number[];
+        start_date: string;
+        end_date: string | null;
+        is_recurring: boolean;
+        is_full_day: boolean;
+        pets: AIEventPet[];
+        notes: string;
+        recurrence?: Recurrence;
+    }
+
+    interface AIResponse {
+        score: number;
+        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "query";
+        description: string;
+        data: AIEventData;
+    }
+
+    interface AIError {
+        error: string;
+        message: string;
+        code?: string;
+    }
+
+    // AI Assistant Conversation Types
+    interface MessageAction {
+        type: "create" | "edit" | "delete" | "view" | "regenerate";
+        label: string;
+        icon: string;
+        onClick: () => void;
+        status?: "pending" | "loading" | "success" | "error";
+    }
+
+    interface Message {
+        id: string;
+        role: "user" | "assistant" | "system";
+        content: string;
+        timestamp: Date;
+        metadata?: {
+            isStreaming?: boolean;
+            attachedEvent?: EventFormData;
+            attachedPet?: PetFormData;
+            aiResponse?: AIResponse;
+            actions?: MessageAction[];
+            error?: string;
+        };
+    }
+
+    interface Conversation {
+        id: string;
+        title: string;
+        messages: Message[];
+        createdAt: Date;
+        updatedAt: Date;
+        isPinned: boolean;
+        tags: string[];
+    }
+
+    interface ConversationState {
+        conversations: Conversation[];
+        activeConversationId: string | null;
+        isLoading: boolean;
+        streamingMessageId: string | null;
     }
 }
 

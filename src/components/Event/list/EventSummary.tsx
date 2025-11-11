@@ -82,15 +82,16 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
         setPeriode(periode);
     };
 
-    const handleChangeDoneStatus = (event: Event) => {
+    const handleChangeDoneStatus = async (event: Event) => {
         try {
-            const resp = eventService.changeDoneStatus(event);
+            const resp = await eventService.changeDoneStatus(event);
             console.log("resp", resp);
             addToast({
                 message: "Event successfully updated!",
                 type: "success",
             });
         } catch (error) {
+            console.error("Error updating event:", error);
             addToast({
                 message: "Error updating event!",
                 type: "error",

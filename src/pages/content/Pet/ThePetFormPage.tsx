@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import {
-    doc,
-    getDoc,
-    collection,
-    addDoc,
-    updateDoc,
-    getDocs,
-    query,
-    where,
-    orderBy,
-} from "firebase/firestore";
-import { db } from "../../../../firebaseConfig";
-
 import { useToast } from "../../../providers/ToastProvider";
 import PetForm from "../../../components/Pets/form/PetForm";
 import { modelService } from "../../../services";
@@ -72,71 +59,51 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
     ) => {
         const target = e.target as HTMLInputElement | HTMLSelectElement;
         const { name, value, type } = target;
+        const { checked } = target as HTMLInputElement;
 
         setFormData((prevState) => ({
             ...prevState,
-            [name]: type === "checkbox" ? "checked" : value,
+            [name]: type === "checkbox" ? checked : value,
         }));
     };
     const addPet = async (petData: PetFormData) => {
         try {
-            const authId = "1";
-
-            const petsRef = collection(db, "pets");
-            const ownerRef = doc(db, "users", authId);
-
-            const petsQuery = query(
-                petsRef,
-                where("owner_id", "==", ownerRef),
-                orderBy("order", "desc"),
-            );
-            const querySnapshot = await getDocs(petsQuery);
-
-            const maxOrder =
-                querySnapshot.docs.length > 0
-                    ? querySnapshot.docs[0].data().order
-                    : 0;
-
-            // Calculer la nouvelle valeur pour "order"
-            const newOrder = maxOrder ? maxOrder + 1 : 1;
-
             const data = {
                 name: petData.name,
                 species: petData.species,
                 breed: petData.breed,
-                birth_date: petData.birthDate, // Assurez-vous que c'est au bon format
+                birth_date: petData.birthDate,
                 isActive: true,
-                owner_id: ownerRef,
-                created_at: new Date(), // Ajoute une date de création
-                order: newOrder,
             };
-            const docRef = await addDoc(collection(db, "pets"), data);
 
-            console.log("Pet successfully added with ID:", docRef.id);
+            const petId = await modelService.add("pets", data);
+
+            console.log("Pet successfully added with ID:", petId);
             addToast({
                 message: "Pet successfully added!",
                 type: "success",
             });
-            return docRef.id;
+            return petId;
         } catch (error) {
             console.error("Error adding pet:", error);
+            addToast({
+                message: "Failed to add pet",
+                type: "error",
+            });
             throw error;
         }
     };
     const updatePet = async (id: string, petData: PetFormData) => {
         try {
-            // Référence au document dans Firestore
-            const petRef = doc(db, "pets", id);
-
-            // Mise à jour des champs du document
-            await updateDoc(petRef, {
+            const data = {
                 name: petData.name,
                 species: petData.species,
                 breed: petData.breed,
-                birth_date: petData.birthDate, // Assurez-vous que c'est au bon format
+                birth_date: petData.birthDate,
                 isActive: petData.isActive,
-                updated_at: new Date(), // Ajoute une date de mise à jour
-            });
+            };
+
+            await modelService.update("pets", id, data);
 
             console.log("Pet successfully updated!");
             addToast({
@@ -145,6 +112,10 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
             });
         } catch (error) {
             console.error("Error updating pet:", error);
+            addToast({
+                message: "Failed to update pet",
+                type: "error",
+            });
             throw error;
         }
     };

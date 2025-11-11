@@ -85,9 +85,6 @@ const EventForm = forwardRef(
             key: string,
             value: string | string[] | number | boolean,
         ) {
-            console.log("key", key);
-            console.log("value", value);
-
             setEventFormData((prev) => ({
                 ...prev,
                 recurrence: {

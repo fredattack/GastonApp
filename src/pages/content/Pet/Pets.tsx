@@ -1,4 +1,3 @@
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -9,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePets } from "../../../contexts/PetsContext";
 import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
-import { db } from "../../../../firebaseConfig";
 import { useIcons } from "../../../providers/FontawesomeProvider";
 import { modelService } from "../../../services";
 
@@ -97,21 +95,15 @@ const Pets = () => {
 
     // Method to delete the animal
     const deleteAnimal = async (id: number | string) => {
-        console.log(`Deleting animal with ID: ${id}`);
-        /*
-                const petRef = doc(db, 'pets', id);
-                deleteDoc(petRef)
-                    .then(() => {
-                        console.log(`Animal with ID: ${id} successfully deleted.`);
-                        setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
-                    })
-                    .catch((error) => {
-                        console.error(`Error deleting animal with ID: ${id}`, error);
-                    }); */
         console.log(`Preparing to delete animal with ID: ${id}`);
 
         // Sauvegarde temporaire de l'animal supprimé
         const petToDelete = pets.find((pet) => pet.id === id);
+
+        if (!petToDelete) {
+            addToast({ message: "Pet not found", type: "error" });
+            return;
+        }
 
         // Ajouter l'animal à la file d'attente
         setDeletionQueue((prevQueue: any) => [
@@ -125,20 +117,36 @@ const Pets = () => {
 
         const timeout = setTimeout(async () => {
             try {
+                // ACTUALLY DELETE THE PET FROM DATABASE
+                await modelService.delete("pets", petToDelete);
+
                 console.log(`Animal with ID: ${id} successfully deleted.`);
+                addToast({
+                    message: "Pet deleted successfully",
+                    type: "success",
+                });
 
                 // Supprimer l'animal de la file d'attente
                 setDeletionQueue((prevQueue) =>
-                    prevQueue.filter((item) => item.id !== id),
+                    prevQueue.filter((item) => item.id !== String(id)),
                 );
+
+                // Refresh pet list from server
+                refreshPets();
             } catch (error) {
                 console.error(`Error deleting animal with ID: ${id}`, error);
+                addToast({ message: "Failed to delete pet", type: "error" });
+
+                // Remove from queue on error
+                setDeletionQueue((prevQueue) =>
+                    prevQueue.filter((item) => item.id !== String(id)),
+                );
             }
         }, 10000); // 10 secondes
 
         setDeletionQueue((prevQueue) =>
             prevQueue.map((item) =>
-                item.id === id
+                item.id === String(id)
                     ? {
                           ...item,
                           timeout,

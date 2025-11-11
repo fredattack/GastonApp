@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +19,7 @@ import { useMessage } from "../../contexts/MessageContext";
 import { EventTypes } from "../../enums/EventTypes";
 
 const CTAButton = () => {
+    const navigate = useNavigate();
     const { handelOpenModal } = useMessage();
     const { registerHandelOpenModal } = useMessage();
 
@@ -85,12 +87,7 @@ const CTAButton = () => {
 
     const handlePromptInput = () => {
         try {
-            setPromptType("newPrompt");
-            setViewMode("write");
-            setStep(0);
-            setTranscription("");
-            setManualInput(true);
-            setIsModalOpen(true);
+            navigate("/ai-assistant");
         } catch (error) {
             console.error("Erreur dans handlePromptInput:", error);
         }

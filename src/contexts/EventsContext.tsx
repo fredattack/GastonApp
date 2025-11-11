@@ -26,10 +26,15 @@ export const EventsProvider: React.FC<{
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const getDateRange = (date: Date) => {
-        // Replace with your logic to get the date range
+        // Get first day of the month
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+        // Get last day of the month
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
         return {
-            start_date: "2024-01-01",
-            end_date: "2024-01-31",
+            start_date: firstDay.toISOString().split("T")[0],
+            end_date: lastDay.toISOString().split("T")[0],
         };
     };
 

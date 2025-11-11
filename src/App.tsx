@@ -21,13 +21,18 @@ import {
 
 import { IconProvider } from "./providers/FontawesomeProvider";
 import { GlobalProvider } from "./contexts/GlobalContext";
+import { AIAssistantProvider } from "./contexts/AIAssistantContext";
 
 const App = ({ children }: PropsWithChildren) => {
-    Bugsnag.start({
-        apiKey: "05ccd85ddac435639e21692be85d8bf8",
-        plugins: [new BugsnagPluginReact()],
-    });
-    BugsnagPerformance.start({ apiKey: "05ccd85ddac435639e21692be85d8bf8" });
+    const bugsnagApiKey = import.meta.env.VITE_BUGSNAG_API_KEY;
+
+    if (bugsnagApiKey) {
+        Bugsnag.start({
+            apiKey: bugsnagApiKey,
+            plugins: [new BugsnagPluginReact()],
+        });
+        BugsnagPerformance.start({ apiKey: bugsnagApiKey });
+    }
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
@@ -84,13 +89,15 @@ const App = ({ children }: PropsWithChildren) => {
         <ErrorBoundary>
             <IconProvider>
                 <GlobalProvider>
-                    <div
-                        className={`${(store.getState().themeConfig.sidebar && "toggle-sidebar") || ""} ${themeConfig.menu} ${themeConfig.layout} ${
-                            themeConfig.rtlClass
-                        } main-section antialiased relative font-nunito text-sm font-normal`}
-                    >
-                        {children}
-                    </div>
+                    <AIAssistantProvider>
+                        <div
+                            className={`${(store.getState().themeConfig.sidebar && "toggle-sidebar") || ""} ${themeConfig.menu} ${themeConfig.layout} ${
+                                themeConfig.rtlClass
+                            } main-section antialiased relative font-nunito text-sm font-normal`}
+                        >
+                            {children}
+                        </div>
+                    </AIAssistantProvider>
                 </GlobalProvider>
             </IconProvider>
         </ErrorBoundary>

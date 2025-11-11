@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,7 @@ import StepOne from "./components/StepOne";
 import PreviewAiResponse from "./components/PreviewAiResponse";
 import RecordingButton from "../RecordingButton";
 import { showConfirmUpdateEventAlert } from "../Alerts/confirmUpdateEventAlert";
+import { transformAIResponseToEventForm } from "../../utils/aiTransformers";
 
 interface SpeechRecognitionModalProps {
     event: Event | null;
@@ -71,15 +72,15 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         species: "dog",
     });
 
-    const eventFormRef = useRef<any>(null); // Référence pour EventForm
-    const stepOneRef = useRef<any>(null); // Référence pour setOne
-    const petRef = useRef<any>(null); // Référence pour petForm
+    const eventFormRef = useRef<{ handleSubmit: () => Promise<void> }>(null);
+    const stepOneRef = useRef<{ handleSubmit: () => Promise<void> }>(null);
+    const petRef = useRef<{ handleSubmit: () => Promise<void> }>(null);
 
     const [load, setLoad] = useState(false);
     const [prompt, setPrompt] = useState<string>(transcription);
     const [promptType, setPromptType] = useState(initialPromptType);
     const [viewMode, setViewMode] = useState(initialViewMode);
-    const [aiResponse, setAiResponse] = useState(Object);
+    const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
 
     useEffect(() => {
         setCurrentStep(initialStep);
@@ -88,7 +89,6 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
     if (!isOpen) return null;
 
     const handleNext = () => {
-        console.log("handleNext", prompt);
         if (currentStep < 2) setCurrentStep((prev) => prev + 1);
     };
 
@@ -96,17 +96,20 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         if (currentStep > 0) setCurrentStep((prev) => prev - 1);
     };
 
-    async function handlePostSubmit(responseObject: any) {
+    function handlePostSubmit(responseObject: AIResponse) {
         setLoad(false);
-        await setAiResponse(responseObject);
-        await setPromptType(responseObject.requestType);
+        setAiResponse(responseObject);
+        setPromptType(responseObject.requestType);
 
-        if (currentStep == 0) {
-            if (responseObject.requestType == "createEvent") {
-                await setEventData(responseObject?.response);
+        if (currentStep === 0) {
+            if (responseObject.requestType === "createEvent") {
+                const transformedData = transformAIResponseToEventForm(
+                    responseObject.data,
+                );
+                setEventData(transformedData);
             }
-            if (responseObject.requestType == "createPet") {
-                setPetData(responseObject?.response);
+            if (responseObject.requestType === "createPet") {
+                setPetData(responseObject.data as unknown as PetFormData);
             }
             setCurrentStep(1);
             setViewMode("edit");
@@ -122,7 +125,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         setLoad(!load);
         if (currentStep === 2) return;
         if (currentStep === 0) {
-            stepOneRef.current.handleSubmit();
+            stepOneRef.current?.handleSubmit();
             return;
         }
 
@@ -130,35 +133,32 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
             setViewMode("edit");
             if (event?.id || event?.master_id) {
                 showConfirmUpdateEventAlert(eventData, () => {
-                    console.log("Event updated successfully!");
                     succesUpdate();
                 });
                 return;
             }
-            if (promptType == "createPet") {
-                petRef.current.handleSubmit();
+            if (promptType === "createPet") {
+                petRef.current?.handleSubmit();
             }
-            if (promptType == "createEvent") {
-                eventFormRef.current.handleSubmit();
+            if (promptType === "createEvent") {
+                eventFormRef.current?.handleSubmit();
             }
         }
         setLoad(!load);
     };
 
-    const handlePromptChange = (value: any) => {
-        console.log("handlePromptChange", value);
+    const handlePromptChange = (value: string) => {
         setPrompt(value);
     };
 
     const handleRecallAi = () => {
         setLoad(!load);
-        stepOneRef.current.handleSubmit();
+        stepOneRef.current?.handleSubmit();
         setLoad(!load);
     };
 
-    const handleSetEventData = (data: any) => {
-        console.log("handleSetEventData", data);
-        setEventData((prevData: any) => ({
+    const handleSetEventData = (data: Partial<EventFormData>) => {
+        setEventData((prevData) => ({
             ...prevData,
             ...data,
         }));
@@ -196,9 +196,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                             ref={stepOneRef}
                             prompt={prompt}
                             isManualInput
-                            onSubmit={(data: any) => {
-                                handlePostSubmit(data);
-                            }}
+                            onSubmit={handlePostSubmit}
                             onChange={handlePromptChange}
                             onCancel={handleBack}
                         />
@@ -206,52 +204,33 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                     {currentStep === 1 &&
                         viewMode === "preview" &&
                         aiResponse && (
-                            <div>
-                                {aiResponse.length && (
-                                    <pre className="bg-gray-100 p-4 rounded overflow-auto">
-                                        {JSON.stringify(aiResponse, null, 2)}
-                                    </pre>
-                                )}
-                                <PreviewAiResponse aiResponse={aiResponse} />
-                            </div>
+                            <PreviewAiResponse aiResponse={aiResponse} />
                         )}
                     {currentStep === 1 &&
                         promptType === "createEvent" &&
-                        viewMode != "preview" && (
-                            <div>
-                                {aiResponse.length && (
-                                    <pre className="bg-gray-100 p-4 rounded overflow-auto">
-                                        {JSON.stringify(aiResponse, null, 2)}
-                                    </pre>
-                                )}
-
-                                <EventForm
-                                    event={eventData}
-                                    ref={eventFormRef}
-                                    onChange={(updatedData: any) =>
-                                        handleSetEventData(updatedData)
-                                    }
-                                    onSubmit={() => onClose()}
-                                    onCancel={() => setCurrentStep(0)}
-                                />
-                            </div>
+                        viewMode !== "preview" && (
+                            <EventForm
+                                event={eventData}
+                                ref={eventFormRef}
+                                onChange={handleSetEventData}
+                                onSubmit={() => onClose()}
+                                onCancel={() => setCurrentStep(0)}
+                            />
                         )}
                     {currentStep === 1 &&
                         promptType === "createPet" &&
-                        viewMode != "preview" && (
-                            <div>
-                                <PetForm
-                                    petFormData={petData}
-                                    ref={petRef}
-                                    onChange={(updatedData: any) => {
-                                        setEventData((prevData: any) => ({
-                                            ...prevData,
-                                            ...updatedData,
-                                        }));
-                                    }}
-                                    onCancel={() => setCurrentStep(0)}
-                                />
-                            </div>
+                        viewMode !== "preview" && (
+                            <PetForm
+                                petFormData={petData}
+                                ref={petRef}
+                                onChange={(updatedData) => {
+                                    setEventData((prevData) => ({
+                                        ...prevData,
+                                        ...updatedData,
+                                    }));
+                                }}
+                                onCancel={() => setCurrentStep(0)}
+                            />
                         )}
                 </div>
                 <div className="flex justify-between items-center mt-6 ">
