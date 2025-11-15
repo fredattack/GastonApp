@@ -99,6 +99,39 @@ if ! $SSH_CMD "echo 'Connection successful'" &> /dev/null; then
 fi
 echo -e "${GREEN}✅ SSH connection successful${NC}"
 
+# Check if Docker is installed
+echo -e "${YELLOW}🐳 Checking Docker installation...${NC}"
+if ! $SSH_CMD "command -v docker &> /dev/null"; then
+    echo -e "${RED}⚠️  Docker is not installed on the droplet${NC}"
+    echo -e "${YELLOW}💡 GastonApp requires Docker and Docker Compose to run${NC}"
+    echo ""
+    read -p "Do you want to install Docker and prerequisites automatically? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}📦 Installing prerequisites on droplet...${NC}"
+        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+        # Upload and run installation script
+        SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+        $SSH_CMD "mkdir -p /tmp/gastonapp-setup"
+        scp $(echo "$SSH_CMD" | sed 's/ssh/scp/' | sed "s/${REMOTE_USER}@${DROPLET_IP}//") \
+            "${SCRIPT_DIR}/install-prerequisites.sh" \
+            "${REMOTE_USER}@${DROPLET_IP}:/tmp/gastonapp-setup/install-prerequisites.sh"
+
+        $SSH_CMD "chmod +x /tmp/gastonapp-setup/install-prerequisites.sh && sudo /tmp/gastonapp-setup/install-prerequisites.sh"
+
+        echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${GREEN}✅ Prerequisites installed successfully${NC}"
+    else
+        echo -e "${RED}❌ Deployment cancelled${NC}"
+        echo -e "${YELLOW}💡 Please install Docker manually or run this script again and choose 'y'${NC}"
+        exit 1
+    fi
+else
+    echo -e "${GREEN}✅ Docker is installed${NC}"
+    $SSH_CMD "docker --version"
+fi
+
 # Check if project exists on remote
 echo -e "${YELLOW}📂 Checking remote project...${NC}"
 if $SSH_CMD "[ -d ${REMOTE_PATH} ]"; then

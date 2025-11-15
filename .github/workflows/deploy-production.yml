@@ -51,14 +51,9 @@ jobs:
         run: |
           cd apps/web
           cat > .env << EOF
-          VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}
           VITE_API_URL=${{ secrets.VITE_API_URL }}
+          VITE_BUGSNAG_API_KEY=${{ secrets.VITE_BUGSNAG_API_KEY }}
           VITE_NODE_ENV=production
           EOF
 
@@ -100,17 +95,12 @@ jobs:
             git pull origin master
 
             echo "📝 Updating environment variables..."
-            cat > apps/web/.env << EOF
-          VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
+            cat > apps/web/.env << 'ENVEOF'
           VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}
           VITE_API_URL=${{ secrets.VITE_API_URL }}
+          VITE_BUGSNAG_API_KEY=${{ secrets.VITE_BUGSNAG_API_KEY }}
           VITE_NODE_ENV=production
-          EOF
+          ENVEOF
 
             echo "🐳 Deploying with Docker..."
             ./.deploy/deploy.sh
