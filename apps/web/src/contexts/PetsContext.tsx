@@ -4,6 +4,7 @@ import { modelService } from "../services/index";
 
 interface PetsContextType {
     pets: Pet[];
+    isLoading: boolean;
     refreshPets: () => void;
 }
 
@@ -13,13 +14,17 @@ export const PetsProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     const [pets, setPets] = useState<Pet[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const fetchPets = async () => {
+        setIsLoading(true);
         try {
             const data = await modelService.getModels("pets");
             setPets(data);
         } catch (error) {
             console.error("Failed to fetch pets:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -31,6 +36,7 @@ export const PetsProvider: React.FC<{
         <PetsContext.Provider
             value={{
                 pets,
+                isLoading,
                 refreshPets: fetchPets,
             }}
         >

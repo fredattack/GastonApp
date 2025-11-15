@@ -739,6 +739,28 @@
 .capitalize-first {
     @apply first-letter:uppercase; /* Capitalizes the first letter of the first word */
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Optimized focus states for accessibility */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+}
+
+/* Skip to main content link for screen readers */
+.skip-link {
+    @apply absolute -top-full left-0 bg-primary text-white px-4 py-2 z-50 focus:top-0 transition-all;
+}
+
 /* Hightlight JS */
 pre.hljs {
     @apply p-6 rounded-md overflow-x-auto !bg-[#191e3a];

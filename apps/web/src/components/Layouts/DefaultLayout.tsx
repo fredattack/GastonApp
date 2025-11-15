@@ -8,6 +8,8 @@ import Header from "./Header";
 import Setting from "./Setting";
 import Sidebar from "./Sidebar";
 import Portals from "../Portals";
+import TabBar from "../Navigation/TabBar";
+import FAB from "../Common/FAB";
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -146,6 +148,14 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                         {/* END FOOTER */}
                         <Portals />
                     </div>
+
+                    {/* BEGIN MOBILE TAB BAR */}
+                    <TabBar />
+                    {/* END MOBILE TAB BAR */}
+
+                    {/* BEGIN FAB */}
+                    <FAB />
+                    {/* END FAB */}
                 </div>
             </div>
         </App>

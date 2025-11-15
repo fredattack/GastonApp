@@ -41,10 +41,14 @@ const FAB: React.FC<FABProps> = ({
                 active:scale-95
                 flex items-center justify-center
                 md:bottom-8 md:right-8
+                lg:bottom-24 lg:right-8
+                focus:outline-none focus:ring-4 focus:ring-primary/50
             "
             aria-label={ariaLabel}
+            title={ariaLabel}
+            type="button"
         >
-            {icon}
+            <span aria-hidden="true">{icon}</span>
         </button>
     );
 };

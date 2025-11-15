@@ -20,7 +20,6 @@ import IconUser from "../Icon/IconUser";
 import IconMail from "../Icon/IconMail";
 import IconLockDots from "../Icon/IconLockDots";
 import IconLogout from "../Icon/IconLogout";
-import CTAButton from "./CTAButton";
 import { useIcons } from "../../providers/FontawesomeProvider";
 
 const Header = () => {
@@ -521,9 +520,6 @@ const Header = () => {
                                     </ul>
                                 </Dropdown>
                             </div> */}
-                        <div className="dropdown shrink-0">
-                            <CTAButton />
-                        </div>
                         <div className="dropdown shrink-0 flex">
                             <Dropdown
                                 offset={[0, 8]}

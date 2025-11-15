@@ -36,7 +36,7 @@ const TabBar: React.FC = () => {
             label: "Animaux",
         },
         {
-            path: "/",
+            path: "/calendar",
             icon: faCalendar,
             emoji: "📅",
             label: "Calendrier",
@@ -65,6 +65,8 @@ const TabBar: React.FC = () => {
                 pb-safe
                 lg:hidden
             "
+            role="navigation"
+            aria-label="Navigation principale mobile"
         >
             <div className="grid grid-cols-4 h-16">
                 {tabs.map((tab) => {
@@ -77,21 +79,25 @@ const TabBar: React.FC = () => {
                                 flex flex-col items-center justify-center
                                 min-h-[44px]
                                 transition-colors duration-200
+                                focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset
                                 ${
                                     active
                                         ? "text-primary"
                                         : "text-gray-500 dark:text-gray-400"
                                 }
                             `}
+                            aria-label={tab.label}
+                            aria-current={active ? "page" : undefined}
                         >
                             {tab.emoji ? (
-                                <span className="text-2xl mb-1">
+                                <span className="text-2xl mb-1" aria-hidden="true">
                                     {tab.emoji}
                                 </span>
                             ) : (
                                 <FontAwesomeIcon
                                     icon={tab.icon}
                                     className="text-xl mb-1"
+                                    aria-hidden="true"
                                 />
                             )}
                             <span className="text-xs font-medium">
