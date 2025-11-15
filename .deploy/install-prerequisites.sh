@@ -28,15 +28,42 @@ if [ -f /etc/os-release ]; then
     . /etc/os-release
     OS=$ID
     VER=$VERSION_ID
+    VERSION_CODENAME=${VERSION_CODENAME:-unknown}
 else
     echo -e "${RED}❌ Cannot detect OS${NC}"
     exit 1
 fi
 
 echo -e "${BLUE}📋 System Information:${NC}"
-echo -e "   OS: $OS $VER"
+echo -e "   OS: $OS $VER ($VERSION_CODENAME)"
 echo -e "   Hostname: $(hostname)"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+# Check if OS version is supported
+if [ "$OS" = "ubuntu" ] && [ "$VERSION_CODENAME" = "oracular" ]; then
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${RED}❌ ERROR: Ubuntu 24.10 (Oracular) is END-OF-LIFE${NC}"
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "${YELLOW}Ubuntu 24.10 has reached end-of-life and repositories are no longer available.${NC}"
+    echo -e "${YELLOW}Docker installation will fail on this version.${NC}"
+    echo ""
+    echo -e "${GREEN}✅ SOLUTION - Recreate your droplet:${NC}"
+    echo ""
+    echo -e "${BLUE}1. Go to DigitalOcean Dashboard${NC}"
+    echo -e "${BLUE}2. Create new droplet with: Ubuntu 24.04 LTS (Noble)${NC}"
+    echo -e "${BLUE}3. Update GitHub secrets with new droplet IP${NC}"
+    echo -e "${BLUE}4. Re-run the deployment${NC}"
+    echo ""
+    echo -e "${GREEN}Why Ubuntu 24.04 LTS?${NC}"
+    echo -e "   • Supported until 2029 (5 years of updates)"
+    echo -e "   • Receives security patches"
+    echo -e "   • Stable and production-ready"
+    echo -e "   • Fully compatible with Docker"
+    echo ""
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    exit 1
+fi
 
 # Update system (ignore errors if repos are unavailable)
 echo -e "${YELLOW}📦 Updating system packages...${NC}"

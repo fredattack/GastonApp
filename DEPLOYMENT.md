@@ -17,7 +17,28 @@ This document provides comprehensive instructions for deploying GastonApp to Dig
 
 ## Prerequisites
 
-### Required Software
+### Digital Ocean Droplet Requirements
+
+**⚠️ IMPORTANT: Use Ubuntu LTS versions only!**
+
+For production deployment, create a droplet with:
+- **OS**: Ubuntu 24.04 LTS (Noble) - **RECOMMENDED**
+- **Alternative**: Ubuntu 22.04 LTS (Jammy)
+- **Memory**: Minimum 512MB RAM (1GB+ recommended)
+- **Storage**: Minimum 10GB
+
+**❌ DO NOT USE:**
+- Ubuntu 24.10 (Oracular) - End-of-life, repositories unavailable
+- Ubuntu 23.x - Non-LTS versions
+- Other non-LTS versions
+
+**Why LTS (Long Term Support)?**
+- Supported for 5 years with security updates
+- Stable and production-ready
+- Package repositories remain available
+- Docker officially supports LTS versions
+
+### Required Software (Local Development)
 - **Node.js**: 22.3.0 or later
 - **pnpm**: 9.0.0 or later (will be installed via corepack)
 - **Docker**: Latest version
