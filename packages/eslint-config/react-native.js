@@ -14,7 +14,4 @@ module.exports = {
     'prettier/prettier': 'warn',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
   },
-  env: {
-    'react-native/react-native': true,
-  },
 };

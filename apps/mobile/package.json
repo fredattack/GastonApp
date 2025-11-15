@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "@gastonapp/eslint-config": "workspace:*",
     "@gastonapp/typescript-config": "workspace:*",
     "@types/react": "~18.2.0",
+    "eslint": "^8.57.1",
     "typescript": "^5.1.3"
   }
 }

@@ -34,10 +34,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
                         : "bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                 }`}
             >
-                <FontAwesomeIcon
-                    icon={isUser ? faUser : faRobot}
-                    size="sm"
-                />
+                <FontAwesomeIcon icon={isUser ? faUser : faRobot} size="sm" />
             </div>
 
             <div className={`max-w-[80%] ${bubbleClasses} px-4 py-3 shadow-sm`}>

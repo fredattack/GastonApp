@@ -90,7 +90,10 @@ const TabBar: React.FC = () => {
                             aria-current={active ? "page" : undefined}
                         >
                             {tab.emoji ? (
-                                <span className="text-2xl mb-1" aria-hidden="true">
+                                <span
+                                    className="text-2xl mb-1"
+                                    aria-hidden="true"
+                                >
                                     {tab.emoji}
                                 </span>
                             ) : (

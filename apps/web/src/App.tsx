@@ -37,7 +37,8 @@ const App = ({ children }: PropsWithChildren) => {
         BugsnagPerformance.start({ apiKey: bugsnagApiKey });
 
         // Get Bugsnag ErrorBoundary
-        ErrorBoundary = Bugsnag.getPlugin("react")?.createErrorBoundary(React) || null;
+        ErrorBoundary =
+            Bugsnag.getPlugin("react")?.createErrorBoundary(React) || null;
     }
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);

@@ -29,8 +29,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     primary: {
                         label: "Créer cet événement",
                         icon: faCheck,
-                        className:
-                            "bg-success hover:bg-success/90 text-white",
+                        className: "bg-success hover:bg-success/90 text-white",
                     },
                     secondary: {
                         label: "Modifier d'abord",
@@ -45,8 +44,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     primary: {
                         label: "Appliquer la modification",
                         icon: faCheck,
-                        className:
-                            "bg-warning hover:bg-warning/90 text-white",
+                        className: "bg-warning hover:bg-warning/90 text-white",
                     },
                     secondary: {
                         label: "Ajuster",
@@ -69,8 +67,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     primary: {
                         label: "Confirmer la suppression",
                         icon: faExclamationTriangle,
-                        className:
-                            "bg-danger hover:bg-danger/90 text-white",
+                        className: "bg-danger hover:bg-danger/90 text-white",
                     },
                     secondary: {
                         label: "Annuler",
@@ -85,8 +82,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     primary: {
                         label: "Confirmer",
                         icon: faCheck,
-                        className:
-                            "bg-primary hover:bg-primary/90 text-white",
+                        className: "bg-primary hover:bg-primary/90 text-white",
                     },
                     secondary: {
                         label: "Modifier",
@@ -112,19 +108,31 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     <span className="animate-spin inline-block w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent rounded-full" />
                 ) : (
                     <>
-                        <FontAwesomeIcon icon={actions.primary.icon} className="text-sm md:text-base" />
-                        <span className="truncate">{actions.primary.label}</span>
+                        <FontAwesomeIcon
+                            icon={actions.primary.icon}
+                            className="text-sm md:text-base"
+                        />
+                        <span className="truncate">
+                            {actions.primary.label}
+                        </span>
                     </>
                 )}
             </button>
 
             {/* Secondary Action */}
             <button
-                onClick={requestType === "deleteEvent" && onCancel ? onCancel : onEdit}
+                onClick={
+                    requestType === "deleteEvent" && onCancel
+                        ? onCancel
+                        : onEdit
+                }
                 disabled={isLoading}
                 className={`min-h-[44px] py-2.5 px-4 md:py-3 md:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 font-medium text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${actions.secondary.className}`}
             >
-                <FontAwesomeIcon icon={actions.secondary.icon} className="text-sm md:text-base" />
+                <FontAwesomeIcon
+                    icon={actions.secondary.icon}
+                    className="text-sm md:text-base"
+                />
                 <span className="truncate">{actions.secondary.label}</span>
             </button>
 
@@ -135,7 +143,10 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     disabled={isLoading}
                     className={`min-h-[44px] py-2.5 px-4 md:py-3 md:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 font-medium text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${actions.tertiary.className}`}
                 >
-                    <FontAwesomeIcon icon={actions.tertiary.icon} className="text-sm md:text-base" />
+                    <FontAwesomeIcon
+                        icon={actions.tertiary.icon}
+                        className="text-sm md:text-base"
+                    />
                     <span className="truncate">{actions.tertiary.label}</span>
                 </button>
             )}

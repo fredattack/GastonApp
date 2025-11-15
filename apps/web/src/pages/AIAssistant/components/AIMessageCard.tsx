@@ -39,7 +39,9 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
         return attachedEvent.pets.map((eventPet) => {
             // Essayer de trouver le pet dans le contexte, sinon utiliser directement eventPet
-            const contextPet = pets.find((p) => p.id === eventPet.id.toString());
+            const contextPet = pets.find(
+                (p) => p.id === eventPet.id.toString(),
+            );
             const pet = contextPet || eventPet;
 
             return {
@@ -56,7 +58,8 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         try {
             if (!attachedEvent.type || !attachedEvent.start_date) {
                 addToast({
-                    message: "Les champs Type et Date de début sont obligatoires !",
+                    message:
+                        "Les champs Type et Date de début sont obligatoires !",
                     type: "error",
                 });
                 setIsCreating(false);
@@ -67,12 +70,16 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
             // et transformer pivot de tableau à objet pour l'API
             const enrichedEvent = {
                 ...attachedEvent,
-                pets: attachedEvent.pets.map(eventPet => {
-                    const pet = pets.find(p => p.id === eventPet.id.toString());
+                pets: attachedEvent.pets.map((eventPet) => {
+                    const pet = pets.find(
+                        (p) => p.id === eventPet.id.toString(),
+                    );
                     // Extraire les données pivot du premier élément du tableau
-                    const pivotData = Array.isArray(eventPet.pivot) && eventPet.pivot.length > 0
-                        ? eventPet.pivot[0]
-                        : eventPet.pivot;
+                    const pivotData =
+                        Array.isArray(eventPet.pivot) &&
+                        eventPet.pivot.length > 0
+                            ? eventPet.pivot[0]
+                            : eventPet.pivot;
 
                     return {
                         id: eventPet.id,
@@ -86,9 +93,9 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                             item: pivotData?.item || "",
                             quantity: pivotData?.quantity || "",
                             notes: pivotData?.notes || "",
-                        }
+                        },
                     };
-                })
+                }),
             };
 
             await modelService.add("events", enrichedEvent);
@@ -104,7 +111,8 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         } catch (error) {
             console.error("Erreur lors de la création de l'événement :", error);
             addToast({
-                message: "Une erreur est survenue lors de la création de l'événement.",
+                message:
+                    "Une erreur est survenue lors de la création de l'événement.",
                 type: "error",
             });
         } finally {
@@ -135,9 +143,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const requestType = aiResponse?.requestType || "createEvent";
     const score = aiResponse?.score;
     const description =
-        message.content ||
-        aiResponse?.description ||
-        "Génération en cours...";
+        message.content || aiResponse?.description || "Génération en cours...";
 
     return (
         <div className="flex gap-3 mb-4 items-start">

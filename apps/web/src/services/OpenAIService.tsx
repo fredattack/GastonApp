@@ -198,10 +198,7 @@ export class OpenAiService {
                 }
             }
         } catch (error) {
-            if (
-                error instanceof TypeError &&
-                error.message.includes("fetch")
-            ) {
+            if (error instanceof TypeError && error.message.includes("fetch")) {
                 console.warn(
                     "Streaming endpoint not reachable, falling back to regular API",
                 );
@@ -217,9 +214,7 @@ export class OpenAiService {
                 onError(error);
             } else {
                 onError(
-                    new Error(
-                        "An unknown error occurred during streaming",
-                    ),
+                    new Error("An unknown error occurred during streaming"),
                 );
             }
         }

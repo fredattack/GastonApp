@@ -39,7 +39,11 @@ class Logger {
     /**
      * Error logs - always shown + sent to Bugsnag
      */
-    error(message: string, error?: Error | unknown, metadata?: Record<string, unknown>): void {
+    error(
+        message: string,
+        error?: Error | unknown,
+        metadata?: Record<string, unknown>,
+    ): void {
         console.error("[ERROR]", message, error);
 
         // Send to Bugsnag in production

@@ -23,15 +23,16 @@ export function transformAIResponseToEventForm(
         },
         notes: data.notes || "",
         is_done: false,
-        pets: data.pets?.map((aiPet) => ({
-            id: aiPet.id.toString(),
-            name: "",
-            species: "",
-            breed: "",
-            birthDate: "",
-            ownerId: "",
-            pivot: Array.isArray(aiPet.pivot) ? aiPet.pivot : [aiPet.pivot],
-        })) || [],
+        pets:
+            data.pets?.map((aiPet) => ({
+                id: aiPet.id.toString(),
+                name: "",
+                species: "",
+                breed: "",
+                birthDate: "",
+                ownerId: "",
+                pivot: Array.isArray(aiPet.pivot) ? aiPet.pivot : [aiPet.pivot],
+            })) || [],
     };
 }
 

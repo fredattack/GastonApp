@@ -87,7 +87,10 @@ const TodayTimeline: React.FC = () => {
     }
 
     return (
-        <section className="mb-6 md:mb-8" aria-labelledby="today-events-heading">
+        <section
+            className="mb-6 md:mb-8"
+            aria-labelledby="today-events-heading"
+        >
             <div className="flex items-center justify-between mb-4">
                 <h2
                     id="today-events-heading"

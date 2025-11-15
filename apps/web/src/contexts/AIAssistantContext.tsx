@@ -26,17 +26,17 @@ interface AIAssistantContextValue {
     clearAllConversations: () => void;
 }
 
-const AIAssistantContext = createContext<
-    AIAssistantContextValue | undefined
->(undefined);
+const AIAssistantContext = createContext<AIAssistantContextValue | undefined>(
+    undefined,
+);
 
 interface AIAssistantProviderProps {
     children: ReactNode;
 }
 
-export const AIAssistantProvider: React.FC<
-    AIAssistantProviderProps
-> = ({ children }) => {
+export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
+    children,
+}) => {
     const [state, setState] = useState<ConversationState>({
         conversations: [],
         activeConversationId: null,
@@ -55,13 +55,14 @@ export const AIAssistantProvider: React.FC<
         }));
     }, []);
 
-    const activeConversation = state.conversations.find(
-        (c) => c.id === state.activeConversationId,
-    ) || null;
+    const activeConversation =
+        state.conversations.find((c) => c.id === state.activeConversationId) ||
+        null;
 
-    const streamingMessage = activeConversation?.messages.find(
-        (m) => m.id === state.streamingMessageId,
-    ) || null;
+    const streamingMessage =
+        activeConversation?.messages.find(
+            (m) => m.id === state.streamingMessageId,
+        ) || null;
 
     const createConversation = useCallback((title?: string): Conversation => {
         const newConversation = conversationService.create(title);
@@ -103,22 +104,19 @@ export const AIAssistantProvider: React.FC<
         }));
     }, []);
 
-    const updateConversationTitle = useCallback(
-        (id: string, title: string) => {
-            const conversation = conversationService.getById(id);
-            if (conversation) {
-                conversation.title = title;
-                conversationService.save(conversation);
-                setState((prev) => ({
-                    ...prev,
-                    conversations: prev.conversations.map((c) =>
-                        c.id === id ? { ...c, title } : c,
-                    ),
-                }));
-            }
-        },
-        [],
-    );
+    const updateConversationTitle = useCallback((id: string, title: string) => {
+        const conversation = conversationService.getById(id);
+        if (conversation) {
+            conversation.title = title;
+            conversationService.save(conversation);
+            setState((prev) => ({
+                ...prev,
+                conversations: prev.conversations.map((c) =>
+                    c.id === id ? { ...c, title } : c,
+                ),
+            }));
+        }
+    }, []);
 
     const searchConversations = useCallback((query: string): Conversation[] => {
         return conversationService.search(query);
@@ -145,13 +143,10 @@ export const AIAssistantProvider: React.FC<
                 conversationId = newConv.id;
             }
 
-            const userMessage = conversationService.addMessage(
-                conversationId,
-                {
-                    role: "user",
-                    content: content.trim(),
-                },
-            );
+            const userMessage = conversationService.addMessage(conversationId, {
+                role: "user",
+                content: content.trim(),
+            });
 
             setState((prev) => ({
                 ...prev,
@@ -248,7 +243,8 @@ export const AIAssistantProvider: React.FC<
                                                             isStreaming: false,
                                                             attachedEvent:
                                                                 transformedEvent,
-                                                            aiResponse: finalResponse,
+                                                            aiResponse:
+                                                                finalResponse,
                                                         },
                                                     }
                                                   : m,

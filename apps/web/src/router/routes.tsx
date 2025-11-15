@@ -4,9 +4,7 @@ const Index = lazy(() => import("../pages/Index"));
 // @ts-ignore
 const Pets = lazy(() => import("../pages/content/Pet/Pets"));
 const PetForm = lazy(() => import("../pages/content/Pet/ThePetFormPage"));
-const AIAssistant = lazy(
-    () => import("../pages/AIAssistant/AIAssistantPage"),
-);
+const AIAssistant = lazy(() => import("../pages/AIAssistant/AIAssistantPage"));
 
 const routes = [
     // dashboard

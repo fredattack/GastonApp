@@ -75,9 +75,16 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Accueil"
-                                    aria-current={({ isActive }) => isActive ? "page" : undefined}
+                                    aria-current={({ isActive }) =>
+                                        isActive ? "page" : undefined
+                                    }
                                 >
-                                    <span className="text-xl" aria-hidden="true">🏠</span>
+                                    <span
+                                        className="text-xl"
+                                        aria-hidden="true"
+                                    >
+                                        🏠
+                                    </span>
                                     <span className="font-medium">
                                         {t("home")}
                                     </span>
@@ -95,9 +102,16 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Animaux"
-                                    aria-current={({ isActive }) => isActive ? "page" : undefined}
+                                    aria-current={({ isActive }) =>
+                                        isActive ? "page" : undefined
+                                    }
                                 >
-                                    <span className="text-xl" aria-hidden="true">🐾</span>
+                                    <span
+                                        className="text-xl"
+                                        aria-hidden="true"
+                                    >
+                                        🐾
+                                    </span>
                                     <span className="font-medium">
                                         {t("animals")}
                                     </span>
@@ -115,9 +129,16 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Calendrier"
-                                    aria-current={({ isActive }) => isActive ? "page" : undefined}
+                                    aria-current={({ isActive }) =>
+                                        isActive ? "page" : undefined
+                                    }
                                 >
-                                    <span className="text-xl" aria-hidden="true">📅</span>
+                                    <span
+                                        className="text-xl"
+                                        aria-hidden="true"
+                                    >
+                                        📅
+                                    </span>
                                     <span className="font-medium">
                                         Calendrier
                                     </span>
@@ -135,12 +156,17 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Profil"
-                                    aria-current={({ isActive }) => isActive ? "page" : undefined}
+                                    aria-current={({ isActive }) =>
+                                        isActive ? "page" : undefined
+                                    }
                                 >
-                                    <span className="text-xl" aria-hidden="true">👤</span>
-                                    <span className="font-medium">
-                                        Profil
+                                    <span
+                                        className="text-xl"
+                                        aria-hidden="true"
+                                    >
+                                        👤
                                     </span>
+                                    <span className="font-medium">Profil</span>
                                 </NavLink>
                             </li>
                         </ul>

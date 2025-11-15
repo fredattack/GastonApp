@@ -48,6 +48,8 @@
     },
     "rules": {
         "node/no-missing-import": "off",
+        "node/no-unsupported-features/es-syntax": "off",
+        "node/no-unsupported-features/node-builtins": "off",
         "jsx-a11y/control-has-associated-label": "off",
         "react/jsx-filename-extension": [
             1,

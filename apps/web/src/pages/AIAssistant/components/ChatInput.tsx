@@ -89,7 +89,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                     : "bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 hover:shadow-lg hover:scale-105"
                             } disabled:opacity-50 disabled:cursor-not-allowed`}
                             aria-label={
-                                isRecording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement"
+                                isRecording
+                                    ? "Arrêter l'enregistrement"
+                                    : "Démarrer l'enregistrement"
                             }
                         >
                             <FontAwesomeIcon icon={faMicrophone} />
@@ -112,8 +114,19 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
                 <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
                     <span className="inline-flex items-center gap-1">
-                        Appuyez sur <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">Entrée</kbd> pour envoyer,{" "}
-                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">Shift</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">Entrée</kbd> pour une nouvelle ligne
+                        Appuyez sur{" "}
+                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
+                            Entrée
+                        </kbd>{" "}
+                        pour envoyer,{" "}
+                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
+                            Shift
+                        </kbd>{" "}
+                        +{" "}
+                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
+                            Entrée
+                        </kbd>{" "}
+                        pour une nouvelle ligne
                     </span>
                 </div>
             </div>

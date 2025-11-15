@@ -27,7 +27,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
                 <div className="text-center max-w-2xl mx-auto">
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+                            <div className="w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
                         </div>
                         <div className="relative text-7xl animate-bounce-slow">
                             🤖

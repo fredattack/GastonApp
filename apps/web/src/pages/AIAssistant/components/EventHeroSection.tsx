@@ -61,7 +61,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
                             />
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Pour</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Pour
+                            </p>
                             <h4 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">
                                 {petInfo.pet?.name || "Animal"}
                             </h4>
@@ -76,7 +78,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
         <>
             {primaryData.item && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">{getEmoji(eventType)}</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        {getEmoji(eventType)}
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Aliment
@@ -89,7 +93,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
             )}
             {primaryData.quantity && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">📦</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        📦
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Quantité
@@ -107,7 +113,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
         <>
             {primaryData.medication && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">{getEmoji(eventType)}</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        {getEmoji(eventType)}
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Médicament
@@ -120,7 +128,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
             )}
             {primaryData.dosage && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">💉</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        💉
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Dosage
@@ -133,7 +143,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
             )}
             {primaryData.frequency && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">🔄</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        🔄
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Fréquence
@@ -151,7 +163,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
         <>
             {primaryData.location && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">{getEmoji(eventType)}</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        {getEmoji(eventType)}
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Lieu
@@ -164,7 +178,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
             )}
             {primaryData.duration && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">⏱️</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        ⏱️
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Durée
@@ -182,7 +198,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
         <>
             {primaryData.activity && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">{getEmoji(eventType)}</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        {getEmoji(eventType)}
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Activité
@@ -195,7 +213,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
             )}
             {primaryData.duration && (
                 <div className="flex items-start gap-2 md:gap-3 mb-3">
-                    <span className="text-xl md:text-2xl flex-shrink-0">⏱️</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        ⏱️
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Durée
@@ -224,7 +244,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
                 return (
                     primaryData.details && (
                         <div className="flex items-start gap-2 md:gap-3 mb-3">
-                            <span className="text-xl md:text-2xl flex-shrink-0">📌</span>
+                            <span className="text-xl md:text-2xl flex-shrink-0">
+                                📌
+                            </span>
                             <div className="flex-1 min-w-0">
                                 <p className="text-base md:text-lg font-semibold text-gray-900 dark:text-white break-words">
                                     {primaryData.details}
@@ -247,7 +269,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
 
                 {/* Date/Time - Always shown */}
                 <div className="flex items-start gap-2 md:gap-3 mb-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <span className="text-xl md:text-2xl flex-shrink-0">📅</span>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                        📅
+                    </span>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Quand

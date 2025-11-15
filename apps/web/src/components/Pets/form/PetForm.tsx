@@ -14,7 +14,9 @@ import {
 interface PetFormProps {
     petFormData: PetFormData;
     onSubmit?: (data: PetFormData) => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    onChange: (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    ) => void;
     onCancel?: () => void;
     submitable?: boolean;
 }
@@ -45,7 +47,9 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                 const validation = validatePetForm(petFormData);
 
                 if (!validation.isValid) {
-                    const errorMessage = formatValidationErrors(validation.errors);
+                    const errorMessage = formatValidationErrors(
+                        validation.errors,
+                    );
                     addToast({
                         message: errorMessage,
                         type: "error",

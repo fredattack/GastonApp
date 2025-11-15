@@ -41,15 +41,10 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
         if (onClose) onClose();
     };
 
-    const handleDeleteConversation = (
-        e: React.MouseEvent,
-        id: string,
-    ) => {
+    const handleDeleteConversation = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
         if (
-            window.confirm(
-                "Are you sure you want to delete this conversation?",
-            )
+            window.confirm("Are you sure you want to delete this conversation?")
         ) {
             deleteConversation(id);
         }
@@ -145,7 +140,10 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                                             <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                                                 <span>
                                                     {conv.messages.length}{" "}
-                                                    message{conv.messages.length > 1 ? "s" : ""}
+                                                    message
+                                                    {conv.messages.length > 1
+                                                        ? "s"
+                                                        : ""}
                                                 </span>
                                                 <span>•</span>
                                                 <span>

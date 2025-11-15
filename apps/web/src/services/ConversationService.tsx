@@ -163,9 +163,7 @@ class ConversationService {
         return `${firstMessage.substring(0, maxLength)}...`;
     }
 
-    private pruneOldest(
-        conversations: Record<string, Conversation>,
-    ): void {
+    private pruneOldest(conversations: Record<string, Conversation>): void {
         const conversationsArray = Object.values(conversations);
 
         conversationsArray.sort(

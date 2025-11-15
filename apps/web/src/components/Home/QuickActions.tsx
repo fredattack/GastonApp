@@ -53,7 +53,10 @@ const QuickActions: React.FC = () => {
     ];
 
     return (
-        <section className="mb-6 md:mb-8" aria-labelledby="quick-actions-heading">
+        <section
+            className="mb-6 md:mb-8"
+            aria-labelledby="quick-actions-heading"
+        >
             <h2
                 id="quick-actions-heading"
                 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-4"
@@ -61,7 +64,10 @@ const QuickActions: React.FC = () => {
                 Actions rapides
             </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" role="group">
+            <div
+                className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
+                role="group"
+            >
                 {actions.map((action) => (
                     <button
                         key={action.id}
@@ -81,7 +87,10 @@ const QuickActions: React.FC = () => {
                         type="button"
                     >
                         <div>
-                            <div className="text-3xl md:text-4xl mb-2" aria-hidden="true">
+                            <div
+                                className="text-3xl md:text-4xl mb-2"
+                                aria-hidden="true"
+                            >
                                 {action.emoji}
                             </div>
                             <h3 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base mb-1">

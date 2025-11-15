@@ -108,7 +108,10 @@ const PetCards: React.FC = () => {
                 </button>
             </div>
 
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" role="list">
+            <div
+                className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
+                role="list"
+            >
                 {pets.map((pet) => (
                     <button
                         key={pet.id}
