@@ -53,7 +53,7 @@ const Sidebar = () => {
                             aria-label="Réduire la barre de navigation"
                         >
                             <FontAwesomeIcon
-                                icon={icons.anglesLeft}
+                                icon={icons?.anglesLeft as any}
                                 className="text-gray-600 dark:text-gray-400"
                                 aria-hidden="true"
                             />
@@ -75,9 +75,6 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Accueil"
-                                    aria-current={({ isActive }) =>
-                                        isActive ? "page" : undefined
-                                    }
                                 >
                                     <span
                                         className="text-xl"
@@ -102,9 +99,6 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Animaux"
-                                    aria-current={({ isActive }) =>
-                                        isActive ? "page" : undefined
-                                    }
                                 >
                                     <span
                                         className="text-xl"
@@ -129,9 +123,6 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Calendrier"
-                                    aria-current={({ isActive }) =>
-                                        isActive ? "page" : undefined
-                                    }
                                 >
                                     <span
                                         className="text-xl"
@@ -156,9 +147,6 @@ const Sidebar = () => {
                                         }`
                                     }
                                     aria-label="Profil"
-                                    aria-current={({ isActive }) =>
-                                        isActive ? "page" : undefined
-                                    }
                                 >
                                     <span
                                         className="text-xl"

@@ -3,6 +3,7 @@ import { eventService } from "../services";
 
 type EventsContextType = {
     events: EventFormData[];
+    isLoading: boolean;
     fetchEvents: (start_date: string, end_date: string) => void;
 };
 
@@ -23,6 +24,7 @@ export const EventsProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     const [events, setEvents] = useState<EventFormData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const getDateRange = (date: Date) => {
@@ -46,23 +48,29 @@ export const EventsProvider: React.FC<{
 
     // Function to fetch events
     const fetchEvents = async (start_date: any, end_date: any) => {
-        const events = await eventService.getEventsForPeriod(
-            start_date,
-            end_date,
-        );
+        setIsLoading(true);
+        try {
+            const events = await eventService.getEventsForPeriod(
+                start_date,
+                end_date,
+            );
 
-        setEvents(
-            events.map((event: EventFormData) => ({
-                ...event,
-                // Ensure all required Event type fields are set here, as necessary
-            })),
-        );
+            setEvents(
+                events.map((event: EventFormData) => ({
+                    ...event,
+                    // Ensure all required Event type fields are set here, as necessary
+                })),
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <EventsContext.Provider
             value={{
                 events,
+                isLoading,
                 fetchEvents,
             }}
         >

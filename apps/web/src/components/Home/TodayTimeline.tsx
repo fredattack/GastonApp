@@ -23,16 +23,16 @@ const TodayTimeline: React.FC = () => {
         return emojiMap[type?.toLowerCase() || ""] || "📌";
     };
 
-    const formatTime = (dateString: string): string => {
-        const date = new Date(dateString);
+    const formatTime = (dateString: string | Date): string => {
+        const date = dateString instanceof Date ? dateString : new Date(dateString);
         return date.toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
         });
     };
 
-    const isToday = (dateString: string): boolean => {
-        const date = new Date(dateString);
+    const isToday = (dateString: string | Date): boolean => {
+        const date = dateString instanceof Date ? dateString : new Date(dateString);
         const today = new Date();
         return (
             date.getDate() === today.getDate() &&

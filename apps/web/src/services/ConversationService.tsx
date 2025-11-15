@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
-
 const STORAGE_KEY = "ai_conversations";
 const MAX_CONVERSATIONS = 50;
+
+// Helper function to generate UUID
+const uuidv4 = () => crypto.randomUUID();
 
 class ConversationService {
     private static instance: ConversationService;

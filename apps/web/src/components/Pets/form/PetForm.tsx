@@ -182,7 +182,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                             type="submit"
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                onSubmit(petFormData);
+                                onSubmit?.(petFormData);
                             }}
                             className="btn btn-primary"
                         >

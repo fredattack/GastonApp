@@ -75,11 +75,11 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                         (p) => p.id === eventPet.id.toString(),
                     );
                     // Extraire les données pivot du premier élément du tableau
-                    const pivotData =
+                    const pivotData: PetDetails =
                         Array.isArray(eventPet.pivot) &&
                         eventPet.pivot.length > 0
                             ? eventPet.pivot[0]
-                            : eventPet.pivot;
+                            : (eventPet.pivot as unknown as PetDetails);
 
                     return {
                         id: eventPet.id,

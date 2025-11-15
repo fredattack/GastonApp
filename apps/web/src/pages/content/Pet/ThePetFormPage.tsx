@@ -152,8 +152,8 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
             case "infos":
                 return (
                     <PetForm
-                        formData={formData}
-                        handleChange={handleChange}
+                        petFormData={formData}
+                        onChange={handleChange}
                         onCancel={handleCancel}
                         onSubmit={(formData: any) =>
                             handleSubmit({

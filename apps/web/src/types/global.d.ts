@@ -116,7 +116,7 @@ declare global {
 
     interface AIResponse {
         score: number;
-        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "query";
+        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "query";
         description: string;
         data: AIEventData;
     }

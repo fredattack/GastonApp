@@ -8,7 +8,9 @@
       "mcp__playwright__browser_click",
       "Bash(npm run dev:*)",
       "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_type"
+      "mcp__playwright__browser_type",
+      "Bash(timeout 30 pnpm build:*)",
+      "Bash(pnpm --filter @gastonapp/web build:*)"
     ],
     "deny": [],
     "ask": []
