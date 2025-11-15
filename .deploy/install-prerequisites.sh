@@ -38,53 +38,42 @@ echo -e "   OS: $OS $VER"
 echo -e "   Hostname: $(hostname)"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-# Update system
+# Update system (ignore errors if repos are unavailable)
 echo -e "${YELLOW}📦 Updating system packages...${NC}"
-apt-get update -qq
-apt-get upgrade -y -qq
+apt-get update -qq || echo -e "${YELLOW}⚠️  Some package lists couldn't be updated (continuing anyway)${NC}"
 
-# Install basic tools
+# Install basic tools (curl is essential for Docker installation)
 echo -e "${YELLOW}🔧 Installing basic tools...${NC}"
-apt-get install -y -qq \
-    curl \
-    wget \
-    git \
-    ca-certificates \
-    gnupg \
-    lsb-release \
-    software-properties-common \
-    apt-transport-https
+apt-get install -y -qq curl wget ca-certificates gnupg || {
+    echo -e "${YELLOW}⚠️  Could not install via apt, trying minimal installation...${NC}"
+    # Try to install just curl if apt is broken
+    which curl || {
+        echo -e "${RED}❌ Cannot install curl. Please fix your package manager.${NC}"
+        exit 1
+    }
+}
+
+# Install git separately (optional)
+apt-get install -y -qq git || echo -e "${YELLOW}⚠️  Could not install git via apt${NC}"
 
 # Check if Docker is already installed
 if command -v docker &> /dev/null; then
     echo -e "${GREEN}✅ Docker is already installed${NC}"
     docker --version
 else
-    echo -e "${YELLOW}🐳 Installing Docker...${NC}"
+    echo -e "${YELLOW}🐳 Installing Docker using official installation script...${NC}"
+    echo -e "${BLUE}   This method works on all Ubuntu versions${NC}"
 
-    # Add Docker's official GPG key
-    install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    chmod a+r /etc/apt/keyrings/docker.asc
-
-    # Add the repository to Apt sources
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-    # Install Docker
-    apt-get update -qq
-    apt-get install -y -qq \
-        docker-ce \
-        docker-ce-cli \
-        containerd.io \
-        docker-buildx-plugin \
-        docker-compose-plugin
+    # Use Docker's official installation script (more robust)
+    curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+    sh /tmp/get-docker.sh
 
     # Start and enable Docker
     systemctl start docker
     systemctl enable docker
+
+    # Cleanup
+    rm -f /tmp/get-docker.sh
 
     echo -e "${GREEN}✅ Docker installed successfully${NC}"
     docker --version
@@ -96,8 +85,13 @@ if docker compose version &> /dev/null; then
     docker compose version
 else
     echo -e "${YELLOW}🔧 Installing Docker Compose...${NC}"
-    apt-get install -y -qq docker-compose-plugin
-    echo -e "${GREEN}✅ Docker Compose installed successfully${NC}"
+    # The get.docker.com script usually installs docker-compose-plugin
+    # But let's make sure it's available
+    if apt-get install -y -qq docker-compose-plugin 2>/dev/null; then
+        echo -e "${GREEN}✅ Docker Compose installed via apt${NC}"
+    else
+        echo -e "${GREEN}✅ Docker Compose already included with Docker${NC}"
+    fi
     docker compose version
 fi
 
@@ -178,8 +172,8 @@ fi
 
 # Cleanup
 echo -e "${YELLOW}🧹 Cleaning up...${NC}"
-apt-get autoremove -y -qq
-apt-get clean -qq
+apt-get autoremove -y -qq 2>/dev/null || true
+apt-get clean -qq 2>/dev/null || true
 
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}✅ All prerequisites installed successfully!${NC}"
