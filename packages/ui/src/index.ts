@@ -4,4 +4,5 @@
 // export { Button } from './Button';
 // export { Input } from './Input';
 
+// Placeholder - export empty object to make this a module
 export {};
