@@ -1,0 +1,150 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+env:
+  NODE_VERSION: '22.3.0'
+
+jobs:
+  deploy:
+    name: Build and Deploy to Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install pnpm
+        run: corepack prepare pnpm@latest --activate
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create environment file
+        run: |
+          cd apps/web
+          cat > .env << EOF
+          VITE_FIREBASE_API_KEY=${{ secrets.STAGING_VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.STAGING_VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID=${{ secrets.STAGING_VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.STAGING_VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.STAGING_VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID=${{ secrets.STAGING_VITE_FIREBASE_APP_ID }}
+          VITE_OPENAI_API_KEY=${{ secrets.STAGING_VITE_OPENAI_API_KEY }}
+          VITE_API_URL=${{ secrets.STAGING_VITE_API_URL }}
+          VITE_NODE_ENV=staging
+          EOF
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build application
+        run: pnpm build:web
+
+      - name: Setup SSH
+        if: vars.STAGING_DROPLET_IP != ''
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+
+      - name: Add staging droplet to known hosts
+        if: vars.STAGING_DROPLET_IP != ''
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ vars.STAGING_DROPLET_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Staging Droplet
+        if: vars.STAGING_DROPLET_IP != ''
+        env:
+          DROPLET_IP: ${{ vars.STAGING_DROPLET_IP }}
+          DROPLET_USER: ${{ vars.STAGING_DROPLET_USER }}
+          REMOTE_PATH: ${{ vars.STAGING_REMOTE_PATH }}
+        run: |
+          echo "🚀 Deploying to staging: $DROPLET_IP..."
+
+          ssh $DROPLET_USER@$DROPLET_IP << 'ENDSSH'
+            set -e
+            cd ${{ vars.STAGING_REMOTE_PATH }}
+
+            echo "📥 Pulling latest code..."
+            git fetch origin
+            BRANCH=${GITHUB_REF#refs/heads/}
+            git checkout $BRANCH
+            git pull origin $BRANCH
+
+            echo "📝 Updating environment variables..."
+            cat > apps/web/.env << EOF
+          VITE_FIREBASE_API_KEY=${{ secrets.STAGING_VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.STAGING_VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID=${{ secrets.STAGING_VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.STAGING_VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.STAGING_VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID=${{ secrets.STAGING_VITE_FIREBASE_APP_ID }}
+          VITE_OPENAI_API_KEY=${{ secrets.STAGING_VITE_OPENAI_API_KEY }}
+          VITE_API_URL=${{ secrets.STAGING_VITE_API_URL }}
+          VITE_NODE_ENV=staging
+          EOF
+
+            echo "🐳 Deploying with Docker..."
+            ./.deploy/deploy.sh
+
+            echo "✅ Staging deployment completed!"
+          ENDSSH
+
+      - name: Health check
+        if: vars.STAGING_DROPLET_IP != ''
+        run: |
+          echo "🧪 Running health check..."
+          sleep 10
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ vars.STAGING_DROPLET_IP }}/health || echo "000")
+          if [ "$response" = "200" ]; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check returned: $response"
+            exit 1
+          fi
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "✅ Staging deployment successful!"
+          if [ -n "${{ vars.STAGING_DROPLET_IP }}" ]; then
+            echo "🌐 Staging is live at: http://${{ vars.STAGING_DROPLET_IP }}"
+          fi
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Staging deployment failed!"
+          echo "Check the logs above for details."

@@ -18,7 +18,13 @@
         "type-check": "turbo type-check",
         "test": "turbo test",
         "clean": "turbo clean && rm -rf node_modules .turbo",
-        "deploy": "pnpm build:web && docker build -t gastonapp-web -f .deploy/Dockerfile ."
+        "deploy": "./.deploy/deploy.sh",
+        "deploy:remote": "./.deploy/remote-deploy.sh",
+        "docker:build": "docker-compose -f .deploy/docker-compose.yml build",
+        "docker:up": "docker-compose -f .deploy/docker-compose.yml up -d",
+        "docker:down": "docker-compose -f .deploy/docker-compose.yml down",
+        "docker:logs": "docker-compose -f .deploy/docker-compose.yml logs -f",
+        "docker:ps": "docker-compose -f .deploy/docker-compose.yml ps"
     },
     "devDependencies": {
         "turbo": "^2.3.3",
