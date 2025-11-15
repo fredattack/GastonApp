@@ -338,6 +338,9 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.2.0)
     devDependencies:
+      '@gastonapp/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@gastonapp/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -347,9 +350,12 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.10
         version: 18.3.7(@types/react@18.2.79)
+      eslint:
+        specifier: ^8.57.1
+        version: 8.57.1
       typescript:
-        specifier: ^4.9.5
-        version: 4.9.5
+        specifier: ^5.3.3
+        version: 5.9.3
 
 packages:
 
