@@ -66,6 +66,29 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ vars.STAGING_DROPLET_IP }} >> ~/.ssh/known_hosts
 
+      - name: Install Docker prerequisites if needed
+        if: vars.STAGING_DROPLET_IP != ''
+        env:
+          DROPLET_IP: ${{ vars.STAGING_DROPLET_IP }}
+          DROPLET_USER: ${{ vars.STAGING_DROPLET_USER }}
+        run: |
+          echo "🔍 Checking if Docker is installed..."
+
+          # Check if Docker is installed
+          if ! ssh $DROPLET_USER@$DROPLET_IP "command -v docker &> /dev/null"; then
+            echo "📦 Docker not found. Installing Docker..."
+
+            # Copy installation script
+            scp .deploy/install-prerequisites.sh $DROPLET_USER@$DROPLET_IP:/tmp/
+
+            # Run installation script
+            ssh $DROPLET_USER@$DROPLET_IP "chmod +x /tmp/install-prerequisites.sh && sudo /tmp/install-prerequisites.sh"
+
+            echo "✅ Docker installation completed!"
+          else
+            echo "✅ Docker is already installed"
+          fi
+
       - name: Deploy to Staging Droplet
         if: vars.STAGING_DROPLET_IP != ''
         env:
