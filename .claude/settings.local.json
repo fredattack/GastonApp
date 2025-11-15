@@ -10,7 +10,9 @@
       "mcp__playwright__browser_snapshot",
       "mcp__playwright__browser_type",
       "Bash(timeout 30 pnpm build:*)",
-      "Bash(pnpm --filter @gastonapp/web build:*)"
+      "Bash(pnpm --filter @gastonapp/web build:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm install:*)"
     ],
     "deny": [],
     "ask": []
