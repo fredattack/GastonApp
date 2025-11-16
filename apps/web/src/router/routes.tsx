@@ -5,6 +5,7 @@ const Index = lazy(() => import("../pages/Index"));
 const Pets = lazy(() => import("../pages/content/Pet/Pets"));
 const PetForm = lazy(() => import("../pages/content/Pet/ThePetFormPage"));
 const AIAssistant = lazy(() => import("../pages/AIAssistant/AIAssistantPage"));
+const Calendar = lazy(() => import("../pages/Calendar/CalendarPage"));
 
 const routes = [
     // dashboard
@@ -18,6 +19,12 @@ const routes = [
         path: "/ai-assistant",
         element: <AIAssistant />,
         layout: "blank",
+    },
+    // Calendar
+    {
+        path: "/calendar",
+        element: <Calendar />,
+        layout: "default",
     },
     // content
     {
