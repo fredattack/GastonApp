@@ -214,11 +214,32 @@ declare global {
         notes?: string;
     }
 
+    // Delete Operations Types
+    interface DeleteFilters {
+        petIds?: string[];
+        type?: string;
+        startDate?: string;
+        endDate?: string;
+        eventId?: string;
+    }
+
+    interface DeleteData {
+        filters: DeleteFilters;
+        confirmationRequired: boolean;
+        itemsToDelete?: Array<{
+            id: string;
+            title: string;
+            type?: string;
+            date?: string;
+        }>;
+        estimatedCount?: number;
+    }
+
     interface AIResponse {
         score: number;
         requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "updatePet" | "deletePet" | "query" | "advice" | "metrics";
         description: string;
-        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData | MetricsHistory;
+        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData | MetricsHistory | DeleteData;
         metadata?: AIResponseMetadata;
         healthDisclaimer?: HealthDisclaimer;
     }
