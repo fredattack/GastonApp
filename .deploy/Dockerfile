@@ -2,8 +2,8 @@
 # Stage 1: Build
 FROM node:22.3-alpine AS builder
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@10.14.0 --activate
+# Install pnpm directly via npm (avoids corepack signature verification issues)
+RUN npm install -g pnpm@10.14.0
 
 # Set working directory
 WORKDIR /app
