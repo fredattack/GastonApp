@@ -2,13 +2,13 @@
 
 **Date:** 16 November 2025
 **Branch:** `claude/develop-ai-improvements-014cpHAAuQhAJsGRXXAsQBtt`
-**Status:** Phase 1 & 2 Frontend Implementation Completed
+**Status:** Phase 1, 2 & 3 Frontend Implementation Completed
 
 ---
 
 ## Overview
 
-This document summarizes the frontend implementation of Phase 1 (Health Disclaimers) and Phase 2 (Query & Advice Support) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
+This document summarizes the frontend implementation of Phase 1 (Health Disclaimers), Phase 2 (Query & Advice Support), and Phase 3 (Enhanced Advice with Knowledge Base) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
 
 ---
 
@@ -429,9 +429,167 @@ All components use standard React and Tailwind CSS:
 
 ---
 
+## Phase 3: Enhanced Advice with Knowledge Base
+
+**Implementation Date:** 16 November 2025
+
+### New Features
+
+#### 1. Enhanced AdviceData Types
+
+Added nutrition and health-specific fields to `AdviceData` interface:
+
+**Nutrition Fields:**
+- `species` - Animal species (dog, cat)
+- `weight` - Animal weight in kg
+- `age` - Life stage (puppy, kitten, adult, senior)
+- `dailyCalories` - Calculated daily calorie needs
+- `feedingFrequency` - Recommended feeding schedule
+- `toxicFoods` - List of toxic foods for the species
+
+**Health Fields:**
+- `symptom` - Specific symptom being addressed
+- `severity` - Severity level (low, medium, high, unknown)
+- `redFlags` - Warning signs requiring immediate attention
+- `nextSteps` - Recommended actions to take
+
+#### 2. Enhanced AdviceCard Component
+
+The AdviceCard component now displays:
+
+**For Nutrition Advice:**
+- Daily calorie requirements in a metric card
+- Feeding frequency recommendations
+- List of toxic foods to avoid (with red warning box)
+- Severity-based icon coloring
+
+**For Health Advice:**
+- Red flags section with warning signs
+- Next steps section with actionable recommendations
+- Severity indicator on the main icon
+- Color-coded confidence levels
+
+**Common Features:**
+- Sources with external links
+- Related topics tags
+- Confidence percentage display
+- Responsive design with dark mode
+
+#### 3. Client-Side Knowledge Base
+
+**File:** `apps/web/src/utils/knowledgeBase.ts`
+
+A comprehensive knowledge base providing:
+
+**Nutrition Knowledge:**
+- Calorie calculation formulas for dogs and cats
+- Age-based adjustments (puppy/kitten: +100-150%, senior: -20%)
+- Complete toxic foods lists (12+ foods per species)
+- Feeding frequency recommendations
+
+**Health Symptoms Database:**
+- 5 common symptoms covered (vomit, diarrhea, fever, cough, limping)
+- Severity assessments
+- Red flags for each symptom
+- Step-by-step action plans
+
+**Helper Functions:**
+- `calculateDailyCalories(species, weight, age)` - Calculate calorie needs
+- `getNutritionAdvice(species, weight, age)` - Get complete nutrition advice
+- `getHealthAdvice(symptom)` - Get health recommendations
+- `getToxicFoods(species)` - Get toxic foods list
+- `isFoodToxic(food, species)` - Check if food is toxic
+
+### Usage Examples
+
+#### Nutrition Advice
+```typescript
+import { getNutritionAdvice } from '@/utils/knowledgeBase';
+
+const advice = getNutritionAdvice('dog', 15, 'adult');
+// Returns:
+// {
+//   adviceType: 'nutrition',
+//   dailyCalories: 520,
+//   feedingFrequency: '2 fois par jour',
+//   toxicFoods: ['chocolat', 'raisins', ...],
+//   confidence: 85
+// }
+```
+
+#### Health Advice
+```typescript
+import { getHealthAdvice } from '@/utils/knowledgeBase';
+
+const advice = getHealthAdvice('vomi');
+// Returns:
+// {
+//   adviceType: 'health',
+//   severity: 'medium',
+//   redFlags: ['Sang dans les vomissements', ...],
+//   nextSteps: ['Retirer la nourriture pendant 12h', ...],
+//   confidence: 80
+// }
+```
+
+### Files Modified/Created
+
+**Modified:**
+1. `apps/web/src/types/global.d.ts` - Enhanced AdviceData interface
+2. `apps/web/src/components/AI/AdviceCard.tsx` - Complete rewrite with all features
+
+**Created:**
+3. `apps/web/src/utils/knowledgeBase.ts` - Client-side knowledge base
+
+### What Works Now
+
+✅ **Enhanced Advice Display:**
+- Nutrition advice with calorie calculations
+- Health advice with severity levels
+- Red flags and action plans
+- Toxic foods warnings
+
+✅ **Client-Side Intelligence:**
+- Offline advice generation
+- Fallback when backend unavailable
+- Knowledge base with 5 health symptoms
+- Complete toxic foods database
+
+✅ **Professional UI:**
+- Color-coded severity indicators
+- Structured information display
+- Mobile-responsive layout
+- Dark mode support
+
+### Backend Integration
+
+The backend can now return enriched advice responses:
+
+```typescript
+// Backend response example
+{
+    requestType: "advice",
+    description: "Voici mes recommandations nutritionnelles",
+    data: {
+        adviceType: "nutrition",
+        species: "dog",
+        weight: 15,
+        age: "adult",
+        question: "Quelle quantité de croquettes pour un chien de 15 kg ?",
+        answer: "Pour un chien adulte de 15 kg...",
+        dailyCalories: 520,
+        feedingFrequency: "2 fois par jour",
+        toxicFoods: ["chocolat", "raisins", ...],
+        confidence: 95
+    }
+}
+```
+
+---
+
 ## Conclusion
 
-**Phase 1 (Health Disclaimers)** and **Phase 2 (Query & Advice UI)** frontend implementations are **complete and ready for integration**.
+**Phase 1 (Health Disclaimers)**, **Phase 2 (Query & Advice UI)**, and **Phase 3 (Enhanced Advice with Knowledge Base)** frontend implementations are **complete and ready for integration**.
 
 The backend API needs to be updated to:
 1. Support new `requestType` values (`query`, `advice`)

@@ -159,6 +159,20 @@ declare global {
         sources?: string[];
         relatedTopics?: string[];
         confidence: number;
+
+        // Nutrition-specific fields
+        species?: 'dog' | 'cat' | string;
+        weight?: number;
+        age?: 'puppy' | 'kitten' | 'adult' | 'senior' | string;
+        dailyCalories?: number;
+        feedingFrequency?: string;
+        toxicFoods?: string[];
+
+        // Health-specific fields
+        symptom?: string;
+        severity?: 'low' | 'medium' | 'high' | 'unknown';
+        redFlags?: string[];
+        nextSteps?: string[];
     }
 
     // Metrics Response Types

@@ -7,6 +7,7 @@ import {
     faPaw,
     faCheckCircle,
     faExternalLinkAlt,
+    faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface AdviceCardProps {
@@ -21,6 +22,14 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
         sources,
         relatedTopics,
         confidence,
+        // Nutrition fields
+        dailyCalories,
+        feedingFrequency,
+        toxicFoods,
+        // Health fields
+        severity,
+        redFlags,
+        nextSteps,
     } = adviceData;
 
     const getIcon = () => {
@@ -62,9 +71,22 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
         }
     };
 
+    const getSeverityColor = () => {
+        switch (severity) {
+            case 'high':
+                return 'text-red-600 dark:text-red-400';
+            case 'medium':
+                return 'text-yellow-600 dark:text-yellow-400';
+            case 'low':
+                return 'text-green-600 dark:text-green-400';
+            default:
+                return 'text-blue-600 dark:text-blue-400';
+        }
+    };
+
     const getConfidenceColor = () => {
-        if (confidence >= 0.8) return 'text-green-600 dark:text-green-400';
-        if (confidence >= 0.6) return 'text-yellow-600 dark:text-yellow-400';
+        if (confidence >= 80) return 'text-green-600 dark:text-green-400';
+        if (confidence >= 60) return 'text-yellow-600 dark:text-yellow-400';
         return 'text-orange-600 dark:text-orange-400';
     };
 
@@ -76,40 +98,110 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 <div className="flex-shrink-0">
                     <FontAwesomeIcon
                         icon={getIcon()}
-                        className={`${getIconColor()} text-xl`}
+                        className={`${severity ? getSeverityColor() : getIconColor()} text-xl`}
                     />
                 </div>
                 <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                        Question
-                    </h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 italic">
-                        {question}
+                    {question && (
+                        <h4 className="font-semibold text-sm text-gray-900 dark:text-white mb-2">
+                            {question}
+                        </h4>
+                    )}
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {answer}
                     </p>
                 </div>
+                {confidence !== undefined && (
+                    <div
+                        className={`flex-shrink-0 flex items-center gap-1 ${getConfidenceColor()}`}
+                    >
+                        <FontAwesomeIcon icon={faCheckCircle} size="xs" />
+                        <span className="text-xs font-medium whitespace-nowrap">
+                            {Math.round(confidence)}%
+                        </span>
+                    </div>
+                )}
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-3">
-                <div className="flex items-center justify-between mb-2">
-                    <h5 className="font-semibold text-gray-900 dark:text-white text-sm">
-                        Réponse
-                    </h5>
-                    {confidence && (
-                        <div
-                            className={`flex items-center gap-1 ${getConfidenceColor()}`}
-                        >
-                            <FontAwesomeIcon icon={faCheckCircle} size="xs" />
-                            <span className="text-xs font-medium">
-                                {Math.round(confidence * 100)}% confiance
-                            </span>
+            {/* Nutrition-specific fields */}
+            {adviceType === 'nutrition' && (
+                <>
+                    {(dailyCalories || feedingFrequency) && (
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                            {dailyCalories && (
+                                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                        Calories quotidiennes
+                                    </p>
+                                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                                        {dailyCalories} kcal
+                                    </p>
+                                </div>
+                            )}
+                            {feedingFrequency && (
+                                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                        Fréquence
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {feedingFrequency}
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     )}
-                </div>
-                <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line">
-                    {answer}
-                </p>
-            </div>
 
+                    {toxicFoods && toxicFoods.length > 0 && (
+                        <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg mb-3 border border-red-200 dark:border-red-800">
+                            <p className="text-xs font-semibold text-red-800 dark:text-red-200 mb-2">
+                                ⚠️ Aliments toxiques à éviter :
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                                {toxicFoods.map((food, index) => (
+                                    <span
+                                        key={index}
+                                        className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded"
+                                    >
+                                        {food}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
+
+            {/* Health-specific fields */}
+            {redFlags && redFlags.length > 0 && (
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg mb-3 border border-yellow-200 dark:border-yellow-800">
+                    <p className="text-xs font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                        🚩 Signes d'alerte :
+                    </p>
+                    <ul className="text-xs text-yellow-900 dark:text-yellow-100 space-y-1">
+                        {redFlags.map((flag, index) => (
+                            <li key={index} className="flex items-center gap-2">
+                                <span className="w-1 h-1 bg-yellow-600 rounded-full flex-shrink-0"></span>
+                                <span>{flag}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {nextSteps && nextSteps.length > 0 && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-3 border border-blue-200 dark:border-blue-800">
+                    <p className="text-xs font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                        📋 Prochaines étapes :
+                    </p>
+                    <ol className="text-xs text-blue-900 dark:text-blue-100 space-y-1 list-decimal list-inside">
+                        {nextSteps.map((step, index) => (
+                            <li key={index}>{step}</li>
+                        ))}
+                    </ol>
+                </div>
+            )}
+
+            {/* Sources */}
             {sources && sources.length > 0 && (
                 <div className="mb-3">
                     <h5 className="font-semibold text-gray-900 dark:text-white text-xs mb-2">
@@ -128,13 +220,14 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                                     icon={faExternalLinkAlt}
                                     size="xs"
                                 />
-                                {source}
+                                <span className="truncate">{source}</span>
                             </a>
                         ))}
                     </div>
                 </div>
             )}
 
+            {/* Related Topics */}
             {relatedTopics && relatedTopics.length > 0 && (
                 <div>
                     <h5 className="font-semibold text-gray-900 dark:text-white text-xs mb-2">
