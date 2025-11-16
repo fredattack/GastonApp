@@ -2,13 +2,13 @@
 
 **Date:** 16 November 2025
 **Branch:** `claude/develop-ai-improvements-014cpHAAuQhAJsGRXXAsQBtt`
-**Status:** Phase 1, 2 & 3 Frontend Implementation Completed
+**Status:** Phase 1, 2, 3 & 4 Frontend Implementation Completed
 
 ---
 
 ## Overview
 
-This document summarizes the frontend implementation of Phase 1 (Health Disclaimers), Phase 2 (Query & Advice Support), and Phase 3 (Enhanced Advice with Knowledge Base) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
+This document summarizes the frontend implementation of Phase 1 (Health Disclaimers), Phase 2 (Query & Advice Support), Phase 3 (Enhanced Advice with Knowledge Base), and Phase 4 (Metrics & Analytics) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
 
 ---
 
@@ -587,9 +587,186 @@ The backend can now return enriched advice responses:
 
 ---
 
+## Phase 4: Metrics & Analytics
+
+**Implementation Date:** 16 November 2025
+
+### New Features
+
+#### 1. Enhanced Metrics Types
+
+Added comprehensive metric tracking types:
+
+**Core Metrics Types:**
+- `Metric` - Individual metric entry (weight, temperature, heart_rate)
+- `MetricsAnalysis` - Statistical analysis (average, min, max, change, trend)
+- `MetricsHistory` - Complete history with metrics array and analysis
+
+**Fields:**
+- `metric_type` - Type of metric (weight, temperature, heart_rate, custom)
+- `value` - Measured value
+- `unit` - Unit of measurement (kg, °C, bpm)
+- `measured_at` - Date of measurement
+- `trend` - Trend analysis (increasing, decreasing, stable)
+- `changePercent` - Percentage change over period
+
+#### 2. MetricsChart Component
+
+**File:** `apps/web/src/components/AI/MetricsChart.tsx`
+
+A CSS-pure line chart component for visualizing metric trends:
+
+**Features:**
+- SVG-based line chart (no external dependencies)
+- Statistical cards (average, min, max, evolution)
+- Normalized data visualization
+- Trend indicators with color coding
+- Hover tooltips on data points
+- Responsive design with dark mode
+- X-axis and Y-axis with labels
+- Grid lines for better readability
+
+**Visualization:**
+- Purple line graph showing metric evolution
+- Color-coded trend indicators:
+  - Red: Increasing trend (+5% or more)
+  - Blue: Decreasing trend (-5% or more)
+  - Green: Stable (within ±5%)
+- Data points with hover information
+
+**Display Elements:**
+- 4 metric cards: Average, Min, Max, Evolution
+- Line chart with gridlines
+- Date labels on X-axis
+- Value labels on Y-axis
+- Trend analysis section for significant changes
+
+#### 3. Metrics Analysis Utilities
+
+**File:** `apps/web/src/utils/metricsUtils.ts`
+
+Comprehensive client-side metrics analysis:
+
+**Analysis Functions:**
+- `analyzeMetrics(metrics)` - Calculate statistics and trends
+  - Average, min, max values
+  - Change and percentage change
+  - Trend classification (±5% threshold)
+
+- `isWeightChangeConcerning(changePercent, species)` - Health alerts
+  - Loss thresholds: >5% (low), >10% (medium), >15% (high)
+  - Gain thresholds: >10% (low), >15% (medium), >20% (high)
+  - Species-specific recommendations
+
+**Helper Functions:**
+- `generateMockMetrics()` - Testing data generation
+- `getIdealWeightRange()` - Species/breed weight ranges
+- `formatMetricValue()` - Format with units
+- `getMetricTypeLabel()` - French labels
+
+### Usage Examples
+
+#### Metrics Display
+```typescript
+// Backend response example
+{
+    requestType: "metrics",
+    description: "Voici l'évolution du poids de Pablo",
+    data: {
+        metrics: [
+            { pet_id: "1", metric_type: "weight", value: 14.5, unit: "kg", measured_at: "2025-10-01" },
+            { pet_id: "1", metric_type: "weight", value: 15.2, unit: "kg", measured_at: "2025-11-01" },
+            { pet_id: "1", metric_type: "weight", value: 15.8, unit: "kg", measured_at: "2025-11-16" }
+        ],
+        analysis: {
+            average: 15.17,
+            min: 14.5,
+            max: 15.8,
+            change: 1.3,
+            changePercent: 8.97,
+            trend: "increasing"
+        },
+        petId: "1",
+        metricType: "weight"
+    }
+}
+```
+
+#### Client-Side Analysis
+```typescript
+import { analyzeMetrics, isWeightChangeConcerning } from '@/utils/metricsUtils';
+
+const analysis = analyzeMetrics(metrics);
+// Returns: { average: 15.17, min: 14.5, max: 15.8, change: 1.3, changePercent: 8.97, trend: "increasing" }
+
+const concern = isWeightChangeConcerning(8.97, 'dog');
+// Returns: { isConcerning: true, severity: "low", message: "Prise de poids notable..." }
+```
+
+### Files Modified/Created
+
+**Modified:**
+1. `apps/web/src/types/global.d.ts` - Added Metric, MetricsAnalysis, MetricsHistory types
+2. `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx` - Added metrics display support
+
+**Created:**
+3. `apps/web/src/components/AI/MetricsChart.tsx` - SVG-based metrics visualization
+4. `apps/web/src/utils/metricsUtils.ts` - Metrics analysis utilities
+
+### What Works Now
+
+✅ **Metrics Visualization:**
+- Line chart with SVG (no dependencies)
+- Statistical analysis cards
+- Trend indicators with color coding
+- Date range display
+
+✅ **Health Monitoring:**
+- Weight change analysis
+- Concerning change detection
+- Severity levels (low/medium/high)
+- Species-specific thresholds
+
+✅ **Professional Display:**
+- Clean metric cards layout
+- Responsive chart rendering
+- Dark mode support
+- Grid lines and axis labels
+
+### Backend Integration
+
+The backend needs to:
+
+1. **Create metrics table** with schema:
+   - pet_id, metric_type, value, unit, measured_at, notes
+
+2. **Implement endpoints:**
+   - `POST /api/metrics` - Store metric
+   - `GET /api/metrics/{petId}/history` - Retrieve history
+
+3. **Return MetricsHistory format:**
+   ```typescript
+   {
+       metrics: Metric[],
+       analysis: MetricsAnalysis,
+       petId: string,
+       metricType: string
+   }
+   ```
+
+### Benefits
+
+1. **No External Dependencies**: Pure CSS/SVG charts
+2. **Health Monitoring**: Automatic concern detection
+3. **Trend Analysis**: Statistical insights
+4. **Visual Feedback**: Clear trend indicators
+5. **Extensible**: Supports weight, temperature, heart rate, custom metrics
+
+---
+
 ## Conclusion
 
-**Phase 1 (Health Disclaimers)**, **Phase 2 (Query & Advice UI)**, and **Phase 3 (Enhanced Advice with Knowledge Base)** frontend implementations are **complete and ready for integration**.
+**Phase 1 (Health Disclaimers)**, **Phase 2 (Query & Advice UI)**, **Phase 3 (Enhanced Advice with Knowledge Base)**, and **Phase 4 (Metrics & Analytics)** frontend implementations are **complete and ready for integration**.
 
 The backend API needs to be updated to:
 1. Support new `requestType` values (`query`, `advice`)

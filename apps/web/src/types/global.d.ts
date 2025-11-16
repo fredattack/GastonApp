@@ -176,6 +176,35 @@ declare global {
     }
 
     // Metrics Response Types
+    interface Metric {
+        id?: string;
+        pet_id: string;
+        metric_type: 'weight' | 'temperature' | 'heart_rate' | 'custom';
+        value: number;
+        unit: string;
+        measured_at: string;
+        notes?: string;
+    }
+
+    interface MetricsAnalysis {
+        average: number;
+        min: number;
+        max: number;
+        change: number;
+        changePercent: number;
+        trend: 'increasing' | 'decreasing' | 'stable';
+    }
+
+    interface MetricsHistory {
+        metrics: Metric[];
+        analysis: MetricsAnalysis;
+        petId: string;
+        metricType: string;
+        startDate?: string;
+        endDate?: string;
+    }
+
+    // Legacy MetricData for single metric entry
     interface MetricData {
         metricType: 'weight' | 'height' | 'activity' | 'custom';
         petId: string;
@@ -189,7 +218,7 @@ declare global {
         score: number;
         requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "updatePet" | "deletePet" | "query" | "advice" | "metrics";
         description: string;
-        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData;
+        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData | MetricsHistory;
         metadata?: AIResponseMetadata;
         healthDisclaimer?: HealthDisclaimer;
     }

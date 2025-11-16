@@ -13,6 +13,7 @@ import { useToast } from "../../../providers/ToastProvider";
 import HealthDisclaimer from "../../../components/AI/HealthDisclaimer";
 import QueryResults from "../../../components/AI/QueryResults";
 import AdviceCard from "../../../components/AI/AdviceCard";
+import MetricsChart from "../../../components/AI/MetricsChart";
 
 interface AIMessageCardProps {
     message: Message;
@@ -35,10 +36,11 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const requestType = aiResponse?.requestType || "createEvent";
     const isQuery = requestType === 'query';
     const isAdvice = requestType === 'advice';
+    const isMetrics = requestType === 'metrics';
     const isEvent = requestType?.includes('Event');
 
-    // For query and advice, we don't need attachedEvent
-    if (!attachedEvent && !isQuery && !isAdvice) {
+    // For query, advice, and metrics, we don't need attachedEvent
+    if (!attachedEvent && !isQuery && !isAdvice && !isMetrics) {
         return null;
     }
 
@@ -213,7 +215,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     )}
 
                     {/* Description - Always show for non-event types */}
-                    {!isStreaming && (isQuery || isAdvice) && description && (
+                    {!isStreaming && (isQuery || isAdvice || isMetrics) && description && (
                         <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
                             {description}
                         </p>
@@ -227,6 +229,11 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     {/* Advice Card */}
                     {!isStreaming && isAdvice && aiResponse?.data && (
                         <AdviceCard adviceData={aiResponse.data as AdviceData} />
+                    )}
+
+                    {/* Metrics Chart */}
+                    {!isStreaming && isMetrics && aiResponse?.data && (
+                        <MetricsChart metricsHistory={aiResponse.data as MetricsHistory} />
                     )}
 
                     {/* Event Preview Mode */}
