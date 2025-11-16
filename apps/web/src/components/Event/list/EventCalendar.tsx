@@ -10,6 +10,10 @@ import EventSummary from "./EventSummary";
 import EventCalendarDropdown from "./EventCalendarDropdown";
 
 import DisplaySettingsDropdown from "../../Calendar/DisplaySettingsDropdown";
+import CalendarGrid from "../../Calendar/CalendarGrid";
+import WeekView from "../../Calendar/WeekView";
+import DayView from "../../Calendar/DayView";
+import EventQuickView from "../../Calendar/EventQuickView";
 import { EventTypes } from "../../../enums/EventTypes";
 import { useEvents } from "../../../contexts/EventsContext";
 
@@ -33,9 +37,12 @@ const EventCalendar = () => {
         is_done: false,
     });
 
-    const [viewMode, setViewMode] = useState(VIEW_MODES.DAY);
+    const [viewMode, setViewMode] = useState(VIEW_MODES.MONTH);
     const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalInitialDate, setModalInitialDate] = useState<Date | undefined>();
 
     useEffect(() => {
         const { start_date, end_date } = getDateRange(currentDate);
@@ -178,6 +185,97 @@ const EventCalendar = () => {
         const { start_date, end_date } = getDateRange(newDate);
         fetchEvents(start_date, end_date);
     };
+
+    const handleDateClick = (date: Date) => {
+        setModalInitialDate(date);
+        setSelectedEvent(null);
+        setIsModalOpen(true);
+    };
+
+    const handleTimeSlotClick = (date: Date, hour: number) => {
+        const slotDate = new Date(date);
+        slotDate.setHours(hour, 0, 0, 0);
+        setModalInitialDate(slotDate);
+        setSelectedEvent(null);
+        setIsModalOpen(true);
+    };
+
+    const handleEventClick = (event: Event) => {
+        setSelectedEvent(event);
+        setModalInitialDate(undefined);
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedEvent(null);
+        setModalInitialDate(undefined);
+    };
+
+    const handleModalUpdate = () => {
+        handleRefetchEvents();
+    };
+
+    const handleEventMove = async (event: Event, newDate: Date) => {
+        try {
+            // Update event with new date
+            const updatedEvent = {
+                ...event,
+                start_date: newDate.toISOString(),
+            };
+
+            await eventService.update(event.id, updatedEvent);
+
+            // Refresh events
+            handleRefetchEvents();
+
+            // Show success toast
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: `"${event.title}" déplacé avec succès`,
+                type: 'success',
+            });
+        } catch (error) {
+            console.error('Error moving event:', error);
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: 'Erreur lors du déplacement de l\'événement',
+                type: 'error',
+            });
+        }
+    };
+
+    const handleEventResize = async (event: Event, newDuration: number) => {
+        try {
+            // Calculate new end date based on duration
+            const startDate = new Date(event.start_date);
+            const endDate = new Date(startDate.getTime() + newDuration * 60 * 60 * 1000);
+
+            const updatedEvent = {
+                ...event,
+                end_date: endDate.toISOString(),
+            };
+
+            await eventService.update(event.id, updatedEvent);
+
+            // Refresh events
+            handleRefetchEvents();
+
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: `Durée de "${event.title}" modifiée`,
+                type: 'success',
+            });
+        } catch (error) {
+            console.error('Error resizing event:', error);
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: 'Erreur lors de la modification de la durée',
+                type: 'error',
+            });
+        }
+    };
+
     // console.log("filters", filters);
     return (
         <div key={viewMode} className="event-calendar">
@@ -230,18 +328,43 @@ const EventCalendar = () => {
                 </div>
             </div>
 
-            {filteredEvents.length > 0 ? (
-                <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {viewStyle === VIEW_STYLES.CARD &&
-                        filteredEvents.map((event, index) => (
-                            <div key={index} className="event-card">
-                                <EventCard
-                                    // @ts-ignore
-                                    event={event}
-                                    onRefresh={handleRefetchEvents}
-                                />
-                            </div>
-                        ))}
+            {/* Calendar Views */}
+            <div className="mx-3">
+                {viewMode === VIEW_MODES.MONTH && (
+                    <CalendarGrid
+                        currentDate={currentDate}
+                        events={filteredEvents}
+                        onDateClick={handleDateClick}
+                        onEventClick={handleEventClick}
+                    />
+                )}
+
+                {viewMode === VIEW_MODES.WEEK && (
+                    <WeekView
+                        currentDate={currentDate}
+                        events={filteredEvents}
+                        onTimeSlotClick={handleTimeSlotClick}
+                        onEventClick={handleEventClick}
+                        onEventMove={handleEventMove}
+                        onEventResize={handleEventResize}
+                    />
+                )}
+
+                {viewMode === VIEW_MODES.DAY && (
+                    <DayView
+                        currentDate={currentDate}
+                        events={filteredEvents}
+                        onTimeSlotClick={handleTimeSlotClick}
+                        onEventClick={handleEventClick}
+                        onEventMove={handleEventMove}
+                        onEventResize={handleEventResize}
+                    />
+                )}
+            </div>
+
+            {/* Legacy List Views (optional fallback) */}
+            {viewStyle !== VIEW_STYLES.CARD && (
+                <div className="mx-3 mt-4">
                     {viewStyle === VIEW_STYLES.FEEDING && (
                         <EventSummary
                             events={filteredEvents.filter(
@@ -249,11 +372,22 @@ const EventCalendar = () => {
                             )}
                         />
                     )}
-                    {viewStyle === VIEW_STYLES.CARE && <p>care</p>}
+                    {viewStyle === VIEW_STYLES.CARE && (
+                        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                            <p className="text-gray-600 dark:text-gray-400">Vue soins médicaux à implémenter</p>
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <p>Aucun événement à afficher.</p>
             )}
+
+            {/* Event Quick View Modal */}
+            <EventQuickView
+                event={selectedEvent}
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onUpdate={handleModalUpdate}
+                initialDate={modalInitialDate}
+            />
         </div>
     );
 };
