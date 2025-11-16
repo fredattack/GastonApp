@@ -5,7 +5,9 @@
 <!-- Logo: Replace with actual logo when available -->
 <!-- ![GastonApp Logo](./assets/logo.png) -->
 
-**AI-Powered Pet Care Management Platform**
+**AI-Powered Pet
+Care Management
+Platform**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -20,22 +22,64 @@
 
 ## Overview
 
-GastonApp is a **Turborepo-based monorepo** containing a comprehensive pet management platform with:
+GastonApp is a *
+*Turborepo-based
+monorepo**
+containing a
+comprehensive pet
+management platform
+with:
 
-- **Web Application** (React + Vite + TypeScript)
-- **Mobile Application** (React Native + Expo) - *Coming Soon*
-- **AI Integration** (OpenAI GPT-4)
-- **Shared Code** across platforms
+- **Web Application
+  ** (React + Vite +
+  TypeScript)
+- **Mobile
+  Application** (
+  React Native +
+  Expo) - *Coming
+  Soon*
+- **AI Integration
+  ** (OpenAI GPT-4)
+- **Shared Code**
+  across platforms
 
 ## Features
 
-- **Pet Profile Management** - Track multiple pets with detailed information
-- **Event Scheduling** - Create recurring events for feeding, medications, vet visits
-- **Voice Assistant** - AI-powered voice commands for hands-free management
-- **Calendar Integration** - Visual calendar for all pet-related events
-- **Multi-language Support** - Available in multiple languages (i18next)
-- **Dark Mode** - Beautiful UI with light and dark themes
-- **Analytics** - Track pet care patterns and insights
+- **Pet Profile
+  Management** -
+  Track multiple
+  pets with detailed
+  information
+- **Event Scheduling
+  ** - Create
+  recurring events
+  for feeding,
+  medications, vet
+  visits
+- **Voice Assistant
+  ** - AI-powered
+  voice commands for
+  hands-free
+  management
+- **Calendar
+  Integration** -
+  Visual calendar
+  for all
+  pet-related events
+- **Multi-language
+  Support** -
+  Available in
+  multiple
+  languages (
+  i18next)
+- **Dark Mode** -
+  Beautiful UI with
+  light and dark
+  themes
+- **Analytics** -
+  Track pet care
+  patterns and
+  insights
 
 ## Monorepo Structure
 
@@ -56,9 +100,12 @@ GastonApp/
 
 ### Prerequisites
 
-- **Node.js**: 22.3.0 or later
-- **pnpm**: 9.0.0 or later
-- **Git**: For version control
+- **Node.js**:
+  22.3.0 or later
+- **pnpm**: 9.0.0 or
+  later
+- **Git**: For
+  version control
 
 ### Installation
 
@@ -78,7 +125,9 @@ pnpm install
 pnpm dev:web
 ```
 
-The web app will be available at `http://localhost:4480`
+The web app will be
+available at
+`http://localhost:4480`
 
 ## Available Commands
 
@@ -119,63 +168,126 @@ pnpm docker:down      # Stop containers
 
 ### Web Application
 
-- **Framework**: React 18
-- **Build Tool**: Vite
-- **Language**: TypeScript
-- **UI Library**: Mantine v5
-- **Styling**: Tailwind CSS
-- **State Management**: Redux Toolkit
-- **Backend**: Firebase (Auth, Firestore, Storage)
-- **AI**: OpenAI GPT-4
+- **Framework**:
+  React 18
+- **Build Tool**:
+  Vite
+- **Language**:
+  TypeScript
+- **UI Library**:
+  Mantine v5
+- **Styling**:
+  Tailwind CSS
+- **State Management
+  **: Redux Toolkit
+- **Backend**:
+  Firebase (Auth,
+  Firestore,
+  Storage)
+- **AI**: OpenAI
+  GPT-4
 - **i18n**: i18next
 
 ### Mobile Application (Future)
 
-- **Framework**: React Native
+- **Framework**:
+  React Native
 - **Platform**: Expo
-- **Navigation**: Expo Router
-- **Shared Code**: @gastonapp/shared
+- **Navigation**:
+  Expo Router
+- **Shared Code**:
+  @gastonapp/shared
 
 ### Infrastructure
 
-- **Monorepo**: Turborepo
-- **Package Manager**: pnpm with workspaces
-- **Deployment**: Docker + Nginx
-- **CI/CD**: GitHub Actions (future)
+- **Monorepo**:
+  Turborepo
+- **Package Manager
+  **: pnpm with
+  workspaces
+- **Deployment**:
+  Docker + Nginx
+- **CI/CD**: GitHub
+  Actions (future)
 
 ## Documentation
 
-- **[Deployment Guide](DEPLOYMENT.md)** - Detailed deployment instructions
-- **[Developer Guide](CLAUDE.md)** - Project architecture and conventions
-- **[Product Strategy](PRODUCT_STRATEGY_ANALYSIS.md)** - Product roadmap and strategy
-- **[MVP Definition](MVP_DEFINITION.md)** - Core features and priorities
-- **[Go-to-Market Strategy](GO_TO_MARKET_STRATEGY.md)** - Marketing and launch strategy
-- **[Monorepo Migration](MONOREPO_MIGRATION.md)** - Migration summary and guide
+-
+    *
+*[Deployment Guide](docs/DEPLOYMENT.md)
+** - Detailed
+deployment
+instructions
+-
+    *
+*[Developer Guide](CLAUDE.md)
+** - Project
+architecture and
+conventions
+-
+    *
+*[Product Strategy](docs/PRODUCT_STRATEGY_ANALYSIS.md)
+** - Product
+roadmap and
+strategy
+-
+    *
+*[MVP Definition](docs/MVP_DEFINITION.md)
+** - Core features
+and priorities
+-
+    *
+*[Go-to-Market Strategy](docs/GO_TO_MARKET_STRATEGY.md)
+** - Marketing and
+launch strategy
+-
+    *
+*[Monorepo Migration](docs/MONOREPO_MIGRATION.md)
+** - Migration
+summary and guide
 
 ## Applications
 
-### Web App (`apps/web`)
+### Web App (
 
-React + Vite application for desktop and mobile browsers.
+`apps/web`)
+
+React + Vite
+application for
+desktop and mobile
+browsers.
 
 **Key Features:**
-- Pet profile management
-- Event scheduling with recurrence
-- Voice-activated AI assistant
-- Calendar visualization
-- Multi-language support
+
+- Pet profile
+  management
+- Event scheduling
+  with recurrence
+- Voice-activated AI
+  assistant
+- Calendar
+  visualization
+- Multi-language
+  support
 
 **Development:**
+
 ```bash
 cd apps/web
 pnpm dev
 ```
 
-### Mobile App (`apps/mobile`)
+### Mobile App (
 
-React Native + Expo application for iOS and Android. *(Under Development)*
+`apps/mobile`)
+
+React Native + Expo
+application for iOS
+and Android. *(Under
+Development)*
 
 **Development:**
+
 ```bash
 cd apps/mobile
 pnpm start
@@ -183,30 +295,65 @@ pnpm start
 
 ## Packages
 
-### `@gastonapp/shared`
+###
 
-Shared code used by both web and mobile apps:
-- TypeScript type definitions
-- Business logic services
-- Data repository layer
+`@gastonapp/shared`
+
+Shared code used by
+both web and mobile
+apps:
+
+- TypeScript type
+  definitions
+- Business logic
+  services
+- Data repository
+  layer
 - Utility functions
 
-### `@gastonapp/ui` (Future)
+###
 
-Shared UI components compatible with React and React Native.
+`@gastonapp/ui` (
+Future)
 
-### `@gastonapp/eslint-config`
+Shared UI components
+compatible with
+React and React
+Native.
 
-ESLint configurations for consistent code style:
-- `react.js` - For React web apps
-- `react-native.js` - For React Native mobile apps
+###
 
-### `@gastonapp/typescript-config`
+`@gastonapp/eslint-config`
 
-TypeScript configurations:
-- `base.json` - Base config
-- `react.json` - For React apps
-- `react-native.json` - For React Native apps
+ESLint
+configurations for
+consistent code
+style:
+
+- `react.js` - For
+  React web apps
+-
+
+`react-native.js` -
+For React Native
+mobile apps
+
+###
+
+`@gastonapp/typescript-config`
+
+TypeScript
+configurations:
+
+- `base.json` - Base
+  config
+- `react.json` - For
+  React apps
+-
+
+`react-native.json` -
+For React Native
+apps
 
 ## Deployment
 
@@ -222,35 +369,62 @@ docker-compose -f .deploy/docker-compose.yml up -d
 
 ### Digital Ocean
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
-- App Platform deployment
+See [DEPLOYMENT.md](docs/DEPLOYMENT.md)
+for detailed
+instructions on:
+
+- App Platform
+  deployment
 - Droplet deployment
-- Container Registry deployment
+- Container Registry
+  deployment
 - SSL configuration
 
 ## Contributing
 
-We welcome contributions! Please follow these steps:
+We welcome
+contributions!
+Please follow these
+steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork the
+   repository
+2. Create a feature
+   branch (
+   `git checkout -b feature/amazing-feature`)
+3. Commit your
+   changes (
+   `git commit -m 'Add amazing feature'`)
+4. Push to the
+   branch (
+   `git push origin feature/amazing-feature`)
+5. Open a Pull
+   Request
 
 ### Development Guidelines
 
-- Follow TypeScript strict mode
-- Use ESLint and Prettier for code formatting
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
+- Follow TypeScript
+  strict mode
+- Use ESLint and
+  Prettier for code
+  formatting
+- Write meaningful
+  commit messages
+- Add tests for new
+  features
+- Update
+  documentation as
+  needed
 
 ## Environment Variables
 
-Create `.env` files in the appropriate locations:
+Create `.env` files
+in the appropriate
+locations:
 
-**Web App** (`apps/web/.env`):
+**Web App** (
+`apps/web/.env`):
+
 ```env
 VITE_FIREBASE_API_KEY=your_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
@@ -262,27 +436,46 @@ VITE_OPENAI_API_KEY=your_openai_key
 VITE_API_URL=your_backend_url
 ```
 
-> **Note**: Never commit `.env` files to version control. They are included in `.gitignore`.
+> **Note**: Never
+> commit `.env`
+> files
+> to version
+> control.
+> They are included
+> in
+`.gitignore`.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is
+licensed under the
+MIT License - see
+the LICENSE file for
+details.
 
 ## Team
 
-Created with care by the GastonApp Team
+Created with care by
+the GastonApp Team
 
 ## Contact
 
-- **GitHub**: [@fredattack](https://github.com/fredattack)
-- **Issues**: [GitHub Issues](https://github.com/fredattack/GastonApp/issues)
+- **GitHub
+  **: [@fredattack](https://github.com/fredattack)
+- **Issues
+  **: [GitHub Issues](https://github.com/fredattack/GastonApp/issues)
 
 ---
 
 <div align="center">
 
-**[⬆ Back to top](#gastonapp---multi-platform-pet-management)**
+*
 
-Made with TypeScript, React, and lots of ☕
+*[⬆ Back to top](#gastonapp---multi-platform-pet-management)
+**
+
+Made with
+TypeScript, React,
+and lots of ☕
 
 </div>

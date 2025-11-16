@@ -1,20 +1,42 @@
 # Deployment Scripts
 
-This directory contains all the deployment configuration and scripts for GastonApp.
+This directory
+contains all the
+deployment
+configuration and
+scripts for
+GastonApp.
 
 ## Files Overview
 
-- **Dockerfile** - Multi-stage Docker build for production
-- **docker-compose.yml** - Docker Compose configuration
-- **nginx.conf** - Nginx web server configuration
-- **deploy.sh** - Local/droplet deployment script
-- **remote-deploy.sh** - Remote deployment script (from local to droplet)
+- **Dockerfile** -
+  Multi-stage Docker
+  build for
+  production
+-
+    *
+*docker-compose.yml
+** - Docker
+Compose
+configuration
+- **nginx.conf** -
+  Nginx web server
+  configuration
+- **deploy.sh** -
+  Local/droplet
+  deployment script
+- **remote-deploy.sh
+  ** - Remote
+  deployment
+  script (from local
+  to droplet)
 
 ## Quick Start
 
 ### Local Deployment
 
-Deploy locally using Docker:
+Deploy locally using
+Docker:
 
 ```bash
 # From project root
@@ -26,7 +48,10 @@ pnpm deploy
 
 ### Remote Deployment
 
-Deploy to your Digital Ocean droplet from your local machine:
+Deploy to your
+Digital Ocean
+droplet from your
+local machine:
 
 ```bash
 # Basic usage
@@ -42,9 +67,13 @@ pnpm deploy:remote -- --host YOUR_DROPLET_IP --branch develop
 pnpm deploy:remote -- --host 192.168.1.100 --user deploy --branch main --key ~/.ssh/id_rsa
 ```
 
-**Note:** The `--` before arguments is required when using pnpm scripts.
+**Note:** The `--`
+before arguments is
+required when using
+pnpm scripts.
 
-Or use the script directly:
+Or use the script
+directly:
 
 ```bash
 ./.deploy/remote-deploy.sh --host YOUR_DROPLET_IP
@@ -84,10 +113,19 @@ pnpm docker:ps           # Show container status
 
 ### 1. First-Time Deployment to Droplet
 
-Follow the detailed guide in `MIGRATION_DEPLOYMENT.md`:
+Follow the detailed
+guide in
+`MIGRATION_DEPLOYMENT.md`:
 
-1. Ensure your droplet has Docker and Git installed
-2. Create `apps/web/.env` with your environment variables
+1. Ensure your
+   droplet has
+   Docker and Git
+   installed
+2. Create
+   `apps/web/.env`
+   with your
+   environment
+   variables
 3. Deploy:
    ```bash
    pnpm deploy:remote -- --host YOUR_DROPLET_IP
@@ -95,7 +133,9 @@ Follow the detailed guide in `MIGRATION_DEPLOYMENT.md`:
 
 ### 2. Update Existing Deployment
 
-To update an already deployed application:
+To update an already
+deployed
+application:
 
 ```bash
 # Just run the remote deploy script
@@ -115,7 +155,9 @@ pnpm deploy:remote -- --host YOUR_DROPLET_IP --branch feature/my-feature
 
 ### 4. Local Testing Before Deployment
 
-Test the Docker build locally before deploying:
+Test the Docker
+build locally before
+deploying:
 
 ```bash
 # Build and run locally
@@ -136,7 +178,9 @@ pnpm docker:down
 
 ### Environment Variables
 
-Create `apps/web/.env` with required variables:
+Create
+`apps/web/.env` with
+required variables:
 
 ```env
 VITE_FIREBASE_API_KEY=...
@@ -152,19 +196,27 @@ VITE_NODE_ENV=production
 
 ### Nginx Configuration
 
-Edit `nginx.conf` to customize:
-- Server name (for SSL)
-- Proxy settings (for backend API)
+Edit `nginx.conf` to
+customize:
+
+- Server name (for
+  SSL)
+- Proxy settings (
+  for backend API)
 - Cache settings
 - Security headers
 
 ### Docker Compose Configuration
 
-Edit `docker-compose.yml` to customize:
+Edit
+`docker-compose.yml`
+to customize:
+
 - Ports
 - Volumes
 - Networks
-- Additional services
+- Additional
+  services
 
 ## Troubleshooting
 
@@ -257,22 +309,54 @@ curl http://YOUR_DROPLET_IP/health
 
 ## Best Practices
 
-1. **Test Locally First**: Always test Docker build locally before deploying to production
-2. **Use Branches**: Deploy feature branches to test before merging to main
-3. **Check Logs**: Always check logs after deployment to verify everything works
-4. **Backup**: Keep backups of environment variables and data
-5. **Monitor**: Set up monitoring and alerting for production
+1. **Test Locally
+   First**: Always
+   test Docker build
+   locally before
+   deploying to
+   production
+2. **Use Branches**:
+   Deploy feature
+   branches to test
+   before merging to
+   main
+3. **Check Logs**:
+   Always check logs
+   after deployment
+   to verify
+   everything works
+4. **Backup**: Keep
+   backups of
+   environment
+   variables and
+   data
+5. **Monitor**: Set
+   up monitoring and
+   alerting for
+   production
 
 ## Additional Resources
 
-- [DEPLOYMENT.md](../DEPLOYMENT.md) - Complete deployment guide
-- [MIGRATION_DEPLOYMENT.md](../MIGRATION_DEPLOYMENT.md) - Migration guide from old structure
-- [CLAUDE.md](../CLAUDE.md) - Project overview and architecture
+- [DEPLOYMENT.md](../docs/DEPLOYMENT.md) -
+  Complete
+  deployment guide
+- [MIGRATION_DEPLOYMENT.md](../docs/MIGRATION_DEPLOYMENT.md) -
+  Migration guide
+  from old structure
+- [CLAUDE.md](../CLAUDE.md) -
+  Project overview
+  and architecture
 
 ## Support
 
-For issues or questions:
+For issues or
+questions:
+
 1. Check logs first
-2. Review the troubleshooting sections
-3. Consult the full deployment guides
-4. Open an issue on GitHub
+2. Review the
+   troubleshooting
+   sections
+3. Consult the full
+   deployment guides
+4. Open an issue on
+   GitHub
