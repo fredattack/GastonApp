@@ -12,7 +12,13 @@
       "Bash(timeout 30 pnpm build:*)",
       "Bash(pnpm --filter @gastonapp/web build:*)",
       "Bash(pnpm list:*)",
-      "Bash(pnpm install:*)"
+      "Bash(pnpm install:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(for dir in deployment strategy technical ai-improvements archive)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Bash(ls:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

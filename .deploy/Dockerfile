@@ -3,7 +3,7 @@
 FROM node:22.3-alpine AS builder
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.14.0 --activate
 
 # Set working directory
 WORKDIR /app
