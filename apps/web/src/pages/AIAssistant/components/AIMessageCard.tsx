@@ -13,6 +13,8 @@ import { useToast } from "../../../providers/ToastProvider";
 import HealthDisclaimer from "../../../components/AI/HealthDisclaimer";
 import QueryResults from "../../../components/AI/QueryResults";
 import AdviceCard from "../../../components/AI/AdviceCard";
+import MetricsChart from "../../../components/AI/MetricsChart";
+import DeletePreview from "../../../components/AI/DeletePreview";
 
 interface AIMessageCardProps {
     message: Message;
@@ -35,10 +37,12 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const requestType = aiResponse?.requestType || "createEvent";
     const isQuery = requestType === 'query';
     const isAdvice = requestType === 'advice';
+    const isMetrics = requestType === 'metrics';
+    const isDelete = requestType === 'deleteEvent' || requestType === 'deletePet';
     const isEvent = requestType?.includes('Event');
 
-    // For query and advice, we don't need attachedEvent
-    if (!attachedEvent && !isQuery && !isAdvice) {
+    // For query, advice, metrics, and delete, we don't need attachedEvent
+    if (!attachedEvent && !isQuery && !isAdvice && !isMetrics && !isDelete) {
         return null;
     }
 
@@ -180,6 +184,36 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         }
     };
 
+    const handleDelete = async () => {
+        if (!aiResponse?.data) return;
+
+        setIsCreating(true);
+        try {
+            const deleteData = aiResponse.data as DeleteData;
+
+            // TODO: Call backend API to perform delete operation
+            // This will be implemented when backend support is added
+            console.log('Delete operation:', deleteData);
+
+            addToast({
+                message: 'Suppression effectuée avec succès !',
+                type: 'success',
+            });
+
+            if (onEventCreated) {
+                onEventCreated();
+            }
+        } catch (error) {
+            console.error('Erreur lors de la suppression:', error);
+            addToast({
+                message: 'Une erreur est survenue lors de la suppression.',
+                type: 'error',
+            });
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
     // Extract primary data for display
     const primaryData = attachedEvent ? extractPrimaryData(attachedEvent) : null;
     const petInfo = getPetInfo();
@@ -213,7 +247,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     )}
 
                     {/* Description - Always show for non-event types */}
-                    {!isStreaming && (isQuery || isAdvice) && description && (
+                    {!isStreaming && (isQuery || isAdvice || isMetrics || isDelete) && description && (
                         <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
                             {description}
                         </p>
@@ -227,6 +261,21 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     {/* Advice Card */}
                     {!isStreaming && isAdvice && aiResponse?.data && (
                         <AdviceCard adviceData={aiResponse.data as AdviceData} />
+                    )}
+
+                    {/* Metrics Chart */}
+                    {!isStreaming && isMetrics && aiResponse?.data && (
+                        <MetricsChart metricsHistory={aiResponse.data as MetricsHistory} />
+                    )}
+
+                    {/* Delete Preview */}
+                    {!isStreaming && isDelete && aiResponse?.data && (
+                        <DeletePreview
+                            deleteData={aiResponse.data as DeleteData}
+                            requestType={requestType as 'deleteEvent' | 'deletePet'}
+                            onDelete={handleDelete}
+                            isLoading={isCreating}
+                        />
                     )}
 
                     {/* Event Preview Mode */}

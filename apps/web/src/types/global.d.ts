@@ -176,6 +176,35 @@ declare global {
     }
 
     // Metrics Response Types
+    interface Metric {
+        id?: string;
+        pet_id: string;
+        metric_type: 'weight' | 'temperature' | 'heart_rate' | 'custom';
+        value: number;
+        unit: string;
+        measured_at: string;
+        notes?: string;
+    }
+
+    interface MetricsAnalysis {
+        average: number;
+        min: number;
+        max: number;
+        change: number;
+        changePercent: number;
+        trend: 'increasing' | 'decreasing' | 'stable';
+    }
+
+    interface MetricsHistory {
+        metrics: Metric[];
+        analysis: MetricsAnalysis;
+        petId: string;
+        metricType: string;
+        startDate?: string;
+        endDate?: string;
+    }
+
+    // Legacy MetricData for single metric entry
     interface MetricData {
         metricType: 'weight' | 'height' | 'activity' | 'custom';
         petId: string;
@@ -185,11 +214,32 @@ declare global {
         notes?: string;
     }
 
+    // Delete Operations Types
+    interface DeleteFilters {
+        petIds?: string[];
+        type?: string;
+        startDate?: string;
+        endDate?: string;
+        eventId?: string;
+    }
+
+    interface DeleteData {
+        filters: DeleteFilters;
+        confirmationRequired: boolean;
+        itemsToDelete?: Array<{
+            id: string;
+            title: string;
+            type?: string;
+            date?: string;
+        }>;
+        estimatedCount?: number;
+    }
+
     interface AIResponse {
         score: number;
         requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "updatePet" | "deletePet" | "query" | "advice" | "metrics";
         description: string;
-        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData;
+        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData | MetricsHistory | DeleteData;
         metadata?: AIResponseMetadata;
         healthDisclaimer?: HealthDisclaimer;
     }

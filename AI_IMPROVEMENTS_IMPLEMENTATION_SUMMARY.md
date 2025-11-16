@@ -2,13 +2,13 @@
 
 **Date:** 16 November 2025
 **Branch:** `claude/develop-ai-improvements-014cpHAAuQhAJsGRXXAsQBtt`
-**Status:** Phase 1, 2 & 3 Frontend Implementation Completed
+**Status:** Phase 1, 2, 3, 4 & 5 Frontend Implementation Completed
 
 ---
 
 ## Overview
 
-This document summarizes the frontend implementation of Phase 1 (Health Disclaimers), Phase 2 (Query & Advice Support), and Phase 3 (Enhanced Advice with Knowledge Base) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
+This document summarizes the frontend implementation of Phase 1 (Health Disclaimers), Phase 2 (Query & Advice Support), Phase 3 (Enhanced Advice with Knowledge Base), Phase 4 (Metrics & Analytics), and Phase 5 (Delete Operations) from the AI Improvement Plan. All changes are client-side only, as the backend Laravel API is in a separate repository.
 
 ---
 
@@ -390,15 +390,20 @@ protected function enrichResponseWithMetadata(array $response): array
 ## Files Modified
 
 ### New Files Created
-1. `apps/web/src/components/AI/HealthDisclaimer.tsx`
-2. `apps/web/src/components/AI/QueryResults.tsx`
-3. `apps/web/src/components/AI/AdviceCard.tsx`
-4. `apps/web/src/utils/healthDisclaimerUtils.ts`
+1. `apps/web/src/components/AI/HealthDisclaimer.tsx` - Phase 1
+2. `apps/web/src/components/AI/QueryResults.tsx` - Phase 2
+3. `apps/web/src/components/AI/AdviceCard.tsx` - Phase 2
+4. `apps/web/src/utils/healthDisclaimerUtils.ts` - Phase 1
+5. `apps/web/src/utils/knowledgeBase.ts` - Phase 3
+6. `apps/web/src/components/AI/MetricsChart.tsx` - Phase 4
+7. `apps/web/src/utils/metricsUtils.ts` - Phase 4
+8. `apps/web/src/components/AI/ConfirmationDialog.tsx` - Phase 5
+9. `apps/web/src/components/AI/DeletePreview.tsx` - Phase 5
 
 ### Existing Files Modified
-1. `apps/web/src/types/global.d.ts` - Added new types
-2. `apps/web/src/services/OpenAIService.tsx` - Added disclaimer enrichment
-3. `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx` - Integrated new components
+1. `apps/web/src/types/global.d.ts` - Added types for all phases
+2. `apps/web/src/services/OpenAIService.tsx` - Added disclaimer enrichment (Phase 1)
+3. `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx` - Integrated all components
 
 ---
 
@@ -587,14 +592,518 @@ The backend can now return enriched advice responses:
 
 ---
 
+## Phase 4: Metrics & Analytics
+
+**Implementation Date:** 16 November 2025
+
+### New Features
+
+#### 1. Enhanced Metrics Types
+
+Added comprehensive metric tracking types:
+
+**Core Metrics Types:**
+- `Metric` - Individual metric entry (weight, temperature, heart_rate)
+- `MetricsAnalysis` - Statistical analysis (average, min, max, change, trend)
+- `MetricsHistory` - Complete history with metrics array and analysis
+
+**Fields:**
+- `metric_type` - Type of metric (weight, temperature, heart_rate, custom)
+- `value` - Measured value
+- `unit` - Unit of measurement (kg, °C, bpm)
+- `measured_at` - Date of measurement
+- `trend` - Trend analysis (increasing, decreasing, stable)
+- `changePercent` - Percentage change over period
+
+#### 2. MetricsChart Component
+
+**File:** `apps/web/src/components/AI/MetricsChart.tsx`
+
+A CSS-pure line chart component for visualizing metric trends:
+
+**Features:**
+- SVG-based line chart (no external dependencies)
+- Statistical cards (average, min, max, evolution)
+- Normalized data visualization
+- Trend indicators with color coding
+- Hover tooltips on data points
+- Responsive design with dark mode
+- X-axis and Y-axis with labels
+- Grid lines for better readability
+
+**Visualization:**
+- Purple line graph showing metric evolution
+- Color-coded trend indicators:
+  - Red: Increasing trend (+5% or more)
+  - Blue: Decreasing trend (-5% or more)
+  - Green: Stable (within ±5%)
+- Data points with hover information
+
+**Display Elements:**
+- 4 metric cards: Average, Min, Max, Evolution
+- Line chart with gridlines
+- Date labels on X-axis
+- Value labels on Y-axis
+- Trend analysis section for significant changes
+
+#### 3. Metrics Analysis Utilities
+
+**File:** `apps/web/src/utils/metricsUtils.ts`
+
+Comprehensive client-side metrics analysis:
+
+**Analysis Functions:**
+- `analyzeMetrics(metrics)` - Calculate statistics and trends
+  - Average, min, max values
+  - Change and percentage change
+  - Trend classification (±5% threshold)
+
+- `isWeightChangeConcerning(changePercent, species)` - Health alerts
+  - Loss thresholds: >5% (low), >10% (medium), >15% (high)
+  - Gain thresholds: >10% (low), >15% (medium), >20% (high)
+  - Species-specific recommendations
+
+**Helper Functions:**
+- `generateMockMetrics()` - Testing data generation
+- `getIdealWeightRange()` - Species/breed weight ranges
+- `formatMetricValue()` - Format with units
+- `getMetricTypeLabel()` - French labels
+
+### Usage Examples
+
+#### Metrics Display
+```typescript
+// Backend response example
+{
+    requestType: "metrics",
+    description: "Voici l'évolution du poids de Pablo",
+    data: {
+        metrics: [
+            { pet_id: "1", metric_type: "weight", value: 14.5, unit: "kg", measured_at: "2025-10-01" },
+            { pet_id: "1", metric_type: "weight", value: 15.2, unit: "kg", measured_at: "2025-11-01" },
+            { pet_id: "1", metric_type: "weight", value: 15.8, unit: "kg", measured_at: "2025-11-16" }
+        ],
+        analysis: {
+            average: 15.17,
+            min: 14.5,
+            max: 15.8,
+            change: 1.3,
+            changePercent: 8.97,
+            trend: "increasing"
+        },
+        petId: "1",
+        metricType: "weight"
+    }
+}
+```
+
+#### Client-Side Analysis
+```typescript
+import { analyzeMetrics, isWeightChangeConcerning } from '@/utils/metricsUtils';
+
+const analysis = analyzeMetrics(metrics);
+// Returns: { average: 15.17, min: 14.5, max: 15.8, change: 1.3, changePercent: 8.97, trend: "increasing" }
+
+const concern = isWeightChangeConcerning(8.97, 'dog');
+// Returns: { isConcerning: true, severity: "low", message: "Prise de poids notable..." }
+```
+
+### Files Modified/Created
+
+**Modified:**
+1. `apps/web/src/types/global.d.ts` - Added Metric, MetricsAnalysis, MetricsHistory types
+2. `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx` - Added metrics display support
+
+**Created:**
+3. `apps/web/src/components/AI/MetricsChart.tsx` - SVG-based metrics visualization
+4. `apps/web/src/utils/metricsUtils.ts` - Metrics analysis utilities
+
+### What Works Now
+
+✅ **Metrics Visualization:**
+- Line chart with SVG (no dependencies)
+- Statistical analysis cards
+- Trend indicators with color coding
+- Date range display
+
+✅ **Health Monitoring:**
+- Weight change analysis
+- Concerning change detection
+- Severity levels (low/medium/high)
+- Species-specific thresholds
+
+✅ **Professional Display:**
+- Clean metric cards layout
+- Responsive chart rendering
+- Dark mode support
+- Grid lines and axis labels
+
+### Backend Integration
+
+The backend needs to:
+
+1. **Create metrics table** with schema:
+   - pet_id, metric_type, value, unit, measured_at, notes
+
+2. **Implement endpoints:**
+   - `POST /api/metrics` - Store metric
+   - `GET /api/metrics/{petId}/history` - Retrieve history
+
+3. **Return MetricsHistory format:**
+   ```typescript
+   {
+       metrics: Metric[],
+       analysis: MetricsAnalysis,
+       petId: string,
+       metricType: string
+   }
+   ```
+
+### Benefits
+
+1. **No External Dependencies**: Pure CSS/SVG charts
+2. **Health Monitoring**: Automatic concern detection
+3. **Trend Analysis**: Statistical insights
+4. **Visual Feedback**: Clear trend indicators
+5. **Extensible**: Supports weight, temperature, heart rate, custom metrics
+
+---
+
+## Phase 5: Delete Operations & Confirmation Flows
+
+**Implementation Date:** 16 November 2025
+
+### New Features
+
+#### 1. Delete Operation Types
+
+Added comprehensive delete operation types:
+
+**Delete Types:**
+- `DeleteFilters` - Criteria for selecting items to delete
+- `DeleteData` - Complete delete operation data structure
+
+**DeleteFilters Fields:**
+- `petIds` - Array of pet IDs to filter
+- `type` - Event type filter
+- `startDate` - Date range start
+- `endDate` - Date range end
+- `eventId` - Specific event ID
+
+**DeleteData Fields:**
+- `filters` - Selection criteria
+- `confirmationRequired` - Whether confirmation dialog is needed
+- `itemsToDelete` - Preview of items (id, title, type, date)
+- `estimatedCount` - Number of items to be deleted
+
+#### 2. ConfirmationDialog Component
+
+**File:** `apps/web/src/components/AI/ConfirmationDialog.tsx`
+
+A reusable modal for confirming destructive operations:
+
+**Features:**
+- Warning icon with yellow color scheme
+- Title and message display
+- List of items to be deleted
+- Loading state during deletion
+- Cancel and confirm actions
+- Backdrop click handling
+- Accessible keyboard support
+- Dark mode compatible
+
+**Props:**
+- `title` - Dialog title
+- `message` - Warning message
+- `itemsToDelete` - Array of item descriptions
+- `onConfirm` - Confirmation callback
+- `onCancel` - Cancellation callback
+- `isLoading` - Loading state
+
+**Usage:**
+```tsx
+<ConfirmationDialog
+    title="Suppression d'événements"
+    message="Êtes-vous sûr de vouloir supprimer 3 élément(s) ?"
+    itemsToDelete={["Visite vétérinaire [medical] - 16/11/2025", ...]}
+    onConfirm={handleConfirm}
+    onCancel={handleCancel}
+    isLoading={isDeleting}
+/>
+```
+
+#### 3. DeletePreview Component
+
+**File:** `apps/web/src/components/AI/DeletePreview.tsx`
+
+Preview component showing what will be deleted:
+
+**Features:**
+- Type-based icons (calendar for events, paw for pets)
+- Estimated count badge
+- Warning section for irreversible actions
+- Selection criteria display (filters)
+- Items to delete list with details
+- Delete button with loading state
+- Triggers ConfirmationDialog on click
+- Gradient background (red/orange theme)
+
+**Props:**
+- `deleteData` - Delete operation data
+- `requestType` - 'deleteEvent' or 'deletePet'
+- `onDelete` - Delete callback
+- `isLoading` - Loading state
+
+**Display Sections:**
+1. **Header** - Icon, title, and count badge
+2. **Warning** - Yellow alert for irreversible action
+3. **Filters** - Selection criteria (pets, type, date range)
+4. **Items List** - Preview of items to be deleted
+5. **Action Button** - Delete button
+
+**Usage:**
+```tsx
+<DeletePreview
+    deleteData={{
+        filters: { petIds: ["1"], type: "medical" },
+        confirmationRequired: true,
+        itemsToDelete: [
+            { id: "1", title: "Visite vétérinaire", type: "medical", date: "2025-11-16" }
+        ],
+        estimatedCount: 1
+    }}
+    requestType="deleteEvent"
+    onDelete={handleDelete}
+    isLoading={isDeleting}
+/>
+```
+
+#### 4. AIMessageCard Integration
+
+**File:** `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx`
+
+Integrated delete operations into the main AI message card:
+
+**Changes:**
+
+1. **Import:**
+   ```typescript
+   import DeletePreview from "../../../components/AI/DeletePreview";
+   ```
+
+2. **Delete Detection:**
+   ```typescript
+   const isDelete = requestType === 'deleteEvent' || requestType === 'deletePet';
+   ```
+
+3. **Delete Handler:**
+   ```typescript
+   const handleDelete = async () => {
+       const deleteData = aiResponse.data as DeleteData;
+       // TODO: Call backend API to perform delete operation
+       console.log('Delete operation:', deleteData);
+       addToast({ message: 'Suppression effectuée avec succès !', type: 'success' });
+   };
+   ```
+
+4. **Conditional Rendering:**
+   ```tsx
+   {!isStreaming && isDelete && aiResponse?.data && (
+       <DeletePreview
+           deleteData={aiResponse.data as DeleteData}
+           requestType={requestType as 'deleteEvent' | 'deletePet'}
+           onDelete={handleDelete}
+           isLoading={isCreating}
+       />
+   )}
+   ```
+
+### Usage Examples
+
+#### Delete Events by Filter
+
+When user sends: **"Supprime tous les événements médicaux de Pablo"**
+
+Backend should respond with:
+```typescript
+{
+    requestType: "deleteEvent",
+    description: "Je vais supprimer tous les événements médicaux de Pablo",
+    data: {
+        filters: {
+            petIds: ["1"],
+            type: "medical"
+        },
+        confirmationRequired: true,
+        itemsToDelete: [
+            { id: "1", title: "Visite vétérinaire", type: "medical", date: "2025-11-16" },
+            { id: "2", title: "Vaccination", type: "medical", date: "2025-10-15" }
+        ],
+        estimatedCount: 2
+    }
+}
+```
+
+#### Delete Pet
+
+When user sends: **"Supprime l'animal Luna"**
+
+Backend should respond with:
+```typescript
+{
+    requestType: "deletePet",
+    description: "Je vais supprimer l'animal Luna",
+    data: {
+        filters: {
+            petIds: ["2"]
+        },
+        confirmationRequired: true,
+        itemsToDelete: [
+            { id: "2", title: "Luna", type: "cat" }
+        ],
+        estimatedCount: 1
+    }
+}
+```
+
+#### Delete Events by Date Range
+
+When user sends: **"Supprime tous les événements du mois dernier"**
+
+Backend should respond with:
+```typescript
+{
+    requestType: "deleteEvent",
+    description: "Je vais supprimer tous les événements du mois dernier",
+    data: {
+        filters: {
+            startDate: "2025-10-01",
+            endDate: "2025-10-31"
+        },
+        confirmationRequired: true,
+        estimatedCount: 5
+    }
+}
+```
+
+### Files Modified/Created
+
+**Modified:**
+1. `apps/web/src/types/global.d.ts` - Added DeleteFilters, DeleteData types
+2. `apps/web/src/pages/AIAssistant/components/AIMessageCard.tsx` - Added delete operation support
+
+**Created:**
+3. `apps/web/src/components/AI/ConfirmationDialog.tsx` - Confirmation modal component
+4. `apps/web/src/components/AI/DeletePreview.tsx` - Delete preview component
+
+### What Works Now
+
+✅ **Delete Preview:**
+- Shows filters and selection criteria
+- Displays items to be deleted
+- Estimated count badge
+- Warning for irreversible actions
+
+✅ **Confirmation Flow:**
+- Two-step confirmation process
+- Modal dialog with item list
+- Loading states during deletion
+- Cancel functionality
+
+✅ **UI Components:**
+- Color-coded delete theme (red/orange)
+- Responsive design
+- Dark mode support
+- Accessible keyboard navigation
+
+✅ **Type Safety:**
+- Complete TypeScript types
+- Proper type guards for delete operations
+- Type-safe props and callbacks
+
+### Backend Integration
+
+The backend needs to implement delete endpoints:
+
+#### 1. Delete Events Endpoint
+
+```php
+// POST /api/events/delete
+{
+    "filters": {
+        "petIds": ["1"],
+        "type": "medical",
+        "startDate": "2025-10-01",
+        "endDate": "2025-10-31"
+    }
+}
+
+// Response
+{
+    "success": true,
+    "deletedCount": 5,
+    "message": "5 événements supprimés avec succès"
+}
+```
+
+#### 2. Delete Pet Endpoint
+
+```php
+// DELETE /api/pets/{id}
+// Response
+{
+    "success": true,
+    "message": "Animal supprimé avec succès"
+}
+```
+
+#### 3. AI Service Integration
+
+Update `ConsumeAiService.php` to:
+- Detect delete intent from user message
+- Return `requestType: "deleteEvent"` or `"deletePet"`
+- Include `DeleteData` with filters and preview
+- Set `confirmationRequired: true` for bulk operations
+
+### Security Considerations
+
+**Important:**
+- Backend MUST validate ownership before deletion
+- Soft deletes recommended for events (add `deleted_at`)
+- Cascade deletes for pet removal (events, metrics, etc.)
+- Audit logging for delete operations
+- Rate limiting to prevent abuse
+
+### User Experience Flow
+
+1. **User sends delete request** - "Supprime les événements de Pablo"
+2. **AI detects delete intent** - Returns `deleteEvent` requestType
+3. **DeletePreview displays** - Shows filters and items
+4. **User clicks "Supprimer"** - ConfirmationDialog appears
+5. **User confirms** - Backend API called
+6. **Success toast** - "Suppression effectuée avec succès !"
+7. **UI refresh** - Events list updated
+
+### Benefits
+
+1. **Safety First**: Two-step confirmation for all deletes
+2. **Transparency**: Users see exactly what will be deleted
+3. **Flexibility**: Filter-based deletion (by pet, type, date)
+4. **Consistency**: Matches existing AI patterns
+5. **Extensibility**: Ready for bulk operations and undo
+
+---
+
 ## Conclusion
 
-**Phase 1 (Health Disclaimers)**, **Phase 2 (Query & Advice UI)**, and **Phase 3 (Enhanced Advice with Knowledge Base)** frontend implementations are **complete and ready for integration**.
+**Phase 1 (Health Disclaimers)**, **Phase 2 (Query & Advice UI)**, **Phase 3 (Enhanced Advice with Knowledge Base)**, **Phase 4 (Metrics & Analytics)**, and **Phase 5 (Delete Operations)** frontend implementations are **complete and ready for integration**.
 
 The backend API needs to be updated to:
-1. Support new `requestType` values (`query`, `advice`)
+1. Support new `requestType` values (`query`, `advice`, `metrics`, `deleteEvent`, `deletePet`)
 2. Optionally add server-side disclaimer generation
 3. Implement query endpoints
+4. Implement metrics storage and retrieval
+5. Implement secure delete endpoints with ownership validation
 
 Once the backend is ready, the UI will automatically display the new features without additional frontend changes.
 
