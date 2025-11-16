@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import { enrichWithHealthDisclaimer } from "../utils/healthDisclaimerUtils";
 
 export class OpenAiService {
     private static instance: OpenAiService | null = null;
@@ -85,7 +86,13 @@ export class OpenAiService {
                 throw new Error("Invalid response format from AI service");
             }
 
-            return response.data;
+            // Enrich response with health disclaimer if needed
+            const enrichedResponse = enrichWithHealthDisclaimer(
+                response.data,
+                messages.trim(),
+            );
+
+            return enrichedResponse;
         } catch (error) {
             return this.handleError(error);
         }
@@ -113,7 +120,20 @@ export class OpenAiService {
                 throw new Error("Invalid response format from AI service");
             }
 
-            return response.data;
+            // Get the last user message for context
+            const lastUserMessage = messages
+                .slice()
+                .reverse()
+                .find((m) => m.role === "user");
+            const originalPrompt = lastUserMessage?.content || "";
+
+            // Enrich response with health disclaimer if needed
+            const enrichedResponse = enrichWithHealthDisclaimer(
+                response.data,
+                originalPrompt,
+            );
+
+            return enrichedResponse;
         } catch (error) {
             return this.handleError(error);
         }
@@ -189,7 +209,22 @@ export class OpenAiService {
                                 onChunk(parsed.chunk);
                             }
                             if (parsed.done && parsed.response) {
-                                onComplete(parsed.response as AIResponse);
+                                // Get the last user message for context
+                                const lastUserMessage = messages
+                                    .slice()
+                                    .reverse()
+                                    .find((m) => m.role === "user");
+                                const originalPrompt =
+                                    lastUserMessage?.content || "";
+
+                                // Enrich response with health disclaimer
+                                const enrichedResponse =
+                                    enrichWithHealthDisclaimer(
+                                        parsed.response as AIResponse,
+                                        originalPrompt,
+                                    );
+
+                                onComplete(enrichedResponse);
                             }
                         } catch (e) {
                             console.error("Failed to parse SSE data:", e);
@@ -250,6 +285,7 @@ export class OpenAiService {
                 await new Promise((resolve) => setTimeout(resolve, 30));
             }
 
+            // The response is already enriched by sendPromptApi
             onComplete(aiResponse);
         } catch (error) {
             if (error instanceof Error) {
