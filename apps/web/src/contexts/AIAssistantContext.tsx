@@ -8,7 +8,8 @@ import React, {
 } from "react";
 import { OpenAiService } from "../services/OpenAIService";
 import ConversationService from "../services/ConversationService";
-import { transformAIResponseToEventForm } from "../utils/aiTransformers";
+import { transformAIResponseToEventForm, transformAIResponseToPetForm } from "../utils/aiTransformers";
+import { modelService } from "../services";
 
 interface AIAssistantContextValue {
     conversations: Conversation[];
@@ -212,12 +213,62 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                             ),
                         }));
                     },
-                    (finalResponse: AIResponse) => {
+                    async (finalResponse: AIResponse) => {
+                        console.log('[AIAssistantContext] Final Response:', finalResponse);
+
                         // Type narrow: only transform if data is AIEventData
                         const transformedEvent =
                             'title' in finalResponse.data && 'petId' in finalResponse.data
                                 ? transformAIResponseToEventForm(finalResponse.data as AIEventData)
                                 : null;
+
+                        // Type narrow: only use if data is PetFormData
+                        const transformedPet =
+                            'name' in finalResponse.data && 'species' in finalResponse.data
+                                ? transformAIResponseToPetForm(finalResponse.data)
+                                : undefined;
+
+                        // Execute query if it's a query request without results
+                        let enrichedResponse = finalResponse;
+                        if (finalResponse.requestType === 'query' && 'queryType' in finalResponse.data && !('results' in finalResponse.data)) {
+                            const queryData = finalResponse.data as any;
+
+                            // Execute query based on queryType
+                            if (queryData.queryType === 'pets') {
+                                try {
+                                    const allPets = await modelService.getModels('pets') as Pet[];
+                                    let filteredPets = allPets || [];
+
+                                    // Apply filters
+                                    if (queryData.filters?.type) {
+                                        filteredPets = filteredPets.filter((pet: Pet) => pet.species === queryData.filters.type);
+                                    }
+                                    if (queryData.filters?.petIds && queryData.filters.petIds.length > 0) {
+                                        filteredPets = filteredPets.filter((pet: Pet) =>
+                                            queryData.filters.petIds.includes(pet.id)
+                                        );
+                                    }
+
+                                    enrichedResponse = {
+                                        ...finalResponse,
+                                        data: {
+                                            ...queryData,
+                                            results: filteredPets,
+                                            totalCount: filteredPets.length,
+                                        }
+                                    };
+                                } catch (error) {
+                                    console.error('[AIAssistantContext] Error fetching pets:', error);
+                                }
+                            }
+                        }
+
+                        console.log('[AIAssistantContext] Transformed:', {
+                            transformedEvent,
+                            transformedPet,
+                            requestType: enrichedResponse.requestType,
+                            enrichedData: enrichedResponse.data,
+                        });
 
                         conversationService.updateMessage(
                             conversationId!,
@@ -226,7 +277,8 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                                 metadata: {
                                     isStreaming: false,
                                     attachedEvent: transformedEvent,
-                                    aiResponse: finalResponse,
+                                    attachedPet: transformedPet,
+                                    aiResponse: enrichedResponse,
                                 },
                             },
                         );
@@ -245,8 +297,10 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                                                             isStreaming: false,
                                                             attachedEvent:
                                                                 transformedEvent,
+                                                            attachedPet:
+                                                                transformedPet,
                                                             aiResponse:
-                                                                finalResponse,
+                                                                enrichedResponse,
                                                         },
                                                     }
                                                   : m,

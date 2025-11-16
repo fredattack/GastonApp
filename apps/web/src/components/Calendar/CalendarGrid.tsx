@@ -4,9 +4,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface CalendarGridProps {
     currentDate: Date;
-    events: Event[];
+    events: EventFormData[];
     onDateClick: (date: Date) => void;
-    onEventClick: (event: Event) => void;
+    onEventClick: (event: EventFormData) => void;
 }
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({
@@ -59,7 +59,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     }
 
     // Group events by day
-    const getEventsForDate = (date: Date | null): Event[] => {
+    const getEventsForDate = (date: Date | null): EventFormData[] => {
         if (!date) return [];
 
         return events.filter(event => {

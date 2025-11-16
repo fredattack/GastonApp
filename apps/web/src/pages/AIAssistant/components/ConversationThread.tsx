@@ -140,10 +140,18 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
             <div className="max-w-4xl mx-auto">
                 {conversation.messages.map((message) => {
-                    if (
-                        message.role === "assistant" &&
-                        message.metadata?.attachedEvent
-                    ) {
+                    // Render AIMessageCard for assistant messages with special content
+                    const hasSpecialContent = message.metadata?.attachedEvent
+                        || message.metadata?.attachedPet
+                        || (message.metadata?.aiResponse && (
+                            message.metadata.aiResponse.requestType === 'query' ||
+                            message.metadata.aiResponse.requestType === 'advice' ||
+                            message.metadata.aiResponse.requestType === 'metrics' ||
+                            message.metadata.aiResponse.requestType === 'deleteEvent' ||
+                            message.metadata.aiResponse.requestType === 'deletePet'
+                        ));
+
+                    if (message.role === "assistant" && hasSpecialContent) {
                         return (
                             <AIMessageCard
                                 key={message.id}

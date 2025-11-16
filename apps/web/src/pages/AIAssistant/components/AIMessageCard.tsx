@@ -4,8 +4,10 @@ import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import { usePets } from "../../../contexts/PetsContext";
 import { extractPrimaryData } from "../../../utils/aiTransformers";
 import EventForm from "../../../components/Event/Form/EventForm";
+import PetForm from "../../../components/Pets/form/PetForm";
 import IntentHeader from "./IntentHeader";
 import EventHeroSection from "./EventHeroSection";
+import PetHeroSection from "./PetHeroSection";
 import ContextualActions from "./ContextualActions";
 import SecondaryDetails from "./SecondaryDetails";
 import { modelService } from "../../../services";
@@ -27,9 +29,9 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     aiResponse,
     onEventCreated,
 }) => {
-    const { pets } = usePets();
+    const { pets, refreshPets } = usePets();
     const { addToast } = useToast();
-    const { attachedEvent, isStreaming } = message.metadata || {};
+    const { attachedEvent, attachedPet, isStreaming } = message.metadata || {};
     const [mode, setMode] = useState<"preview" | "edit">("preview");
     const [isCreating, setIsCreating] = useState(false);
 
@@ -40,9 +42,22 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const isMetrics = requestType === 'metrics';
     const isDelete = requestType === 'deleteEvent' || requestType === 'deletePet';
     const isEvent = requestType?.includes('Event');
+    const isPet = requestType?.includes('Pet');
 
-    // For query, advice, metrics, and delete, we don't need attachedEvent
-    if (!attachedEvent && !isQuery && !isAdvice && !isMetrics && !isDelete) {
+    // Debug logs
+    console.log('[AIMessageCard] Debug:', {
+        requestType,
+        isPet,
+        isEvent,
+        attachedPet,
+        attachedEvent,
+        aiResponse,
+        messageMetadata: message.metadata,
+    });
+
+    // For query, advice, metrics, and delete, we don't need attachedEvent or attachedPet
+    // For events we need attachedEvent, for pets we need attachedPet
+    if (!attachedEvent && !attachedPet && !isQuery && !isAdvice && !isMetrics && !isDelete) {
         return null;
     }
 
@@ -214,9 +229,75 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         }
     };
 
+    const handleCreatePet = async () => {
+        if (!attachedPet) return;
+
+        setIsCreating(true);
+        try {
+            if (!attachedPet.name || !attachedPet.species) {
+                addToast({
+                    message: "Les champs Nom et Espèce sont obligatoires !",
+                    type: "error",
+                });
+                setIsCreating(false);
+                return;
+            }
+
+            // Préparer les données du pet pour l'API
+            const petData = {
+                name: attachedPet.name,
+                species: attachedPet.species,
+                breed: attachedPet.breed || "",
+                birthDate: attachedPet.birthDate || "",
+                isActive: attachedPet.isActive !== false,
+                order: attachedPet.order || 1,
+                ownerId: attachedPet.ownerId || "",
+                created_at: attachedPet.created_at || new Date().toISOString(),
+            };
+
+            await modelService.add("pets", petData);
+
+            addToast({
+                message: `${attachedPet.name} a été ajouté avec succès !`,
+                type: "success",
+            });
+
+            // Rafraîchir la liste des pets
+            if (refreshPets) {
+                await refreshPets();
+            }
+
+            if (onEventCreated) {
+                onEventCreated();
+            }
+        } catch (error) {
+            console.error("Erreur lors de la création de l'animal :", error);
+            addToast({
+                message: "Une erreur est survenue lors de l'ajout de l'animal.",
+                type: "error",
+            });
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const handleEditPet = () => {
+        setMode("edit");
+    };
+
+    const handlePetSubmitted = () => {
+        if (onEventCreated) {
+            onEventCreated();
+        }
+        setMode("preview");
+    };
+
     // Extract primary data for display
     const primaryData = attachedEvent ? extractPrimaryData(attachedEvent) : null;
     const petInfo = getPetInfo();
+
+    // Detect missing pets (event created but no pet found)
+    const hasMissingPets = attachedEvent && (!attachedEvent.pets || attachedEvent.pets.length === 0);
 
     const score = aiResponse?.score;
     const description =
@@ -289,6 +370,28 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                 score={score}
                             />
 
+                            {/* Warning for missing pets */}
+                            {hasMissingPets && (
+                                <div className="mt-3 p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 rounded-r-lg">
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex-shrink-0 text-amber-600 dark:text-amber-400 text-xl">
+                                            ⚠️
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-1">
+                                                Animal introuvable
+                                            </h4>
+                                            <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
+                                                L'animal mentionné dans votre demande n'existe pas dans votre liste d'animaux.
+                                            </p>
+                                            <p className="text-xs text-amber-700 dark:text-amber-300">
+                                                💡 <strong>Suggestion :</strong> Créez d'abord l'animal avant de créer cet événement, ou modifiez l'événement pour sélectionner un animal existant.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Hero Section - Primary Information */}
                             <EventHeroSection
                                 eventType={attachedEvent.type}
@@ -311,7 +414,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                         </>
                     )}
 
-                    {/* Edit Mode */}
+                    {/* Event Edit Mode */}
                     {!isStreaming && mode === "edit" && attachedEvent && (
                         <div className="mt-3">
                             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
@@ -335,6 +438,59 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                     onChange={() => {}}
                                     onSubmit={handleEventSubmitted}
                                     onCancel={handleBackToPreview}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Pet Preview Mode */}
+                    {!isStreaming && isPet && attachedPet && mode === "preview" && (
+                        <>
+                            {/* Description */}
+                            <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
+                                {description}
+                            </p>
+
+                            {/* Pet Hero Section */}
+                            <PetHeroSection petData={attachedPet} />
+
+                            {/* Contextual Actions */}
+                            <div className="mt-4">
+                                <ContextualActions
+                                    requestType={requestType}
+                                    onConfirm={handleCreatePet}
+                                    onEdit={handleEditPet}
+                                    isLoading={isCreating}
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {/* Pet Edit Mode */}
+                    {!isStreaming && mode === "edit" && attachedPet && (
+                        <div className="mt-3">
+                            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <button
+                                        onClick={handleBackToPreview}
+                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faRobot}
+                                            className="text-gray-600 dark:text-gray-400"
+                                        />
+                                    </button>
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                                        Modifier l'animal
+                                    </h3>
+                                </div>
+
+                                <PetForm
+                                    petFormData={attachedPet}
+                                    onChange={() => {}}
+                                    onSubmit={handlePetSubmitted}
+                                    onCancel={handleBackToPreview}
+                                    submitable={true}
                                 />
                             </div>
                         </div>

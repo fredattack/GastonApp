@@ -42,6 +42,23 @@ export function transformAIResponseToEventForm(
 }
 
 /**
+ * Transforme les données de l'IA en format de formulaire de pet
+ */
+export function transformAIResponseToPetForm(data: any): PetFormData {
+    return {
+        id: data.id || null,
+        name: data.name || "",
+        species: data.species || "",
+        breed: data.breed || "",
+        birthDate: data.birthDate || "",
+        isActive: data.isActive ?? data.is_active ?? true,
+        order: data.order || 1,
+        ownerId: data.ownerId || "",
+        created_at: data.created_at || new Date().toISOString(),
+    };
+}
+
+/**
  * Retourne le label français pour un type d'événement
  */
 export function getEventTypeLabel(type: string): string {
