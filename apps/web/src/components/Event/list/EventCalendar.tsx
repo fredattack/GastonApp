@@ -216,6 +216,66 @@ const EventCalendar = () => {
         handleRefetchEvents();
     };
 
+    const handleEventMove = async (event: Event, newDate: Date) => {
+        try {
+            // Update event with new date
+            const updatedEvent = {
+                ...event,
+                start_date: newDate.toISOString(),
+            };
+
+            await eventService.update(event.id, updatedEvent);
+
+            // Refresh events
+            handleRefetchEvents();
+
+            // Show success toast
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: `"${event.title}" déplacé avec succès`,
+                type: 'success',
+            });
+        } catch (error) {
+            console.error('Error moving event:', error);
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: 'Erreur lors du déplacement de l\'événement',
+                type: 'error',
+            });
+        }
+    };
+
+    const handleEventResize = async (event: Event, newDuration: number) => {
+        try {
+            // Calculate new end date based on duration
+            const startDate = new Date(event.start_date);
+            const endDate = new Date(startDate.getTime() + newDuration * 60 * 60 * 1000);
+
+            const updatedEvent = {
+                ...event,
+                end_date: endDate.toISOString(),
+            };
+
+            await eventService.update(event.id, updatedEvent);
+
+            // Refresh events
+            handleRefetchEvents();
+
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: `Durée de "${event.title}" modifiée`,
+                type: 'success',
+            });
+        } catch (error) {
+            console.error('Error resizing event:', error);
+            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            addToast({
+                message: 'Erreur lors de la modification de la durée',
+                type: 'error',
+            });
+        }
+    };
+
     // console.log("filters", filters);
     return (
         <div key={viewMode} className="event-calendar">
@@ -285,6 +345,8 @@ const EventCalendar = () => {
                         events={filteredEvents}
                         onTimeSlotClick={handleTimeSlotClick}
                         onEventClick={handleEventClick}
+                        onEventMove={handleEventMove}
+                        onEventResize={handleEventResize}
                     />
                 )}
 
@@ -294,6 +356,8 @@ const EventCalendar = () => {
                         events={filteredEvents}
                         onTimeSlotClick={handleTimeSlotClick}
                         onEventClick={handleEventClick}
+                        onEventMove={handleEventMove}
+                        onEventResize={handleEventResize}
                     />
                 )}
             </div>

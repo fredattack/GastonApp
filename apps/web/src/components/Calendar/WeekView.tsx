@@ -7,6 +7,8 @@ interface WeekViewProps {
     events: Event[];
     onTimeSlotClick: (date: Date, hour: number) => void;
     onEventClick: (event: Event) => void;
+    onEventMove?: (event: Event, newDate: Date) => void;
+    onEventResize?: (event: Event, newDuration: number) => void;
 }
 
 const WeekView: React.FC<WeekViewProps> = ({
@@ -14,8 +16,11 @@ const WeekView: React.FC<WeekViewProps> = ({
     events,
     onTimeSlotClick,
     onEventClick,
+    onEventMove,
+    onEventResize,
 }) => {
     const [hoveredSlot, setHoveredSlot] = useState<{ day: number; hour: number } | null>(null);
+    const [draggedEvent, setDraggedEvent] = useState<Event | null>(null);
 
     // Generate week days starting from Monday
     const getWeekDays = (date: Date): Date[] => {

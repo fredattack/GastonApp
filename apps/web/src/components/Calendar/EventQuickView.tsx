@@ -11,6 +11,7 @@ import {
     faCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import EventForm from '../Event/Form/EventForm';
+import RecurringEventDialog from './RecurringEventDialog';
 import { eventService } from '../../services';
 import { useToast } from '../../providers/ToastProvider';
 
@@ -32,6 +33,8 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
     const { addToast } = useToast();
     const [mode, setMode] = useState<'view' | 'edit' | 'create'>('view');
     const [isDeleting, setIsDeleting] = useState(false);
+    const [showRecurringDialog, setShowRecurringDialog] = useState(false);
+    const [recurringAction, setRecurringAction] = useState<'edit' | 'delete'>('edit');
 
     // Initialize for new event creation
     const getInitialEvent = (): EventFormData => {
@@ -91,20 +94,54 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
         }
     }, [isOpen, event, initialDate]);
 
-    const handleDelete = async () => {
+    const handleDeleteClick = () => {
+        if (!event) return;
+
+        // If event is recurring, show dialog
+        if (event.is_recurring) {
+            setRecurringAction('delete');
+            setShowRecurringDialog(true);
+        } else {
+            // Direct delete for non-recurring events
+            handleDeleteConfirm();
+        }
+    };
+
+    const handleDeleteConfirm = async (scope?: 'this' | 'all') => {
         if (!event?.id) return;
 
-        if (!confirm(`Êtes-vous sûr de vouloir supprimer "${event.title}" ?`)) {
+        const confirmMessage = scope === 'all'
+            ? `Êtes-vous sûr de vouloir supprimer TOUS les événements de la série "${event.title}" ?`
+            : `Êtes-vous sûr de vouloir supprimer "${event.title}" ?`;
+
+        if (!confirm(confirmMessage)) {
             return;
         }
 
         setIsDeleting(true);
         try {
-            await eventService.delete(event.id);
-            addToast({
-                message: 'Événement supprimé avec succès',
-                type: 'success',
-            });
+            if (scope === 'all' && event.master_id) {
+                // Delete all events in the series
+                await eventService.delete(event.master_id, { scope: 'series' });
+                addToast({
+                    message: 'Série d\'événements supprimée avec succès',
+                    type: 'success',
+                });
+            } else if (scope === 'this' && event.is_recurring) {
+                // Delete only this occurrence
+                await eventService.delete(event.id, { scope: 'single' });
+                addToast({
+                    message: 'Événement supprimé avec succès',
+                    type: 'success',
+                });
+            } else {
+                // Simple delete for non-recurring
+                await eventService.delete(event.id);
+                addToast({
+                    message: 'Événement supprimé avec succès',
+                    type: 'success',
+                });
+            }
             onUpdate();
             onClose();
         } catch (error) {
@@ -115,6 +152,34 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
             });
         } finally {
             setIsDeleting(false);
+        }
+    };
+
+    const handleEditClick = () => {
+        if (!event) return;
+
+        // If event is recurring, show dialog
+        if (event.is_recurring) {
+            setRecurringAction('edit');
+            setShowRecurringDialog(true);
+        } else {
+            // Direct edit for non-recurring events
+            setMode('edit');
+        }
+    };
+
+    const handleRecurringChoice = (option: 'this' | 'all') => {
+        setShowRecurringDialog(false);
+
+        if (recurringAction === 'delete') {
+            handleDeleteConfirm(option);
+        } else if (recurringAction === 'edit') {
+            // Store the scope choice for when form is submitted
+            setEventData({
+                ...eventData,
+                _editScope: option, // Custom field to track edit scope
+            } as any);
+            setMode('edit');
         }
     };
 
@@ -300,7 +365,7 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                 </button>
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={handleDelete}
+                                        onClick={handleDeleteClick}
                                         disabled={isDeleting}
                                         className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                                     >
@@ -308,7 +373,7 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                         Supprimer
                                     </button>
                                     <button
-                                        onClick={() => setMode('edit')}
+                                        onClick={handleEditClick}
                                         className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors"
                                     >
                                         <FontAwesomeIcon icon={faEdit} className="mr-2" />
@@ -343,6 +408,15 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                     )}
                 </div>
             </div>
+
+            {/* Recurring Event Dialog */}
+            <RecurringEventDialog
+                isOpen={showRecurringDialog}
+                eventTitle={event?.title || ''}
+                onSelectOption={handleRecurringChoice}
+                onCancel={() => setShowRecurringDialog(false)}
+                action={recurringAction}
+            />
         </>
     );
 };
