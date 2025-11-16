@@ -20,7 +20,7 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check if Docker Compose is installed
-if ! command -v docker-compose &> /dev/null; then
+if ! docker compose version &> /dev/null; then
     echo -e "${RED}❌ Docker Compose is not installed. Please install Docker Compose first.${NC}"
     exit 1
 fi
@@ -29,30 +29,30 @@ fi
 cd "$(dirname "$0")/.."
 
 echo -e "${YELLOW}📦 Building Docker image...${NC}"
-docker-compose -f .deploy/docker-compose.yml build
+docker compose -f .deploy/docker-compose.yml build
 
 echo -e "${YELLOW}🛑 Stopping existing containers...${NC}"
-docker-compose -f .deploy/docker-compose.yml down
+docker compose -f .deploy/docker-compose.yml down
 
 echo -e "${YELLOW}🚀 Starting containers...${NC}"
-docker-compose -f .deploy/docker-compose.yml up -d
+docker compose -f .deploy/docker-compose.yml up -d
 
 echo -e "${YELLOW}⏳ Waiting for services to be healthy...${NC}"
 sleep 5
 
 # Check if the web service is running
-if docker-compose -f .deploy/docker-compose.yml ps | grep -q "web.*Up"; then
+if docker compose -f .deploy/docker-compose.yml ps | grep -q "web.*Up"; then
     echo -e "${GREEN}✅ Deployment successful!${NC}"
     echo -e "${GREEN}🌐 Application is running at: http://localhost${NC}"
 else
-    echo -e "${RED}❌ Deployment failed. Check logs with: docker-compose -f .deploy/docker-compose.yml logs${NC}"
+    echo -e "${RED}❌ Deployment failed. Check logs with: docker compose -f .deploy/docker-compose.yml logs${NC}"
     exit 1
 fi
 
 echo -e "${GREEN}📊 Container status:${NC}"
-docker-compose -f .deploy/docker-compose.yml ps
+docker compose -f .deploy/docker-compose.yml ps
 
 echo -e "\n${YELLOW}Useful commands:${NC}"
-echo -e "  View logs:    docker-compose -f .deploy/docker-compose.yml logs -f"
-echo -e "  Stop app:     docker-compose -f .deploy/docker-compose.yml down"
-echo -e "  Restart app:  docker-compose -f .deploy/docker-compose.yml restart"
+echo -e "  View logs:    docker compose -f .deploy/docker-compose.yml logs -f"
+echo -e "  Stop app:     docker compose -f .deploy/docker-compose.yml down"
+echo -e "  Restart app:  docker compose -f .deploy/docker-compose.yml restart"
