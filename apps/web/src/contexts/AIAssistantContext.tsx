@@ -213,9 +213,11 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                         }));
                     },
                     (finalResponse: AIResponse) => {
-                        const transformedEvent = transformAIResponseToEventForm(
-                            finalResponse.data,
-                        );
+                        // Type narrow: only transform if data is AIEventData
+                        const transformedEvent =
+                            'title' in finalResponse.data && 'petId' in finalResponse.data
+                                ? transformAIResponseToEventForm(finalResponse.data as AIEventData)
+                                : null;
 
                         conversationService.updateMessage(
                             conversationId!,

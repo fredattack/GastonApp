@@ -266,7 +266,7 @@ declare global {
         timestamp: Date;
         metadata?: {
             isStreaming?: boolean;
-            attachedEvent?: EventFormData;
+            attachedEvent?: EventFormData | null;
             attachedPet?: PetFormData;
             aiResponse?: AIResponse;
             actions?: MessageAction[];

@@ -102,14 +102,14 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
         setPromptType(responseObject.requestType);
 
         if (currentStep === 0) {
-            if (responseObject.requestType === "createEvent") {
+            if (responseObject.requestType === "createEvent" && 'title' in responseObject.data && 'petId' in responseObject.data) {
                 const transformedData = transformAIResponseToEventForm(
-                    responseObject.data,
+                    responseObject.data as AIEventData,
                 );
                 setEventData(transformedData);
             }
-            if (responseObject.requestType === "createPet") {
-                setPetData(responseObject.data as unknown as PetFormData);
+            if (responseObject.requestType === "createPet" && 'name' in responseObject.data && 'species' in responseObject.data) {
+                setPetData(responseObject.data as PetFormData);
             }
             setCurrentStep(1);
             setViewMode("edit");

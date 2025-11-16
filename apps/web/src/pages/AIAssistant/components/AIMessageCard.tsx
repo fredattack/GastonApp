@@ -279,7 +279,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     )}
 
                     {/* Event Preview Mode */}
-                    {!isStreaming && isEvent && attachedEvent && mode === "preview" && (
+                    {!isStreaming && isEvent && attachedEvent && primaryData && mode === "preview" && (
                         <>
                             {/* Intent Header */}
                             <IntentHeader

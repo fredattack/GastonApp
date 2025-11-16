@@ -38,9 +38,10 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
             );
         }
 
+        const events = results as Event[];
         return (
             <div className="space-y-2">
-                {results.map((event: Event, index: number) => (
+                {events.map((event, index: number) => (
                     <div
                         key={event.id || index}
                         className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
@@ -102,9 +103,10 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
             );
         }
 
+        const pets = results as Pet[];
         return (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {results.map((pet: Pet) => (
+                {pets.map((pet) => (
                     <div
                         key={pet.id}
                         className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"

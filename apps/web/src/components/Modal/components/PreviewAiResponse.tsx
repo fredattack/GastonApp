@@ -22,7 +22,13 @@ const PreviewAiResponse = ({
     aiResponse,
 }: PreviewAiResponseProps): JSX.Element => {
     const { pets } = usePets();
-    const eventData = aiResponse.data;
+
+    // Type guard: Only render if data is AIEventData (has title and petId)
+    if (!('title' in aiResponse.data && 'petId' in aiResponse.data)) {
+        return <div>Type de données non supporté pour l'aperçu</div>;
+    }
+
+    const eventData = aiResponse.data as AIEventData;
 
     const selectedPets = useMemo(() => {
         if (!eventData.petId || eventData.petId.length === 0) {
