@@ -214,34 +214,45 @@ pnpm docker:down      # Stop containers
 
 -
     *
+
 *[Deployment Guide](docs/DEPLOYMENT.md)
 ** - Detailed
 deployment
 instructions
+
 -
     *
+
 *[Developer Guide](CLAUDE.md)
 ** - Project
 architecture and
 conventions
+
 -
     *
+
 *[Product Strategy](docs/PRODUCT_STRATEGY_ANALYSIS.md)
 ** - Product
 roadmap and
 strategy
+
 -
     *
+
 *[MVP Definition](docs/MVP_DEFINITION.md)
 ** - Core features
 and priorities
+
 -
     *
+
 *[Go-to-Market Strategy](docs/GO_TO_MARKET_STRATEGY.md)
 ** - Marketing and
 launch strategy
+
 -
     *
+
 *[Monorepo Migration](docs/MONOREPO_MIGRATION.md)
 ** - Migration
 summary and guide
@@ -477,5 +488,4 @@ the GastonApp Team
 Made with
 TypeScript, React,
 and lots of ☕
-
 </div>
