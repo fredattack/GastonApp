@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  landing:
+    build:
+      context: ..
+      dockerfile: .deploy-landing/Dockerfile
+    image: gastonapp-landing:latest
+    container_name: gastonapp-landing
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - gastonapp-landing-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  gastonapp-landing-network:
+    driver: bridge

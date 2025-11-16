@@ -11,8 +11,10 @@
         "dev": "turbo dev",
         "dev:web": "turbo dev --filter=@gastonapp/web",
         "dev:mobile": "turbo dev --filter=@gastonapp/mobile",
+        "dev:landing": "turbo dev --filter=@gastonapp/landing-page",
         "build": "turbo build",
         "build:web": "turbo build --filter=@gastonapp/web",
+        "build:landing": "turbo build --filter=@gastonapp/landing-page",
         "lint": "turbo lint",
         "format": "turbo format",
         "type-check": "turbo type-check",
@@ -20,11 +22,16 @@
         "clean": "turbo clean && rm -rf node_modules .turbo",
         "deploy": "./.deploy/deploy.sh",
         "deploy:remote": "./.deploy/remote-deploy.sh",
+        "deploy:landing": "./.deploy-landing/deploy.sh",
         "docker:build": "docker-compose -f .deploy/docker-compose.yml build",
         "docker:up": "docker-compose -f .deploy/docker-compose.yml up -d",
         "docker:down": "docker-compose -f .deploy/docker-compose.yml down",
         "docker:logs": "docker-compose -f .deploy/docker-compose.yml logs -f",
-        "docker:ps": "docker-compose -f .deploy/docker-compose.yml ps"
+        "docker:ps": "docker-compose -f .deploy/docker-compose.yml ps",
+        "docker:landing:build": "docker-compose -f .deploy-landing/docker-compose.yml build",
+        "docker:landing:up": "docker-compose -f .deploy-landing/docker-compose.yml up -d",
+        "docker:landing:down": "docker-compose -f .deploy-landing/docker-compose.yml down",
+        "docker:landing:logs": "docker-compose -f .deploy-landing/docker-compose.yml logs -f"
     },
     "devDependencies": {
         "turbo": "^2.3.3",
