@@ -114,11 +114,70 @@ declare global {
         recurrence?: Recurrence;
     }
 
+    // Health Disclaimer Types
+    interface DisclaimerAction {
+        label: string;
+        type: 'primary' | 'secondary' | 'danger';
+        action: 'findVet' | 'dismiss' | 'learnMore' | 'callEmergency';
+    }
+
+    interface HealthDisclaimer {
+        severity: 'info' | 'warning' | 'critical';
+        type: 'medical' | 'nutrition' | 'general';
+        title: string;
+        message: string;
+        actions: DisclaimerAction[];
+        autoMedicationWarning?: string;
+    }
+
+    interface AIResponseMetadata {
+        hasMedicalContext: boolean;
+        processedAt: string;
+        originalPrompt?: string;
+        confidence?: number;
+    }
+
+    // Query Response Types
+    interface QueryResult {
+        queryType: 'events' | 'pets' | 'statistics' | 'history';
+        results: Event[] | Pet[] | any[];
+        totalCount: number;
+        filters?: {
+            petIds?: string[];
+            startDate?: string;
+            endDate?: string;
+            eventTypes?: string[];
+        };
+        summary?: string;
+    }
+
+    // Advice Response Types
+    interface AdviceData {
+        adviceType: 'nutrition' | 'health' | 'behavior' | 'general';
+        question: string;
+        answer: string;
+        sources?: string[];
+        relatedTopics?: string[];
+        confidence: number;
+    }
+
+    // Metrics Response Types
+    interface MetricData {
+        metricType: 'weight' | 'height' | 'activity' | 'custom';
+        petId: string;
+        value: number;
+        unit: string;
+        timestamp: string;
+        notes?: string;
+    }
+
     interface AIResponse {
         score: number;
-        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "query";
+        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "updatePet" | "deletePet" | "query" | "advice" | "metrics";
         description: string;
-        data: AIEventData;
+        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData;
+        metadata?: AIResponseMetadata;
+        healthDisclaimer?: HealthDisclaimer;
     }
 
     interface AIError {
