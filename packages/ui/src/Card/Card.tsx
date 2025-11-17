@@ -1,5 +1,4 @@
 import { type ReactNode, type HTMLAttributes, forwardRef } from 'react';
-import '../styles/design-tokens.css';
 import './Card.css';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {

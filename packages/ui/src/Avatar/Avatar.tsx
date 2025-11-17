@@ -1,5 +1,4 @@
 import { type ImgHTMLAttributes, forwardRef, useState } from 'react';
-import '../styles/design-tokens.css';
 import './Avatar.css';
 
 export interface AvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {

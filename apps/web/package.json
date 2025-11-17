@@ -12,6 +12,8 @@
         "type-check": "tsc --noEmit"
     },
     "dependencies": {
+        "@gastonapp/ui": "workspace:*",
+        "@phosphor-icons/react": "^2.1.10",
         "@bugsnag/browser-performance": "^2.10.1",
         "@bugsnag/js": "^8.1.2",
         "@bugsnag/plugin-react": "^8.1.1",

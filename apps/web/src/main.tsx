@@ -7,6 +7,9 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 // Tailwind css
 import "./tailwind.css";
 
+// Design Tokens from UI package
+import "./styles/design-tokens.css";
+
 // i18n (needs to be bundled)
 import "./i18n";
 

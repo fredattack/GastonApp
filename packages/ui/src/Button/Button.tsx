@@ -1,5 +1,4 @@
 import { type ReactNode, type ButtonHTMLAttributes, forwardRef } from 'react';
-import '../styles/design-tokens.css';
 import './Button.css';
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {

@@ -1,6 +1,5 @@
 import { type IconProps as PhosphorIconProps, type Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { type ComponentType } from 'react';
-import '../styles/design-tokens.css';
 import './Icon.css';
 
 export interface IconProps extends Omit<PhosphorIconProps, 'size' | 'weight'> {

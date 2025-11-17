@@ -1,6 +1,7 @@
 import React, { lazy } from "react";
 
 const Index = lazy(() => import("../pages/Index"));
+const ComponentsShowcase = lazy(() => import("../pages/ComponentsShowcase"));
 // @ts-ignore
 const Pets = lazy(() => import("../pages/content/Pet/Pets"));
 const PetForm = lazy(() => import("../pages/content/Pet/ThePetFormPage"));
@@ -12,6 +13,12 @@ const routes = [
     {
         path: "/",
         element: <Index />,
+        layout: "default",
+    },
+    // Components Showcase
+    {
+        path: "/components-showcase",
+        element: <ComponentsShowcase />,
         layout: "default",
     },
     // AI Assistant
