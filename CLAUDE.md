@@ -133,16 +133,18 @@ pnpm docker:logs     # View logs
 - **State Management
   **: Redux Toolkit
 - **Backend**:
-  Firebase (auth,
-  firestore,
-  storage)
+  Laravel
+  12/Users/fred/PhpstormProjects/gaston-backend
 - **AI Integration
   **: OpenAI API
 -
     *
+
 *
+
 Internationalization
 **: i18next
+
 - **Error Tracking
   **: Bugsnag
 
@@ -184,7 +186,7 @@ apps/web/src/
 │   └── Icon/          # Custom icon components
 ├── contexts/          # React contexts for state management
 ├── services/          # Business logic and API calls
-├── repository/        # Data access layer (Firebase, REST APIs)
+├── repository/        # Data access layer (REST APIs)
 ├── hooks/             # Custom React hooks
 ├── store/             # Redux store configuration
 ├── router/            # App routing configuration
@@ -211,7 +213,6 @@ mobile apps:
 - **repository/**:
   Data access
   layer (
-  FirebaseRepository,
   REST repositories)
 - **utils/**: Shared
   utility functions
@@ -257,21 +258,22 @@ for data access:
 
 -
     *
-*FirebaseRepository
-**: Handles
-Firebase
-operations (in
-@gastonapp/shared)
+
+
 -
     *
+
 *RestEventRepository
 **: Manages event
 data via REST APIs
+
 -
     *
+
 *RestModelRepository
 **: Manages pet
 data via REST APIs
+
 - **EventService**:
   Business logic for
   event operations
@@ -340,12 +342,7 @@ data via REST APIs
 #### Web App (apps/web/.env)
 
 ```env
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_APP_ID=
+
 VITE_OPENAI_API_KEY=
 VITE_API_URL=
 ```
@@ -358,33 +355,33 @@ system.
 
 ### Code Conventions
 
-- Use TypeScript
-  strict mode
-- Follow ESLint
-  Airbnb
-  configuration
-- Use Prettier for
-  code formatting
-- Component file
-  naming: PascalCase
-  with .tsx
-  extension
-- Use functional
-  components with
-  React hooks
-- Context providers
-  follow the
-  pattern:
-  Provider + custom
-  hook
-- Repository pattern
-  for data access
-  abstraction
-- Shared code should
-  be placed in
-  packages/ when
-  used by multiple
-  apps
+**⚠️ IMPORTANT: For detailed architectural guidelines, design patterns, and best practices, see [Front-End Architecture Guide](docs/technical/front-architecture.md).**
+
+#### Quick Reference
+
+- **TypeScript**: Strict mode enabled, explicit types for all public APIs
+- **ESLint**: Airbnb configuration
+- **Formatting**: Prettier for all code
+- **Components**: PascalCase naming with `.tsx` extension
+- **Architecture Patterns**:
+  - **Hooks Pattern** (primary): Custom hooks for all business logic
+  - **Provider Pattern**: Context API for global state (Auth, Theme, I18n, Family)
+  - **UI/Logic Separation**: Presentational components vs. Container components
+  - **HOC**: Discouraged (legacy pattern)
+- **File Organization**:
+  - Business logic → `packages/shared/src/hooks/`
+  - UI components → `packages/ui/src/` (when reusable) or `apps/*/components/` (when app-specific)
+  - Types → `packages/shared/src/types/`
+  - Services → `packages/shared/src/services/`
+- **Naming Conventions**:
+  - Components: `PascalCase` (e.g., `PetsTable`, `EventCard`)
+  - Hooks: `camelCase` with `use` prefix (e.g., `usePetsList`, `useAuth`)
+  - Files: Match the export name
+- **State Management Hierarchy**:
+  1. Local state (`useState`) for UI-only state
+  2. Custom hooks for reusable logic
+  3. Context for global simple state
+  4. Redux Toolkit for complex global state
 
 ### Package Naming Convention
 
@@ -564,7 +561,9 @@ Example:
 
 ```typescript
 // In apps/web/src/services/EventService.ts
-import { EventService } from '@gastonapp/shared';
+import {
+    EventService
+} from '@gastonapp/shared';
 ```
 
 #### Debugging Build Issues
@@ -609,36 +608,20 @@ pnpm deploy
 
 ### Additional Resources
 
--
-    *
-*[Deployment Guide](docs/DEPLOYMENT.md)
-** - Detailed
-deployment
-instructions
--
-    *
-*[README](README.md)
-** - Quick start
-and project
-overview
--
-    *
-*[Migration Guide](docs/MONOREPO_MIGRATION.md)
-** - Monorepo
-migration details
--
-    *
-*[Turborepo Docs](https://turbo.build/repo/docs)
-** - Turborepo
-documentation
--
-    *
-*[pnpm Docs](https://pnpm.io/)
-** - pnpm
-documentation
--
-    *
-*[Expo Docs](https://docs.expo.dev/)
-** - Expo
-documentation (for
-mobile app)
+#### Project Documentation
+
+- **[Front-End Architecture Guide](docs/technical/front-architecture.md)** - **MUST READ**: Comprehensive guide covering React design patterns, hooks, providers, code organization, and architectural guidelines for all front-end development. This document defines the mandatory patterns and best practices for the mono-repo.
+
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Detailed deployment instructions
+
+- **[README](README.md)** - Quick start and project overview
+
+- **[Migration Guide](docs/MONOREPO_MIGRATION.md)** - Monorepo migration details
+
+#### External Documentation
+
+- **[Turborepo Docs](https://turbo.build/repo/docs)** - Turborepo documentation
+
+- **[pnpm Docs](https://pnpm.io/)** - pnpm documentation
+
+- **[Expo Docs](https://docs.expo.dev/)** - Expo documentation (for mobile app)

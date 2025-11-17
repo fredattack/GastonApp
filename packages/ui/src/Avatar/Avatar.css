@@ -1,0 +1,125 @@
+/* Avatar Base Styles */
+.gaston-avatar {
+  /* Display */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  /* Shape */
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+
+  /* Box Model */
+  box-sizing: border-box;
+  flex-shrink: 0;
+
+  /* Background */
+  background-color: var(--color-lin-4);
+
+  /* Border */
+  border: var(--border-width-thin) solid var(--color-lin-3);
+
+  /* Transitions */
+  transition: opacity var(--transition-normal);
+
+  /* Touch */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== SIZE VARIANTS ==================== */
+
+.gaston-avatar--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.gaston-avatar--md {
+  width: 40px;
+  height: 40px;
+}
+
+.gaston-avatar--lg {
+  width: 56px;
+  height: 56px;
+}
+
+.gaston-avatar--xl {
+  width: 80px;
+  height: 80px;
+}
+
+/* ==================== IMAGE STYLES ==================== */
+
+.gaston-avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.gaston-avatar--loaded .gaston-avatar__image {
+  opacity: 1;
+}
+
+/* ==================== INITIALS STYLES ==================== */
+
+.gaston-avatar__initials {
+  /* Typography */
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  user-select: none;
+  line-height: 1;
+}
+
+/* Size-specific font sizes */
+.gaston-avatar--sm .gaston-avatar__initials {
+  font-size: 11px;
+}
+
+.gaston-avatar--md .gaston-avatar__initials {
+  font-size: 14px;
+}
+
+.gaston-avatar--lg .gaston-avatar__initials {
+  font-size: 18px;
+}
+
+.gaston-avatar--xl .gaston-avatar__initials {
+  font-size: 28px;
+}
+
+/* ==================== PLACEHOLDER STYLES ==================== */
+
+.gaston-avatar__placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-text-tertiary);
+}
+
+.gaston-avatar__placeholder-icon {
+  width: 60%;
+  height: 60%;
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .gaston-avatar {
+    border-width: var(--border-width-medium);
+  }
+}
+
+/* Ensure text is readable */
+@media (prefers-color-scheme: dark) {
+  .gaston-avatar__initials {
+    color: var(--color-text-inverse);
+  }
+}

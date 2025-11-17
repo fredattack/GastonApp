@@ -1,0 +1,187 @@
+/* Card Base Styles */
+.gaston-card {
+  /* Box Model */
+  box-sizing: border-box;
+  position: relative;
+
+  /* Display */
+  display: block;
+
+  /* Transitions */
+  transition: all var(--transition-normal);
+
+  /* Touch */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== VARIANT STYLES ==================== */
+
+/* Standard Variant */
+.gaston-card--standard {
+  background-color: var(--color-lin-0);
+  border: var(--border-width-thin) solid var(--color-lin-3);
+}
+
+/* Glass Variant (Glassmorphism) */
+.gaston-card--glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: var(--border-width-thin) solid rgba(255, 255, 255, 0.3);
+}
+
+/* Gradient Variant */
+.gaston-card--gradient {
+  border: none;
+}
+
+/* Gradient Color Options */
+.gaston-card--gradient-mint-lavender {
+  background: var(--gradient-mint-lavender);
+}
+
+.gaston-card--gradient-mint-white {
+  background: var(--gradient-mint-white);
+}
+
+.gaston-card--gradient-activity-purple {
+  background: var(--gradient-activity-purple);
+}
+
+.gaston-card--gradient-activity-yellow {
+  background: var(--gradient-activity-yellow);
+}
+
+.gaston-card--gradient-activity-coral {
+  background: var(--gradient-activity-coral);
+}
+
+/* ==================== PADDING VARIANTS ==================== */
+
+.gaston-card--padding-none {
+  padding: 0;
+}
+
+.gaston-card--padding-sm {
+  padding: var(--spacing-12);
+}
+
+.gaston-card--padding-md {
+  padding: var(--spacing-20);
+}
+
+.gaston-card--padding-lg {
+  padding: var(--spacing-32);
+}
+
+/* ==================== SHADOW VARIANTS ==================== */
+
+.gaston-card--shadow-none {
+  box-shadow: none;
+}
+
+.gaston-card--shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.gaston-card--shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.gaston-card--shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Glass variant gets inner shadow too */
+.gaston-card--glass.gaston-card--shadow-md {
+  box-shadow: var(--shadow-inner-glass), var(--shadow-md);
+}
+
+.gaston-card--glass.gaston-card--shadow-lg {
+  box-shadow: var(--shadow-inner-glass), var(--shadow-lg);
+}
+
+/* ==================== BORDER RADIUS VARIANTS ==================== */
+
+.gaston-card--radius-md {
+  border-radius: var(--radius-md);
+}
+
+.gaston-card--radius-lg {
+  border-radius: var(--radius-lg);
+}
+
+.gaston-card--radius-xl {
+  border-radius: var(--radius-xl);
+}
+
+.gaston-card--radius-2xl {
+  border-radius: var(--radius-2xl);
+}
+
+/* ==================== INTERACTIVE STYLES ==================== */
+
+.gaston-card--interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.gaston-card--interactive:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Standard variant hover */
+.gaston-card--standard.gaston-card--interactive:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Glass variant hover */
+.gaston-card--glass.gaston-card--interactive:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Gradient variant hover */
+.gaston-card--gradient.gaston-card--interactive:hover {
+  filter: brightness(1.05);
+}
+
+/* Active/Pressed state */
+.gaston-card--interactive:active {
+  transform: translateY(-2px) scale(0.99);
+  transition: all var(--transition-fast);
+}
+
+.gaston-card--standard.gaston-card--interactive:active {
+  box-shadow: var(--shadow-sm);
+}
+
+/* Focus state (keyboard navigation) */
+.gaston-card--interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--state-focus-ring);
+}
+
+/* Standard variant focus needs to combine shadows */
+.gaston-card--standard.gaston-card--interactive:focus-visible {
+  box-shadow: var(--state-focus-ring), var(--shadow-md);
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+
+/* Reduce hover effects on touch devices */
+@media (hover: none) {
+  .gaston-card--interactive:hover {
+    transform: none;
+  }
+
+  .gaston-card--standard.gaston-card--interactive:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Mobile: Reduce padding slightly */
+@media (max-width: 768px) {
+  .gaston-card--padding-lg {
+    padding: var(--spacing-24);
+  }
+}

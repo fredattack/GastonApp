@@ -297,7 +297,9 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const petInfo = getPetInfo();
 
     // Detect missing pets (event created but no pet found)
-    const hasMissingPets = attachedEvent && (!attachedEvent.pets || attachedEvent.pets.length === 0);
+    // Check backend warning first, fallback to local detection
+    const petWarning = aiResponse?.petWarning;
+    const hasMissingPets = petWarning || (attachedEvent && (!attachedEvent.pets || attachedEvent.pets.length === 0));
 
     const score = aiResponse?.score;
     const description =
@@ -379,14 +381,49 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-1">
-                                                Animal introuvable
+                                                {petWarning?.title || "Animal introuvable"}
                                             </h4>
                                             <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
-                                                L'animal mentionné dans votre demande n'existe pas dans votre liste d'animaux.
+                                                {petWarning?.message || "L'animal mentionné dans votre demande n'existe pas dans votre liste d'animaux."}
                                             </p>
-                                            <p className="text-xs text-amber-700 dark:text-amber-300">
-                                                💡 <strong>Suggestion :</strong> Créez d'abord l'animal avant de créer cet événement, ou modifiez l'événement pour sélectionner un animal existant.
-                                            </p>
+
+                                            {/* Display suggestions from backend */}
+                                            {petWarning?.suggestions && petWarning.suggestions.length > 0 && (
+                                                <div className="text-xs text-amber-700 dark:text-amber-300 mb-2">
+                                                    <strong>💡 Suggestions :</strong>
+                                                    <ul className="list-disc list-inside ml-2 mt-1">
+                                                        {petWarning.suggestions.map((suggestion: string, idx: number) => (
+                                                            <li key={idx}>{suggestion}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {/* Fallback suggestion if no backend suggestions */}
+                                            {!petWarning?.suggestions && (
+                                                <p className="text-xs text-amber-700 dark:text-amber-300">
+                                                    💡 <strong>Suggestion :</strong> Créez d'abord l'animal avant de créer cet événement, ou modifiez l'événement pour sélectionner un animal existant.
+                                                </p>
+                                            )}
+
+                                            {/* Display available pets if provided by backend */}
+                                            {petWarning?.availablePets && petWarning.availablePets.length > 0 && (
+                                                <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-800">
+                                                    <p className="text-xs font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                                                        Vos animaux disponibles :
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {petWarning.availablePets.map((pet: any) => (
+                                                            <span
+                                                                key={pet.id}
+                                                                className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200"
+                                                            >
+                                                                {pet.species === 'cat' ? '🐱' : pet.species === 'dog' ? '🐶' : '🐾'} {pet.name}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -438,6 +475,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                     onChange={() => {}}
                                     onSubmit={handleEventSubmitted}
                                     onCancel={handleBackToPreview}
+                                    submitable={true}
                                 />
                             </div>
                         </div>

@@ -1,0 +1,233 @@
+/* Button Base Styles */
+.gaston-button {
+  /* Reset */
+  all: unset;
+  box-sizing: border-box;
+
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  position: relative;
+
+  /* Typography */
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+
+  /* Shape */
+  border-radius: var(--radius-button);
+
+  /* Transitions */
+  transition: all var(--transition-normal);
+
+  /* Cursor */
+  cursor: pointer;
+
+  /* Touch */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== SIZE VARIANTS ==================== */
+
+.gaston-button--sm {
+  height: 40px;
+  padding: 0 var(--spacing-20);
+  font-size: var(--font-size-body-s);
+}
+
+.gaston-button--md {
+  height: 48px;
+  padding: 0 var(--spacing-24);
+  font-size: var(--font-size-body-m);
+}
+
+.gaston-button--lg {
+  height: 56px;
+  padding: 0 var(--spacing-32);
+  font-size: var(--font-size-body-l);
+}
+
+/* ==================== VARIANT STYLES ==================== */
+
+/* Primary Variant (Black) */
+.gaston-button--primary {
+  background-color: var(--color-text-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.gaston-button--primary:hover:not(:disabled) {
+  background-color: var(--color-text-secondary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.gaston-button--primary:active:not(:disabled) {
+  background-color: var(--color-text-tertiary);
+  box-shadow: var(--shadow-xs);
+  transform: translateY(0);
+  transition: all var(--transition-fast);
+}
+
+/* Secondary Variant (White + Border) */
+.gaston-button--secondary {
+  background-color: var(--color-lin-0);
+  color: var(--color-text-primary);
+  border: var(--border-width-medium) solid var(--color-lin-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.gaston-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-lin-1);
+  border-color: var(--color-primary-400);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.gaston-button--secondary:active:not(:disabled) {
+  background-color: var(--color-lin-2);
+  border-color: var(--color-primary-500);
+  box-shadow: none;
+  transform: translateY(0);
+  transition: all var(--transition-fast);
+}
+
+/* Ghost Variant (Transparent) */
+.gaston-button--ghost {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border: none;
+  box-shadow: none;
+}
+
+.gaston-button--ghost:hover:not(:disabled) {
+  background-color: var(--color-lin-2);
+}
+
+.gaston-button--ghost:active:not(:disabled) {
+  background-color: var(--color-lin-3);
+  transition: all var(--transition-fast);
+}
+
+/* ==================== STATE STYLES ==================== */
+
+/* Focus State (Eucalyptus Ring) */
+.gaston-button:focus-visible {
+  outline: none;
+  box-shadow: var(--state-focus-ring);
+}
+
+/* Disabled State */
+.gaston-button:disabled {
+  opacity: var(--state-disabled-opacity);
+  cursor: var(--state-disabled-cursor);
+  transform: none !important;
+}
+
+.gaston-button--primary:disabled {
+  background-color: var(--state-disabled-bg);
+  color: var(--state-disabled-text);
+  box-shadow: none;
+}
+
+.gaston-button--secondary:disabled {
+  background-color: var(--color-lin-1);
+  border-color: var(--color-lin-4);
+  color: var(--state-disabled-text);
+}
+
+.gaston-button--ghost:disabled {
+  background-color: transparent;
+  color: var(--state-disabled-text);
+}
+
+/* Loading State */
+.gaston-button--loading {
+  pointer-events: none;
+}
+
+.gaston-button--loading .gaston-button__label {
+  opacity: 0;
+}
+
+/* ==================== FULL WIDTH ==================== */
+
+.gaston-button--full-width {
+  width: 100%;
+}
+
+/* ==================== ICON STYLES ==================== */
+
+.gaston-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gaston-button__icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.gaston-button--sm .gaston-button__icon svg {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.gaston-button--md .gaston-button__icon svg {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.gaston-button--lg .gaston-button__icon svg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+/* ==================== LOADING SPINNER ==================== */
+
+.gaston-button__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaston-button__spinner-svg {
+  width: 1.2em;
+  height: 1.2em;
+  animation: gaston-button-spin 1s linear infinite;
+}
+
+.gaston-button__spinner-circle {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 25;
+}
+
+@keyframes gaston-button-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== LABEL ==================== */
+
+.gaston-button__label {
+  display: inline-block;
+  transition: opacity var(--transition-normal);
+}

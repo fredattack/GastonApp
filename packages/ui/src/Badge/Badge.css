@@ -1,0 +1,90 @@
+/* Badge Base Styles */
+.gaston-badge {
+  /* Display */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Typography */
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  white-space: nowrap;
+  user-select: none;
+
+  /* Box Model */
+  box-sizing: border-box;
+
+  /* Touch */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== SIZE VARIANTS ==================== */
+
+.gaston-badge--sm {
+  font-size: var(--font-size-caption);
+  padding: 2px var(--spacing-8);
+  gap: 4px;
+  line-height: 1.4;
+}
+
+.gaston-badge--md {
+  font-size: var(--font-size-body-s);
+  padding: 4px var(--spacing-12);
+  gap: var(--spacing-4);
+  line-height: 1.4;
+}
+
+/* ==================== PILL SHAPE ==================== */
+
+.gaston-badge--pill {
+  border-radius: var(--radius-badge);
+}
+
+/* ==================== VARIANT STYLES ==================== */
+
+/* Success Variant (Green/Mint) */
+.gaston-badge--success {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: var(--border-width-thin) solid var(--color-success-base);
+}
+
+/* Warning Variant (Yellow) */
+.gaston-badge--warning {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border: var(--border-width-thin) solid var(--color-warning-base);
+}
+
+/* Error Variant (Red) */
+.gaston-badge--error {
+  background-color: var(--color-error-light);
+  color: var(--color-error-dark);
+  border: var(--border-width-thin) solid var(--color-error-base);
+}
+
+/* Info Variant (Eucalyptus) */
+.gaston-badge--info {
+  background-color: var(--color-info-light);
+  color: var(--color-info-dark);
+  border: var(--border-width-thin) solid var(--color-info-base);
+}
+
+/* Neutral Variant (Grey) */
+.gaston-badge--neutral {
+  background-color: var(--color-lin-3);
+  color: var(--color-text-secondary);
+  border: var(--border-width-thin) solid var(--color-lin-5);
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .gaston-badge {
+    border-width: var(--border-width-medium);
+  }
+}

@@ -1,0 +1,38 @@
+/* Icon Base Styles */
+.gaston-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* Size variants (using design tokens) */
+.gaston-icon--xs {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+}
+
+.gaston-icon--sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.gaston-icon--md {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.gaston-icon--lg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+.gaston-icon--xl {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}
+
+.gaston-icon--2xl {
+  width: var(--icon-size-2xl);
+  height: var(--icon-size-2xl);
+}

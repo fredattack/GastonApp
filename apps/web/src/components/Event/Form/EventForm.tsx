@@ -14,8 +14,16 @@ import EventRecurrence from "./EventRecurrence";
 import PetDetails from "./PetDetails";
 import { EventTypes } from "../../../enums/EventTypes";
 
+interface EventFormProps {
+    event: EventFormData;
+    onSubmit?: (data: EventFormData) => void;
+    onChange?: (data: EventFormData) => void;
+    onCancel?: () => void;
+    submitable?: boolean;
+}
+
 const EventForm = forwardRef(
-    ({ event, onSubmit, onChange, onCancel }: any, ref) => {
+    ({ event, onSubmit, onChange, onCancel, submitable = false }: EventFormProps, ref) => {
         const { addToast } = useToast();
         const { pets, refreshPets } = usePets();
 
@@ -175,6 +183,26 @@ const EventForm = forwardRef(
                         />
                     </div>
                 </div>
+
+                {/* Action buttons */}
+                {submitable && (
+                    <div className="flex justify-end space-x-4 mt-5 px-3 py-2">
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                            className="btn btn-secondary"
+                        >
+                            Annuler
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleSubmit}
+                            className="btn btn-primary"
+                        >
+                            Enregistrer
+                        </button>
+                    </div>
+                )}
             </form>
         );
     },

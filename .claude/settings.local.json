@@ -20,7 +20,12 @@
       "Bash(ls:*)",
       "Bash(done)",
       "Bash(timeout 120 pnpm build:web:*)",
-      "Bash(pnpm build:web:*)"
+      "Bash(pnpm build:web:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm type-check:*)",
+      "Bash(pnpm build:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
