@@ -1,167 +1,242 @@
 import React from "react";
-import { Button, Card, Badge, Avatar } from '@gastonapp/ui';
-import { Dog, Calendar, Plus, Heart, PawPrint, Bell } from '@phosphor-icons/react';
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { usePets } from "../contexts/PetsContext";
+import { useEvents } from "../contexts/EventsContext";
+import { useCommandBar } from "../components/AI/CommandBar";
+import { CommandBar } from "../components/AI/CommandBar";
+import AIInsightsPanel from "../components/Dashboard/AIInsightsPanel";
+import RecentEventsTimeline from "../components/Dashboard/RecentEventsTimeline";
 
-/**
- * Page d'accueil - VERSION TEST pour valider les nouveaux composants
- * TODO: Remplacer par la vraie home page avec HeroSection, QuickActions, etc.
- */
 const Index: React.FC = () => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { pets, isLoading: petsLoading } = usePets();
+    const { events, isLoading: eventsLoading } = useEvents();
+    const { isOpen, open, close } = useCommandBar();
+
+    const getGreeting = (): string => {
+        const hour = new Date().getHours();
+        if (hour < 12) return t("Good morning");
+        if (hour < 18) return t("Good afternoon");
+        return t("Good evening");
+    };
+
+    const isLoading = petsLoading || eventsLoading;
+
     return (
-        <div className="min-h-screen" style={{ background: 'var(--color-lin-2)' }}>
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                {/* Hero Section Test */}
-                <Card variant="gradient" gradient="mint-lavender" padding="lg" className="mb-8">
-                    <div className="max-w-2xl">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-                            Welcome to GastonApp
-                        </h1>
-                        <p className="text-xl mb-6 text-white/90">
-                            Manage your pets' health, schedule, and activities all in one place.
-                        </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Button variant="secondary" icon={<Plus />} iconPosition="left">
-                                Add Pet
-                            </Button>
-                            <Button variant="ghost" icon={<Calendar />} iconPosition="left">
-                                View Calendar
-                            </Button>
-                        </div>
-                    </div>
-                </Card>
-
-                {/* Quick Actions */}
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-primary-900)' }}>
-                        Quick Actions
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <Card variant="standard" padding="lg">
-                            <PawPrint size={32} style={{ color: 'var(--color-primary-500)' }} />
-                            <h3 className="font-semibold mt-3" style={{ color: 'var(--color-primary-900)' }}>
-                                My Pets
-                            </h3>
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-neutral-600)' }}>
-                                View all pets
-                            </p>
-                        </Card>
-
-                        <Card variant="standard" padding="lg">
-                            <Calendar size={32} style={{ color: 'var(--color-accent-500)' }} />
-                            <h3 className="font-semibold mt-3" style={{ color: 'var(--color-primary-900)' }}>
-                                Calendar
-                            </h3>
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-neutral-600)' }}>
-                                Schedule events
-                            </p>
-                        </Card>
-
-                        <Card variant="standard" padding="lg">
-                            <Bell size={32} style={{ color: 'var(--color-warning-500)' }} />
-                            <h3 className="font-semibold mt-3" style={{ color: 'var(--color-primary-900)' }}>
-                                Reminders
-                            </h3>
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-neutral-600)' }}>
-                                Active alerts
-                            </p>
-                        </Card>
-
-                        <Card variant="standard" padding="lg">
-                            <Heart size={32} style={{ color: 'var(--color-error-400)' }} />
-                            <h3 className="font-semibold mt-3" style={{ color: 'var(--color-primary-900)' }}>
-                                Health
-                            </h3>
-                            <p className="text-sm mt-1" style={{ color: 'var(--color-neutral-600)' }}>
-                                Track wellness
-                            </p>
-                        </Card>
-                    </div>
-                </div>
-
-                {/* Pet Cards Test */}
-                <div>
-                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-primary-900)' }}>
-                        My Pets
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card variant="standard" padding="md">
-                            <div className="flex items-start gap-4 mb-4">
-                                <Avatar
-                                    size="lg"
-                                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100&h=100&fit=crop"
-                                    alt="Max"
-                                />
-                                <div className="flex-1">
-                                    <h3 className="text-lg font-semibold" style={{ color: 'var(--color-primary-900)' }}>
-                                        Max
-                                    </h3>
-                                    <p className="text-sm" style={{ color: 'var(--color-neutral-600)' }}>
-                                        Golden Retriever • 3 years
-                                    </p>
-                                    <div className="flex gap-2 mt-2">
-                                        <Badge variant="success" size="sm">Healthy</Badge>
-                                        <Badge variant="info" size="sm">Vet Today</Badge>
-                                    </div>
-                                </div>
-                            </div>
-                            <Button variant="primary" size="sm" icon={<Calendar />} fullWidth>
-                                Schedule Event
-                            </Button>
-                        </Card>
-
-                        <Card variant="standard" padding="md">
-                            <div className="flex items-start gap-4 mb-4">
-                                <Avatar
-                                    size="lg"
-                                    src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100&h=100&fit=crop"
-                                    alt="Bella"
-                                />
-                                <div className="flex-1">
-                                    <h3 className="text-lg font-semibold" style={{ color: 'var(--color-primary-900)' }}>
-                                        Bella
-                                    </h3>
-                                    <p className="text-sm" style={{ color: 'var(--color-neutral-600)' }}>
-                                        Persian Cat • 2 years
-                                    </p>
-                                    <div className="flex gap-2 mt-2">
-                                        <Badge variant="success" size="sm">Healthy</Badge>
-                                        <Badge variant="neutral" size="sm">Indoor</Badge>
-                                    </div>
-                                </div>
-                            </div>
-                            <Button variant="primary" size="sm" icon={<Calendar />} fullWidth>
-                                Schedule Event
-                            </Button>
-                        </Card>
-
-                        {/* Add New Pet Card */}
-                        <Card variant="gradient" gradient="activity-purple" padding="md">
-                            <div className="text-center py-4">
-                                <Plus size={48} className="mx-auto mb-3" style={{ color: 'white' }} />
-                                <h3 className="text-lg font-semibold mb-2 text-white">
-                                    Add New Pet
-                                </h3>
-                                <p className="text-sm text-white/90 mb-4">
-                                    Register your new companion
-                                </p>
-                                <Button variant="secondary" size="sm" icon={<Plus />}>
-                                    Add Pet
-                                </Button>
-                            </div>
-                        </Card>
-                    </div>
-                </div>
-
-                {/* Test Note */}
-                <Card variant="glass" padding="md" className="mt-8">
-                    <p className="text-sm text-center" style={{ color: 'var(--color-neutral-600)' }}>
-                        <strong>Note:</strong> Ceci est une version de test pour valider les nouveaux composants.
-                        Voir <a href="/components-showcase" className="underline">la page showcase</a> pour tous les composants.
+        <div className="max-w-5xl mx-auto space-y-8">
+            {/* Hero AI Greeting */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 dark:from-primary/20 dark:via-primary/10 dark:to-secondary/20 p-8">
+                <div className="relative z-10">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                        {getGreeting()} 👋
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
+                        {pets.length > 0
+                            ? t("You have {{petCount}} pet(s) and {{eventCount}} event(s)", {
+                                  petCount: pets.length,
+                                  eventCount: events.length,
+                              })
+                            : t("Welcome to GastonApp! Let's get started.")}
                     </p>
-                </Card>
+
+                    {/* AI Quick Input */}
+                    <button
+                        type="button"
+                        onClick={open}
+                        className="w-full max-w-lg flex items-center gap-3 px-5 py-3.5 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-primary/30 transition-all text-left group"
+                    >
+                        <span className="text-primary text-lg">✨</span>
+                        <span className="flex-1 text-gray-400 group-hover:text-gray-500">
+                            {t("Ask anything about your pets...")}
+                        </span>
+                        <kbd className="hidden sm:inline-flex items-center px-2 py-1 text-xs text-gray-400 bg-gray-100 dark:bg-gray-700 rounded font-mono">
+                            ⌘K
+                        </kbd>
+                    </button>
+                </div>
+
+                {/* Decorative background */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/5 rounded-full translate-y-1/2 -translate-x-1/4" />
             </div>
+
+            {/* AI Insights */}
+            {!isLoading && (
+                <AIInsightsPanel
+                    pets={pets}
+                    events={events}
+                    onOpenCommandBar={open}
+                />
+            )}
+
+            {/* Quick Actions */}
+            <div>
+                <h2
+                    className="text-lg font-semibold mb-4"
+                    style={{ color: "var(--color-primary-900, #1a1a2e)" }}
+                >
+                    {t("Quick Actions")}
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <QuickActionCard
+                        icon="🐾"
+                        label={t("My Pets")}
+                        description={t("{{count}} registered", { count: pets.length })}
+                        onClick={() => navigate("/content/pets")}
+                    />
+                    <QuickActionCard
+                        icon="📅"
+                        label={t("Calendar")}
+                        description={t("View schedule")}
+                        onClick={() => navigate("/calendar")}
+                    />
+                    <QuickActionCard
+                        icon="✨"
+                        label={t("AI Assistant")}
+                        description={t("Full conversation")}
+                        onClick={() => navigate("/ai-assistant")}
+                    />
+                    <QuickActionCard
+                        icon="➕"
+                        label={t("Add Pet")}
+                        description={t("Register new")}
+                        onClick={() => navigate("/content/pets/create")}
+                    />
+                </div>
+            </div>
+
+            {/* Two Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Pets Summary */}
+                <div className="lg:col-span-1">
+                    <h2
+                        className="text-lg font-semibold mb-4"
+                        style={{ color: "var(--color-primary-900, #1a1a2e)" }}
+                    >
+                        {t("My Pets")}
+                    </h2>
+                    {isLoading ? (
+                        <div className="space-y-3">
+                            {[1, 2].map((i) => (
+                                <div
+                                    key={i}
+                                    className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse"
+                                />
+                            ))}
+                        </div>
+                    ) : pets.length > 0 ? (
+                        <div className="space-y-3">
+                            {pets.map((pet) => (
+                                <div
+                                    key={pet.id}
+                                    className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-sm transition-shadow cursor-pointer"
+                                    onClick={() =>
+                                        navigate(`/content/pets/${pet.id}`)
+                                    }
+                                >
+                                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-xl flex-shrink-0">
+                                        {pet.species === "dog" ? "🐕" : pet.species === "cat" ? "🐈" : "🐾"}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-900 dark:text-white truncate">
+                                            {pet.name}
+                                        </p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            {pet.breed || pet.species}
+                                        </p>
+                                    </div>
+                                    <svg
+                                        className="w-4 h-4 text-gray-300"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 5l7 7-7 7"
+                                        />
+                                    </svg>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div
+                            className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                            onClick={() => navigate("/content/pets/create")}
+                        >
+                            <p className="text-3xl mb-2">🐾</p>
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {t("Add your first pet")}
+                            </p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Recent Events */}
+                <div className="lg:col-span-2">
+                    <h2
+                        className="text-lg font-semibold mb-4"
+                        style={{ color: "var(--color-primary-900, #1a1a2e)" }}
+                    >
+                        {t("Recent Events")}
+                    </h2>
+                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                        {isLoading ? (
+                            <div className="p-4 space-y-3">
+                                {[1, 2, 3].map((i) => (
+                                    <div
+                                        key={i}
+                                        className="h-14 bg-gray-100 dark:bg-gray-700 rounded-lg animate-pulse"
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <RecentEventsTimeline events={events} />
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Command Bar */}
+            <CommandBar isOpen={isOpen} onClose={close} />
         </div>
     );
 };
+
+interface QuickActionCardProps {
+    icon: string;
+    label: string;
+    description: string;
+    onClick: () => void;
+}
+
+const QuickActionCard: React.FC<QuickActionCardProps> = ({
+    icon,
+    label,
+    description,
+    onClick,
+}) => (
+    <button
+        type="button"
+        onClick={onClick}
+        className="flex flex-col items-center gap-2 p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-primary/30 transition-all text-center group"
+    >
+        <span className="text-2xl group-hover:scale-110 transition-transform">
+            {icon}
+        </span>
+        <div>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {label}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+                {description}
+            </p>
+        </div>
+    </button>
+);
 
 export default Index;

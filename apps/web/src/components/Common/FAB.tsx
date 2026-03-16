@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface FABProps {
     onClick?: () => void;
@@ -10,26 +9,16 @@ interface FABProps {
 /**
  * Floating Action Button - Style Apple
  * Bouton d'action principal flottant en bas à droite
+ * Opens AI Command Bar by default
  */
 const FAB: React.FC<FABProps> = ({
     onClick,
-    icon = "🎤",
-    ariaLabel = "Assistant vocal",
+    icon = "✨",
+    ariaLabel = "AI Assistant",
 }) => {
-    const navigate = useNavigate();
-
-    const handleClick = () => {
-        if (onClick) {
-            onClick();
-        } else {
-            // Action par défaut : ouvrir l'assistant IA
-            navigate("/ai-assistant");
-        }
-    };
-
     return (
         <button
-            onClick={handleClick}
+            onClick={onClick}
             className="
                 fixed bottom-6 right-6 z-50
                 w-16 h-16

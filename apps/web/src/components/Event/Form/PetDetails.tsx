@@ -7,15 +7,17 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import SingleSelect from "../../Form/SingleSelect";
 
+interface PetDetailsProps {
+    formData: EventFormData;
+    pets: { value: string; label: string }[];
+    handleChange: (field: string, value: unknown) => void;
+}
+
 const PetDetails = ({
     formData,
     pets,
     handleChange,
-}: {
-    formData: any;
-    pets: any;
-    handleChange: (field: string, value: any) => void;
-}) => {
+}: PetDetailsProps) => {
     const { t } = useTranslation();
     const addPetDetail = () => {
         handleChange("pets", [
@@ -31,20 +33,20 @@ const PetDetails = ({
 
     const removePetDetail = (index: number) => {
         const newPets = formData.pets.filter(
-            (pet: any, i: number) => i !== index,
+            (_pet, i) => i !== index,
         );
         handleChange("pets", newPets);
     };
-    const handlePetChange = (index: number, field: string, value: any) => {
-        console.log("index: field: value: ", index, field, value);
+    const handlePetChange = (index: number, field: string, value: string) => {
         const updatedPets = [...formData.pets];
-        updatedPets[index][field] = value;
+        (updatedPets[index] as unknown as Record<string, unknown>)[field] = value;
         handleChange("pets", updatedPets);
     };
 
     return (
         <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
-            {formData.pets?.map((petDetail: any, index: number) => {
+            {formData.pets?.map((petDetail, index) => {
+                const detail = petDetail as unknown as Record<string, unknown>;
                 return (
                     <div
                         key={index}
@@ -79,7 +81,7 @@ const PetDetails = ({
                                 id="item"
                                 name="pets[${index}].item"
                                 type="text"
-                                value={petDetail?.item}
+                                value={(detail?.item as string) ?? ""}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,
@@ -101,7 +103,7 @@ const PetDetails = ({
                                 id="quantity"
                                 name="pets[${index}].quantity"
                                 type="text"
-                                value={petDetail?.quantity}
+                                value={(detail?.quantity as string) ?? ""}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,
@@ -119,7 +121,7 @@ const PetDetails = ({
                             </label>
                             <textarea
                                 name={`pets[${index}].notes`}
-                                value={petDetail?.notes}
+                                value={(detail?.notes as string) ?? ""}
                                 onChange={(e) =>
                                     handlePetChange(
                                         index,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faArrowLeft,
@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useAIAssistant } from "../../contexts/AIAssistantContext";
+import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import ConversationSidebar from "./components/ConversationSidebar";
 import ConversationThread from "./components/ConversationThread";
 import ChatInput from "./components/ChatInput";
@@ -16,8 +17,17 @@ const AIAssistantPage: React.FC = () => {
     const { activeConversation, isLoading, sendMessage } = useAIAssistant();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const [voiceTranscript, setVoiceTranscript] = useState("");
+
+    const handleTranscription = useCallback((text: string) => {
+        setVoiceTranscript(text);
+    }, []);
+
+    const { isRecording, startRecording, stopRecording } =
+        useSpeechRecognition(handleTranscription);
 
     const handleSendMessage = async (message: string) => {
+        setVoiceTranscript("");
         await sendMessage(message);
     };
 
@@ -122,8 +132,12 @@ const AIAssistantPage: React.FC = () => {
                     {/* Chat Input */}
                     <ChatInput
                         onSend={handleSendMessage}
+                        onVoiceStart={startRecording}
+                        onVoiceStop={stopRecording}
+                        isRecording={isRecording}
                         isLoading={isLoading}
                         placeholder="Ask anything about your pets..."
+                        externalValue={voiceTranscript}
                     />
                 </div>
             </div>
