@@ -28,7 +28,6 @@ const useSpeechRecognition = (onTranscriptionUpdate: any) => {
 
         recognition.onstart = () => {
             setIsRecording(true);
-            console.log("Enregistrement vocal démarré...");
         };
 
         recognition.onresult = (event: any) => {
@@ -39,13 +38,12 @@ const useSpeechRecognition = (onTranscriptionUpdate: any) => {
             onTranscriptionUpdate(newTranscript);
         };
 
-        recognition.onerror = (event: any) => {
-            console.error("Erreur de reconnaissance vocale : ", event.error);
+        recognition.onerror = () => {
+            setIsRecording(false);
         };
 
         recognition.onend = () => {
             setIsRecording(false);
-            console.log("Enregistrement terminé.");
         };
 
         recognition.start();
@@ -56,7 +54,6 @@ const useSpeechRecognition = (onTranscriptionUpdate: any) => {
             recognitionRef.current.stop();
             recognitionRef.current = null;
             setIsRecording(false);
-            console.log("Enregistrement manuel arrêté.");
         }
     };
 

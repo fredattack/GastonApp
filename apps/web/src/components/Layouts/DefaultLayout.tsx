@@ -1,4 +1,4 @@
-import { PropsWithChildren, Suspense, useEffect, useState } from "react";
+import { PropsWithChildren, Suspense, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import App from "../../App";
 import { IRootState } from "../../store";
@@ -11,11 +11,21 @@ import Portals from "../Portals";
 import TabBar from "../Navigation/TabBar";
 import FAB from "../Common/FAB";
 import { CommandBar, useCommandBar } from "../AI/CommandBar";
+import AIOverlayPanel from "../AI/AIOverlayPanel";
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
     const commandBar = useCommandBar();
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+    const handleFABClick = useCallback(() => {
+        setIsOverlayOpen(true);
+    }, []);
+
+    const handleOverlayClose = useCallback(() => {
+        setIsOverlayOpen(false);
+    }, []);
 
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
@@ -156,8 +166,12 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* END MOBILE TAB BAR */}
 
                     {/* BEGIN FAB */}
-                    <FAB onClick={commandBar.open} />
+                    <FAB onClick={handleFABClick} />
                     {/* END FAB */}
+
+                    {/* BEGIN AI OVERLAY PANEL */}
+                    <AIOverlayPanel isOpen={isOverlayOpen} onClose={handleOverlayClose} />
+                    {/* END AI OVERLAY PANEL */}
 
                     {/* BEGIN AI COMMAND BAR */}
                     <CommandBar isOpen={commandBar.isOpen} onClose={commandBar.close} />

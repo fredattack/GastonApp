@@ -1,4 +1,4 @@
-import React, { useState, useRef, KeyboardEvent, ChangeEvent } from "react";
+import React, { useState, useRef, useEffect, KeyboardEvent, ChangeEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faMicrophone } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,6 +9,7 @@ interface ChatInputProps {
     isRecording?: boolean;
     isLoading?: boolean;
     placeholder?: string;
+    externalValue?: string;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -18,8 +19,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
     isRecording = false,
     isLoading = false,
     placeholder = "Ask anything about your pets...",
+    externalValue,
 }) => {
     const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (externalValue) {
+            setMessage(externalValue);
+            adjustTextareaHeight();
+        }
+    }, [externalValue]);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

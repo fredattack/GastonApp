@@ -44,17 +44,6 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     const isEvent = requestType?.includes('Event');
     const isPet = requestType?.includes('Pet');
 
-    // Debug logs
-    console.log('[AIMessageCard] Debug:', {
-        requestType,
-        isPet,
-        isEvent,
-        attachedPet,
-        attachedEvent,
-        aiResponse,
-        messageMetadata: message.metadata,
-    });
-
     // For query, advice, metrics, and delete, we don't need attachedEvent or attachedPet
     // For events we need attachedEvent, for pets we need attachedPet
     if (!attachedEvent && !attachedPet && !isQuery && !isAdvice && !isMetrics && !isDelete) {
@@ -140,7 +129,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                 onEventCreated();
             }
         } catch (error) {
-            console.error("Erreur lors de la création de l'événement :", error);
+            // Event creation failed
             addToast({
                 message:
                     "Une erreur est survenue lors de la création de l'événement.",
@@ -170,7 +159,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         switch (action) {
             case 'findVet':
                 // TODO: Open veterinary search modal (Phase 3)
-                console.log('Finding vet...');
+                // TODO: implement vet finder
                 addToast({
                     message: 'Recherche de vétérinaires - Fonctionnalité à venir',
                     type: 'info',
@@ -184,7 +173,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                 break;
             case 'learnMore':
                 // TODO: Open health info modal
-                console.log('Learn more about health...');
+                // TODO: implement health info
                 addToast({
                     message: 'Plus d\'informations santé - Fonctionnalité à venir',
                     type: 'info',
@@ -192,7 +181,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                 break;
             case 'dismiss':
                 // Dismissed - could save to localStorage
-                console.log('Disclaimer dismissed');
+                // Disclaimer dismissed
                 break;
             default:
                 break;
@@ -208,7 +197,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
             // TODO: Call backend API to perform delete operation
             // This will be implemented when backend support is added
-            console.log('Delete operation:', deleteData);
+            // TODO: implement delete operation
 
             addToast({
                 message: 'Suppression effectuée avec succès !',
@@ -219,7 +208,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                 onEventCreated();
             }
         } catch (error) {
-            console.error('Erreur lors de la suppression:', error);
+            // Delete operation failed
             addToast({
                 message: 'Une erreur est survenue lors de la suppression.',
                 type: 'error',
@@ -271,7 +260,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                 onEventCreated();
             }
         } catch (error) {
-            console.error("Erreur lors de la création de l'animal :", error);
+            // Pet creation failed
             addToast({
                 message: "Une erreur est survenue lors de l'ajout de l'animal.",
                 type: "error",
