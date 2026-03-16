@@ -80,7 +80,6 @@ const MultiSelect = ({
     required = false, // Optionnel
 }: MultiSelectProps) => {
     function getValue() {
-        console.log("value", value);
         return options.filter((option) => value.includes(option.value));
     }
 

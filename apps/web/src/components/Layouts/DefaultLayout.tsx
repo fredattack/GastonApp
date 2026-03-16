@@ -10,10 +10,12 @@ import Sidebar from "./Sidebar";
 import Portals from "../Portals";
 import TabBar from "../Navigation/TabBar";
 import FAB from "../Common/FAB";
+import { CommandBar, useCommandBar } from "../AI/CommandBar";
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
+    const commandBar = useCommandBar();
 
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
@@ -154,8 +156,12 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* END MOBILE TAB BAR */}
 
                     {/* BEGIN FAB */}
-                    <FAB />
+                    <FAB onClick={commandBar.open} />
                     {/* END FAB */}
+
+                    {/* BEGIN AI COMMAND BAR */}
+                    <CommandBar isOpen={commandBar.isOpen} onClose={commandBar.close} />
+                    {/* END AI COMMAND BAR */}
                 </div>
             </div>
         </App>

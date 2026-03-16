@@ -298,7 +298,9 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
     // Detect missing pets (event created but no pet found)
     // Check backend warning first, fallback to local detection
-    const petWarning = aiResponse?.petWarning;
+    const petWarning = (aiResponse as Record<string, unknown> | undefined)?.petWarning as
+        | { title?: string; message?: string; suggestions?: string[]; availablePets?: Array<{ id: string; name: string; species: string }> }
+        | undefined;
     const hasMissingPets = petWarning || (attachedEvent && (!attachedEvent.pets || attachedEvent.pets.length === 0));
 
     const score = aiResponse?.score;
