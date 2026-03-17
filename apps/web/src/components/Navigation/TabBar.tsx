@@ -6,6 +6,7 @@ import {
     faPaw,
     faCalendar,
     faUser,
+    faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Tab {
@@ -28,6 +29,12 @@ const TabBar: React.FC = () => {
             icon: faHome,
             emoji: "🏠",
             label: "Accueil",
+        },
+        {
+            path: "/feeding",
+            icon: faUtensils,
+            emoji: "🍽️",
+            label: "Repas",
         },
         {
             path: "/content/pets",
@@ -68,7 +75,7 @@ const TabBar: React.FC = () => {
             role="navigation"
             aria-label="Navigation principale mobile"
         >
-            <div className="grid grid-cols-4 h-16">
+            <div className="grid grid-cols-5 h-16">
                 {tabs.map((tab) => {
                     const active = isActive(tab.path);
                     return (

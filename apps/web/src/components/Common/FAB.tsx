@@ -20,7 +20,7 @@ const FAB: React.FC<FABProps> = ({
         <button
             onClick={onClick}
             className="
-                fixed bottom-6 right-6 z-50
+                fixed bottom-20 right-6 z-40
                 w-16 h-16
                 bg-primary hover:bg-primary/90
                 text-white text-2xl
@@ -30,7 +30,7 @@ const FAB: React.FC<FABProps> = ({
                 active:scale-95
                 flex items-center justify-center
                 md:bottom-8 md:right-8
-                lg:bottom-24 lg:right-8
+                lg:bottom-8 lg:right-8
                 focus:outline-none focus:ring-4 focus:ring-primary/50
             "
             aria-label={ariaLabel}

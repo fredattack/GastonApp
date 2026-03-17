@@ -27,22 +27,27 @@ const useSpeechRecognition = (onTranscriptionUpdate: any) => {
         recognitionRef.current = recognition;
 
         recognition.onstart = () => {
+            console.log("[SpeechRecognition] onstart fired");
             setIsRecording(true);
         };
 
         recognition.onresult = (event: any) => {
+            console.log("[SpeechRecognition] onresult fired, results:", event.results.length);
             const newTranscript = Array.from(event.results)
                 .map((result: any) => result[0].transcript)
                 .join("");
-            setTranscription((prev) => `${newTranscript}`.trim()); // Concaténer le texte
+            console.log("[SpeechRecognition] transcript:", newTranscript);
+            setTranscription(`${newTranscript}`.trim());
             onTranscriptionUpdate(newTranscript);
         };
 
-        recognition.onerror = () => {
+        recognition.onerror = (event: any) => {
+            console.error("[SpeechRecognition] onerror:", event.error, event.message);
             setIsRecording(false);
         };
 
         recognition.onend = () => {
+            console.log("[SpeechRecognition] onend fired");
             setIsRecording(false);
         };
 

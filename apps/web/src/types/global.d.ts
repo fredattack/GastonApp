@@ -290,6 +290,75 @@ declare global {
         isLoading: boolean;
         streamingMessageId: string | null;
     }
+
+    // Feeding System Types
+    interface FeedingSchedule {
+        id: number;
+        pet_id: number;
+        meal_slot: 'morning' | 'noon' | 'evening';
+        food_type: string;
+        quantity: number;
+        unit: string;
+        notes: string | null;
+        is_active: boolean;
+    }
+
+    interface FeedingItem {
+        schedule_id: number;
+        pet_id: number;
+        pet_name: string;
+        pet_species: string;
+        meal_slot: 'morning' | 'noon' | 'evening';
+        food_type: string;
+        quantity: number;
+        unit: string;
+        notes: string | null;
+        is_done: boolean;
+        fed_at: string | null;
+        fed_by: string | null;
+        log_id: number | null;
+    }
+
+    interface FeedingSlotData {
+        items: FeedingItem[];
+        total: number;
+        done: number;
+    }
+
+    interface FeedingTodayResponse {
+        date: string;
+        slots: {
+            morning: FeedingSlotData;
+            noon: FeedingSlotData;
+            evening: FeedingSlotData;
+        };
+    }
+
+    type MealSlot = 'morning' | 'noon' | 'evening';
+
+    interface VoiceCommandResult {
+        status: 'executed' | 'error' | 'low_confidence';
+        action: string;
+        message: string;
+        data?: any;
+    }
+
+    interface PetScheduleInfo {
+        id: number;
+        meal_slot: MealSlot;
+        food_type: string;
+        quantity: number;
+        unit: string;
+        notes: string | null;
+    }
+
+    interface PetScheduleGroup {
+        pet_id: number;
+        pet_name: string;
+        pet_species: string;
+        pet_breed: string;
+        schedules: PetScheduleInfo[];
+    }
 }
 
 // Required to make this a module and avoid errors in a global declaration file

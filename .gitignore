@@ -91,3 +91,6 @@ yarn-error.log*
 /design-system/img_exemples/original-e29baffa29e788055345cac13c639408.webp
 /design-system/img_exemples/original-e4941055ef0f36c59c438876eec03008.webp
 /design-system/img_exemples/original-ff0151685292be68d08d4b649bd2ac38.webp
+
+# Documentation synchronisée via Google Drive (symlink)
+docs/
