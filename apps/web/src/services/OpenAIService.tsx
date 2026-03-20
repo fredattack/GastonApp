@@ -1,32 +1,14 @@
-import axios, {
-    AxiosInstance,
-    AxiosResponse,
-    AxiosError
-} from "axios";
-import {
-    enrichWithHealthDisclaimer
-} from "../utils/healthDisclaimerUtils";
+import { AxiosResponse, AxiosError } from "axios";
+import axiosClient from "../providers/apiClientProvider/axiosClient";
+import { enrichWithHealthDisclaimer } from "../utils/healthDisclaimerUtils";
 
 export class OpenAiService {
     private static instance: OpenAiService | null = null;
 
-    private apiClient: AxiosInstance;
-
     private endpoint: string;
 
-    private baseUrl: string;
-
     private constructor() {
-        const apiUrl = "";
-        this.baseUrl = import.meta.env.VITE_API_URL + apiUrl;
         this.endpoint = "/ai";
-        this.apiClient = axios.create({
-            baseURL: this.baseUrl,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            timeout: 30000
-        });
     }
 
     static getInstance(): OpenAiService {
@@ -54,7 +36,7 @@ export class OpenAiService {
     }
 
     private handleError(error: unknown): never {
-        if (axios.isAxiosError(error)) {
+        if (error instanceof Object && 'response' in error && 'message' in error) {
             const axiosError = error as AxiosError<AIError>;
             const errorMessage =
                 axiosError.response?.data?.message ||
@@ -69,26 +51,23 @@ export class OpenAiService {
         }
 
         throw new Error(
-            "An unknown error occurred while processing the AI request"
+            "An unknown error occurred while processing the AI request",
         );
     }
 
     async sendPromptApi(
         messages: string,
-        filters: Record<string, unknown> = {}
+        filters: Record<string, unknown> = {},
     ): Promise<AIResponse> {
         if (!messages || messages.trim().length === 0) {
             throw new Error("Prompt cannot be empty");
         }
 
-        console.log("this.endpoint", this.endpoint);
-        console.log("messages.trim()", messages.trim());
-
         try {
             const response: AxiosResponse<AIResponse> =
-                await this.apiClient.post(this.endpoint, {
+                await axiosClient.post(this.endpoint, {
                     prompt: messages.trim(),
-                    filters
+                    filters,
                 });
 
             if (!this.validateResponse(response.data)) {
@@ -98,7 +77,7 @@ export class OpenAiService {
             // Enrich response with health disclaimer if needed
             const enrichedResponse = enrichWithHealthDisclaimer(
                 response.data,
-                messages.trim()
+                messages.trim(),
             );
 
             return enrichedResponse;
@@ -109,7 +88,7 @@ export class OpenAiService {
 
     async sendWithContext(
         messages: Message[],
-        filters: Record<string, unknown> = {}
+        filters: Record<string, unknown> = {},
     ): Promise<AIResponse> {
         if (!messages || messages.length === 0) {
             throw new Error("Messages cannot be empty");
@@ -117,12 +96,12 @@ export class OpenAiService {
 
         try {
             const response: AxiosResponse<AIResponse> =
-                await this.apiClient.post(this.endpoint, {
+                await axiosClient.post(this.endpoint, {
                     messages: messages.map((m) => ({
                         role: m.role,
-                        content: m.content
+                        content: m.content,
                     })),
-                    filters
+                    filters,
                 });
 
             if (!this.validateResponse(response.data)) {
@@ -139,7 +118,7 @@ export class OpenAiService {
             // Enrich response with health disclaimer if needed
             const enrichedResponse = enrichWithHealthDisclaimer(
                 response.data,
-                originalPrompt
+                originalPrompt,
             );
 
             return enrichedResponse;
@@ -152,38 +131,53 @@ export class OpenAiService {
         messages: Message[],
         onChunk: (chunk: string) => void,
         onComplete: (response: AIResponse) => void,
-        onError: (error: Error) => void
+        onError: (error: Error) => void,
     ): Promise<void> {
         if (!messages || messages.length === 0) {
             throw new Error("Messages cannot be empty");
         }
 
         try {
+            const baseURL = import.meta.env.VITE_API_URL;
+
+            // Extract XSRF token from cookies
+            const token = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            const headers: HeadersInit = {
+                "Content-Type": "application/json",
+            };
+
+            if (token) {
+                headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+            }
+
             const response = await fetch(
-                `${this.baseUrl}${this.endpoint}/stream`,
+                `${baseURL}${this.endpoint}/stream`,
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers,
+                    credentials: "include",
                     body: JSON.stringify({
                         messages: messages.map((m) => ({
                             role: m.role,
-                            content: m.content
-                        }))
-                    })
-                }
+                            content: m.content,
+                        })),
+                    }),
+                },
             );
 
             if (response.status === 404) {
                 console.warn(
-                    "Streaming endpoint not available, falling back to regular API"
+                    "Streaming endpoint not available, falling back to regular API",
                 );
                 return this.sendPromptWithFallback(
                     messages,
                     onChunk,
                     onComplete,
-                    onError
+                    onError,
                 );
             }
 
@@ -200,10 +194,7 @@ export class OpenAiService {
             let accumulatedText = "";
 
             while (true) {
-                const {
-                    done,
-                    value
-                } = await reader.read();
+                const { done, value } = await reader.read();
                 if (done) break;
 
                 const chunk = decoder.decode(value, { stream: true });
@@ -233,7 +224,7 @@ export class OpenAiService {
                                 const enrichedResponse =
                                     enrichWithHealthDisclaimer(
                                         parsed.response as AIResponse,
-                                        originalPrompt
+                                        originalPrompt,
                                     );
 
                                 onComplete(enrichedResponse);
@@ -247,13 +238,13 @@ export class OpenAiService {
         } catch (error) {
             if (error instanceof TypeError && error.message.includes("fetch")) {
                 console.warn(
-                    "Streaming endpoint not reachable, falling back to regular API"
+                    "Streaming endpoint not reachable, falling back to regular API",
                 );
                 return this.sendPromptWithFallback(
                     messages,
                     onChunk,
                     onComplete,
-                    onError
+                    onError,
                 );
             }
 
@@ -261,7 +252,7 @@ export class OpenAiService {
                 onError(error);
             } else {
                 onError(
-                    new Error("An unknown error occurred during streaming")
+                    new Error("An unknown error occurred during streaming"),
                 );
             }
         }
@@ -271,7 +262,7 @@ export class OpenAiService {
         messages: Message[],
         onChunk: (chunk: string) => void,
         onComplete: (response: AIResponse) => void,
-        onError: (error: Error) => void
+        onError: (error: Error) => void,
     ): Promise<void> {
         try {
             const lastUserMessage = messages
@@ -284,7 +275,7 @@ export class OpenAiService {
             }
 
             const aiResponse = await this.sendPromptApi(
-                lastUserMessage.content
+                lastUserMessage.content,
             );
 
             const responseText =
