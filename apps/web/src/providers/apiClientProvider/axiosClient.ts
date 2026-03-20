@@ -71,9 +71,11 @@ axiosClient.interceptors.response.use(
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    // Redirect to login
-                    logger.warn("Unauthorized - redirecting to login");
-                    window.location.href = "/login";
+                    // Redirect to login only if not already there
+                    if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+                        logger.warn("Unauthorized - redirecting to login");
+                        window.location.href = "/login";
+                    }
                     break;
                 case 403:
                     logger.warn("Forbidden access");
