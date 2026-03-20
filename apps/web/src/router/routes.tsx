@@ -8,8 +8,21 @@ const PetForm = lazy(() => import("../pages/content/Pet/ThePetFormPage"));
 const AIAssistant = lazy(() => import("../pages/AIAssistant/AIAssistantPage"));
 const EventCalendar = lazy(() => import("../components/Event/list/EventCalendar"));
 const FeedingDashboard = lazy(() => import("../pages/content/Feeding/FeedingDashboardPage"));
+const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
+const RegisterPage = lazy(() => import("../pages/Auth/RegisterPage"));
 
 const routes = [
+    // auth
+    {
+        path: "/login",
+        element: <LoginPage />,
+        layout: "auth",
+    },
+    {
+        path: "/register",
+        element: <RegisterPage />,
+        layout: "auth",
+    },
     // dashboard
     {
         path: "/",

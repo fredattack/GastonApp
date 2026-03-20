@@ -341,6 +341,137 @@ data via REST APIs
 
 #### Web App (apps/web/.env)
 
+## Design System — GastonApp
+
+### Fichiers de référence
+
+Le design system
+complet est dans
+`/design-system/`. *
+*Toujours consulter
+ces fichiers avant
+de modifier du CSS,
+du styling, ou de
+créer un composant
+UI** :
+
+-
+`00-design-tokens.md` —
+Tokens (couleurs,
+spacing, radius,
+shadows, z-index,
+animations)
+-
+`01-color-system.md` —
+Palette, gradients,
+semantic colors,
+règles de contraste
+-
+`02-typography.md` —
+Nunito, type scale,
+line-heights
+-
+`03-iconography.md` —
+Phosphor Icons,
+weights, sizing
+-
+`04-components.md` —
+Specs des
+composants (buttons,
+cards, inputs, nav,
+badges)
+- `05-layouts.md` —
+  Grilles,
+  breakpoints,
+  templates de
+  pages, safe areas
+
+### Règles immutables
+
+- **Font** : Nunito
+  exclusivement (
+  400/600/700). Pas
+  d'Inter, Roboto,
+  Arial, ou system
+  fonts.
+- **Icônes** :
+  Phosphor Icons (
+  Regular 1.5px +
+  Bold 2px). Pas
+  d'emojis dans l'
+  UI.
+- **Couleurs** :
+  Toujours utiliser
+  les tokens du
+  design system.
+  Palette
+  chaude/organique.
+  Jamais de tons
+  bleus/gris froids,
+  jamais de noir pur
+  `#000000`.
+    - Primaire :
+      `#8FA998` (
+      eucalyptus)
+    - Secondaire :
+      `#D4A574` (
+      golden honey)
+    - Background :
+      `#F4F1E8` (
+      lin-2)
+    - Surfaces :
+      `#FDFCFA` (
+      lin-0)
+- **Shadows** :
+  Tintées eucalyptus
+  `rgba(143,169,152,x)`,
+  jamais noir pur.
+- **Radius** : Cards
+  20px, buttons pill
+  9999px, inputs
+  12px.
+- **Layout** :
+  Mobile-first.
+  Breakpoints :
+  768px (tablette),
+  1200px (desktop),
+  1440px (wide).
+- **Touch targets
+  ** : 44px minimum
+  sur mobile.
+- **Contraste** :
+  WCAG AA minimum
+  pour tout texte.
+
+### Architecture UI
+
+L'application est *
+*chat-centric**. Le
+chat est l'écran
+principal permanent.
+Les autres vues (
+animaux, calendrier)
+sont des compléments
+accessibles via
+sidebar ou
+navigation.
+
+Layout 3 colonnes
+progressif :
+
+- Mobile : chat
+  plein écran +
+  bottom tab bar +
+  drawer menu
+- Tablette : sidebar
+  gauche + chat
+  center
+- Desktop : sidebar
+  gauche + chat
+  center + sidebar
+  droite
+  contextuelle
+
 ```env
 
 VITE_OPENAI_API_KEY=
@@ -355,33 +486,104 @@ system.
 
 ### Code Conventions
 
-**⚠️ IMPORTANT: For detailed architectural guidelines, design patterns, and best practices, see [Front-End Architecture Guide](docs/technical/front-architecture.md).**
+**⚠️ IMPORTANT: For
+detailed
+architectural
+guidelines, design
+patterns, and best
+practices,
+see [Front-End Architecture Guide](docs/technical/front-architecture.md).
+**
 
 #### Quick Reference
 
-- **TypeScript**: Strict mode enabled, explicit types for all public APIs
-- **ESLint**: Airbnb configuration
-- **Formatting**: Prettier for all code
-- **Components**: PascalCase naming with `.tsx` extension
-- **Architecture Patterns**:
-  - **Hooks Pattern** (primary): Custom hooks for all business logic
-  - **Provider Pattern**: Context API for global state (Auth, Theme, I18n, Family)
-  - **UI/Logic Separation**: Presentational components vs. Container components
-  - **HOC**: Discouraged (legacy pattern)
-- **File Organization**:
-  - Business logic → `packages/shared/src/hooks/`
-  - UI components → `packages/ui/src/` (when reusable) or `apps/*/components/` (when app-specific)
-  - Types → `packages/shared/src/types/`
-  - Services → `packages/shared/src/services/`
-- **Naming Conventions**:
-  - Components: `PascalCase` (e.g., `PetsTable`, `EventCard`)
-  - Hooks: `camelCase` with `use` prefix (e.g., `usePetsList`, `useAuth`)
-  - Files: Match the export name
-- **State Management Hierarchy**:
-  1. Local state (`useState`) for UI-only state
-  2. Custom hooks for reusable logic
-  3. Context for global simple state
-  4. Redux Toolkit for complex global state
+- **TypeScript**:
+  Strict mode
+  enabled, explicit
+  types for all
+  public APIs
+- **ESLint**: Airbnb
+  configuration
+- **Formatting**:
+  Prettier for all
+  code
+- **Components**:
+  PascalCase naming
+  with `.tsx`
+  extension
+- **Architecture
+  Patterns**:
+    - **Hooks
+      Pattern** (
+      primary):
+      Custom hooks
+      for all
+      business logic
+    - **Provider
+      Pattern**:
+      Context API
+      for global
+      state (Auth,
+      Theme, I18n,
+      Family)
+    - **UI/Logic
+      Separation**:
+      Presentational
+      components vs.
+      Container
+      components
+    - **HOC**:
+      Discouraged (
+      legacy
+      pattern)
+- **File
+  Organization**:
+    - Business
+      logic →
+      `packages/shared/src/hooks/`
+    - UI
+      components →
+      `packages/ui/src/` (
+      when reusable)
+      or
+      `apps/*/components/` (
+      when
+      app-specific)
+    - Types →
+      `packages/shared/src/types/`
+    - Services →
+      `packages/shared/src/services/`
+- **Naming
+  Conventions**:
+    - Components:
+      `PascalCase` (
+      e.g.,
+      `PetsTable`,
+      `EventCard`)
+    - Hooks:
+      `camelCase`
+      with `use`
+      prefix (e.g.,
+      `usePetsList`,
+      `useAuth`)
+    - Files: Match
+      the export
+      name
+- **State Management
+  Hierarchy**:
+    1. Local state (
+       `useState`)
+       for UI-only
+       state
+    2. Custom hooks
+       for reusable
+       logic
+    3. Context for
+       global simple
+       state
+    4. Redux Toolkit
+       for complex
+       global state
 
 ### Package Naming Convention
 
@@ -610,18 +812,56 @@ pnpm deploy
 
 #### Project Documentation
 
-- **[Front-End Architecture Guide](docs/technical/front-architecture.md)** - **MUST READ**: Comprehensive guide covering React design patterns, hooks, providers, code organization, and architectural guidelines for all front-end development. This document defines the mandatory patterns and best practices for the mono-repo.
+- *
+  *[Front-End Architecture Guide](docs/technical/front-architecture.md)
+  ** - **MUST READ
+  **: Comprehensive
+  guide covering
+  React design
+  patterns, hooks,
+  providers, code
+  organization, and
+  architectural
+  guidelines for all
+  front-end
+  development. This
+  document defines
+  the mandatory
+  patterns and best
+  practices for the
+  mono-repo.
 
-- **[Deployment Guide](docs/DEPLOYMENT.md)** - Detailed deployment instructions
+- *
+  *[Deployment Guide](docs/DEPLOYMENT.md)
+  ** - Detailed
+  deployment
+  instructions
 
-- **[README](README.md)** - Quick start and project overview
+- *
+  *[README](README.md)
+  ** - Quick start
+  and project
+  overview
 
-- **[Migration Guide](docs/MONOREPO_MIGRATION.md)** - Monorepo migration details
+- *
+  *[Migration Guide](docs/MONOREPO_MIGRATION.md)
+  ** - Monorepo
+  migration details
 
 #### External Documentation
 
-- **[Turborepo Docs](https://turbo.build/repo/docs)** - Turborepo documentation
+- *
+  *[Turborepo Docs](https://turbo.build/repo/docs)
+  ** - Turborepo
+  documentation
 
-- **[pnpm Docs](https://pnpm.io/)** - pnpm documentation
+- *
+  *[pnpm Docs](https://pnpm.io/)
+  ** - pnpm
+  documentation
 
-- **[Expo Docs](https://docs.expo.dev/)** - Expo documentation (for mobile app)
+- *
+  *[Expo Docs](https://docs.expo.dev/)
+  ** - Expo
+  documentation (for
+  mobile app)

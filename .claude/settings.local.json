@@ -30,7 +30,9 @@
       "Bash(find:*)",
       "Bash(for file in Card/Card.tsx Icon/Icon.tsx Badge/Badge.tsx Avatar/Avatar.tsx)",
       "Bash(do sed -i '' \"/import.*design-tokens.css/d\" \"$file\")",
-      "Bash(pnpm --filter @gastonapp/ui build:*)"
+      "Bash(pnpm --filter @gastonapp/ui build:*)",
+      "Read(//Users/fred/PhpstormProjects/gaston-backend/**)",
+      "Bash(grep -i \"sanctum\\\\|cors\" config/*)"
     ],
     "deny": [],
     "ask": []

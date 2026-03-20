@@ -73,13 +73,13 @@ const SmartFeedingSuggestion: React.FC<SmartFeedingSuggestionProps> = ({
             <div className="flex gap-2 flex-shrink-0">
                 <button
                     onClick={suggestion.action}
-                    className="px-3 py-1.5 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 active:scale-95 transition-all min-h-[36px]"
+                    className="px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 active:scale-95 transition-all min-h-[44px]"
                 >
                     Oui
                 </button>
                 <button
                     onClick={() => setDismissed(true)}
-                    className="px-3 py-1.5 text-gray-500 dark:text-gray-400 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all min-h-[36px]"
+                    className="px-3 py-2 text-gray-500 dark:text-gray-400 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all min-h-[44px]"
                 >
                     Ignorer
                 </button>

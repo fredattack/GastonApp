@@ -93,7 +93,7 @@ const PetDietCard: React.FC<PetDietCardProps> = ({ petId, petName, petSpecies, o
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Fermer"
                     >
                         <FontAwesomeIcon icon={faTimes} className="text-gray-500" />
