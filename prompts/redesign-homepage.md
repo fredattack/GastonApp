@@ -35,53 +35,40 @@ fichiers avant toute
 modification :
 
 -
-
 `design-system/00-design-tokens.md` —
 Tokens fondation (
 couleurs, spacing,
 radius, shadows,
 animations)
-
 -
-
 `design-system/01-color-system.md` —
 Palette complète,
 gradients, semantic
 colors, règles
 d'accessibilité
-
 -
-
 `design-system/02-typography.md` —
 Nunito exclusif,
 type scale,
 line-heights
-
 -
-
 `design-system/03-iconography.md` —
 Phosphor Icons,
 weights Regular +
 Bold, sizing
-
 -
-
 `design-system/04-components.md` —
 Spécifications des
 composants (boutons,
 cards, inputs,
 badges, nav)
-
 -
-
 `design-system/05-layouts.md` —
 Grilles,
 breakpoints, safe
 areas, templates de
 pages
-
 -
-
 `design-system/GastonApp-DesignSystem-Guidelines-MegaPrompt.md` —
 Résumé global des
 règles immutables
@@ -91,7 +78,6 @@ règles immutables
 ## Mockup de référence
 
 -
-
 `prompts/dashboard-mockup.jsx` —
 Prototype
 fonctionnel React du
@@ -349,10 +335,8 @@ Mobile (<768px)          Tablette (768px+)         Desktop (1200px+)
   cards/sidebars :
   `#FDFCFA` (lin-0)
 -
-
 Borders/séparateurs :
 `#EFEADC` (lin-3)
-
 - Primaire
   interactive :
   `#8FA998` (

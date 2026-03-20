@@ -4,7 +4,7 @@ import { logger } from "../../utils/logger";
 import { handleApiError } from "../../utils/errorHandler";
 
 const baseURL = import.meta.env.VITE_API_URL;
-const appBaseURL = baseURL.replace('/api/v1-0-0', '');
+const appBaseURL = baseURL.replace("/api/v1-0-0", "");
 //
 // if (localStorage.getItem('url') !== null) {
 //     baseURL = localStorage.getItem('url');
@@ -38,17 +38,17 @@ async function fetchCsrfToken() {
 axiosClient.interceptors.request.use(
     (config) => {
         const token = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
+            .split("; ")
+            .find((row) => row.startsWith("XSRF-TOKEN="))
+            ?.split("=")[1];
 
         if (token) {
-            config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+            config.headers["X-XSRF-TOKEN"] = decodeURIComponent(token);
         }
 
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
 );
 
 axiosClient.interceptors.response.use(
@@ -71,7 +71,7 @@ axiosClient.interceptors.response.use(
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    // Redirect to login only if not already there
+                    // Redirect to login (avoid redirect loops on login/register pages)
                     if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
                         logger.warn("Unauthorized - redirecting to login");
                         window.location.href = "/login";

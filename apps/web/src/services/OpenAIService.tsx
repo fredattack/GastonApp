@@ -1,14 +1,26 @@
-import { AxiosResponse, AxiosError } from "axios";
-import axiosClient from "../providers/apiClientProvider/axiosClient";
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import { enrichWithHealthDisclaimer } from "../utils/healthDisclaimerUtils";
 
 export class OpenAiService {
     private static instance: OpenAiService | null = null;
 
+    private apiClient: AxiosInstance;
+
     private endpoint: string;
 
+    private baseUrl: string;
+
     private constructor() {
+        const apiUrl = "";
+        this.baseUrl = import.meta.env.VITE_API_URL + apiUrl;
         this.endpoint = "/ai";
+        this.apiClient = axios.create({
+            baseURL: this.baseUrl,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            timeout: 30000,
+        });
     }
 
     static getInstance(): OpenAiService {
@@ -36,7 +48,7 @@ export class OpenAiService {
     }
 
     private handleError(error: unknown): never {
-        if (error instanceof Object && 'response' in error && 'message' in error) {
+        if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError<AIError>;
             const errorMessage =
                 axiosError.response?.data?.message ||
@@ -65,7 +77,7 @@ export class OpenAiService {
 
         try {
             const response: AxiosResponse<AIResponse> =
-                await axiosClient.post(this.endpoint, {
+                await this.apiClient.post(this.endpoint, {
                     prompt: messages.trim(),
                     filters,
                 });
@@ -96,7 +108,7 @@ export class OpenAiService {
 
         try {
             const response: AxiosResponse<AIResponse> =
-                await axiosClient.post(this.endpoint, {
+                await this.apiClient.post(this.endpoint, {
                     messages: messages.map((m) => ({
                         role: m.role,
                         content: m.content,
@@ -138,28 +150,13 @@ export class OpenAiService {
         }
 
         try {
-            const baseURL = import.meta.env.VITE_API_URL;
-
-            // Extract XSRF token from cookies
-            const token = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('XSRF-TOKEN='))
-                ?.split('=')[1];
-
-            const headers: HeadersInit = {
-                "Content-Type": "application/json",
-            };
-
-            if (token) {
-                headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
-            }
-
             const response = await fetch(
-                `${baseURL}${this.endpoint}/stream`,
+                `${this.baseUrl}${this.endpoint}/stream`,
                 {
                     method: "POST",
-                    headers,
-                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     body: JSON.stringify({
                         messages: messages.map((m) => ({
                             role: m.role,
