@@ -4,6 +4,7 @@ import { logger } from "../../utils/logger";
 import { handleApiError } from "../../utils/errorHandler";
 
 const baseURL = import.meta.env.VITE_API_URL;
+const appBaseURL = baseURL.replace('/api/v1-0-0', '');
 //
 // if (localStorage.getItem('url') !== null) {
 //     baseURL = localStorage.getItem('url');
@@ -19,7 +20,19 @@ const axiosClient = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
+    withCredentials: true,
 });
+
+// Fetch CSRF token for Sanctum
+async function fetchCsrfToken() {
+    try {
+        await axios.get(`${appBaseURL}/sanctum/csrf-cookie`, {
+            withCredentials: true,
+        });
+    } catch (error) {
+        logger.debug("CSRF token fetch attempted");
+    }
+}
 
 axiosClient.interceptors.response.use(
     (response) => response,
@@ -43,7 +56,7 @@ axiosClient.interceptors.response.use(
                 case 401:
                     // Redirect to login
                     logger.warn("Unauthorized - redirecting to login");
-                    window.location.href = "/connect";
+                    window.location.href = "/login";
                     break;
                 case 403:
                     logger.warn("Forbidden access");
@@ -68,3 +81,4 @@ axiosClient.interceptors.response.use(
 );
 
 export default axiosClient;
+export { fetchCsrfToken };
