@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axiosClient from '../providers/apiClientProvider/axiosClient';
+import axiosClient, { fetchCsrfToken } from '../providers/apiClientProvider/axiosClient';
 
 export interface User {
   id: number;
@@ -42,15 +42,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('auth_token');
+      console.log('[Auth] Initializing. Token exists:', !!token);
+
       if (token) {
         try {
+          // Fetch CSRF token first (same as login flow)
+          await fetchCsrfToken();
+
           axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          const response = await axiosClient.get<{ data: User }>('/auth/user');
-          setUser(response.data.data);
-        } catch {
-          localStorage.removeItem('auth_token');
-          delete axiosClient.defaults.headers.common['Authorization'];
-          setUser(null);
+          console.log('[Auth] Calling /auth/user with token');
+          const response = await axiosClient.get<User>('/auth/user');
+          console.log('[Auth] Got user:', response.data);
+          setUser(response.data);
+        } catch (err: any) {
+          console.log('[Auth] Error response:', err.response?.status, err.message);
+          // Only clear token if it's a 401 (unauthorized/expired token)
+          // For other errors (network, etc), keep the token and let the user retry
+          if (err.response?.status === 401) {
+            console.log('[Auth] Token expired/invalid, clearing');
+            localStorage.removeItem('auth_token');
+            delete axiosClient.defaults.headers.common['Authorization'];
+            setUser(null);
+          } else {
+            console.log('[Auth] Other error, keeping token');
+            // For other errors, still try to use the token - it might work
+            // But set user to null temporarily to show loading state
+            setUser(null);
+          }
         }
       }
       setLoading(false);
@@ -62,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (credentials: RegisterCredentials): Promise<User> => {
     setError(null);
     try {
+      await fetchCsrfToken();
       const response = await axiosClient.post<{ data: { user: User; token: string } }>(
         '/auth/register',
         credentials
@@ -81,6 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: LoginCredentials): Promise<User> => {
     setError(null);
     try {
+      await fetchCsrfToken();
       const response = await axiosClient.post<{ data: { user: User; token: string } }>(
         '/auth/login',
         credentials

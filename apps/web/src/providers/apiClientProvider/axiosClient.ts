@@ -71,11 +71,8 @@ axiosClient.interceptors.response.use(
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    // Redirect to login (avoid redirect loops on login/register pages)
-                    if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-                        logger.warn("Unauthorized - redirecting to login");
-                        window.location.href = "/login";
-                    }
+                    // Don't redirect here - let ProtectedRoute handle it
+                    logger.warn("Unauthorized - token invalid or expired");
                     break;
                 case 403:
                     logger.warn("Forbidden access");
@@ -99,5 +96,13 @@ axiosClient.interceptors.response.use(
     },
 );
 
+function setAuthToken(token: string) {
+    axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+function clearAuthToken() {
+    delete axiosClient.defaults.headers.common['Authorization'];
+}
+
 export default axiosClient;
-export { fetchCsrfToken };
+export { fetchCsrfToken, setAuthToken, clearAuthToken };

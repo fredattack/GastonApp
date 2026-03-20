@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { eventService } from "../services";
+import { useAuthContext } from "./AuthContext";
 
 type EventsContextType = {
     events: EventFormData[];
@@ -23,6 +24,7 @@ export const useEvents = () => {
 export const EventsProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
+    const { isAuthenticated, loading } = useAuthContext();
     const [events, setEvents] = useState<EventFormData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -41,10 +43,12 @@ export const EventsProvider: React.FC<{
     };
 
     useEffect(() => {
-        // Automatically fetch events when component mounts
-        const { start_date, end_date } = getDateRange(currentDate);
-        fetchEvents(start_date, end_date);
-    }, []);
+        // Only fetch events when authenticated and auth loading is done
+        if (isAuthenticated && !loading) {
+            const { start_date, end_date } = getDateRange(currentDate);
+            fetchEvents(start_date, end_date);
+        }
+    }, [isAuthenticated, loading]);
 
     // Function to fetch events
     const fetchEvents = async (start_date: any, end_date: any) => {

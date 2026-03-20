@@ -34,7 +34,8 @@
       "Read(//Users/fred/PhpstormProjects/gaston-backend/**)",
       "Bash(grep -i \"sanctum\\\\|cors\" config/*)",
       "Bash(git:*)",
-      "Bash(curl -s http://localhost:4480/login)"
+      "Bash(curl -s http://localhost:4480/login)",
+      "mcp__playwright__browser_run_code"
     ],
     "deny": [],
     "ask": []

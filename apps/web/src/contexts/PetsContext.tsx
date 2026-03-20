@@ -1,6 +1,7 @@
 // src/contexts/PetsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { modelService } from "../services/index";
+import { useAuthContext } from "./AuthContext";
 
 interface PetsContextType {
     pets: Pet[];
@@ -13,6 +14,7 @@ const PetsContext = createContext<PetsContextType | undefined>(undefined);
 export const PetsProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
+    const { isAuthenticated, loading } = useAuthContext();
     const [pets, setPets] = useState<Pet[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -29,8 +31,11 @@ export const PetsProvider: React.FC<{
     };
 
     useEffect(() => {
-        fetchPets();
-    }, []);
+        // Only fetch pets when authenticated and auth loading is done
+        if (isAuthenticated && !loading) {
+            fetchPets();
+        }
+    }, [isAuthenticated, loading]);
 
     return (
         <PetsContext.Provider

@@ -1,4 +1,5 @@
 import React, { lazy } from "react";
+import { ProtectedRoute } from "../components/Router/ProtectedRoute";
 
 const Index = lazy(() => import("../pages/Index"));
 const ComponentsShowcase = lazy(() => import("../pages/ComponentsShowcase"));
@@ -26,47 +27,47 @@ const routes = [
     // dashboard
     {
         path: "/",
-        element: <Index />,
+        element: <ProtectedRoute><Index /></ProtectedRoute>,
         layout: "default",
     },
     // Components Showcase
     {
         path: "/components-showcase",
-        element: <ComponentsShowcase />,
+        element: <ProtectedRoute><ComponentsShowcase /></ProtectedRoute>,
         layout: "default",
     },
     // AI Assistant
     {
         path: "/ai-assistant",
-        element: <AIAssistant />,
+        element: <ProtectedRoute><AIAssistant /></ProtectedRoute>,
         layout: "blank",
     },
     // feeding dashboard
     {
         path: "/feeding",
-        element: <FeedingDashboard />,
+        element: <ProtectedRoute><FeedingDashboard /></ProtectedRoute>,
         layout: "default",
     },
     // calendar
     {
         path: "/calendar",
-        element: <EventCalendar />,
+        element: <ProtectedRoute><EventCalendar /></ProtectedRoute>,
         layout: "default",
     },
     // content
     {
         path: "/content/pets",
-        element: <Pets />,
+        element: <ProtectedRoute><Pets /></ProtectedRoute>,
         layout: "default",
     },
     {
         path: "/content/pets/create",
-        element: <PetForm pet={undefined} />,
+        element: <ProtectedRoute><PetForm pet={undefined} /></ProtectedRoute>,
         layout: "default",
     },
     {
         path: "/content/pets/:id",
-        element: <PetForm pet={undefined} />,
+        element: <ProtectedRoute><PetForm pet={undefined} /></ProtectedRoute>,
         layout: "default",
     },
 ];
