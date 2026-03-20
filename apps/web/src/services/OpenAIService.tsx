@@ -1,26 +1,14 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
+import axiosClient from "../providers/apiClientProvider/axiosClient";
 import { enrichWithHealthDisclaimer } from "../utils/healthDisclaimerUtils";
 
 export class OpenAiService {
     private static instance: OpenAiService | null = null;
 
-    private apiClient: AxiosInstance;
-
     private endpoint: string;
 
-    private baseUrl: string;
-
     private constructor() {
-        const apiUrl = "";
-        this.baseUrl = import.meta.env.VITE_API_URL + apiUrl;
         this.endpoint = "/ai";
-        this.apiClient = axios.create({
-            baseURL: this.baseUrl,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            timeout: 30000,
-        });
     }
 
     static getInstance(): OpenAiService {
@@ -77,7 +65,7 @@ export class OpenAiService {
 
         try {
             const response: AxiosResponse<AIResponse> =
-                await this.apiClient.post(this.endpoint, {
+                await axiosClient.post(this.endpoint, {
                     prompt: messages.trim(),
                     filters,
                 });
@@ -108,7 +96,7 @@ export class OpenAiService {
 
         try {
             const response: AxiosResponse<AIResponse> =
-                await this.apiClient.post(this.endpoint, {
+                await axiosClient.post(this.endpoint, {
                     messages: messages.map((m) => ({
                         role: m.role,
                         content: m.content,
@@ -150,13 +138,25 @@ export class OpenAiService {
         }
 
         try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("XSRF-TOKEN="))
+                ?.split("=")[1];
+
+            const headers: HeadersInit = {
+                "Content-Type": "application/json",
+            };
+
+            if (token) {
+                headers["X-XSRF-TOKEN"] = decodeURIComponent(token);
+            }
+
             const response = await fetch(
-                `${this.baseUrl}${this.endpoint}/stream`,
+                `${import.meta.env.VITE_API_URL}${this.endpoint}/stream`,
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers,
+                    credentials: "include",
                     body: JSON.stringify({
                         messages: messages.map((m) => ({
                             role: m.role,
