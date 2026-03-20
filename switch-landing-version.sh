@@ -28,4 +28,4 @@ echo "$VERSION" > "$LANDING_DIR/.version"
 
 echo "✅ Now using landing page $VERSION"
 echo ""
-echo "Run: pnpm dev:landing-page"
+echo "Run: pnpm dev:landing"

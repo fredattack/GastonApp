@@ -1,0 +1,338 @@
+/**
+ * GastonApp Design Tokens
+ * Version: 1.0.0
+ *
+ * DO NOT MODIFY THESE VALUES DIRECTLY - Update the source design system
+ * Reference: /design-system/00-design-tokens.md
+ */
+
+:root {
+  /* ==================== COLOR TOKENS ==================== */
+
+  /* Primary Palette (Eucalyptus Green) */
+  --color-primary-50: #F4F7F5;
+  --color-primary-100: #E3EBE7;
+  --color-primary-200: #C7D7CF;
+  --color-primary-300: #ABC3B7;
+  --color-primary-400: #8FA998;
+  --color-primary-500: #7A9383;
+  --color-primary-600: #657A6D;
+  --color-primary-700: #506158;
+  --color-primary-800: #3B4842;
+  --color-primary-900: #262F2C;
+
+  /* Secondary Palette (Golden Honey) */
+  --color-secondary-50: #FAF6F1;
+  --color-secondary-100: #F2E8DC;
+  --color-secondary-200: #E8D4BA;
+  --color-secondary-300: #DEC097;
+  --color-secondary-400: #D4A574;
+  --color-secondary-500: #C18E5F;
+  --color-secondary-600: #A97649;
+  --color-secondary-700: #8B6039;
+  --color-secondary-800: #6D4A2A;
+  --color-secondary-900: #4F341C;
+
+  /* Background Scale (Lin Naturel) */
+  --color-lin-0: #FDFCFA;
+  --color-lin-1: #F9F7F4;
+  --color-lin-2: #F4F1E8;
+  --color-lin-3: #EFEADC;
+  --color-lin-4: #E9E3D0;
+  --color-lin-5: #E0D8C3;
+  --color-lin-6: #D6CBB5;
+  --color-lin-7: #C8BDA6;
+  --color-lin-8: #B9AD96;
+  --color-lin-9: #A99D85;
+
+  /* Accent Colors */
+  --color-mint-light: #B8F4DC;
+  --color-mint-base: #7CEDC3;
+  --color-mint-dark: #4FD1A1;
+
+  --color-lavender-light: #E8D9F5;
+  --color-lavender-base: #D1B3E8;
+  --color-lavender-dark: #B98DD9;
+
+  --color-yellow-light: #FFF9CC;
+  --color-yellow-base: #FFE88C;
+  --color-yellow-dark: #FFD84D;
+
+  --color-coral-light: #FFD4C4;
+  --color-coral-base: #FFB59A;
+  --color-coral-dark: #FF9670;
+
+  --color-paid-green: #7CEDC3;
+  --color-credits-yellow: #FFE88C;
+
+  /* Semantic Colors */
+  --color-success-light: #D4F4E7;
+  --color-success-base: #7CEDC3;
+  --color-success-dark: #4FD1A1;
+
+  --color-warning-light: #FFF4D9;
+  --color-warning-base: #FFD84D;
+  --color-warning-dark: #FFBB1A;
+
+  --color-error-light: #FFE5E5;
+  --color-error-base: #FF6B6B;
+  --color-error-dark: #E54545;
+
+  --color-info-light: #E3EBE7;
+  --color-info-base: #8FA998;
+  --color-info-dark: #657A6D;
+
+  /* Text Colors */
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #4A4A4A;
+  --color-text-tertiary: #6B6B6B;
+  --color-text-disabled: #A0A0A0;
+  --color-text-inverse: #FFFFFF;
+  --color-text-hint: #8E8E8E;
+
+  /* Gradient Tokens */
+  --gradient-mint-lavender: linear-gradient(135deg, #B8F4DC 0%, #E8D9F5 100%);
+  --gradient-mint-white: linear-gradient(180deg, #B8F4DC 0%, #FFFFFF 50%, #F4F1E8 100%);
+  --gradient-activity-purple: linear-gradient(135deg, #E8D9F5 0%, #D1B3E8 100%);
+  --gradient-activity-yellow: linear-gradient(135deg, #FFF9CC 0%, #FFE88C 100%);
+  --gradient-activity-coral: linear-gradient(135deg, #FFD4C4 0%, #FFB59A 100%);
+
+  /* ==================== SPACING TOKENS ==================== */
+
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-96: 96px;
+  --spacing-128: 128px;
+
+  /* Semantic Spacing */
+  --spacing-component-gap: var(--spacing-16);
+  --spacing-section-gap: var(--spacing-32);
+  --spacing-page-padding-mobile: var(--spacing-20);
+  --spacing-page-padding-web: var(--spacing-40);
+  --spacing-card-padding: var(--spacing-20);
+  --spacing-button-padding-x: var(--spacing-24);
+  --spacing-button-padding-y: var(--spacing-12);
+
+  /* ==================== TYPOGRAPHY TOKENS ==================== */
+
+  /* Font Family */
+  --font-family-base: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --font-size-h1: 40px;
+  --font-size-h2: 32px;
+  --font-size-h3: 24px;
+  --font-size-h4: 20px;
+  --font-size-h5: 18px;
+  --font-size-h6: 16px;
+  --font-size-body-l: 18px;
+  --font-size-body-m: 16px;
+  --font-size-body-s: 14px;
+  --font-size-caption: 12px;
+  --font-size-overline: 11px;
+
+  /* Mobile Adjustments */
+  --font-size-h1-mobile: 32px;
+  --font-size-h2-mobile: 28px;
+  --font-size-h3-mobile: 22px;
+  --font-size-body-l-mobile: 17px;
+  --font-size-body-m-mobile: 15px;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+  --letter-spacing-number: 0.03em;
+
+  /* ==================== BORDER RADIUS TOKENS ==================== */
+
+  --radius-none: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Component-Specific Radius */
+  --radius-button: var(--radius-full);
+  --radius-card: var(--radius-xl);
+  --radius-input: var(--radius-md);
+  --radius-badge: var(--radius-full);
+  --radius-avatar: var(--radius-full);
+  --radius-tag: var(--radius-full);
+  --radius-status-card: var(--radius-2xl);
+
+  /* ==================== SHADOW TOKENS ==================== */
+
+  --shadow-xs: 0 1px 2px 0 rgba(143, 169, 152, 0.05);
+  --shadow-sm: 0 2px 4px 0 rgba(143, 169, 152, 0.08), 0 1px 2px 0 rgba(143, 169, 152, 0.04);
+  --shadow-md: 0 4px 8px 0 rgba(143, 169, 152, 0.12), 0 2px 4px 0 rgba(143, 169, 152, 0.06);
+  --shadow-lg: 0 8px 16px 0 rgba(143, 169, 152, 0.16), 0 4px 8px 0 rgba(143, 169, 152, 0.08);
+  --shadow-xl: 0 12px 24px 0 rgba(143, 169, 152, 0.20), 0 6px 12px 0 rgba(143, 169, 152, 0.10);
+
+  /* Warm Secondary Shadow Variant */
+  --shadow-warm-md: 0 4px 8px 0 rgba(212, 165, 116, 0.12), 0 2px 4px 0 rgba(212, 165, 116, 0.06);
+
+  /* Inner Shadow for Glassmorphism */
+  --shadow-inner-glass: inset 0 1px 2px 0 rgba(255, 255, 255, 0.5);
+
+  /* ==================== ELEVATION SYSTEM ==================== */
+
+  --elevation-0: none;
+  --elevation-1: var(--shadow-sm);
+  --elevation-2: var(--shadow-md);
+  --elevation-3: var(--shadow-lg);
+  --elevation-4: var(--shadow-xl);
+
+  /* ==================== STATE TOKENS ==================== */
+
+  /* Hover States */
+  --state-hover-opacity: 0.9;
+  --state-hover-scale: 1.02;
+  --state-hover-bg-darken: rgba(0, 0, 0, 0.05);
+
+  /* Pressed States */
+  --state-pressed-opacity: 0.8;
+  --state-pressed-scale: 0.98;
+  --state-pressed-bg-darken: rgba(0, 0, 0, 0.10);
+
+  /* Focus States */
+  --state-focus-ring-color: var(--color-primary-400);
+  --state-focus-ring-width: 3px;
+  --state-focus-ring-offset: 2px;
+  --state-focus-ring: 0 0 0 var(--state-focus-ring-offset) #FFFFFF,
+                      0 0 0 calc(var(--state-focus-ring-offset) + var(--state-focus-ring-width)) var(--state-focus-ring-color);
+
+  /* Disabled States */
+  --state-disabled-opacity: 0.5;
+  --state-disabled-cursor: not-allowed;
+  --state-disabled-bg: var(--color-lin-3);
+  --state-disabled-text: var(--color-text-disabled);
+
+  /* Error States */
+  --state-error-border-color: var(--color-error-base);
+  --state-error-bg: var(--color-error-light);
+  --state-error-text: var(--color-error-dark);
+
+  /* Success States */
+  --state-success-border-color: var(--color-success-base);
+  --state-success-bg: var(--color-success-light);
+  --state-success-text: var(--color-success-dark);
+
+  /* ==================== ANIMATION & TRANSITION TOKENS ==================== */
+
+  /* Durations */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  /* Easings */
+  --easing-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --easing-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --easing-accelerate: cubic-bezier(0.4, 0.0, 1, 1);
+  --easing-smooth: cubic-bezier(0.4, 0.0, 0.6, 1);
+
+  /* Transitions */
+  --transition-fast: var(--duration-fast) var(--easing-standard);
+  --transition-normal: var(--duration-normal) var(--easing-standard);
+  --transition-slow: var(--duration-slow) var(--easing-smooth);
+
+  /* ==================== Z-INDEX SCALE ==================== */
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-tooltip: 1600;
+  --z-notification: 1700;
+  --z-maximum: 9999;
+
+  /* ==================== OPACITY TOKENS ==================== */
+
+  --opacity-0: 0;
+  --opacity-10: 0.1;
+  --opacity-20: 0.2;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-100: 1;
+
+  /* Semantic Opacity */
+  --opacity-disabled: var(--opacity-50);
+  --opacity-hover: var(--opacity-90);
+  --opacity-glass: var(--opacity-80);
+
+  /* ==================== BORDER WIDTH TOKENS ==================== */
+
+  --border-width-none: 0;
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+  --border-width-heavy: 4px;
+
+  /* ==================== ICON SIZE TOKENS ==================== */
+
+  --icon-size-xs: 16px;
+  --icon-size-sm: 20px;
+  --icon-size-md: 24px;
+  --icon-size-lg: 32px;
+  --icon-size-xl: 40px;
+  --icon-size-2xl: 48px;
+
+  /* ==================== ACCESSIBILITY TOKENS ==================== */
+
+  /* Minimum Touch Targets */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+
+  /* ==================== BREAKPOINTS ==================== */
+
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ==================== REDUCED MOTION ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

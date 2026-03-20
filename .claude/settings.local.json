@@ -32,7 +32,9 @@
       "Bash(do sed -i '' \"/import.*design-tokens.css/d\" \"$file\")",
       "Bash(pnpm --filter @gastonapp/ui build:*)",
       "Read(//Users/fred/PhpstormProjects/gaston-backend/**)",
-      "Bash(grep -i \"sanctum\\\\|cors\" config/*)"
+      "Bash(grep -i \"sanctum\\\\|cors\" config/*)",
+      "Bash(git:*)",
+      "Bash(curl -s http://localhost:4480/login)"
     ],
     "deny": [],
     "ask": []
