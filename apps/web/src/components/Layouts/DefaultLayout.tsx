@@ -1,4 +1,4 @@
-import { PropsWithChildren, Suspense, useCallback, useEffect, useState } from "react";
+import { PropsWithChildren, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import App from "../../App";
 import { IRootState } from "../../store";
@@ -35,19 +35,21 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         document.documentElement.scrollTop = 0;
     };
 
-    const onScrollHandler = () => {
-        if (
-            document.body.scrollTop > 50 ||
-            document.documentElement.scrollTop > 50
-        ) {
-            setShowTopButton(true);
-        } else {
-            setShowTopButton(false);
+    const ticking = useRef(false);
+
+    const onScrollHandler = useCallback(() => {
+        if (!ticking.current) {
+            ticking.current = true;
+            requestAnimationFrame(() => {
+                const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                setShowTopButton(scrollTop > 50);
+                ticking.current = false;
+            });
         }
-    };
+    }, []);
 
     useEffect(() => {
-        // window.addEventListener("scroll", onScrollHandler, { passive: true });
+        window.addEventListener("scroll", onScrollHandler, { passive: true });
 
         const screenLoader = document.getElementsByClassName("screen_loader");
         if (screenLoader?.length) {
@@ -58,9 +60,9 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         }
 
         return () => {
-            window.removeEventListener("onscroll", onScrollHandler);
+            window.removeEventListener("scroll", onScrollHandler);
         };
-    }, []);
+    }, [onScrollHandler]);
 
     return (
         <App>
