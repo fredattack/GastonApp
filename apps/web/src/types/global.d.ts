@@ -117,13 +117,13 @@ declare global {
     // Health Disclaimer Types
     interface DisclaimerAction {
         label: string;
-        type: 'primary' | 'secondary' | 'danger';
-        action: 'findVet' | 'dismiss' | 'learnMore' | 'callEmergency';
+        type: "primary" | "secondary" | "danger";
+        action: "findVet" | "dismiss" | "learnMore" | "callEmergency";
     }
 
     interface HealthDisclaimer {
-        severity: 'info' | 'warning' | 'critical';
-        type: 'medical' | 'nutrition' | 'general';
+        severity: "info" | "warning" | "critical";
+        type: "medical" | "nutrition" | "general";
         title: string;
         message: string;
         actions: DisclaimerAction[];
@@ -139,7 +139,7 @@ declare global {
 
     // Query Response Types
     interface QueryResult {
-        queryType: 'events' | 'pets' | 'statistics' | 'history';
+        queryType: "events" | "pets" | "statistics" | "history";
         results: Event[] | Pet[] | any[];
         totalCount: number;
         filters?: {
@@ -153,7 +153,7 @@ declare global {
 
     // Advice Response Types
     interface AdviceData {
-        adviceType: 'nutrition' | 'health' | 'behavior' | 'general';
+        adviceType: "nutrition" | "health" | "behavior" | "general";
         question: string;
         answer: string;
         sources?: string[];
@@ -161,16 +161,16 @@ declare global {
         confidence: number;
 
         // Nutrition-specific fields
-        species?: 'dog' | 'cat' | string;
+        species?: "dog" | "cat" | string;
         weight?: number;
-        age?: 'puppy' | 'kitten' | 'adult' | 'senior' | string;
+        age?: "puppy" | "kitten" | "adult" | "senior" | string;
         dailyCalories?: number;
         feedingFrequency?: string;
         toxicFoods?: string[];
 
         // Health-specific fields
         symptom?: string;
-        severity?: 'low' | 'medium' | 'high' | 'unknown';
+        severity?: "low" | "medium" | "high" | "unknown";
         redFlags?: string[];
         nextSteps?: string[];
     }
@@ -179,7 +179,7 @@ declare global {
     interface Metric {
         id?: string;
         pet_id: string;
-        metric_type: 'weight' | 'temperature' | 'heart_rate' | 'custom';
+        metric_type: "weight" | "temperature" | "heart_rate" | "custom";
         value: number;
         unit: string;
         measured_at: string;
@@ -192,7 +192,7 @@ declare global {
         max: number;
         change: number;
         changePercent: number;
-        trend: 'increasing' | 'decreasing' | 'stable';
+        trend: "increasing" | "decreasing" | "stable";
     }
 
     interface MetricsHistory {
@@ -206,7 +206,7 @@ declare global {
 
     // Legacy MetricData for single metric entry
     interface MetricData {
-        metricType: 'weight' | 'height' | 'activity' | 'custom';
+        metricType: "weight" | "height" | "activity" | "custom";
         petId: string;
         value: number;
         unit: string;
@@ -237,9 +237,25 @@ declare global {
 
     interface AIResponse {
         score: number;
-        requestType: "createEvent" | "updateEvent" | "deleteEvent" | "createPet" | "updatePet" | "deletePet" | "query" | "advice" | "metrics";
+        requestType:
+            | "createEvent"
+            | "updateEvent"
+            | "deleteEvent"
+            | "createPet"
+            | "updatePet"
+            | "deletePet"
+            | "query"
+            | "advice"
+            | "metrics";
         description: string;
-        data: AIEventData | PetFormData | QueryResult | AdviceData | MetricData | MetricsHistory | DeleteData;
+        data:
+            | AIEventData
+            | PetFormData
+            | QueryResult
+            | AdviceData
+            | MetricData
+            | MetricsHistory
+            | DeleteData;
         metadata?: AIResponseMetadata;
         healthDisclaimer?: HealthDisclaimer;
     }
@@ -295,7 +311,7 @@ declare global {
     interface FeedingSchedule {
         id: number;
         pet_id: number;
-        meal_slot: 'morning' | 'noon' | 'evening';
+        meal_slot: "morning" | "noon" | "evening";
         food_type: string;
         quantity: number;
         unit: string;
@@ -308,7 +324,7 @@ declare global {
         pet_id: number;
         pet_name: string;
         pet_species: string;
-        meal_slot: 'morning' | 'noon' | 'evening';
+        meal_slot: "morning" | "noon" | "evening";
         food_type: string;
         quantity: number;
         unit: string;
@@ -334,10 +350,10 @@ declare global {
         };
     }
 
-    type MealSlot = 'morning' | 'noon' | 'evening';
+    type MealSlot = "morning" | "noon" | "evening";
 
     interface VoiceCommandResult {
-        status: 'executed' | 'error' | 'low_confidence';
+        status: "executed" | "error" | "low_confidence";
         action: string;
         message: string;
         data?: any;

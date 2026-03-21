@@ -130,7 +130,11 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
         };
 
         for (const [keyword, path] of Object.entries(navMap)) {
-            if (lowerQuery === keyword || lowerQuery === `go to ${keyword}` || lowerQuery === `aller au ${keyword}`) {
+            if (
+                lowerQuery === keyword ||
+                lowerQuery === `go to ${keyword}` ||
+                lowerQuery === `aller au ${keyword}`
+            ) {
                 navigateAndClose(path);
                 return;
             }
@@ -171,12 +175,9 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
         }
     }, [query, isLoading, navigate, navigateAndClose, onClose, t]);
 
-    const handleActionSelect = useCallback(
-        (action: QuickAction) => {
-            action.action();
-        },
-        [],
-    );
+    const handleActionSelect = useCallback((action: QuickAction) => {
+        action.action();
+    }, []);
 
     const handleClose = useCallback(() => {
         onClose();

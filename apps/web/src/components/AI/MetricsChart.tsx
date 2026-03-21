@@ -1,11 +1,11 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChartLine,
     faArrowUp,
     faArrowDown,
     faArrowRight,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 interface MetricsChartProps {
     metricsHistory: MetricsHistory;
@@ -16,20 +16,20 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
 
     const getTrendColor = () => {
         switch (analysis.trend) {
-            case 'increasing':
-                return 'text-red-600 dark:text-red-400';
-            case 'decreasing':
-                return 'text-blue-600 dark:text-blue-400';
+            case "increasing":
+                return "text-red-600 dark:text-red-400";
+            case "decreasing":
+                return "text-blue-600 dark:text-blue-400";
             default:
-                return 'text-green-600 dark:text-green-400';
+                return "text-green-600 dark:text-green-400";
         }
     };
 
     const getTrendIcon = () => {
         switch (analysis.trend) {
-            case 'increasing':
+            case "increasing":
                 return faArrowUp;
-            case 'decreasing':
+            case "decreasing":
                 return faArrowDown;
             default:
                 return faArrowRight;
@@ -38,14 +38,14 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
 
     const getMetricLabel = () => {
         switch (metricType) {
-            case 'weight':
-                return 'Poids';
-            case 'temperature':
-                return 'Température';
-            case 'heart_rate':
-                return 'Fréquence cardiaque';
+            case "weight":
+                return "Poids";
+            case "temperature":
+                return "Température";
+            case "heart_rate":
+                return "Fréquence cardiaque";
             default:
-                return 'Métrique';
+                return "Métrique";
         }
     };
 
@@ -111,7 +111,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                         className={`text-base font-bold flex items-center justify-center gap-1 ${getTrendColor()}`}
                     >
                         <FontAwesomeIcon icon={getTrendIcon()} size="xs" />
-                        {analysis.changePercent > 0 ? '+' : ''}
+                        {analysis.changePercent > 0 ? "+" : ""}
                         {analysis.changePercent}%
                     </p>
                 </div>
@@ -133,9 +133,9 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                     <div className="ml-12 relative h-full">
                         {/* Grid lines */}
                         <div className="absolute inset-0 flex flex-col justify-between">
-                            <div className="border-t border-gray-200 dark:border-gray-700"></div>
-                            <div className="border-t border-gray-200 dark:border-gray-700"></div>
-                            <div className="border-t border-gray-200 dark:border-gray-700"></div>
+                            <div className="border-t border-gray-200 dark:border-gray-700" />
+                            <div className="border-t border-gray-200 dark:border-gray-700" />
+                            <div className="border-t border-gray-200 dark:border-gray-700" />
                         </div>
 
                         {/* Data points and line */}
@@ -155,7 +155,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                                             100 - normalizeValue(metric.value);
                                         return `${x},${y}`;
                                     })
-                                    .join(' ')}
+                                    .join(" ")}
                                 stroke="#8b5cf6"
                                 strokeWidth="2"
                                 fill="none"
@@ -164,8 +164,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
 
                             {/* Data points */}
                             {metrics.map((metric, index) => {
-                                const x =
-                                    (index / (metrics.length - 1)) * 100;
+                                const x = (index / (metrics.length - 1)) * 100;
                                 const y = 100 - normalizeValue(metric.value);
                                 return (
                                     <circle
@@ -179,8 +178,8 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                                         <title>
                                             {new Date(
                                                 metric.measured_at,
-                                            ).toLocaleDateString('fr-FR')}:{' '}
-                                            {metric.value} {metric.unit}
+                                            ).toLocaleDateString("fr-FR")}
+                                            : {metric.value} {metric.unit}
                                         </title>
                                     </circle>
                                 );
@@ -192,12 +191,13 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                 {/* X-axis labels (dates) */}
                 <div className="ml-12 mt-2 flex justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>
-                        {new Date(
-                            metrics[0].measured_at,
-                        ).toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'short',
-                        })}
+                        {new Date(metrics[0].measured_at).toLocaleDateString(
+                            "fr-FR",
+                            {
+                                day: "numeric",
+                                month: "short",
+                            },
+                        )}
                     </span>
                     {metrics.length > 2 && (
                         <span>
@@ -205,44 +205,44 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                                 metrics[
                                     Math.floor(metrics.length / 2)
                                 ].measured_at,
-                            ).toLocaleDateString('fr-FR', {
-                                day: 'numeric',
-                                month: 'short',
+                            ).toLocaleDateString("fr-FR", {
+                                day: "numeric",
+                                month: "short",
                             })}
                         </span>
                     )}
                     <span>
                         {new Date(
                             metrics[metrics.length - 1].measured_at,
-                        ).toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'short',
+                        ).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "short",
                         })}
                     </span>
                 </div>
             </div>
 
             {/* Trend Analysis */}
-            {analysis.trend !== 'stable' && (
+            {analysis.trend !== "stable" && (
                 <div
                     className={`mt-3 p-3 rounded-lg ${
-                        analysis.trend === 'increasing'
-                            ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
-                            : 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
+                        analysis.trend === "increasing"
+                            ? "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+                            : "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
                     }`}
                 >
                     <p className="text-xs font-semibold mb-1">
-                        {analysis.trend === 'increasing'
-                            ? '📈 Tendance à la hausse'
-                            : '📉 Tendance à la baisse'}
+                        {analysis.trend === "increasing"
+                            ? "📈 Tendance à la hausse"
+                            : "📉 Tendance à la baisse"}
                     </p>
                     <p className="text-xs text-gray-700 dark:text-gray-300">
-                        Variation de{' '}
+                        Variation de{" "}
                         <strong>
-                            {analysis.change > 0 ? '+' : ''}
+                            {analysis.change > 0 ? "+" : ""}
                             {analysis.change} {metrics[0]?.unit}
-                        </strong>{' '}
-                        sur la période ({analysis.changePercent > 0 ? '+' : ''}
+                        </strong>{" "}
+                        sur la période ({analysis.changePercent > 0 ? "+" : ""}
                         {analysis.changePercent}%)
                     </p>
                 </div>

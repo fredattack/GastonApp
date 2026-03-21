@@ -1,7 +1,10 @@
 import { useState, useCallback } from "react";
 import { OpenAiService } from "../../services/OpenAIService";
 import ConversationService from "../../services/ConversationService";
-import { transformAIResponseToEventForm, transformAIResponseToPetForm } from "../../utils/aiTransformers";
+import {
+    transformAIResponseToEventForm,
+    transformAIResponseToPetForm,
+} from "../../utils/aiTransformers";
 import { modelService } from "../../services";
 
 interface UseAIStreamReturn {
@@ -10,13 +13,18 @@ interface UseAIStreamReturn {
     sendMessage: (
         content: string,
         conversationId: string,
-        onConversationUpdate: (conversationId: string, updater: (messages: Message[]) => Message[]) => void,
+        onConversationUpdate: (
+            conversationId: string,
+            updater: (messages: Message[]) => Message[],
+        ) => void,
     ) => Promise<void>;
 }
 
 const useAIStream = (): UseAIStreamReturn => {
     const [isLoading, setIsLoading] = useState(false);
-    const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+    const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
+        null,
+    );
 
     const conversationService = ConversationService.getInstance();
     const openAiService = OpenAiService.getInstance();
@@ -25,7 +33,10 @@ const useAIStream = (): UseAIStreamReturn => {
         async (
             content: string,
             conversationId: string,
-            onConversationUpdate: (conversationId: string, updater: (messages: Message[]) => Message[]) => void,
+            onConversationUpdate: (
+                conversationId: string,
+                updater: (messages: Message[]) => Message[],
+            ) => void,
         ) => {
             if (!content.trim()) return;
 
@@ -35,7 +46,10 @@ const useAIStream = (): UseAIStreamReturn => {
                 content: content.trim(),
             });
 
-            onConversationUpdate(conversationId, (messages) => [...messages, userMessage]);
+            onConversationUpdate(conversationId, (messages) => [
+                ...messages,
+                userMessage,
+            ]);
             setIsLoading(true);
 
             // Add placeholder assistant message
@@ -48,7 +62,10 @@ const useAIStream = (): UseAIStreamReturn => {
             const aiMessageId = aiMessage.id;
             setStreamingMessageId(aiMessageId);
 
-            onConversationUpdate(conversationId, (messages) => [...messages, aiMessage]);
+            onConversationUpdate(conversationId, (messages) => [
+                ...messages,
+                aiMessage,
+            ]);
 
             const conversation = conversationService.getById(conversationId);
             if (!conversation) return;
@@ -69,13 +86,19 @@ const useAIStream = (): UseAIStreamReturn => {
                     // onComplete
                     async (finalResponse: AIResponse) => {
                         const transformedEvent =
-                            "title" in finalResponse.data && "petId" in finalResponse.data
-                                ? transformAIResponseToEventForm(finalResponse.data as AIEventData)
+                            "title" in finalResponse.data &&
+                            "petId" in finalResponse.data
+                                ? transformAIResponseToEventForm(
+                                      finalResponse.data as AIEventData,
+                                  )
                                 : null;
 
                         const transformedPet =
-                            "name" in finalResponse.data && "species" in finalResponse.data
-                                ? transformAIResponseToPetForm(finalResponse.data)
+                            "name" in finalResponse.data &&
+                            "species" in finalResponse.data
+                                ? transformAIResponseToPetForm(
+                                      finalResponse.data,
+                                  )
                                 : undefined;
 
                         // Enrich query responses
@@ -88,11 +111,20 @@ const useAIStream = (): UseAIStreamReturn => {
                             const queryData = finalResponse.data as QueryResult;
                             if (queryData.queryType === "pets") {
                                 try {
-                                    const allPets = (await modelService.getModels("pets")) as Pet[];
+                                    const allPets =
+                                        (await modelService.getModels(
+                                            "pets",
+                                        )) as Pet[];
                                     let filteredPets = allPets || [];
-                                    if (queryData.filters?.petIds && queryData.filters.petIds.length > 0) {
-                                        filteredPets = filteredPets.filter((pet) =>
-                                            queryData.filters!.petIds!.includes(pet.id),
+                                    if (
+                                        queryData.filters?.petIds &&
+                                        queryData.filters.petIds.length > 0
+                                    ) {
+                                        filteredPets = filteredPets.filter(
+                                            (pet) =>
+                                                queryData.filters!.petIds!.includes(
+                                                    pet.id,
+                                                ),
                                         );
                                     }
                                     enrichedResponse = {
@@ -109,14 +141,18 @@ const useAIStream = (): UseAIStreamReturn => {
                             }
                         }
 
-                        conversationService.updateMessage(conversationId, aiMessageId, {
-                            metadata: {
-                                isStreaming: false,
-                                attachedEvent: transformedEvent,
-                                attachedPet: transformedPet,
-                                aiResponse: enrichedResponse,
+                        conversationService.updateMessage(
+                            conversationId,
+                            aiMessageId,
+                            {
+                                metadata: {
+                                    isStreaming: false,
+                                    attachedEvent: transformedEvent,
+                                    attachedPet: transformedPet,
+                                    aiResponse: enrichedResponse,
+                                },
                             },
-                        });
+                        );
 
                         onConversationUpdate(conversationId, (messages) =>
                             messages.map((m) =>
@@ -139,18 +175,29 @@ const useAIStream = (): UseAIStreamReturn => {
                     },
                     // onError
                     (error: Error) => {
-                        conversationService.updateMessage(conversationId, aiMessageId, {
-                            content: "Désolé, une erreur est survenue.",
-                            metadata: { isStreaming: false, error: error.message },
-                        });
+                        conversationService.updateMessage(
+                            conversationId,
+                            aiMessageId,
+                            {
+                                content: "Désolé, une erreur est survenue.",
+                                metadata: {
+                                    isStreaming: false,
+                                    error: error.message,
+                                },
+                            },
+                        );
 
                         onConversationUpdate(conversationId, (messages) =>
                             messages.map((m) =>
                                 m.id === aiMessageId
                                     ? {
                                           ...m,
-                                          content: "Désolé, une erreur est survenue.",
-                                          metadata: { isStreaming: false, error: error.message },
+                                          content:
+                                              "Désolé, une erreur est survenue.",
+                                          metadata: {
+                                              isStreaming: false,
+                                              error: error.message,
+                                          },
                                       }
                                     : m,
                             ),

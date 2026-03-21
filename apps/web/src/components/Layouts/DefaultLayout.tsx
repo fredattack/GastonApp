@@ -1,4 +1,11 @@
-import { PropsWithChildren, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import {
+    PropsWithChildren,
+    Suspense,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import App from "../../App";
 import { IRootState } from "../../store";
@@ -41,7 +48,9 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         if (!ticking.current) {
             ticking.current = true;
             requestAnimationFrame(() => {
-                const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                const scrollTop =
+                    document.body.scrollTop ||
+                    document.documentElement.scrollTop;
                 setShowTopButton(scrollTop > 50);
                 ticking.current = false;
             });
@@ -172,11 +181,17 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* END FAB */}
 
                     {/* BEGIN AI OVERLAY PANEL */}
-                    <AIOverlayPanel isOpen={isOverlayOpen} onClose={handleOverlayClose} />
+                    <AIOverlayPanel
+                        isOpen={isOverlayOpen}
+                        onClose={handleOverlayClose}
+                    />
                     {/* END AI OVERLAY PANEL */}
 
                     {/* BEGIN AI COMMAND BAR */}
-                    <CommandBar isOpen={commandBar.isOpen} onClose={commandBar.close} />
+                    <CommandBar
+                        isOpen={commandBar.isOpen}
+                        onClose={commandBar.close}
+                    />
                     {/* END AI COMMAND BAR */}
                 </div>
             </div>

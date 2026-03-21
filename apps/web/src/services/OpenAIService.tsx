@@ -64,11 +64,13 @@ export class OpenAiService {
         }
 
         try {
-            const response: AxiosResponse<AIResponse> =
-                await axiosClient.post(this.endpoint, {
+            const response: AxiosResponse<AIResponse> = await axiosClient.post(
+                this.endpoint,
+                {
                     prompt: messages.trim(),
                     filters,
-                });
+                },
+            );
 
             if (!this.validateResponse(response.data)) {
                 throw new Error("Invalid response format from AI service");
@@ -95,14 +97,16 @@ export class OpenAiService {
         }
 
         try {
-            const response: AxiosResponse<AIResponse> =
-                await axiosClient.post(this.endpoint, {
+            const response: AxiosResponse<AIResponse> = await axiosClient.post(
+                this.endpoint,
+                {
                     messages: messages.map((m) => ({
                         role: m.role,
                         content: m.content,
                     })),
                     filters,
-                });
+                },
+            );
 
             if (!this.validateResponse(response.data)) {
                 throw new Error("Invalid response format from AI service");

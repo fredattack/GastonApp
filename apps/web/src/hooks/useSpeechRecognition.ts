@@ -1,7 +1,10 @@
 import { useState, useRef } from "react";
 import { logger } from "@/utils/logger";
 
-const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: string) => void) => {
+const useSpeechRecognition = (
+    onTranscriptionUpdate: any,
+    onError?: (message: string) => void,
+) => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcription, setTranscription] = useState("");
     const recognitionRef = useRef<any>(null);
@@ -12,7 +15,8 @@ const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: st
             (window as any).webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            const message = "La reconnaissance vocale n'est pas prise en charge par votre navigateur.";
+            const message =
+                "La reconnaissance vocale n'est pas prise en charge par votre navigateur.";
             if (onError) {
                 onError(message);
             } else {
@@ -36,7 +40,10 @@ const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: st
         };
 
         recognition.onresult = (event: any) => {
-            logger.debug("[SpeechRecognition] onresult fired, results:", event.results.length);
+            logger.debug(
+                "[SpeechRecognition] onresult fired, results:",
+                event.results.length,
+            );
             const newTranscript = Array.from(event.results)
                 .map((result: any) => result[0].transcript)
                 .join("");
@@ -46,7 +53,11 @@ const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: st
         };
 
         recognition.onerror = (event: any) => {
-            console.error("[SpeechRecognition] onerror:", event.error, event.message);
+            console.error(
+                "[SpeechRecognition] onerror:",
+                event.error,
+                event.message,
+            );
             setIsRecording(false);
         };
 

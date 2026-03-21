@@ -52,7 +52,6 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
                 });
             });
         }
-
     }, [pet, id]);
 
     const handleChange = (

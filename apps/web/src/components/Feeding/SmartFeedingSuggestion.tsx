@@ -44,7 +44,9 @@ const SmartFeedingSuggestion: React.FC<SmartFeedingSuggestionProps> = ({
         const pending = totalItems - totalDone;
 
         // If only one species group has pending items, suggest that species
-        const pendingGroups = speciesGroups.filter((g) => g.pendingIds.length > 0);
+        const pendingGroups = speciesGroups.filter(
+            (g) => g.pendingIds.length > 0,
+        );
 
         if (pendingGroups.length === 1) {
             const group = pendingGroups[0];
@@ -58,7 +60,15 @@ const SmartFeedingSuggestion: React.FC<SmartFeedingSuggestionProps> = ({
             message: `${pending} repas en attente — tout marquer comme fait ?`,
             action: onAccept,
         };
-    }, [dismissed, totalItems, totalDone, activeSlot, speciesGroups, onAccept, onAcceptSpecies]);
+    }, [
+        dismissed,
+        totalItems,
+        totalDone,
+        activeSlot,
+        speciesGroups,
+        onAccept,
+        onAcceptSpecies,
+    ]);
 
     if (!suggestion) {
         return null;
@@ -66,7 +76,9 @@ const SmartFeedingSuggestion: React.FC<SmartFeedingSuggestionProps> = ({
 
     return (
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-center gap-3">
-            <span className="text-2xl flex-shrink-0" aria-hidden="true">💡</span>
+            <span className="text-2xl flex-shrink-0" aria-hidden="true">
+                💡
+            </span>
             <p className="flex-1 text-sm text-amber-800 dark:text-amber-300 font-medium">
                 {suggestion.message}
             </p>

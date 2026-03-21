@@ -1,30 +1,43 @@
-import { Navigate } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { Navigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, loading } = useAuthContext();
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const { isAuthenticated, loading } = useAuthContext();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin">
-          <svg width="64" height="64" viewBox="0 0 135 135" xmlns="http://www.w3.org/2000/svg" fill="#8FA998">
-            <path d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z">
-              <animateTransform attributeName="transform" type="rotate" from="0 67 67" to="-360 67 67" dur="2.5s" repeatCount="indefinite" />
-            </path>
-          </svg>
-        </div>
-      </div>
-    );
-  }
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin">
+                    <svg
+                        width="64"
+                        height="64"
+                        viewBox="0 0 135 135"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="#8FA998"
+                    >
+                        <path d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z">
+                            <animateTransform
+                                attributeName="transform"
+                                type="rotate"
+                                from="0 67 67"
+                                to="-360 67 67"
+                                dur="2.5s"
+                                repeatCount="indefinite"
+                            />
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        );
+    }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
-  return <>{children}</>;
-}
+    return <>{children}</>;
+};

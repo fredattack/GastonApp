@@ -12,13 +12,18 @@ interface UseConversationsReturn {
     searchConversations: (query: string) => Conversation[];
     clearAllConversations: () => void;
     setActiveConversationId: (id: string | null) => void;
-    updateConversationMessages: (conversationId: string, updater: (messages: Message[]) => Message[]) => void;
+    updateConversationMessages: (
+        conversationId: string,
+        updater: (messages: Message[]) => Message[],
+    ) => void;
     refreshConversations: () => void;
 }
 
 const useConversations = (): UseConversationsReturn => {
     const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+    const [activeConversationId, setActiveConversationId] = useState<
+        string | null
+    >(null);
 
     const conversationService = ConversationService.getInstance();
 
@@ -75,11 +80,18 @@ const useConversations = (): UseConversationsReturn => {
     }, []);
 
     const updateConversationMessages = useCallback(
-        (conversationId: string, updater: (messages: Message[]) => Message[]) => {
+        (
+            conversationId: string,
+            updater: (messages: Message[]) => Message[],
+        ) => {
             setConversations((prev) =>
                 prev.map((c) =>
                     c.id === conversationId
-                        ? { ...c, messages: updater(c.messages), updatedAt: new Date() }
+                        ? {
+                              ...c,
+                              messages: updater(c.messages),
+                              updatedAt: new Date(),
+                          }
                         : c,
                 ),
             );

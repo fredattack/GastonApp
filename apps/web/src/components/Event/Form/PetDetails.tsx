@@ -13,11 +13,7 @@ interface PetDetailsProps {
     handleChange: (field: string, value: unknown) => void;
 }
 
-const PetDetails = ({
-    formData,
-    pets,
-    handleChange,
-}: PetDetailsProps) => {
+const PetDetails = ({ formData, pets, handleChange }: PetDetailsProps) => {
     const { t } = useTranslation();
     const addPetDetail = () => {
         handleChange("pets", [
@@ -32,14 +28,13 @@ const PetDetails = ({
     };
 
     const removePetDetail = (index: number) => {
-        const newPets = formData.pets.filter(
-            (_pet, i) => i !== index,
-        );
+        const newPets = formData.pets.filter((_pet, i) => i !== index);
         handleChange("pets", newPets);
     };
     const handlePetChange = (index: number, field: string, value: string) => {
         const updatedPets = [...formData.pets];
-        (updatedPets[index] as unknown as Record<string, unknown>)[field] = value;
+        (updatedPets[index] as unknown as Record<string, unknown>)[field] =
+            value;
         handleChange("pets", updatedPets);
     };
 

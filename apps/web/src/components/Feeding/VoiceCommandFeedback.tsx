@@ -10,7 +10,12 @@
  */
 import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faExclamationTriangle, faTimesCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+    faCheckCircle,
+    faExclamationTriangle,
+    faTimesCircle,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface VoiceCommandFeedbackProps {
     result: VoiceCommandResult | null;
@@ -19,7 +24,10 @@ interface VoiceCommandFeedbackProps {
 
 const AUTO_DISMISS_MS = 4000;
 
-const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({ result, onDismiss }) => {
+const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
+    result,
+    onDismiss,
+}) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
@@ -98,7 +106,9 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({ result, onD
             />
 
             <div className="flex-1 min-w-0">
-                <p className={`text-sm font-semibold leading-snug ${variant.textClass}`}>
+                <p
+                    className={`text-sm font-semibold leading-snug ${variant.textClass}`}
+                >
                     {result.message}
                 </p>
                 {result.action && result.action !== "voice_command" && (
@@ -114,7 +124,11 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({ result, onD
                 className={`flex-shrink-0 p-1 rounded-md transition-colors hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${variant.iconClass}`}
                 aria-label="Fermer"
             >
-                <FontAwesomeIcon icon={faTimes} className="w-3.5 h-3.5" aria-hidden="true" />
+                <FontAwesomeIcon
+                    icon={faTimes}
+                    className="w-3.5 h-3.5"
+                    aria-hidden="true"
+                />
             </button>
 
             {/* Progress bar showing time until auto-dismiss */}

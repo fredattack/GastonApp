@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface CalendarGridProps {
     currentDate: Date;
@@ -62,7 +62,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     const getEventsForDate = (date: Date | null): EventFormData[] => {
         if (!date) return [];
 
-        return events.filter(event => {
+        return events.filter((event) => {
             const eventDate = new Date(event.start_date);
             return (
                 eventDate.getDate() === date.getDate() &&
@@ -82,19 +82,19 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         );
     };
 
-    const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
     const getEventColor = (type: string) => {
         const colors: Record<string, string> = {
-            medical: 'bg-red-500',
-            care: 'bg-pink-400',
-            feeding: 'bg-blue-500',
-            appointment: 'bg-purple-500',
-            training: 'bg-green-500',
-            social: 'bg-yellow-500',
-            other: 'bg-gray-500',
+            medical: "bg-red-500",
+            care: "bg-pink-400",
+            feeding: "bg-blue-500",
+            appointment: "bg-purple-500",
+            training: "bg-green-500",
+            social: "bg-yellow-500",
+            other: "bg-gray-500",
         };
-        return colors[type] || 'bg-gray-500';
+        return colors[type] || "bg-gray-500";
     };
 
     return (
@@ -115,7 +115,9 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
             <div className="grid grid-cols-7">
                 {calendarDays.map((date, index) => {
                     const dayEvents = getEventsForDate(date);
-                    const isHovered = hoveredDate && date &&
+                    const isHovered =
+                        hoveredDate &&
+                        date &&
                         hoveredDate.toDateString() === date.toDateString();
 
                     return (
@@ -123,8 +125,8 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                             key={index}
                             className={`
                                 min-h-[120px] border-b border-r border-gray-200 dark:border-gray-700 p-2
-                                ${date ? 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer' : 'bg-gray-50 dark:bg-gray-900'}
-                                ${isToday(date) ? 'ring-2 ring-primary ring-inset' : ''}
+                                ${date ? "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" : "bg-gray-50 dark:bg-gray-900"}
+                                ${isToday(date) ? "ring-2 ring-primary ring-inset" : ""}
                                 transition-colors relative
                             `}
                             onClick={() => date && onDateClick(date)}
@@ -138,9 +140,10 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                         <span
                                             className={`
                                                 text-sm font-semibold
-                                                ${isToday(date)
-                                                    ? 'bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center'
-                                                    : 'text-gray-700 dark:text-gray-300'
+                                                ${
+                                                    isToday(date)
+                                                        ? "bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center"
+                                                        : "text-gray-700 dark:text-gray-300"
                                                 }
                                             `}
                                         >
@@ -156,42 +159,54 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                                 }}
                                                 className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-primary p-1"
                                             >
-                                                <FontAwesomeIcon icon={faPlus} size="xs" />
+                                                <FontAwesomeIcon
+                                                    icon={faPlus}
+                                                    size="xs"
+                                                />
                                             </button>
                                         )}
                                     </div>
 
                                     {/* Events list */}
                                     <div className="space-y-1 overflow-y-auto max-h-[80px]">
-                                        {dayEvents.slice(0, 3).map((event, idx) => (
-                                            <div
-                                                key={event.id || idx}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onEventClick(event);
-                                                }}
-                                                className={`
+                                        {dayEvents
+                                            .slice(0, 3)
+                                            .map((event, idx) => (
+                                                <div
+                                                    key={event.id || idx}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onEventClick(event);
+                                                    }}
+                                                    className={`
                                                     text-xs px-2 py-1 rounded truncate cursor-pointer
                                                     ${getEventColor(event.type)} text-white
                                                     hover:opacity-80 transition-opacity
                                                 `}
-                                                title={event.title}
-                                            >
-                                                <span className="font-medium">
-                                                    {new Date(event.start_date).toLocaleTimeString('fr-FR', {
-                                                        hour: '2-digit',
-                                                        minute: '2-digit'
-                                                    })}
-                                                </span>
-                                                {' '}
-                                                {event.title}
-                                            </div>
-                                        ))}
+                                                    title={event.title}
+                                                >
+                                                    <span className="font-medium">
+                                                        {new Date(
+                                                            event.start_date,
+                                                        ).toLocaleTimeString(
+                                                            "fr-FR",
+                                                            {
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            },
+                                                        )}
+                                                    </span>{" "}
+                                                    {event.title}
+                                                </div>
+                                            ))}
 
                                         {/* Show "+X more" if more than 3 events */}
                                         {dayEvents.length > 3 && (
                                             <div className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1">
-                                                +{dayEvents.length - 3} autre{dayEvents.length - 3 > 1 ? 's' : ''}
+                                                +{dayEvents.length - 3} autre
+                                                {dayEvents.length - 3 > 1
+                                                    ? "s"
+                                                    : ""}
                                             </div>
                                         )}
                                     </div>

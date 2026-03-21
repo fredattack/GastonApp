@@ -37,7 +37,7 @@ const CommandBarResults: React.FC<CommandBarResultsProps> = ({
 
     const groupedActions = filteredActions.reduce(
         (groups, action) => {
-            const category = action.category;
+            const { category } = action;
             if (!groups[category]) groups[category] = [];
             groups[category].push(action);
             return groups;
@@ -76,46 +76,48 @@ const CommandBarResults: React.FC<CommandBarResultsProps> = ({
                 </div>
             )}
 
-            {Object.entries(groupedActions).map(([category, categoryActions]) => (
-                <div key={category} className="mb-2">
-                    <div className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        {categoryLabels[category] || category}
-                    </div>
-                    {categoryActions.map((action) => (
-                        <button
-                            key={action.id}
-                            type="button"
-                            onClick={() => onActionSelect(action)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors text-left group"
-                        >
-                            <span className="text-lg w-7 text-center flex-shrink-0">
-                                {action.icon}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {action.label}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                    {action.description}
-                                </p>
-                            </div>
-                            <svg
-                                className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+            {Object.entries(groupedActions).map(
+                ([category, categoryActions]) => (
+                    <div key={category} className="mb-2">
+                        <div className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                            {categoryLabels[category] || category}
+                        </div>
+                        {categoryActions.map((action) => (
+                            <button
+                                key={action.id}
+                                type="button"
+                                onClick={() => onActionSelect(action)}
+                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors text-left group"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 5l7 7-7 7"
-                                />
-                            </svg>
-                        </button>
-                    ))}
-                </div>
-            ))}
+                                <span className="text-lg w-7 text-center flex-shrink-0">
+                                    {action.icon}
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                        {action.label}
+                                    </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                        {action.description}
+                                    </p>
+                                </div>
+                                <svg
+                                    className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
+                            </button>
+                        ))}
+                    </div>
+                ),
+            )}
 
             {filteredActions.length === 0 && !isLoading && !aiResponse && (
                 <div className="px-4 py-8 text-center text-gray-400">

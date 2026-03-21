@@ -81,7 +81,9 @@ export function useFeedingDashboard(): DashboardData & {
                 items,
                 total: items.length,
                 done,
-                pendingIds: items.filter((i) => !i.is_done).map((i) => i.schedule_id),
+                pendingIds: items
+                    .filter((i) => !i.is_done)
+                    .map((i) => i.schedule_id),
             });
         }
 
@@ -93,9 +95,18 @@ export function useFeedingDashboard(): DashboardData & {
         });
 
         const slotCounts: Record<MealSlot, { total: number; done: number }> = {
-            morning: { total: todayData.slots.morning.total, done: todayData.slots.morning.done },
-            noon: { total: todayData.slots.noon.total, done: todayData.slots.noon.done },
-            evening: { total: todayData.slots.evening.total, done: todayData.slots.evening.done },
+            morning: {
+                total: todayData.slots.morning.total,
+                done: todayData.slots.morning.done,
+            },
+            noon: {
+                total: todayData.slots.noon.total,
+                done: todayData.slots.noon.done,
+            },
+            evening: {
+                total: todayData.slots.evening.total,
+                done: todayData.slots.evening.done,
+            },
         };
 
         return {
@@ -103,7 +114,9 @@ export function useFeedingDashboard(): DashboardData & {
             speciesGroups,
             totalItems: currentSlotData.total,
             totalDone: currentSlotData.done,
-            allDone: currentSlotData.total > 0 && currentSlotData.done === currentSlotData.total,
+            allDone:
+                currentSlotData.total > 0 &&
+                currentSlotData.done === currentSlotData.total,
             slotCounts,
         };
     }, [todayData, activeSlot]);

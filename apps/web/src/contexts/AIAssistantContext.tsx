@@ -55,9 +55,8 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
     } = useAIStream();
 
     const streamingMessage =
-        activeConversation?.messages.find(
-            (m) => m.id === streamingMessageId,
-        ) || null;
+        activeConversation?.messages.find((m) => m.id === streamingMessageId) ||
+        null;
 
     const sendMessage = useCallback(
         async (content: string) => {
@@ -76,7 +75,12 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                 updateConversationMessages,
             );
         },
-        [activeConversationId, createConversation, sendStreamMessage, updateConversationMessages],
+        [
+            activeConversationId,
+            createConversation,
+            sendStreamMessage,
+            updateConversationMessages,
+        ],
     );
 
     const value: AIAssistantContextValue = {

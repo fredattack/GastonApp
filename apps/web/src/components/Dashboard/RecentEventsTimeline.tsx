@@ -98,7 +98,10 @@ const RecentEventsTimeline: React.FC<RecentEventsTimelineProps> = ({
                             {formatDate(event.start_date)}
                         </span>
                         {event.is_done && (
-                            <span className="w-2 h-2 bg-green-400 rounded-full" title={t("Completed")} />
+                            <span
+                                className="w-2 h-2 bg-green-400 rounded-full"
+                                title={t("Completed")}
+                            />
                         )}
                     </div>
                 </div>

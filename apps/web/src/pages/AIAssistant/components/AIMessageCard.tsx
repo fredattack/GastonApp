@@ -37,21 +37,33 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
     // Get requestType from AI response
     const requestType = aiResponse?.requestType || "createEvent";
-    const isQuery = requestType === 'query';
-    const isAdvice = requestType === 'advice';
-    const isMetrics = requestType === 'metrics';
-    const isDelete = requestType === 'deleteEvent' || requestType === 'deletePet';
-    const isEvent = requestType?.includes('Event');
-    const isPet = requestType?.includes('Pet');
+    const isQuery = requestType === "query";
+    const isAdvice = requestType === "advice";
+    const isMetrics = requestType === "metrics";
+    const isDelete =
+        requestType === "deleteEvent" || requestType === "deletePet";
+    const isEvent = requestType?.includes("Event");
+    const isPet = requestType?.includes("Pet");
 
     // For query, advice, metrics, and delete, we don't need attachedEvent or attachedPet
     // For events we need attachedEvent, for pets we need attachedPet
-    if (!attachedEvent && !attachedPet && !isQuery && !isAdvice && !isMetrics && !isDelete) {
+    if (
+        !attachedEvent &&
+        !attachedPet &&
+        !isQuery &&
+        !isAdvice &&
+        !isMetrics &&
+        !isDelete
+    ) {
         return null;
     }
 
     const getPetInfo = () => {
-        if (!attachedEvent || !attachedEvent.pets || attachedEvent.pets.length === 0) {
+        if (
+            !attachedEvent ||
+            !attachedEvent.pets ||
+            attachedEvent.pets.length === 0
+        ) {
             return [];
         }
 
@@ -157,29 +169,35 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
     const handleDisclaimerAction = (action: string) => {
         switch (action) {
-            case 'findVet':
+            case "findVet":
                 // TODO: Open veterinary search modal (Phase 3)
                 // TODO: implement vet finder
                 addToast({
-                    message: 'Recherche de vétérinaires - Fonctionnalité à venir',
-                    type: 'info',
+                    message:
+                        "Recherche de vétérinaires - Fonctionnalité à venir",
+                    type: "info",
                 });
                 break;
-            case 'callEmergency':
+            case "callEmergency":
                 // Open emergency numbers
-                if (window.confirm('Voulez-vous appeler les urgences vétérinaires ?')) {
-                    window.open('tel:112', '_self');
+                if (
+                    window.confirm(
+                        "Voulez-vous appeler les urgences vétérinaires ?",
+                    )
+                ) {
+                    window.open("tel:112", "_self");
                 }
                 break;
-            case 'learnMore':
+            case "learnMore":
                 // TODO: Open health info modal
                 // TODO: implement health info
                 addToast({
-                    message: 'Plus d\'informations santé - Fonctionnalité à venir',
-                    type: 'info',
+                    message:
+                        "Plus d'informations santé - Fonctionnalité à venir",
+                    type: "info",
                 });
                 break;
-            case 'dismiss':
+            case "dismiss":
                 // Dismissed - could save to localStorage
                 // Disclaimer dismissed
                 break;
@@ -194,22 +212,26 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         setIsCreating(true);
         try {
             const deleteData = aiResponse.data as DeleteData;
-            const collection = requestType === 'deletePet' ? 'pets' : 'events';
+            const collection = requestType === "deletePet" ? "pets" : "events";
             const items = deleteData.itemsToDelete || [];
 
             for (const item of items) {
-                await modelService.delete(collection, {
-                    id: item.id,
-                    start_date: item.date,
-                }, false);
+                await modelService.delete(
+                    collection,
+                    {
+                        id: item.id,
+                        start_date: item.date,
+                    },
+                    false,
+                );
             }
 
             addToast({
-                message: 'Suppression effectuée avec succès !',
-                type: 'success',
+                message: "Suppression effectuée avec succès !",
+                type: "success",
             });
 
-            if (requestType === 'deletePet' && refreshPets) {
+            if (requestType === "deletePet" && refreshPets) {
                 await refreshPets();
             }
 
@@ -218,8 +240,8 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
             }
         } catch (error) {
             addToast({
-                message: 'Une erreur est survenue lors de la suppression.',
-                type: 'error',
+                message: "Une erreur est survenue lors de la suppression.",
+                type: "error",
             });
         } finally {
             setIsCreating(false);
@@ -290,15 +312,30 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     };
 
     // Extract primary data for display
-    const primaryData = attachedEvent ? extractPrimaryData(attachedEvent) : null;
+    const primaryData = attachedEvent
+        ? extractPrimaryData(attachedEvent)
+        : null;
     const petInfo = getPetInfo();
 
     // Detect missing pets (event created but no pet found)
     // Check backend warning first, fallback to local detection
-    const petWarning = (aiResponse as Record<string, unknown> | undefined)?.petWarning as
-        | { title?: string; message?: string; suggestions?: string[]; availablePets?: Array<{ id: string; name: string; species: string }> }
+    const petWarning = (aiResponse as Record<string, unknown> | undefined)
+        ?.petWarning as
+        | {
+              title?: string;
+              message?: string;
+              suggestions?: string[];
+              availablePets?: Array<{
+                  id: string;
+                  name: string;
+                  species: string;
+              }>;
+          }
         | undefined;
-    const hasMissingPets = petWarning || (attachedEvent && (!attachedEvent.pets || attachedEvent.pets.length === 0));
+    const hasMissingPets =
+        petWarning ||
+        (attachedEvent &&
+            (!attachedEvent.pets || attachedEvent.pets.length === 0));
 
     const score = aiResponse?.score;
     const description =
@@ -329,126 +366,186 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     )}
 
                     {/* Description - Always show for non-event types */}
-                    {!isStreaming && (isQuery || isAdvice || isMetrics || isDelete) && description && (
-                        <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
-                            {description}
-                        </p>
-                    )}
+                    {!isStreaming &&
+                        (isQuery || isAdvice || isMetrics || isDelete) &&
+                        description && (
+                            <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
+                                {description}
+                            </p>
+                        )}
 
                     {/* Query Results */}
                     {!isStreaming && isQuery && aiResponse?.data && (
-                        <QueryResults queryResult={aiResponse.data as QueryResult} />
+                        <QueryResults
+                            queryResult={aiResponse.data as QueryResult}
+                        />
                     )}
 
                     {/* Advice Card */}
                     {!isStreaming && isAdvice && aiResponse?.data && (
-                        <AdviceCard adviceData={aiResponse.data as AdviceData} />
+                        <AdviceCard
+                            adviceData={aiResponse.data as AdviceData}
+                        />
                     )}
 
                     {/* Metrics Chart */}
                     {!isStreaming && isMetrics && aiResponse?.data && (
-                        <MetricsChart metricsHistory={aiResponse.data as MetricsHistory} />
+                        <MetricsChart
+                            metricsHistory={aiResponse.data as MetricsHistory}
+                        />
                     )}
 
                     {/* Delete Preview */}
                     {!isStreaming && isDelete && aiResponse?.data && (
                         <DeletePreview
                             deleteData={aiResponse.data as DeleteData}
-                            requestType={requestType as 'deleteEvent' | 'deletePet'}
+                            requestType={
+                                requestType as "deleteEvent" | "deletePet"
+                            }
                             onDelete={handleDelete}
                             isLoading={isCreating}
                         />
                     )}
 
                     {/* Event Preview Mode */}
-                    {!isStreaming && isEvent && attachedEvent && primaryData && mode === "preview" && (
-                        <>
-                            {/* Intent Header */}
-                            <IntentHeader
-                                requestType={requestType}
-                                eventType={attachedEvent.type}
-                                description={description}
-                                score={score}
-                            />
+                    {!isStreaming &&
+                        isEvent &&
+                        attachedEvent &&
+                        primaryData &&
+                        mode === "preview" && (
+                            <>
+                                {/* Intent Header */}
+                                <IntentHeader
+                                    requestType={requestType}
+                                    eventType={attachedEvent.type}
+                                    description={description}
+                                    score={score}
+                                />
 
-                            {/* Warning for missing pets */}
-                            {hasMissingPets && (
-                                <div className="mt-3 p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 rounded-r-lg">
-                                    <div className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 text-amber-600 dark:text-amber-400 text-xl">
-                                            ⚠️
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-1">
-                                                {petWarning?.title || "Animal introuvable"}
-                                            </h4>
-                                            <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
-                                                {petWarning?.message || "L'animal mentionné dans votre demande n'existe pas dans votre liste d'animaux."}
-                                            </p>
-
-                                            {/* Display suggestions from backend */}
-                                            {petWarning?.suggestions && petWarning.suggestions.length > 0 && (
-                                                <div className="text-xs text-amber-700 dark:text-amber-300 mb-2">
-                                                    <strong>💡 Suggestions :</strong>
-                                                    <ul className="list-disc list-inside ml-2 mt-1">
-                                                        {petWarning.suggestions.map((suggestion: string, idx: number) => (
-                                                            <li key={idx}>{suggestion}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-
-                                            {/* Fallback suggestion if no backend suggestions */}
-                                            {!petWarning?.suggestions && (
-                                                <p className="text-xs text-amber-700 dark:text-amber-300">
-                                                    💡 <strong>Suggestion :</strong> Créez d'abord l'animal avant de créer cet événement, ou modifiez l'événement pour sélectionner un animal existant.
+                                {/* Warning for missing pets */}
+                                {hasMissingPets && (
+                                    <div className="mt-3 p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 rounded-r-lg">
+                                        <div className="flex items-start gap-3">
+                                            <div className="flex-shrink-0 text-amber-600 dark:text-amber-400 text-xl">
+                                                ⚠️
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-1">
+                                                    {petWarning?.title ||
+                                                        "Animal introuvable"}
+                                                </h4>
+                                                <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
+                                                    {petWarning?.message ||
+                                                        "L'animal mentionné dans votre demande n'existe pas dans votre liste d'animaux."}
                                                 </p>
-                                            )}
 
-                                            {/* Display available pets if provided by backend */}
-                                            {petWarning?.availablePets && petWarning.availablePets.length > 0 && (
-                                                <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-800">
-                                                    <p className="text-xs font-semibold text-amber-900 dark:text-amber-100 mb-2">
-                                                        Vos animaux disponibles :
+                                                {/* Display suggestions from backend */}
+                                                {petWarning?.suggestions &&
+                                                    petWarning.suggestions
+                                                        .length > 0 && (
+                                                        <div className="text-xs text-amber-700 dark:text-amber-300 mb-2">
+                                                            <strong>
+                                                                💡 Suggestions :
+                                                            </strong>
+                                                            <ul className="list-disc list-inside ml-2 mt-1">
+                                                                {petWarning.suggestions.map(
+                                                                    (
+                                                                        suggestion: string,
+                                                                        idx: number,
+                                                                    ) => (
+                                                                        <li
+                                                                            key={
+                                                                                idx
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                suggestion
+                                                                            }
+                                                                        </li>
+                                                                    ),
+                                                                )}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+
+                                                {/* Fallback suggestion if no backend suggestions */}
+                                                {!petWarning?.suggestions && (
+                                                    <p className="text-xs text-amber-700 dark:text-amber-300">
+                                                        💡{" "}
+                                                        <strong>
+                                                            Suggestion :
+                                                        </strong>{" "}
+                                                        Créez d'abord l'animal
+                                                        avant de créer cet
+                                                        événement, ou modifiez
+                                                        l'événement pour
+                                                        sélectionner un animal
+                                                        existant.
                                                     </p>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {petWarning.availablePets.map((pet: any) => (
-                                                            <span
-                                                                key={pet.id}
-                                                                className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200"
-                                                            >
-                                                                {pet.species === 'cat' ? '🐱' : pet.species === 'dog' ? '🐶' : '🐾'} {pet.name}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
+                                                )}
+
+                                                {/* Display available pets if provided by backend */}
+                                                {petWarning?.availablePets &&
+                                                    petWarning.availablePets
+                                                        .length > 0 && (
+                                                        <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-800">
+                                                            <p className="text-xs font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                                                                Vos animaux
+                                                                disponibles :
+                                                            </p>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {petWarning.availablePets.map(
+                                                                    (
+                                                                        pet: any,
+                                                                    ) => (
+                                                                        <span
+                                                                            key={
+                                                                                pet.id
+                                                                            }
+                                                                            className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200"
+                                                                        >
+                                                                            {pet.species ===
+                                                                            "cat"
+                                                                                ? "🐱"
+                                                                                : pet.species ===
+                                                                                    "dog"
+                                                                                  ? "🐶"
+                                                                                  : "🐾"}{" "}
+                                                                            {
+                                                                                pet.name
+                                                                            }
+                                                                        </span>
+                                                                    ),
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {/* Hero Section - Primary Information */}
-                            <EventHeroSection
-                                eventType={attachedEvent.type}
-                                pets={petInfo}
-                                primaryData={primaryData}
-                            />
-
-                            {/* Secondary Details (Collapsible) */}
-                            <SecondaryDetails event={attachedEvent} />
-
-                            {/* Contextual Actions */}
-                            <div className="mt-4">
-                                <ContextualActions
-                                    requestType={requestType}
-                                    onConfirm={handleCreateEvent}
-                                    onEdit={handleEditEvent}
-                                    isLoading={isCreating}
+                                {/* Hero Section - Primary Information */}
+                                <EventHeroSection
+                                    eventType={attachedEvent.type}
+                                    pets={petInfo}
+                                    primaryData={primaryData}
                                 />
-                            </div>
-                        </>
-                    )}
+
+                                {/* Secondary Details (Collapsible) */}
+                                <SecondaryDetails event={attachedEvent} />
+
+                                {/* Contextual Actions */}
+                                <div className="mt-4">
+                                    <ContextualActions
+                                        requestType={requestType}
+                                        onConfirm={handleCreateEvent}
+                                        onEdit={handleEditEvent}
+                                        isLoading={isCreating}
+                                    />
+                                </div>
+                            </>
+                        )}
 
                     {/* Event Edit Mode */}
                     {!isStreaming && mode === "edit" && attachedEvent && (
@@ -474,34 +571,37 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                     onChange={() => {}}
                                     onSubmit={handleEventSubmitted}
                                     onCancel={handleBackToPreview}
-                                    submitable={true}
+                                    submitable
                                 />
                             </div>
                         </div>
                     )}
 
                     {/* Pet Preview Mode */}
-                    {!isStreaming && isPet && attachedPet && mode === "preview" && (
-                        <>
-                            {/* Description */}
-                            <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
-                                {description}
-                            </p>
+                    {!isStreaming &&
+                        isPet &&
+                        attachedPet &&
+                        mode === "preview" && (
+                            <>
+                                {/* Description */}
+                                <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-3">
+                                    {description}
+                                </p>
 
-                            {/* Pet Hero Section */}
-                            <PetHeroSection petData={attachedPet} />
+                                {/* Pet Hero Section */}
+                                <PetHeroSection petData={attachedPet} />
 
-                            {/* Contextual Actions */}
-                            <div className="mt-4">
-                                <ContextualActions
-                                    requestType={requestType}
-                                    onConfirm={handleCreatePet}
-                                    onEdit={handleEditPet}
-                                    isLoading={isCreating}
-                                />
-                            </div>
-                        </>
-                    )}
+                                {/* Contextual Actions */}
+                                <div className="mt-4">
+                                    <ContextualActions
+                                        requestType={requestType}
+                                        onConfirm={handleCreatePet}
+                                        onEdit={handleEditPet}
+                                        isLoading={isCreating}
+                                    />
+                                </div>
+                            </>
+                        )}
 
                     {/* Pet Edit Mode */}
                     {!isStreaming && mode === "edit" && attachedPet && (
@@ -527,7 +627,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                     onChange={() => {}}
                                     onSubmit={handlePetSubmitted}
                                     onCancel={handleBackToPreview}
-                                    submitable={true}
+                                    submitable
                                 />
                             </div>
                         </div>

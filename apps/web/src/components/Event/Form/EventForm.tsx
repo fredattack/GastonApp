@@ -23,7 +23,16 @@ interface EventFormProps {
 }
 
 const EventForm = forwardRef(
-    ({ event, onSubmit, onChange, onCancel, submitable = false }: EventFormProps, ref) => {
+    (
+        {
+            event,
+            onSubmit,
+            onChange,
+            onCancel,
+            submitable = false,
+        }: EventFormProps,
+        ref,
+    ) => {
         const { addToast } = useToast();
         const { pets, refreshPets } = usePets();
 

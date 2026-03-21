@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { FeedingProvider } from "../../../contexts/FeedingContext";
-import { useFeeding } from "../../../contexts/FeedingContext";
+import { FeedingProvider, useFeeding } from "../../../contexts/FeedingContext";
 import { useFeedingDashboard } from "../../../hooks/useFeedingDashboard";
 import FeedingSlotTabs from "../../../components/Feeding/FeedingSlotTabs";
 import FeedingSpeciesSection from "../../../components/Feeding/FeedingSpeciesSection";
@@ -35,19 +34,27 @@ const FeedingDashboardContent: React.FC = () => {
     const { refreshFeedings } = useFeeding();
 
     const [selectedPet, setSelectedPet] = useState<SelectedPet | null>(null);
-    const [voiceResult, setVoiceResult] = useState<VoiceCommandResult | null>(null);
+    const [voiceResult, setVoiceResult] = useState<VoiceCommandResult | null>(
+        null,
+    );
 
-    const handleToggle = useCallback(async (scheduleId: number, isDone: boolean) => {
-        if (isDone) {
-            await undoMark(scheduleId);
-        } else {
-            await markAsDone(scheduleId);
-        }
-    }, [markAsDone, undoMark]);
+    const handleToggle = useCallback(
+        async (scheduleId: number, isDone: boolean) => {
+            if (isDone) {
+                await undoMark(scheduleId);
+            } else {
+                await markAsDone(scheduleId);
+            }
+        },
+        [markAsDone, undoMark],
+    );
 
-    const handlePetTap = useCallback((petId: number, petName: string, petSpecies: string) => {
-        setSelectedPet({ petId, petName, petSpecies });
-    }, []);
+    const handlePetTap = useCallback(
+        (petId: number, petName: string, petSpecies: string) => {
+            setSelectedPet({ petId, petName, petSpecies });
+        },
+        [],
+    );
 
     const handleMarkAll = useCallback(() => {
         const allPendingIds = speciesGroups.flatMap((g) => g.pendingIds);
@@ -56,13 +63,16 @@ const FeedingDashboardContent: React.FC = () => {
         }
     }, [speciesGroups, markBatchDone]);
 
-    const handleVoiceCommandResult = useCallback(async (result: VoiceCommandResult) => {
-        setVoiceResult(result);
+    const handleVoiceCommandResult = useCallback(
+        async (result: VoiceCommandResult) => {
+            setVoiceResult(result);
 
-        if (result.status === "executed") {
-            await refreshFeedings();
-        }
-    }, [refreshFeedings]);
+            if (result.status === "executed") {
+                await refreshFeedings();
+            }
+        },
+        [refreshFeedings],
+    );
 
     const handleDismissFeedback = useCallback(() => {
         setVoiceResult(null);
@@ -70,7 +80,7 @@ const FeedingDashboardContent: React.FC = () => {
 
     const formatDate = (dateStr: string | null) => {
         if (!dateStr) return "";
-        const d = new Date(dateStr + "T00:00:00");
+        const d = new Date(`${dateStr}T00:00:00`);
         return d.toLocaleDateString("fr-FR", {
             weekday: "long",
             day: "numeric",
@@ -79,7 +89,10 @@ const FeedingDashboardContent: React.FC = () => {
     };
 
     const now = new Date();
-    const timeStr = now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    const timeStr = now.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
 
     if (isLoading) {
         return (
@@ -87,7 +100,10 @@ const FeedingDashboardContent: React.FC = () => {
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
                 <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
                 {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                    <div
+                        key={i}
+                        className="h-16 bg-gray-200 dark:bg-gray-700 rounded-xl"
+                    />
                 ))}
             </div>
         );
@@ -115,7 +131,9 @@ const FeedingDashboardContent: React.FC = () => {
                 </div>
 
                 <div className="flex-shrink-0 mt-1">
-                    <VoiceCommandButton onCommandResult={handleVoiceCommandResult} />
+                    <VoiceCommandButton
+                        onCommandResult={handleVoiceCommandResult}
+                    />
                 </div>
             </div>
 
@@ -139,7 +157,9 @@ const FeedingDashboardContent: React.FC = () => {
                             className={`h-full rounded-full transition-all duration-500 ${
                                 allDone ? "bg-green-500" : "bg-primary"
                             }`}
-                            style={{ width: `${(totalDone / totalItems) * 100}%` }}
+                            style={{
+                                width: `${(totalDone / totalItems) * 100}%`,
+                            }}
                         />
                     </div>
                     <span
@@ -173,8 +193,12 @@ const FeedingDashboardContent: React.FC = () => {
             {/* Empty state */}
             {speciesGroups.length === 0 && (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium">Aucun repas configure pour ce creneau</p>
-                    <p className="text-sm mt-1">Ajoutez des regimes alimentaires pour vos animaux</p>
+                    <p className="text-lg font-medium">
+                        Aucun repas configure pour ce creneau
+                    </p>
+                    <p className="text-sm mt-1">
+                        Ajoutez des regimes alimentaires pour vos animaux
+                    </p>
                 </div>
             )}
 

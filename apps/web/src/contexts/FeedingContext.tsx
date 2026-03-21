@@ -1,4 +1,11 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { feedingService } from "../services/FeedingService";
 
 interface FeedingContextType {
@@ -22,8 +29,12 @@ function getCurrentSlot(): MealSlot {
     return "evening";
 }
 
-export const FeedingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [todayData, setTodayData] = useState<FeedingTodayResponse | null>(null);
+export const FeedingProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
+    const [todayData, setTodayData] = useState<FeedingTodayResponse | null>(
+        null,
+    );
     const [isLoading, setIsLoading] = useState(true);
     const [activeSlot, setActiveSlot] = useState<MealSlot>(getCurrentSlot());
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -39,102 +50,138 @@ export const FeedingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }, []);
 
-    const markAsDone = useCallback(async (scheduleId: number) => {
-        setTodayData((prev) => {
-            if (!prev) return prev;
-            const updated = JSON.parse(JSON.stringify(prev)) as FeedingTodayResponse;
-            for (const slot of Object.values(updated.slots)) {
-                const item = slot.items.find((i) => i.schedule_id === scheduleId);
-                if (item) {
-                    item.is_done = true;
-                    item.fed_at = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-                    slot.done += 1;
-                    break;
-                }
-            }
-            return updated;
-        });
-
-        try {
-            await feedingService.markDone(scheduleId);
-        } catch (error) {
-            console.error("Failed to mark as done:", error);
-            await fetchFeedings();
-        }
-    }, [fetchFeedings]);
-
-    const undoMark = useCallback(async (scheduleId: number) => {
-        setTodayData((prev) => {
-            if (!prev) return prev;
-            const updated = JSON.parse(JSON.stringify(prev)) as FeedingTodayResponse;
-            for (const slot of Object.values(updated.slots)) {
-                const item = slot.items.find((i) => i.schedule_id === scheduleId);
-                if (item && item.is_done) {
-                    item.is_done = false;
-                    item.fed_at = null;
-                    item.fed_by = null;
-                    item.log_id = null;
-                    slot.done -= 1;
-                    break;
-                }
-            }
-            return updated;
-        });
-
-        try {
-            await feedingService.undoMark(scheduleId);
-        } catch (error) {
-            console.error("Failed to undo mark:", error);
-            await fetchFeedings();
-        }
-    }, [fetchFeedings]);
-
-    const markBatchDone = useCallback(async (scheduleIds: number[]) => {
-        setTodayData((prev) => {
-            if (!prev) return prev;
-            const updated = JSON.parse(JSON.stringify(prev)) as FeedingTodayResponse;
-            for (const slot of Object.values(updated.slots)) {
-                for (const item of slot.items) {
-                    if (scheduleIds.includes(item.schedule_id) && !item.is_done) {
+    const markAsDone = useCallback(
+        async (scheduleId: number) => {
+            setTodayData((prev) => {
+                if (!prev) return prev;
+                const updated = JSON.parse(
+                    JSON.stringify(prev),
+                ) as FeedingTodayResponse;
+                for (const slot of Object.values(updated.slots)) {
+                    const item = slot.items.find(
+                        (i) => i.schedule_id === scheduleId,
+                    );
+                    if (item) {
                         item.is_done = true;
-                        item.fed_at = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+                        item.fed_at = new Date().toLocaleTimeString("fr-FR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
                         slot.done += 1;
+                        break;
                     }
                 }
+                return updated;
+            });
+
+            try {
+                await feedingService.markDone(scheduleId);
+            } catch (error) {
+                console.error("Failed to mark as done:", error);
+                await fetchFeedings();
             }
-            return updated;
-        });
+        },
+        [fetchFeedings],
+    );
 
-        try {
-            await feedingService.markBatch(scheduleIds);
-        } catch (error) {
-            console.error("Failed to mark batch:", error);
-            await fetchFeedings();
-        }
-    }, [fetchFeedings]);
-
-    const markSpeciesDone = useCallback(async (species: string) => {
-        setTodayData((prev) => {
-            if (!prev) return prev;
-            const updated = JSON.parse(JSON.stringify(prev)) as FeedingTodayResponse;
-            const slotData = updated.slots[activeSlot];
-            for (const item of slotData.items) {
-                if (item.pet_species === species && !item.is_done) {
-                    item.is_done = true;
-                    item.fed_at = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-                    slotData.done += 1;
+    const undoMark = useCallback(
+        async (scheduleId: number) => {
+            setTodayData((prev) => {
+                if (!prev) return prev;
+                const updated = JSON.parse(
+                    JSON.stringify(prev),
+                ) as FeedingTodayResponse;
+                for (const slot of Object.values(updated.slots)) {
+                    const item = slot.items.find(
+                        (i) => i.schedule_id === scheduleId,
+                    );
+                    if (item && item.is_done) {
+                        item.is_done = false;
+                        item.fed_at = null;
+                        item.fed_by = null;
+                        item.log_id = null;
+                        slot.done -= 1;
+                        break;
+                    }
                 }
-            }
-            return updated;
-        });
+                return updated;
+            });
 
-        try {
-            await feedingService.markBatchBySpecies(species, activeSlot);
-        } catch (error) {
-            console.error("Failed to mark species:", error);
-            await fetchFeedings();
-        }
-    }, [fetchFeedings, activeSlot]);
+            try {
+                await feedingService.undoMark(scheduleId);
+            } catch (error) {
+                console.error("Failed to undo mark:", error);
+                await fetchFeedings();
+            }
+        },
+        [fetchFeedings],
+    );
+
+    const markBatchDone = useCallback(
+        async (scheduleIds: number[]) => {
+            setTodayData((prev) => {
+                if (!prev) return prev;
+                const updated = JSON.parse(
+                    JSON.stringify(prev),
+                ) as FeedingTodayResponse;
+                for (const slot of Object.values(updated.slots)) {
+                    for (const item of slot.items) {
+                        if (
+                            scheduleIds.includes(item.schedule_id) &&
+                            !item.is_done
+                        ) {
+                            item.is_done = true;
+                            item.fed_at = new Date().toLocaleTimeString(
+                                "fr-FR",
+                                { hour: "2-digit", minute: "2-digit" },
+                            );
+                            slot.done += 1;
+                        }
+                    }
+                }
+                return updated;
+            });
+
+            try {
+                await feedingService.markBatch(scheduleIds);
+            } catch (error) {
+                console.error("Failed to mark batch:", error);
+                await fetchFeedings();
+            }
+        },
+        [fetchFeedings],
+    );
+
+    const markSpeciesDone = useCallback(
+        async (species: string) => {
+            setTodayData((prev) => {
+                if (!prev) return prev;
+                const updated = JSON.parse(
+                    JSON.stringify(prev),
+                ) as FeedingTodayResponse;
+                const slotData = updated.slots[activeSlot];
+                for (const item of slotData.items) {
+                    if (item.pet_species === species && !item.is_done) {
+                        item.is_done = true;
+                        item.fed_at = new Date().toLocaleTimeString("fr-FR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+                        slotData.done += 1;
+                    }
+                }
+                return updated;
+            });
+
+            try {
+                await feedingService.markBatchBySpecies(species, activeSlot);
+            } catch (error) {
+                console.error("Failed to mark species:", error);
+                await fetchFeedings();
+            }
+        },
+        [fetchFeedings, activeSlot],
+    );
 
     useEffect(() => {
         fetchFeedings();
@@ -143,9 +190,12 @@ export const FeedingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     // Poll every 30 seconds to stay in sync between users
     useEffect(() => {
         intervalRef.current = setInterval(() => {
-            feedingService.getTodayFeedings().then((data) => {
-                setTodayData(data);
-            }).catch(() => {});
+            feedingService
+                .getTodayFeedings()
+                .then((data) => {
+                    setTodayData(data);
+                })
+                .catch(() => {});
         }, 30_000);
 
         return () => {

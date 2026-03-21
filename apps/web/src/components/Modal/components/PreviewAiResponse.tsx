@@ -24,7 +24,7 @@ const PreviewAiResponse = ({
     const { pets } = usePets();
 
     // Type guard: Only render if data is AIEventData (has title and petId)
-    if (!('title' in aiResponse.data && 'petId' in aiResponse.data)) {
+    if (!("title" in aiResponse.data && "petId" in aiResponse.data)) {
         return <div>Type de données non supporté pour l'aperçu</div>;
     }
 

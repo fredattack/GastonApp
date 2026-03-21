@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faTrash,
     faExclamationTriangle,
     faCalendar,
     faPaw,
-} from '@fortawesome/free-solid-svg-icons';
-import ConfirmationDialog from './ConfirmationDialog';
+} from "@fortawesome/free-solid-svg-icons";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 interface DeletePreviewProps {
     deleteData: DeleteData;
-    requestType: 'deleteEvent' | 'deletePet';
+    requestType: "deleteEvent" | "deletePet";
     onDelete: () => void;
     isLoading?: boolean;
 }
@@ -27,13 +27,13 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
         deleteData;
 
     const getIcon = () => {
-        return requestType === 'deleteEvent' ? faCalendar : faPaw;
+        return requestType === "deleteEvent" ? faCalendar : faPaw;
     };
 
     const getTitle = () => {
-        return requestType === 'deleteEvent'
-            ? 'Suppression d\'événements'
-            : 'Suppression d\'animaux';
+        return requestType === "deleteEvent"
+            ? "Suppression d'événements"
+            : "Suppression d'animaux";
     };
 
     const renderFilters = () => {
@@ -51,9 +51,9 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
 
         if (filters.startDate || filters.endDate) {
             const dateRange = [
-                filters.startDate || '...',
-                filters.endDate || '...',
-            ].join(' au ');
+                filters.startDate || "...",
+                filters.endDate || "...",
+            ].join(" au ");
             filterItems.push(`Période: ${dateRange}`);
         }
 
@@ -80,10 +80,10 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                 if (item.type) parts.push(`[${item.type}]`);
                 if (item.date) {
                     parts.push(
-                        `- ${new Date(item.date).toLocaleDateString('fr-FR')}`,
+                        `- ${new Date(item.date).toLocaleDateString("fr-FR")}`,
                     );
                 }
-                return parts.join(' ');
+                return parts.join(" ");
             });
         }
         return [];
@@ -103,7 +103,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                     {estimatedCount !== undefined && (
                         <span className="ml-auto text-xs bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 px-2 py-1 rounded-full">
                             {estimatedCount} élément
-                            {estimatedCount > 1 ? 's' : ''}
+                            {estimatedCount > 1 ? "s" : ""}
                         </span>
                     )}
                 </div>
@@ -137,7 +137,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                                     key={index}
                                     className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2"
                                 >
-                                    <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                                    <span className="w-1 h-1 bg-gray-400 rounded-full" />
                                     {filter}
                                 </li>
                             ))}
@@ -157,7 +157,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                                     key={index}
                                     className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2"
                                 >
-                                    <span className="w-1 h-1 bg-red-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span className="w-1 h-1 bg-red-500 rounded-full mt-1.5 flex-shrink-0" />
                                     <div>
                                         <span className="font-medium">
                                             {item.title}
@@ -169,10 +169,10 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                                         )}
                                         {item.date && (
                                             <span className="text-gray-500 ml-1">
-                                                -{' '}
+                                                -{" "}
                                                 {new Date(
                                                     item.date,
-                                                ).toLocaleDateString('fr-FR')}
+                                                ).toLocaleDateString("fr-FR")}
                                             </span>
                                         )}
                                     </div>
@@ -190,7 +190,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                         className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         <FontAwesomeIcon icon={faTrash} size="sm" />
-                        {isLoading ? 'Suppression...' : 'Supprimer'}
+                        {isLoading ? "Suppression..." : "Supprimer"}
                     </button>
                 </div>
             </div>
@@ -199,7 +199,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
             {showConfirmation && (
                 <ConfirmationDialog
                     title={getTitle()}
-                    message={`Êtes-vous sûr de vouloir supprimer ${estimatedCount || itemsToDelete?.length || 'ces'} élément(s) ? Cette action ne peut pas être annulée.`}
+                    message={`Êtes-vous sûr de vouloir supprimer ${estimatedCount || itemsToDelete?.length || "ces"} élément(s) ? Cette action ne peut pas être annulée.`}
                     itemsToDelete={formatItemsForDialog()}
                     onConfirm={handleConfirm}
                     onCancel={handleCancel}

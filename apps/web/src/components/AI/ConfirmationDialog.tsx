@@ -1,6 +1,9 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faExclamationTriangle,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface ConfirmationDialogProps {
     title: string;
@@ -64,7 +67,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                                         key={index}
                                         className="flex items-start gap-2"
                                     >
-                                        <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full flex-shrink-0 mt-1"></span>
+                                        <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full flex-shrink-0 mt-1" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -89,11 +92,11 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                     >
                         {isLoading ? (
                             <>
-                                <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                 Suppression...
                             </>
                         ) : (
-                            'Confirmer la suppression'
+                            "Confirmer la suppression"
                         )}
                     </button>
                 </div>

@@ -1,10 +1,10 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faExclamationTriangle,
     faPhone,
     faMapMarkerAlt,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 interface HealthDisclaimerProps {
     disclaimer: HealthDisclaimer;
@@ -16,17 +16,17 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
     onAction,
 }) => {
     const severityStyles = {
-        info: 'bg-blue-50 border-blue-300 text-blue-900 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-100',
+        info: "bg-blue-50 border-blue-300 text-blue-900 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-100",
         warning:
-            'bg-yellow-50 border-yellow-400 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-100',
+            "bg-yellow-50 border-yellow-400 text-yellow-900 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-100",
         critical:
-            'bg-red-50 border-red-400 text-red-900 dark:bg-red-900/20 dark:border-red-700 dark:text-red-100',
+            "bg-red-50 border-red-400 text-red-900 dark:bg-red-900/20 dark:border-red-700 dark:text-red-100",
     };
 
     const iconStyles = {
-        info: 'text-blue-500',
-        warning: 'text-yellow-500',
-        critical: 'text-red-500',
+        info: "text-blue-500",
+        warning: "text-yellow-500",
+        critical: "text-red-500",
     };
 
     const actionIcons = {
@@ -71,11 +71,11 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
                                     px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
                                     flex items-center gap-1.5
                                     ${
-                                        action.type === 'primary'
-                                            ? 'bg-primary text-white hover:bg-primary-dark'
-                                            : action.type === 'danger'
-                                              ? 'bg-red-600 text-white hover:bg-red-700'
-                                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                                        action.type === "primary"
+                                            ? "bg-primary text-white hover:bg-primary-dark"
+                                            : action.type === "danger"
+                                              ? "bg-red-600 text-white hover:bg-red-700"
+                                              : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                                     }
                                 `}
                             >

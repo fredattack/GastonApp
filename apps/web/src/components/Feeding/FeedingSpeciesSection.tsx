@@ -18,7 +18,12 @@ interface FeedingSpeciesSectionProps {
     onPetTap?: (petId: number, petName: string, petSpecies: string) => void;
 }
 
-const FeedingSpeciesSection: React.FC<FeedingSpeciesSectionProps> = ({ group, onToggle, onBatchDone, onPetTap }) => {
+const FeedingSpeciesSection: React.FC<FeedingSpeciesSectionProps> = ({
+    group,
+    onToggle,
+    onBatchDone,
+    onPetTap,
+}) => {
     const allDone = group.total > 0 && group.done === group.total;
     const speciesEmoji = group.species === "dog" ? "🐕" : "🐱";
 

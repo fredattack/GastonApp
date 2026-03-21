@@ -36,7 +36,9 @@ export function transformAIResponseToEventForm(
                 order: 0,
                 photo: "",
                 galerie: [],
-                pivot: Array.isArray(aiPet.pivot) ? aiPet.pivot as unknown as PetDetails[] : [aiPet.pivot as unknown as PetDetails],
+                pivot: Array.isArray(aiPet.pivot)
+                    ? (aiPet.pivot as unknown as PetDetails[])
+                    : [aiPet.pivot as unknown as PetDetails],
             })) || [],
     };
 }

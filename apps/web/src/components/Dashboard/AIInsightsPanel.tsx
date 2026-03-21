@@ -115,9 +115,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
 
         // Pending events (not done)
         const pendingEvents = events.filter(
-            (e) =>
-                !e.is_done &&
-                new Date(e.start_date) < now,
+            (e) => !e.is_done && new Date(e.start_date) < now,
         );
 
         if (pendingEvents.length > 0) {
@@ -125,10 +123,9 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                 id: "pending-events",
                 icon: "⏰",
                 title: t("Overdue Events"),
-                description: t(
-                    "{{count}} event(s) need your attention",
-                    { count: pendingEvents.length },
-                ),
+                description: t("{{count}} event(s) need your attention", {
+                    count: pendingEvents.length,
+                }),
                 type: "warning",
             });
         }
@@ -144,8 +141,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
             "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800",
         success:
             "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800",
-        action:
-            "bg-primary/5 dark:bg-primary/10 border-primary/20 dark:border-primary/30",
+        action: "bg-primary/5 dark:bg-primary/10 border-primary/20 dark:border-primary/30",
     };
 
     return (

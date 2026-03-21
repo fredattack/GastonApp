@@ -1,11 +1,11 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCalendar,
     faPaw,
     faChartLine,
     faHistory,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 interface QueryResultsProps {
     queryResult: QueryResult;
@@ -16,13 +16,13 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
 
     const getIcon = () => {
         switch (queryType) {
-            case 'events':
+            case "events":
                 return faCalendar;
-            case 'pets':
+            case "pets":
                 return faPaw;
-            case 'statistics':
+            case "statistics":
                 return faChartLine;
-            case 'history':
+            case "history":
                 return faHistory;
             default:
                 return faCalendar;
@@ -54,12 +54,12 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                     {new Date(
                                         event.start_date,
-                                    ).toLocaleDateString('fr-FR', {
-                                        weekday: 'long',
-                                        day: 'numeric',
-                                        month: 'long',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
+                                    ).toLocaleDateString("fr-FR", {
+                                        weekday: "long",
+                                        day: "numeric",
+                                        month: "long",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
                                     })}
                                 </p>
                                 {event.pets && event.pets.length > 0 && (
@@ -78,11 +78,11 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
                             <span
                                 className={`
                                 text-xs px-2 py-1 rounded-full whitespace-nowrap
-                                ${event.type === 'medical' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : ''}
-                                ${event.type === 'feeding' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ''}
-                                ${event.type === 'appointment' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : ''}
-                                ${event.type === 'training' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : ''}
-                                ${event.type === 'social' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200' : ''}
+                                ${event.type === "medical" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" : ""}
+                                ${event.type === "feeding" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : ""}
+                                ${event.type === "appointment" ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" : ""}
+                                ${event.type === "training" ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200" : ""}
+                                ${event.type === "social" ? "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200" : ""}
                             `}
                             >
                                 {event.type}
@@ -135,7 +135,7 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
     };
 
     const renderStatistics = () => {
-        if (typeof results !== 'object' || Array.isArray(results)) {
+        if (typeof results !== "object" || Array.isArray(results)) {
             return null;
         }
 
@@ -150,12 +150,12 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
                     >
                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                             {key
-                                .replace(/([A-Z])/g, ' $1')
+                                .replace(/([A-Z])/g, " $1")
                                 .trim()
                                 .replace(/^./, (str) => str.toUpperCase())}
                         </p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                            {typeof value === 'object'
+                            {typeof value === "object"
                                 ? JSON.stringify(value)
                                 : value}
                         </p>
@@ -176,7 +176,7 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
                     Résultats de recherche
                 </h4>
                 <span className="ml-auto text-xs bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full">
-                    {totalCount} résultat{totalCount > 1 ? 's' : ''}
+                    {totalCount} résultat{totalCount > 1 ? "s" : ""}
                 </span>
             </div>
 
@@ -186,10 +186,10 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
                 </p>
             )}
 
-            {queryType === 'events' && renderEvents()}
-            {queryType === 'pets' && renderPets()}
-            {queryType === 'statistics' && renderStatistics()}
-            {queryType === 'history' && renderEvents()}
+            {queryType === "events" && renderEvents()}
+            {queryType === "pets" && renderPets()}
+            {queryType === "statistics" && renderStatistics()}
+            {queryType === "history" && renderEvents()}
         </div>
     );
 };

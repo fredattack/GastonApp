@@ -195,11 +195,25 @@ const Header = () => {
                         <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
                             <button
                                 type="button"
-                                onClick={() => window.dispatchEvent(new CustomEvent("open-command-bar"))}
+                                onClick={() =>
+                                    window.dispatchEvent(
+                                        new CustomEvent("open-command-bar"),
+                                    )
+                                }
                                 className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors text-sm"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
                                 </svg>
                                 <span>{t("Ask AI...")}</span>
                                 <kbd className="ml-2 px-1.5 py-0.5 text-[10px] bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 font-mono">
@@ -208,11 +222,25 @@ const Header = () => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => window.dispatchEvent(new CustomEvent("open-command-bar"))}
+                                onClick={() =>
+                                    window.dispatchEvent(
+                                        new CustomEvent("open-command-bar"),
+                                    )
+                                }
                                 className="sm:hidden p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:bg-white-light/90 dark:hover:bg-dark/60"
                             >
-                                <svg className="w-4.5 h-4.5 mx-auto dark:text-[#d0d2d6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg
+                                    className="w-4.5 h-4.5 mx-auto dark:text-[#d0d2d6]"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
                                 </svg>
                             </button>
                         </div>

@@ -1,13 +1,17 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRepeat, faCalendar, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faRepeat,
+    faCalendar,
+    faCalendarDay,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface RecurringEventDialogProps {
     isOpen: boolean;
     eventTitle: string;
-    onSelectOption: (option: 'this' | 'all') => void;
+    onSelectOption: (option: "this" | "all") => void;
     onCancel: () => void;
-    action?: 'edit' | 'delete';
+    action?: "edit" | "delete";
 }
 
 const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
@@ -15,12 +19,13 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
     eventTitle,
     onSelectOption,
     onCancel,
-    action = 'edit',
+    action = "edit",
 }) => {
     if (!isOpen) return null;
 
-    const actionText = action === 'delete' ? 'supprimer' : 'modifier';
-    const actionTextCapitalized = action === 'delete' ? 'Supprimer' : 'Modifier';
+    const actionText = action === "delete" ? "supprimer" : "modifier";
+    const actionTextCapitalized =
+        action === "delete" ? "Supprimer" : "Modifier";
 
     return (
         <>
@@ -37,7 +42,10 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                     <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                                <FontAwesomeIcon icon={faRepeat} className="text-purple-600 dark:text-purple-400" />
+                                <FontAwesomeIcon
+                                    icon={faRepeat}
+                                    className="text-purple-600 dark:text-purple-400"
+                                />
                             </div>
                             <div className="flex-1">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -53,14 +61,15 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                     {/* Content */}
                     <div className="p-6">
                         <p className="text-sm text-gray-700 dark:text-gray-300 mb-6">
-                            Voulez-vous {actionText} seulement cet événement ou tous les événements de cette série récurrente ?
+                            Voulez-vous {actionText} seulement cet événement ou
+                            tous les événements de cette série récurrente ?
                         </p>
 
                         {/* Options */}
                         <div className="space-y-3">
                             {/* This event only */}
                             <button
-                                onClick={() => onSelectOption('this')}
+                                onClick={() => onSelectOption("this")}
                                 className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition-all group text-left"
                             >
                                 <div className="flex items-start gap-3">
@@ -72,7 +81,8 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                                             Cet événement uniquement
                                         </div>
                                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                                            {actionTextCapitalized} seulement cette occurrence de l'événement
+                                            {actionTextCapitalized} seulement
+                                            cette occurrence de l'événement
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +90,7 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
 
                             {/* All events */}
                             <button
-                                onClick={() => onSelectOption('all')}
+                                onClick={() => onSelectOption("all")}
                                 className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition-all group text-left"
                             >
                                 <div className="flex items-start gap-3">
@@ -92,7 +102,9 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                                             Tous les événements de la série
                                         </div>
                                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                                            {actionTextCapitalized} tous les événements futurs de cette série récurrente
+                                            {actionTextCapitalized} tous les
+                                            événements futurs de cette série
+                                            récurrente
                                         </div>
                                     </div>
                                 </div>

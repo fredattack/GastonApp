@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { usePets } from "../contexts/PetsContext";
 import { useEvents } from "../contexts/EventsContext";
-import { useCommandBar } from "../components/AI/CommandBar";
-import { CommandBar } from "../components/AI/CommandBar";
+import { useCommandBar, CommandBar } from "../components/AI/CommandBar";
 import AIInsightsPanel from "../components/Dashboard/AIInsightsPanel";
 import RecentEventsTimeline from "../components/Dashboard/RecentEventsTimeline";
 
@@ -41,19 +40,23 @@ const QUICK_ACTIONS = [
 
 const VARIANT_STYLES = {
     mint: {
-        background: "linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100))",
+        background:
+            "linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100))",
         iconBg: "var(--color-primary-50)",
     },
     lavender: {
-        background: "linear-gradient(135deg, var(--color-lavender-light), rgba(209, 179, 232, 0.3))",
+        background:
+            "linear-gradient(135deg, var(--color-lavender-light), rgba(209, 179, 232, 0.3))",
         iconBg: "var(--color-lavender-light)",
     },
     coral: {
-        background: "linear-gradient(135deg, var(--color-coral-light), rgba(255, 181, 154, 0.3))",
+        background:
+            "linear-gradient(135deg, var(--color-coral-light), rgba(255, 181, 154, 0.3))",
         iconBg: "var(--color-coral-light)",
     },
     yellow: {
-        background: "linear-gradient(135deg, var(--color-yellow-light), rgba(255, 232, 140, 0.3))",
+        background:
+            "linear-gradient(135deg, var(--color-yellow-light), rgba(255, 232, 140, 0.3))",
         iconBg: "var(--color-yellow-light)",
     },
 } as const;
@@ -76,11 +79,19 @@ const Index: React.FC = () => {
     const greeting = getGreeting();
 
     return (
-        <div className="max-w-5xl mx-auto" style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-32)" }}>
+        <div
+            className="max-w-5xl mx-auto"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--spacing-32)",
+            }}
+        >
             {/* Hero Section */}
             <section
                 style={{
-                    background: "linear-gradient(135deg, var(--color-lin-0), var(--color-lin-1))",
+                    background:
+                        "linear-gradient(135deg, var(--color-lin-0), var(--color-lin-1))",
                     borderRadius: "var(--radius-xl)",
                     padding: "var(--spacing-32)",
                     position: "relative",
@@ -97,7 +108,9 @@ const Index: React.FC = () => {
                             marginBottom: "var(--spacing-8)",
                         }}
                     >
-                        <span style={{ fontSize: "var(--font-size-h1)" }}>{greeting.icon}</span>{" "}
+                        <span style={{ fontSize: "var(--font-size-h1)" }}>
+                            {greeting.icon}
+                        </span>{" "}
                         {greeting.text} 👋
                     </h1>
                     <p
@@ -108,10 +121,13 @@ const Index: React.FC = () => {
                         }}
                     >
                         {pets.length > 0
-                            ? t("You have {{petCount}} pet(s) and {{eventCount}} event(s)", {
-                                  petCount: pets.length,
-                                  eventCount: events.length,
-                              })
+                            ? t(
+                                  "You have {{petCount}} pet(s) and {{eventCount}} event(s)",
+                                  {
+                                      petCount: pets.length,
+                                      eventCount: events.length,
+                                  },
+                              )
                             : t("Welcome to GastonApp! Let's get started.")}
                     </p>
 
@@ -137,10 +153,20 @@ const Index: React.FC = () => {
                             transition: "all var(--transition-normal)",
                         }}
                     >
-                        <span style={{ fontSize: "var(--font-size-body-l)", color: "var(--color-primary-400)" }}>✨</span>
+                        <span
+                            style={{
+                                fontSize: "var(--font-size-body-l)",
+                                color: "var(--color-primary-400)",
+                            }}
+                        >
+                            ✨
+                        </span>
                         <span
                             className="flex-1"
-                            style={{ color: "var(--color-text-hint)", fontSize: "var(--font-size-body-m)" }}
+                            style={{
+                                color: "var(--color-text-hint)",
+                                fontSize: "var(--font-size-body-m)",
+                            }}
                         >
                             {t("Ask anything about your pets...")}
                         </span>
@@ -208,7 +234,10 @@ const Index: React.FC = () => {
                 >
                     {t("Quick Actions")}
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: "var(--spacing-12)" }}>
+                <div
+                    className="grid grid-cols-2 md:grid-cols-4"
+                    style={{ gap: "var(--spacing-12)" }}
+                >
                     {QUICK_ACTIONS.map((action) => (
                         <QuickActionCard
                             key={action.route}
@@ -227,10 +256,20 @@ const Index: React.FC = () => {
             </section>
 
             {/* Two Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: "var(--spacing-24)" }}>
+            <div
+                className="grid grid-cols-1 lg:grid-cols-3"
+                style={{ gap: "var(--spacing-24)" }}
+            >
                 {/* Pets Summary */}
                 <section className="lg:col-span-1">
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--spacing-16)" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            marginBottom: "var(--spacing-16)",
+                        }}
+                    >
                         <h2
                             style={{
                                 fontSize: "var(--font-size-body-l)",
@@ -238,7 +277,8 @@ const Index: React.FC = () => {
                                 color: "var(--color-text-primary)",
                             }}
                         >
-                            {t("My Pets")} {pets.length > 0 && `(${pets.length})`}
+                            {t("My Pets")}{" "}
+                            {pets.length > 0 && `(${pets.length})`}
                         </h2>
                         {pets.length > 0 && (
                             <button
@@ -258,7 +298,13 @@ const Index: React.FC = () => {
                         )}
                     </div>
                     {isLoading ? (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-12)" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "var(--spacing-12)",
+                            }}
+                        >
                             {[1, 2].map((i) => (
                                 <div
                                     key={i}
@@ -272,12 +318,20 @@ const Index: React.FC = () => {
                             ))}
                         </div>
                     ) : pets.length > 0 ? (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-12)" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "var(--spacing-12)",
+                            }}
+                        >
                             {pets.map((pet) => (
                                 <button
                                     type="button"
                                     key={pet.id}
-                                    onClick={() => navigate(`/content/pets/${pet.id}`)}
+                                    onClick={() =>
+                                        navigate(`/content/pets/${pet.id}`)
+                                    }
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
@@ -290,7 +344,8 @@ const Index: React.FC = () => {
                                         cursor: "pointer",
                                         textAlign: "left",
                                         width: "100%",
-                                        transition: "all var(--transition-normal)",
+                                        transition:
+                                            "all var(--transition-normal)",
                                     }}
                                     className="hover:shadow-md"
                                 >
@@ -299,7 +354,8 @@ const Index: React.FC = () => {
                                             width: "48px",
                                             height: "48px",
                                             borderRadius: "var(--radius-full)",
-                                            background: "var(--color-primary-50)",
+                                            background:
+                                                "var(--color-primary-50)",
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
@@ -307,14 +363,20 @@ const Index: React.FC = () => {
                                             flexShrink: 0,
                                         }}
                                     >
-                                        {pet.species === "dog" ? "🐕" : pet.species === "cat" ? "🐈" : "🐾"}
+                                        {pet.species === "dog"
+                                            ? "🐕"
+                                            : pet.species === "cat"
+                                              ? "🐈"
+                                              : "🐾"}
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <p
                                             style={{
-                                                fontWeight: "var(--font-weight-semibold)",
+                                                fontWeight:
+                                                    "var(--font-weight-semibold)",
                                                 color: "var(--color-text-primary)",
-                                                fontSize: "var(--font-size-body-m)",
+                                                fontSize:
+                                                    "var(--font-size-body-m)",
                                                 overflow: "hidden",
                                                 textOverflow: "ellipsis",
                                                 whiteSpace: "nowrap",
@@ -325,14 +387,19 @@ const Index: React.FC = () => {
                                         <p
                                             style={{
                                                 color: "var(--color-text-tertiary)",
-                                                fontSize: "var(--font-size-body-s)",
+                                                fontSize:
+                                                    "var(--font-size-body-s)",
                                             }}
                                         >
                                             {pet.breed || pet.species}
                                         </p>
                                     </div>
                                     <svg
-                                        style={{ width: "16px", height: "16px", color: "var(--color-lin-6)" }}
+                                        style={{
+                                            width: "16px",
+                                            height: "16px",
+                                            color: "var(--color-lin-6)",
+                                        }}
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -363,7 +430,14 @@ const Index: React.FC = () => {
                             }}
                             className="hover:border-primary/50"
                         >
-                            <p style={{ fontSize: "var(--font-size-h2)", marginBottom: "var(--spacing-8)" }}>🐾</p>
+                            <p
+                                style={{
+                                    fontSize: "var(--font-size-h2)",
+                                    marginBottom: "var(--spacing-8)",
+                                }}
+                            >
+                                🐾
+                            </p>
                             <p
                                 style={{
                                     fontSize: "var(--font-size-body-s)",
@@ -399,7 +473,14 @@ const Index: React.FC = () => {
                         }}
                     >
                         {isLoading ? (
-                            <div style={{ padding: "var(--spacing-16)", display: "flex", flexDirection: "column", gap: "var(--spacing-12)" }}>
+                            <div
+                                style={{
+                                    padding: "var(--spacing-16)",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "var(--spacing-12)",
+                                }}
+                            >
                                 {[1, 2, 3].map((i) => (
                                     <div
                                         key={i}

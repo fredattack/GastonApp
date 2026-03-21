@@ -97,11 +97,11 @@ axiosClient.interceptors.response.use(
 );
 
 function setAuthToken(token: string) {
-    axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
 }
 
 function clearAuthToken() {
-    delete axiosClient.defaults.headers.common['Authorization'];
+    delete axiosClient.defaults.headers.common.Authorization;
 }
 
 export default axiosClient;

@@ -38,7 +38,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
     undefined,
 );
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -53,11 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     // Fetch CSRF token first (same as login flow)
                     await fetchCsrfToken();
 
-                    axiosClient.defaults.headers.common["Authorization"] =
-                        `Bearer ${token}`;
+                    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
                     const response = await axiosClient.get<User>("/auth/user");
                     const fetchedUser = response.data;
-                    localStorage.setItem("auth_user_id", String(fetchedUser.id));
+                    localStorage.setItem(
+                        "auth_user_id",
+                        String(fetchedUser.id),
+                    );
                     setUser(fetchedUser);
                 } catch (err: any) {
                     logger.debug(
@@ -71,9 +73,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         logger.debug("[Auth] Token expired/invalid, clearing");
                         localStorage.removeItem("auth_token");
                         localStorage.removeItem("auth_user_id");
-                        delete axiosClient.defaults.headers.common[
-                            "Authorization"
-                        ];
+                        delete axiosClient.defaults.headers.common
+                            .Authorization;
                         setUser(null);
                     } else {
                         logger.debug("[Auth] Other error, keeping token");
@@ -101,8 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { user: newUser, token } = response.data.data;
             localStorage.setItem("auth_token", token);
             localStorage.setItem("auth_user_id", String(newUser.id));
-            axiosClient.defaults.headers.common["Authorization"] =
-                `Bearer ${token}`;
+            axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
             setUser(newUser);
             return newUser;
         } catch (err: any) {
@@ -123,8 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { user: loggedUser, token } = response.data.data;
             localStorage.setItem("auth_token", token);
             localStorage.setItem("auth_user_id", String(loggedUser.id));
-            axiosClient.defaults.headers.common["Authorization"] =
-                `Bearer ${token}`;
+            axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
             setUser(loggedUser);
             return loggedUser;
         } catch (err: any) {
@@ -142,7 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } finally {
             localStorage.removeItem("auth_token");
             localStorage.removeItem("auth_user_id");
-            delete axiosClient.defaults.headers.common["Authorization"];
+            delete axiosClient.defaults.headers.common.Authorization;
             setUser(null);
             setError(null);
         }
@@ -161,7 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return (
         <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     );
-}
+};
 
 export function useAuthContext() {
     const context = React.useContext(AuthContext);

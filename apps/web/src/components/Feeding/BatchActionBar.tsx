@@ -8,7 +8,11 @@ interface BatchActionBarProps {
     pendingCount: number;
 }
 
-const BatchActionBar: React.FC<BatchActionBarProps> = ({ label, onBatch, pendingCount }) => {
+const BatchActionBar: React.FC<BatchActionBarProps> = ({
+    label,
+    onBatch,
+    pendingCount,
+}) => {
     return (
         <button
             onClick={onBatch}

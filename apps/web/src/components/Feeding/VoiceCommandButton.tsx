@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faMicrophoneSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+    faMicrophone,
+    faMicrophoneSlash,
+    faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import { feedingService } from "../../services/FeedingService";
 import { logger } from "@/utils/logger";
@@ -11,7 +15,9 @@ interface VoiceCommandButtonProps {
     onCommandResult: (result: VoiceCommandResult) => void;
 }
 
-const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult }) => {
+const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({
+    onCommandResult,
+}) => {
     const [buttonState, setButtonState] = useState<ButtonState>("idle");
     const transcriptRef = useRef<string>("");
     const processingRef = useRef<boolean>(false);
@@ -21,43 +27,49 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
         transcriptRef.current = transcript;
     }, []);
 
-    const { isRecording, startRecording, stopRecording } = useSpeechRecognition(handleTranscriptUpdate);
+    const { isRecording, startRecording, stopRecording } = useSpeechRecognition(
+        handleTranscriptUpdate,
+    );
 
-    const submitTranscript = useCallback(async (transcript: string) => {
-        if (processingRef.current) {
-            logger.debug("[Voice] already processing, skip");
-            return;
-        }
+    const submitTranscript = useCallback(
+        async (transcript: string) => {
+            if (processingRef.current) {
+                logger.debug("[Voice] already processing, skip");
+                return;
+            }
 
-        const trimmed = transcript.trim();
-        if (!trimmed) {
-            logger.debug("[Voice] empty transcript, back to idle");
-            setButtonState("idle");
-            return;
-        }
+            const trimmed = transcript.trim();
+            if (!trimmed) {
+                logger.debug("[Voice] empty transcript, back to idle");
+                setButtonState("idle");
+                return;
+            }
 
-        logger.debug("[Voice] submitting transcript:", trimmed);
-        processingRef.current = true;
-        setButtonState("processing");
+            logger.debug("[Voice] submitting transcript:", trimmed);
+            processingRef.current = true;
+            setButtonState("processing");
 
-        try {
-            const result = await feedingService.sendVoiceCommand(trimmed);
-            logger.debug("[Voice] API result:", result);
-            onCommandResult(result);
-            setButtonState("idle");
-        } catch (err) {
-            console.error("[Voice] API error:", err);
-            onCommandResult({
-                status: "error",
-                action: "voice_command",
-                message: "Impossible de traiter la commande. Veuillez reessayer.",
-            });
-            setButtonState("error");
-            setTimeout(() => setButtonState("idle"), 2000);
-        } finally {
-            processingRef.current = false;
-        }
-    }, [onCommandResult]);
+            try {
+                const result = await feedingService.sendVoiceCommand(trimmed);
+                logger.debug("[Voice] API result:", result);
+                onCommandResult(result);
+                setButtonState("idle");
+            } catch (err) {
+                console.error("[Voice] API error:", err);
+                onCommandResult({
+                    status: "error",
+                    action: "voice_command",
+                    message:
+                        "Impossible de traiter la commande. Veuillez reessayer.",
+                });
+                setButtonState("error");
+                setTimeout(() => setButtonState("idle"), 2000);
+            } finally {
+                processingRef.current = false;
+            }
+        },
+        [onCommandResult],
+    );
 
     // Watch isRecording: when it transitions to false and we have a transcript, auto-submit
     const prevRecordingRef = useRef(false);
@@ -66,21 +78,34 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
         prevRecordingRef.current = isRecording;
 
         if (wasRecording && !isRecording && buttonState === "recording") {
-            logger.debug("[Voice] recording ended (browser auto-stop), transcript:", transcriptRef.current);
+            logger.debug(
+                "[Voice] recording ended (browser auto-stop), transcript:",
+                transcriptRef.current,
+            );
             submitTranscript(transcriptRef.current);
             transcriptRef.current = "";
         }
     }, [isRecording, buttonState, submitTranscript]);
 
     const handlePress = () => {
-        logger.debug("[Voice] button pressed, state:", buttonState, "isRecording:", isRecording, "transcript so far:", transcriptRef.current);
+        logger.debug(
+            "[Voice] button pressed, state:",
+            buttonState,
+            "isRecording:",
+            isRecording,
+            "transcript so far:",
+            transcriptRef.current,
+        );
 
         if (buttonState === "processing") {
             return;
         }
 
         if (buttonState === "recording") {
-            logger.debug("[Voice] stopping recording manually, transcript:", transcriptRef.current);
+            logger.debug(
+                "[Voice] stopping recording manually, transcript:",
+                transcriptRef.current,
+            );
             // Don't submit here — let the useEffect on isRecording handle it
             // This avoids the race condition where stopRecording() hasn't fired onend yet
             stopRecording();
@@ -135,9 +160,17 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
             )}
 
             {buttonState === "processing" ? (
-                <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin" aria-hidden="true" />
+                <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="w-4 h-4 animate-spin"
+                    aria-hidden="true"
+                />
             ) : buttonState === "error" ? (
-                <FontAwesomeIcon icon={faMicrophoneSlash} className="w-4 h-4" aria-hidden="true" />
+                <FontAwesomeIcon
+                    icon={faMicrophoneSlash}
+                    className="w-4 h-4"
+                    aria-hidden="true"
+                />
             ) : (
                 <FontAwesomeIcon
                     icon={faMicrophone}

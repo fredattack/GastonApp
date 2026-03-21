@@ -5,99 +5,99 @@
 
 const MEDICAL_KEYWORDS = [
     // Médicaments et traitements
-    'médicament',
-    'traitement',
-    'antibiotique',
-    'anti-inflammatoire',
-    'vermifuge',
-    'antiparasitaire',
-    'corticoïde',
-    'antidouleur',
-    'médicaments',
-    'pilule',
-    'comprimé',
-    'sirop',
-    'injection',
-    'piqûre',
+    "médicament",
+    "traitement",
+    "antibiotique",
+    "anti-inflammatoire",
+    "vermifuge",
+    "antiparasitaire",
+    "corticoïde",
+    "antidouleur",
+    "médicaments",
+    "pilule",
+    "comprimé",
+    "sirop",
+    "injection",
+    "piqûre",
 
     // Symptômes
-    'symptôme',
-    'malade',
-    'douleur',
-    'vomi',
-    'vomissement',
-    'diarrhée',
-    'fièvre',
-    'température',
-    'blessure',
-    'plaie',
-    'saignement',
-    'boiterie',
-    'toux',
-    'éternuement',
-    'démangeaison',
-    'grattage',
+    "symptôme",
+    "malade",
+    "douleur",
+    "vomi",
+    "vomissement",
+    "diarrhée",
+    "fièvre",
+    "température",
+    "blessure",
+    "plaie",
+    "saignement",
+    "boiterie",
+    "toux",
+    "éternuement",
+    "démangeaison",
+    "grattage",
 
     // Conditions médicales
-    'infection',
-    'allergie',
-    'maladie',
-    'diabète',
-    'insuffisance',
-    'cancer',
-    'tumeur',
-    'inflammation',
-    'arthrose',
-    'fracture',
-    'entorse',
-    'paralysie',
+    "infection",
+    "allergie",
+    "maladie",
+    "diabète",
+    "insuffisance",
+    "cancer",
+    "tumeur",
+    "inflammation",
+    "arthrose",
+    "fracture",
+    "entorse",
+    "paralysie",
 
     // Soins vétérinaires
-    'vétérinaire',
-    'véto',
-    'clinique',
-    'urgence',
-    'consultation',
-    'diagnostic',
-    'analyse',
-    'radio',
-    'échographie',
-    'opération',
-    'chirurgie',
-    'hospitalisation',
+    "vétérinaire",
+    "véto",
+    "clinique",
+    "urgence",
+    "consultation",
+    "diagnostic",
+    "analyse",
+    "radio",
+    "échographie",
+    "opération",
+    "chirurgie",
+    "hospitalisation",
 
     // Vaccins et prévention
-    'vaccin',
-    'vaccination',
-    'rappel',
-    'immunisation',
+    "vaccin",
+    "vaccination",
+    "rappel",
+    "immunisation",
 
     // Autres termes médicaux
-    'santé',
-    'soigner',
-    'guérir',
-    'dose',
-    'posologie',
-    'prescription',
-    'ordonnance',
+    "santé",
+    "soigner",
+    "guérir",
+    "dose",
+    "posologie",
+    "prescription",
+    "ordonnance",
 ];
 
 const EMERGENCY_KEYWORDS = [
-    'urgence',
-    'critique',
-    'grave',
-    'hémorragie',
-    'convulsion',
-    'inconscient',
-    'empoisonnement',
-    'intoxication',
-    'accident',
-    'chute',
-    'morsure',
-    'électrocution',
-    'brûlure',
-    'noyade',
-    'étouffement',
+    "urgence",
+    "critique",
+    "grave",
+    "hémorragie",
+    "convulsion",
+    "inconscient",
+    "empoisonnement",
+    "intoxication",
+    "accident",
+    "chute",
+    "morsure",
+    "électrocution",
+    "brûlure",
+    "noyade",
+    "étouffement",
 ];
 
 /**
@@ -109,12 +109,12 @@ export function isMedicalContext(
     adviceType?: string,
 ): boolean {
     // Vérifier le type d'événement
-    if (eventType === 'medical') {
+    if (eventType === "medical") {
         return true;
     }
 
     // Vérifier le type de conseil
-    if (adviceType === 'health') {
+    if (adviceType === "health") {
         return true;
     }
 
@@ -147,26 +147,26 @@ export function generateHealthDisclaimer(
 
     if (isEmergency) {
         return {
-            severity: 'critical',
-            type: 'medical',
-            title: '🚨 Urgence Vétérinaire',
+            severity: "critical",
+            type: "medical",
+            title: "🚨 Urgence Vétérinaire",
             message:
                 "Cette situation pourrait être une urgence vétérinaire. N'attendez pas et contactez immédiatement un vétérinaire ou une clinique d'urgence.",
             actions: [
                 {
-                    label: 'Appeler Urgences',
-                    type: 'danger',
-                    action: 'callEmergency',
+                    label: "Appeler Urgences",
+                    type: "danger",
+                    action: "callEmergency",
                 },
                 {
-                    label: 'Trouver un vétérinaire',
-                    type: 'primary',
-                    action: 'findVet',
+                    label: "Trouver un vétérinaire",
+                    type: "primary",
+                    action: "findVet",
                 },
                 {
                     label: "J'ai compris",
-                    type: 'secondary',
-                    action: 'dismiss',
+                    type: "secondary",
+                    action: "dismiss",
                 },
             ],
             autoMedicationWarning:
@@ -175,26 +175,26 @@ export function generateHealthDisclaimer(
     }
 
     return {
-        severity: 'warning',
-        type: eventType === 'medical' ? 'medical' : 'general',
-        title: '⚠️ Avertissement Santé',
+        severity: "warning",
+        type: eventType === "medical" ? "medical" : "general",
+        title: "⚠️ Avertissement Santé",
         message:
             "Les informations fournies par GastonApp ne remplacent en aucun cas l'avis d'un vétérinaire professionnel. En cas de doute sur la santé de votre animal, consultez immédiatement un vétérinaire.",
         actions: [
             {
-                label: 'Trouver un vétérinaire',
-                type: 'primary',
-                action: 'findVet',
+                label: "Trouver un vétérinaire",
+                type: "primary",
+                action: "findVet",
             },
             {
-                label: 'En savoir plus',
-                type: 'secondary',
-                action: 'learnMore',
+                label: "En savoir plus",
+                type: "secondary",
+                action: "learnMore",
             },
             {
                 label: "J'ai compris",
-                type: 'secondary',
-                action: 'dismiss',
+                type: "secondary",
+                action: "dismiss",
             },
         ],
         autoMedicationWarning:
@@ -216,9 +216,9 @@ export function enrichWithHealthDisclaimer(
 
     // Déterminer le type d'événement ou de conseil
     const eventType =
-        'type' in response.data ? (response.data as any).type : undefined;
+        "type" in response.data ? (response.data as any).type : undefined;
     const adviceType =
-        'adviceType' in response.data
+        "adviceType" in response.data
             ? (response.data as any).adviceType
             : undefined;
 

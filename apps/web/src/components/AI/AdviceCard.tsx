@@ -1,5 +1,5 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLightbulb,
     faUtensils,
@@ -8,7 +8,7 @@ import {
     faCheckCircle,
     faExternalLinkAlt,
     faExclamationCircle,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 interface AdviceCardProps {
     adviceData: AdviceData;
@@ -34,11 +34,11 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
 
     const getIcon = () => {
         switch (adviceType) {
-            case 'nutrition':
+            case "nutrition":
                 return faUtensils;
-            case 'health':
+            case "health":
                 return faHeartbeat;
-            case 'behavior':
+            case "behavior":
                 return faPaw;
             default:
                 return faLightbulb;
@@ -47,47 +47,47 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
 
     const getTypeColor = () => {
         switch (adviceType) {
-            case 'nutrition':
-                return 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20';
-            case 'health':
-                return 'from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20';
-            case 'behavior':
-                return 'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20';
+            case "nutrition":
+                return "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20";
+            case "health":
+                return "from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20";
+            case "behavior":
+                return "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20";
             default:
-                return 'from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20';
+                return "from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20";
         }
     };
 
     const getIconColor = () => {
         switch (adviceType) {
-            case 'nutrition':
-                return 'text-green-600 dark:text-green-400';
-            case 'health':
-                return 'text-red-600 dark:text-red-400';
-            case 'behavior':
-                return 'text-blue-600 dark:text-blue-400';
+            case "nutrition":
+                return "text-green-600 dark:text-green-400";
+            case "health":
+                return "text-red-600 dark:text-red-400";
+            case "behavior":
+                return "text-blue-600 dark:text-blue-400";
             default:
-                return 'text-gray-600 dark:text-gray-400';
+                return "text-gray-600 dark:text-gray-400";
         }
     };
 
     const getSeverityColor = () => {
         switch (severity) {
-            case 'high':
-                return 'text-red-600 dark:text-red-400';
-            case 'medium':
-                return 'text-yellow-600 dark:text-yellow-400';
-            case 'low':
-                return 'text-green-600 dark:text-green-400';
+            case "high":
+                return "text-red-600 dark:text-red-400";
+            case "medium":
+                return "text-yellow-600 dark:text-yellow-400";
+            case "low":
+                return "text-green-600 dark:text-green-400";
             default:
-                return 'text-blue-600 dark:text-blue-400';
+                return "text-blue-600 dark:text-blue-400";
         }
     };
 
     const getConfidenceColor = () => {
-        if (confidence >= 80) return 'text-green-600 dark:text-green-400';
-        if (confidence >= 60) return 'text-yellow-600 dark:text-yellow-400';
-        return 'text-orange-600 dark:text-orange-400';
+        if (confidence >= 80) return "text-green-600 dark:text-green-400";
+        if (confidence >= 60) return "text-yellow-600 dark:text-yellow-400";
+        return "text-orange-600 dark:text-orange-400";
     };
 
     return (
@@ -124,7 +124,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
             </div>
 
             {/* Nutrition-specific fields */}
-            {adviceType === 'nutrition' && (
+            {adviceType === "nutrition" && (
                 <>
                     {(dailyCalories || feedingFrequency) && (
                         <div className="grid grid-cols-2 gap-3 mb-3">
@@ -180,7 +180,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                     <ul className="text-xs text-yellow-900 dark:text-yellow-100 space-y-1">
                         {redFlags.map((flag, index) => (
                             <li key={index} className="flex items-center gap-2">
-                                <span className="w-1 h-1 bg-yellow-600 rounded-full flex-shrink-0"></span>
+                                <span className="w-1 h-1 bg-yellow-600 rounded-full flex-shrink-0" />
                                 <span>{flag}</span>
                             </li>
                         ))}

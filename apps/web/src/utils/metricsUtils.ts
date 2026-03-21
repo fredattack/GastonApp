@@ -14,7 +14,7 @@ export function analyzeMetrics(metrics: Metric[]): MetricsAnalysis {
             max: 0,
             change: 0,
             changePercent: 0,
-            trend: 'stable',
+            trend: "stable",
         };
     }
 
@@ -28,13 +28,13 @@ export function analyzeMetrics(metrics: Metric[]): MetricsAnalysis {
     const change = lastValue - firstValue;
     const changePercent = firstValue !== 0 ? (change / firstValue) * 100 : 0;
 
-    let trend: 'increasing' | 'decreasing' | 'stable';
+    let trend: "increasing" | "decreasing" | "stable";
     if (changePercent > 5) {
-        trend = 'increasing';
+        trend = "increasing";
     } else if (changePercent < -5) {
-        trend = 'decreasing';
+        trend = "decreasing";
     } else {
-        trend = 'stable';
+        trend = "stable";
     }
 
     return {
@@ -52,7 +52,7 @@ export function analyzeMetrics(metrics: Metric[]): MetricsAnalysis {
  */
 export function generateMockMetrics(
     petId: string,
-    metricType: 'weight' | 'temperature' | 'heart_rate' = 'weight',
+    metricType: "weight" | "temperature" | "heart_rate" = "weight",
     count: number = 10,
 ): Metric[] {
     const now = new Date();
@@ -63,25 +63,25 @@ export function generateMockMetrics(
     let unit: string;
 
     switch (metricType) {
-        case 'weight':
+        case "weight":
             baseValue = 15;
             variance = 2;
-            unit = 'kg';
+            unit = "kg";
             break;
-        case 'temperature':
+        case "temperature":
             baseValue = 38.5;
             variance = 0.5;
-            unit = '°C';
+            unit = "°C";
             break;
-        case 'heart_rate':
+        case "heart_rate":
             baseValue = 100;
             variance = 15;
-            unit = 'bpm';
+            unit = "bpm";
             break;
         default:
             baseValue = 10;
             variance = 2;
-            unit = 'unit';
+            unit = "unit";
     }
 
     for (let i = 0; i < count; i++) {
@@ -100,7 +100,7 @@ export function generateMockMetrics(
             metric_type: metricType,
             value: parseFloat(value.toFixed(2)),
             unit,
-            measured_at: date.toISOString().split('T')[0],
+            measured_at: date.toISOString().split("T")[0],
         });
     }
 
@@ -112,10 +112,10 @@ export function generateMockMetrics(
  */
 export function isWeightChangeConcerning(
     changePercent: number,
-    species: 'dog' | 'cat',
+    species: "dog" | "cat",
 ): {
     isConcerning: boolean;
-    severity: 'low' | 'medium' | 'high';
+    severity: "low" | "medium" | "high";
     message: string;
 } {
     const absChange = Math.abs(changePercent);
@@ -125,19 +125,21 @@ export function isWeightChangeConcerning(
         if (absChange > 15) {
             return {
                 isConcerning: true,
-                severity: 'high',
+                severity: "high",
                 message: `Perte de poids importante (${changePercent.toFixed(1)}%). Consultez rapidement un vétérinaire.`,
             };
-        } else if (absChange > 10) {
+        }
+        if (absChange > 10) {
             return {
                 isConcerning: true,
-                severity: 'medium',
+                severity: "medium",
                 message: `Perte de poids notable (${changePercent.toFixed(1)}%). Surveillez l'évolution et consultez un vétérinaire si cela continue.`,
             };
-        } else if (absChange > 5) {
+        }
+        if (absChange > 5) {
             return {
                 isConcerning: true,
-                severity: 'low',
+                severity: "low",
                 message: `Légère perte de poids (${changePercent.toFixed(1)}%). Surveillez l'alimentation et l'activité.`,
             };
         }
@@ -148,19 +150,21 @@ export function isWeightChangeConcerning(
         if (absChange > 20) {
             return {
                 isConcerning: true,
-                severity: 'high',
+                severity: "high",
                 message: `Prise de poids excessive (${changePercent.toFixed(1)}%). Consultez un vétérinaire pour ajuster l'alimentation.`,
             };
-        } else if (absChange > 15) {
+        }
+        if (absChange > 15) {
             return {
                 isConcerning: true,
-                severity: 'medium',
+                severity: "medium",
                 message: `Prise de poids importante (${changePercent.toFixed(1)}%). Considérez une réduction des portions ou plus d'exercice.`,
             };
-        } else if (absChange > 10) {
+        }
+        if (absChange > 10) {
             return {
                 isConcerning: true,
-                severity: 'low',
+                severity: "low",
                 message: `Prise de poids notable (${changePercent.toFixed(1)}%). Surveillez l'alimentation.`,
             };
         }
@@ -168,7 +172,7 @@ export function isWeightChangeConcerning(
 
     return {
         isConcerning: false,
-        severity: 'low',
+        severity: "low",
         message: `Poids stable (${changePercent.toFixed(1)}%). Continuez ainsi !`,
     };
 }
@@ -177,7 +181,7 @@ export function isWeightChangeConcerning(
  * Calculate ideal weight range for a pet
  */
 export function getIdealWeightRange(
-    species: 'dog' | 'cat',
+    species: "dog" | "cat",
     breed?: string,
 ): {
     min: number;
@@ -185,19 +189,19 @@ export function getIdealWeightRange(
     unit: string;
 } | null {
     // This is a simplified version - in reality, this would be breed-specific
-    if (species === 'dog') {
+    if (species === "dog") {
         return {
             min: 10,
             max: 25,
-            unit: 'kg',
+            unit: "kg",
         };
     }
 
-    if (species === 'cat') {
+    if (species === "cat") {
         return {
             min: 3.5,
             max: 5.5,
-            unit: 'kg',
+            unit: "kg",
         };
     }
 
@@ -207,16 +211,13 @@ export function getIdealWeightRange(
 /**
  * Format metric value with appropriate precision
  */
-export function formatMetricValue(
-    value: number,
-    metricType: string,
-): string {
+export function formatMetricValue(value: number, metricType: string): string {
     switch (metricType) {
-        case 'weight':
+        case "weight":
             return `${value.toFixed(2)} kg`;
-        case 'temperature':
+        case "temperature":
             return `${value.toFixed(1)} °C`;
-        case 'heart_rate':
+        case "heart_rate":
             return `${Math.round(value)} bpm`;
         default:
             return value.toFixed(2);
@@ -228,10 +229,10 @@ export function formatMetricValue(
  */
 export function getMetricTypeLabel(metricType: string): string {
     const labels: Record<string, string> = {
-        weight: 'Poids',
-        temperature: 'Température',
-        heart_rate: 'Fréquence cardiaque',
-        custom: 'Métrique personnalisée',
+        weight: "Poids",
+        temperature: "Température",
+        heart_rate: "Fréquence cardiaque",
+        custom: "Métrique personnalisée",
     };
 
     return labels[metricType] || metricType;

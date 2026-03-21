@@ -1,8 +1,8 @@
 // @ts-nocheck
 
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 
 interface WeekViewProps {
     currentDate: Date;
@@ -21,7 +21,10 @@ const WeekView: React.FC<WeekViewProps> = ({
     onEventMove,
     onEventResize,
 }) => {
-    const [hoveredSlot, setHoveredSlot] = useState<{ day: number; hour: number } | null>(null);
+    const [hoveredSlot, setHoveredSlot] = useState<{
+        day: number;
+        hour: number;
+    } | null>(null);
     const [draggedEvent, setDraggedEvent] = useState<Event | null>(null);
 
     // Generate week days starting from Monday
@@ -49,7 +52,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     // Get events for a specific day and hour
     const getEventsForSlot = (day: Date, hour: number): EventFormData[] => {
-        return events.filter(event => {
+        return events.filter((event) => {
             const eventDate = new Date(event.start_date);
             return (
                 eventDate.getDate() === day.getDate() &&
@@ -75,18 +78,18 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     const getEventColor = (type: string) => {
         const colors: Record<string, string> = {
-            medical: 'bg-red-500 border-red-600',
-            care: 'bg-pink-400 border-pink-500',
-            feeding: 'bg-blue-500 border-blue-600',
-            appointment: 'bg-purple-500 border-purple-600',
-            training: 'bg-green-500 border-green-600',
-            social: 'bg-yellow-500 border-yellow-600',
-            other: 'bg-gray-500 border-gray-600',
+            medical: "bg-red-500 border-red-600",
+            care: "bg-pink-400 border-pink-500",
+            feeding: "bg-blue-500 border-blue-600",
+            appointment: "bg-purple-500 border-purple-600",
+            training: "bg-green-500 border-green-600",
+            social: "bg-yellow-500 border-yellow-600",
+            other: "bg-gray-500 border-gray-600",
         };
-        return colors[type] || 'bg-gray-500 border-gray-600';
+        return colors[type] || "bg-gray-500 border-gray-600";
     };
 
-    const weekDayNames = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    const weekDayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
     return (
         <div className="week-view bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -103,7 +106,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                         key={index}
                         className={`
                             text-center py-3 border-r border-gray-200 dark:border-gray-700
-                            ${isToday(day) ? 'bg-primary/10' : ''}
+                            ${isToday(day) ? "bg-primary/10" : ""}
                         `}
                     >
                         <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
@@ -112,9 +115,10 @@ const WeekView: React.FC<WeekViewProps> = ({
                         <div
                             className={`
                                 text-lg font-bold mt-1
-                                ${isToday(day)
-                                    ? 'bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto'
-                                    : 'text-gray-900 dark:text-gray-100'
+                                ${
+                                    isToday(day)
+                                        ? "bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto"
+                                        : "text-gray-900 dark:text-gray-100"
                                 }
                             `}
                         >
@@ -133,14 +137,17 @@ const WeekView: React.FC<WeekViewProps> = ({
                     >
                         {/* Hour label */}
                         <div className="py-2 px-3 text-xs text-gray-500 dark:text-gray-400 text-right border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                            {hour.toString().padStart(2, '0')}:00
+                            {hour.toString().padStart(2, "0")}:00
                         </div>
 
                         {/* Day cells */}
                         {weekDays.map((day, dayIndex) => {
                             const slotEvents = getEventsForSlot(day, hour);
-                            const isHovered = hoveredSlot?.day === dayIndex && hoveredSlot?.hour === hour;
-                            const isCurrentHour = isToday(day) && hour === getCurrentHour();
+                            const isHovered =
+                                hoveredSlot?.day === dayIndex &&
+                                hoveredSlot?.hour === hour;
+                            const isCurrentHour =
+                                isToday(day) && hour === getCurrentHour();
 
                             return (
                                 <div
@@ -148,11 +155,13 @@ const WeekView: React.FC<WeekViewProps> = ({
                                     className={`
                                         min-h-[60px] p-1 border-r border-gray-200 dark:border-gray-700
                                         hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors
-                                        ${isCurrentHour ? 'bg-primary/5' : ''}
+                                        ${isCurrentHour ? "bg-primary/5" : ""}
                                         relative
                                     `}
                                     onClick={() => onTimeSlotClick(day, hour)}
-                                    onMouseEnter={() => setHoveredSlot({ day: dayIndex, hour })}
+                                    onMouseEnter={() =>
+                                        setHoveredSlot({ day: dayIndex, hour })
+                                    }
                                     onMouseLeave={() => setHoveredSlot(null)}
                                 >
                                     {/* Current time indicator */}
@@ -175,14 +184,22 @@ const WeekView: React.FC<WeekViewProps> = ({
                                                     hover:opacity-80 transition-opacity
                                                     truncate
                                                 `}
-                                                title={`${event.title} - ${event.pets?.map(p => p.name).join(', ')}`}
+                                                title={`${event.title} - ${event.pets?.map((p) => p.name).join(", ")}`}
                                             >
-                                                <div className="font-semibold truncate">{event.title}</div>
-                                                {event.pets && event.pets.length > 0 && (
-                                                    <div className="text-xs opacity-90 truncate">
-                                                        {event.pets.map(p => p.name).join(', ')}
-                                                    </div>
-                                                )}
+                                                <div className="font-semibold truncate">
+                                                    {event.title}
+                                                </div>
+                                                {event.pets &&
+                                                    event.pets.length > 0 && (
+                                                        <div className="text-xs opacity-90 truncate">
+                                                            {event.pets
+                                                                .map(
+                                                                    (p) =>
+                                                                        p.name,
+                                                                )
+                                                                .join(", ")}
+                                                        </div>
+                                                    )}
                                             </div>
                                         ))}
                                     </div>

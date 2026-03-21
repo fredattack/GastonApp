@@ -24,7 +24,8 @@ const TodayTimeline: React.FC = () => {
     };
 
     const formatTime = (dateString: string | Date): string => {
-        const date = dateString instanceof Date ? dateString : new Date(dateString);
+        const date =
+            dateString instanceof Date ? dateString : new Date(dateString);
         return date.toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
@@ -32,7 +33,8 @@ const TodayTimeline: React.FC = () => {
     };
 
     const isToday = (dateString: string | Date): boolean => {
-        const date = dateString instanceof Date ? dateString : new Date(dateString);
+        const date =
+            dateString instanceof Date ? dateString : new Date(dateString);
         const today = new Date();
         return (
             date.getDate() === today.getDate() &&

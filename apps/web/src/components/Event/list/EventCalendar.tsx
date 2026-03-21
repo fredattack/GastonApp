@@ -41,9 +41,13 @@ const EventCalendar = () => {
     const [viewMode, setViewMode] = useState(VIEW_MODES.MONTH);
     const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedEvent, setSelectedEvent] = useState<EventFormData | null>(null);
+    const [selectedEvent, setSelectedEvent] = useState<EventFormData | null>(
+        null,
+    );
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalInitialDate, setModalInitialDate] = useState<Date | undefined>();
+    const [modalInitialDate, setModalInitialDate] = useState<
+        Date | undefined
+    >();
 
     useEffect(() => {
         const { start_date, end_date } = getDateRange(currentDate);
@@ -232,26 +236,33 @@ const EventCalendar = () => {
             handleRefetchEvents();
 
             // Show success toast
-            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            const { addToast } =
+                require("../../../providers/ToastProvider").useToast();
             addToast({
                 message: `"${event.title}" déplacé avec succès`,
-                type: 'success',
+                type: "success",
             });
         } catch (error) {
-            console.error('Error moving event:', error);
-            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            console.error("Error moving event:", error);
+            const { addToast } =
+                require("../../../providers/ToastProvider").useToast();
             addToast({
-                message: 'Erreur lors du déplacement de l\'événement',
-                type: 'error',
+                message: "Erreur lors du déplacement de l'événement",
+                type: "error",
             });
         }
     };
 
-    const handleEventResize = async (event: EventFormData, newDuration: number) => {
+    const handleEventResize = async (
+        event: EventFormData,
+        newDuration: number,
+    ) => {
         try {
             // Calculate new end date based on duration
             const startDate = new Date(event.start_date);
-            const endDate = new Date(startDate.getTime() + newDuration * 60 * 60 * 1000);
+            const endDate = new Date(
+                startDate.getTime() + newDuration * 60 * 60 * 1000,
+            );
 
             const updatedEvent = {
                 ...event,
@@ -263,17 +274,19 @@ const EventCalendar = () => {
             // Refresh events
             handleRefetchEvents();
 
-            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            const { addToast } =
+                require("../../../providers/ToastProvider").useToast();
             addToast({
                 message: `Durée de "${event.title}" modifiée`,
-                type: 'success',
+                type: "success",
             });
         } catch (error) {
-            console.error('Error resizing event:', error);
-            const { addToast } = require('../../../providers/ToastProvider').useToast();
+            console.error("Error resizing event:", error);
+            const { addToast } =
+                require("../../../providers/ToastProvider").useToast();
             addToast({
-                message: 'Erreur lors de la modification de la durée',
-                type: 'error',
+                message: "Erreur lors de la modification de la durée",
+                type: "error",
             });
         }
     };
@@ -374,7 +387,9 @@ const EventCalendar = () => {
                     )}
                     {viewStyle === VIEW_STYLES.CARE && (
                         <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                            <p className="text-gray-600 dark:text-gray-400">Vue soins médicaux à implémenter</p>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Vue soins médicaux à implémenter
+                            </p>
                         </div>
                     )}
                 </div>
