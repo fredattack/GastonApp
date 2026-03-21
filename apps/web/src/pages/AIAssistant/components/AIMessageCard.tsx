@@ -194,21 +194,29 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         setIsCreating(true);
         try {
             const deleteData = aiResponse.data as DeleteData;
+            const collection = requestType === 'deletePet' ? 'pets' : 'events';
+            const items = deleteData.itemsToDelete || [];
 
-            // TODO: Call backend API to perform delete operation
-            // This will be implemented when backend support is added
-            // TODO: implement delete operation
+            for (const item of items) {
+                await modelService.delete(collection, {
+                    id: item.id,
+                    start_date: item.date,
+                }, false);
+            }
 
             addToast({
                 message: 'Suppression effectuée avec succès !',
                 type: 'success',
             });
 
+            if (requestType === 'deletePet' && refreshPets) {
+                await refreshPets();
+            }
+
             if (onEventCreated) {
                 onEventCreated();
             }
         } catch (error) {
-            // Delete operation failed
             addToast({
                 message: 'Une erreur est survenue lors de la suppression.',
                 type: 'error',
