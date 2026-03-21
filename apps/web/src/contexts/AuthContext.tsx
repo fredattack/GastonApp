@@ -55,7 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     axiosClient.defaults.headers.common["Authorization"] =
                         `Bearer ${token}`;
                     const response = await axiosClient.get<User>("/auth/user");
-                    setUser(response.data);
+                    const fetchedUser = response.data;
+                    localStorage.setItem("auth_user_id", String(fetchedUser.id));
+                    setUser(fetchedUser);
                 } catch (err: any) {
                     console.log(
                         "[Auth] Error response:",
@@ -67,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     if (err.response?.status === 401) {
                         console.log("[Auth] Token expired/invalid, clearing");
                         localStorage.removeItem("auth_token");
+                        localStorage.removeItem("auth_user_id");
                         delete axiosClient.defaults.headers.common[
                             "Authorization"
                         ];
@@ -96,6 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }>("/auth/register", credentials);
             const { user: newUser, token } = response.data.data;
             localStorage.setItem("auth_token", token);
+            localStorage.setItem("auth_user_id", String(newUser.id));
             axiosClient.defaults.headers.common["Authorization"] =
                 `Bearer ${token}`;
             setUser(newUser);
@@ -117,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }>("/auth/login", credentials);
             const { user: loggedUser, token } = response.data.data;
             localStorage.setItem("auth_token", token);
+            localStorage.setItem("auth_user_id", String(loggedUser.id));
             axiosClient.defaults.headers.common["Authorization"] =
                 `Bearer ${token}`;
             setUser(loggedUser);
@@ -135,6 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error("Logout error:", err);
         } finally {
             localStorage.removeItem("auth_token");
+            localStorage.removeItem("auth_user_id");
             delete axiosClient.defaults.headers.common["Authorization"];
             setUser(null);
             setError(null);

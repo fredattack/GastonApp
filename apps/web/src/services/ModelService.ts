@@ -83,8 +83,6 @@ export default class ModelService {
     }
 
     private getAuthenticatedOwnerId(): string | null {
-        // Placeholder for authentication logic; replace with your actual auth logic
-        const authId = "1"; // Replace with dynamic user auth
-        return authId;
+        return localStorage.getItem("auth_user_id");
     }
 }
