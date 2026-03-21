@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-const useSpeechRecognition = (onTranscriptionUpdate: any) => {
+const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: string) => void) => {
     const [isRecording, setIsRecording] = useState(false);
     const [transcription, setTranscription] = useState("");
     const recognitionRef = useRef<any>(null);
@@ -11,9 +11,12 @@ const useSpeechRecognition = (onTranscriptionUpdate: any) => {
             (window as any).webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            alert(
-                "La reconnaissance vocale n'est pas prise en charge par votre navigateur.",
-            );
+            const message = "La reconnaissance vocale n'est pas prise en charge par votre navigateur.";
+            if (onError) {
+                onError(message);
+            } else {
+                console.warn(message);
+            }
             return;
         }
 
