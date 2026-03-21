@@ -61,7 +61,6 @@ export default class RestEventRepository {
         withRecurrences: boolean = false,
         date: string | Date | null = null,
     ): Promise<void> {
-        console.log("date", date);
         try {
             await axiosClient.put(
                 `events/${event.id ?? event.master_id}?with_recurrences=${withRecurrences}&date=${date}`,

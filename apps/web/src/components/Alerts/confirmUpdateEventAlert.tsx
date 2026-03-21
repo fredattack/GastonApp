@@ -33,7 +33,6 @@ export const showConfirmUpdateEventAlert = async (
         })
         .then(async (result) => {
             if (result.isConfirmed) {
-                console.log("event.start_date", event.start_date);
                 try {
                     await eventService.update(event, true, event.start_date);
 

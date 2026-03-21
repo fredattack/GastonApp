@@ -233,7 +233,6 @@ const themeConfigSlice = createSlice({
             };
         },
         toggleSidebar(state) {
-            console.log("boom", state);
             return {
                 ...state,
                 sidebar: !state.sidebar,

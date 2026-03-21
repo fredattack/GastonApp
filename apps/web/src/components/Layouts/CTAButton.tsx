@@ -134,7 +134,6 @@ const CTAButton = () => {
         setViewMode(vmode);
         setTranscription("");
         setManualInput(true);
-        console.log("localEvent", localEvent);
         setIsModalOpen(true);
     };
 

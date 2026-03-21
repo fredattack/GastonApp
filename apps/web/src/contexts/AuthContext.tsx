@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axiosClient, {
     fetchCsrfToken,
 } from "../providers/apiClientProvider/axiosClient";
+import { logger } from "@/utils/logger";
 
 export interface User {
     id: number;
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     localStorage.setItem("auth_user_id", String(fetchedUser.id));
                     setUser(fetchedUser);
                 } catch (err: any) {
-                    console.log(
+                    logger.debug(
                         "[Auth] Error response:",
                         err.response?.status,
                         err.message,
@@ -67,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     // Only clear token if it's a 401 (unauthorized/expired token)
                     // For other errors (network, etc), keep the token and let the user retry
                     if (err.response?.status === 401) {
-                        console.log("[Auth] Token expired/invalid, clearing");
+                        logger.debug("[Auth] Token expired/invalid, clearing");
                         localStorage.removeItem("auth_token");
                         localStorage.removeItem("auth_user_id");
                         delete axiosClient.defaults.headers.common[
@@ -75,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         ];
                         setUser(null);
                     } else {
-                        console.log("[Auth] Other error, keeping token");
+                        logger.debug("[Auth] Other error, keeping token");
                         // For other errors, still try to use the token - it might work
                         // But set user to null temporarily to show loading state
                         setUser(null);

@@ -17,11 +17,9 @@ const PERIODES = {
 };
 const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
     const [periode, setPeriode] = useState(PERIODES.ALL);
-    console.log("Events", events);
     const { addToast } = useToast();
     const isInPeriod = (start_date: Date | string) => {
         const date = new Date(start_date);
-        // console.log('date', date);
         switch (periode) {
             case PERIODES.MORNING:
                 return date.getHours() >= 6 && date.getHours() < 12;
@@ -85,7 +83,6 @@ const EventSummary: React.FC<EventSummaryProps> = ({ events }) => {
     const handleChangeDoneStatus = async (event: Event) => {
         try {
             const resp = await eventService.changeDoneStatus(event);
-            console.log("resp", resp);
             addToast({
                 message: "Event successfully updated!",
                 type: "success",

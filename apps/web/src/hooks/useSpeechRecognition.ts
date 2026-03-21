@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { logger } from "@/utils/logger";
 
 const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: string) => void) => {
     const [isRecording, setIsRecording] = useState(false);
@@ -30,16 +31,16 @@ const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: st
         recognitionRef.current = recognition;
 
         recognition.onstart = () => {
-            console.log("[SpeechRecognition] onstart fired");
+            logger.debug("[SpeechRecognition] onstart fired");
             setIsRecording(true);
         };
 
         recognition.onresult = (event: any) => {
-            console.log("[SpeechRecognition] onresult fired, results:", event.results.length);
+            logger.debug("[SpeechRecognition] onresult fired, results:", event.results.length);
             const newTranscript = Array.from(event.results)
                 .map((result: any) => result[0].transcript)
                 .join("");
-            console.log("[SpeechRecognition] transcript:", newTranscript);
+            logger.debug("[SpeechRecognition] transcript:", newTranscript);
             setTranscription(`${newTranscript}`.trim());
             onTranscriptionUpdate(newTranscript);
         };
@@ -50,7 +51,7 @@ const useSpeechRecognition = (onTranscriptionUpdate: any, onError?: (message: st
         };
 
         recognition.onend = () => {
-            console.log("[SpeechRecognition] onend fired");
+            logger.debug("[SpeechRecognition] onend fired");
             setIsRecording(false);
         };
 

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faMicrophoneSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import { feedingService } from "../../services/FeedingService";
+import { logger } from "@/utils/logger";
 
 type ButtonState = "idle" | "recording" | "processing" | "error";
 
@@ -16,7 +17,7 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
     const processingRef = useRef<boolean>(false);
 
     const handleTranscriptUpdate = useCallback((transcript: string) => {
-        console.log("[Voice] transcript update:", transcript);
+        logger.debug("[Voice] transcript update:", transcript);
         transcriptRef.current = transcript;
     }, []);
 
@@ -24,24 +25,24 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
 
     const submitTranscript = useCallback(async (transcript: string) => {
         if (processingRef.current) {
-            console.log("[Voice] already processing, skip");
+            logger.debug("[Voice] already processing, skip");
             return;
         }
 
         const trimmed = transcript.trim();
         if (!trimmed) {
-            console.log("[Voice] empty transcript, back to idle");
+            logger.debug("[Voice] empty transcript, back to idle");
             setButtonState("idle");
             return;
         }
 
-        console.log("[Voice] submitting transcript:", trimmed);
+        logger.debug("[Voice] submitting transcript:", trimmed);
         processingRef.current = true;
         setButtonState("processing");
 
         try {
             const result = await feedingService.sendVoiceCommand(trimmed);
-            console.log("[Voice] API result:", result);
+            logger.debug("[Voice] API result:", result);
             onCommandResult(result);
             setButtonState("idle");
         } catch (err) {
@@ -65,21 +66,21 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
         prevRecordingRef.current = isRecording;
 
         if (wasRecording && !isRecording && buttonState === "recording") {
-            console.log("[Voice] recording ended (browser auto-stop), transcript:", transcriptRef.current);
+            logger.debug("[Voice] recording ended (browser auto-stop), transcript:", transcriptRef.current);
             submitTranscript(transcriptRef.current);
             transcriptRef.current = "";
         }
     }, [isRecording, buttonState, submitTranscript]);
 
     const handlePress = () => {
-        console.log("[Voice] button pressed, state:", buttonState, "isRecording:", isRecording, "transcript so far:", transcriptRef.current);
+        logger.debug("[Voice] button pressed, state:", buttonState, "isRecording:", isRecording, "transcript so far:", transcriptRef.current);
 
         if (buttonState === "processing") {
             return;
         }
 
         if (buttonState === "recording") {
-            console.log("[Voice] stopping recording manually, transcript:", transcriptRef.current);
+            logger.debug("[Voice] stopping recording manually, transcript:", transcriptRef.current);
             // Don't submit here — let the useEffect on isRecording handle it
             // This avoids the race condition where stopRecording() hasn't fired onend yet
             stopRecording();
@@ -87,7 +88,7 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({ onCommandResult
         }
 
         // Start recording
-        console.log("[Voice] starting recording...");
+        logger.debug("[Voice] starting recording...");
         transcriptRef.current = "";
         setButtonState("recording");
         startRecording("fr-FR");

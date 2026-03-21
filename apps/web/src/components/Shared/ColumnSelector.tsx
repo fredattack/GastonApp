@@ -47,7 +47,6 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
                                             className="form-checkbox"
                                             defaultValue={col.accessor}
                                             onChange={(event: any) => {
-                                                console.log(event.target.value);
                                                 onToggleColumn(
                                                     event.target.value,
                                                 );

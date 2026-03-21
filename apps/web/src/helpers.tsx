@@ -58,7 +58,6 @@ export function updateNestedObject<T>(
     } else {
         current[lastKey] = value;
     }
-    console.log("obj", obj);
     return obj; // Retourne une copie immuable
 }
 

@@ -10,6 +10,7 @@ import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
 import { useIcons } from "../../../providers/FontawesomeProvider";
 import { modelService } from "../../../services";
+import { logger } from "@/utils/logger";
 
 type DeletionQueueItem = {
     id: string;
@@ -76,27 +77,22 @@ const Pets = () => {
 
     // Method to handle edit
     const handleEdit = (id: number | string) => {
-        console.log(`Editing animal with ID: ${id}`);
         navigate(`/content/pets/${id}`);
         // Add your logic to open an edit form/modal
     };
 
     // Method to toggle active/inactive status
     const toggleActiveStatus = (id: number | string) => {
-        console.log(`Toggling active status for animal ID: ${id}`);
         // Add logic to toggle the animal's active status
     };
 
     // Method to set the animal as deceased
     const setDeceased = (id: number | string) => {
-        console.log(`Setting animal ID: ${id} as deceased`);
         // Add your logic to update the deceased status
     };
 
     // Method to delete the animal
     const deleteAnimal = async (id: number | string) => {
-        console.log(`Preparing to delete animal with ID: ${id}`);
-
         // Sauvegarde temporaire de l'animal supprimé
         const petToDelete = pets.find((pet) => pet.id === id);
 
@@ -120,7 +116,7 @@ const Pets = () => {
                 // ACTUALLY DELETE THE PET FROM DATABASE
                 await modelService.delete("pets", petToDelete);
 
-                console.log(`Animal with ID: ${id} successfully deleted.`);
+                logger.info(`Animal with ID: ${id} successfully deleted.`);
                 addToast({
                     message: "Pet deleted successfully",
                     type: "success",
@@ -158,7 +154,6 @@ const Pets = () => {
 
     const undoDelete = (id: number | string) => {
         const item = deletionQueue.find((entry) => entry.id === id);
-        console.log("item", item);
         if (item) {
             clearTimeout(item.timeout!);
             setDeletionQueue((prevQueue) =>
@@ -168,19 +163,16 @@ const Pets = () => {
     };
     // Method to add a treatment
     const addTreatment = (id: number | string) => {
-        console.log(`Adding treatment for animal ID: ${id}`);
         // Add logic to handle treatment addition
     };
 
     // Method to add a menu
     const addMenu = (id: number | string) => {
-        console.log(`Adding menu for animal ID: ${id}`);
         // Add logic to handle menu addition
     };
 
     // Method to add a rendezvous
     const addRendezvous = (id: number | string) => {
-        console.log(`Adding rendezvous for animal ID: ${id}`);
         // Add logic to handle rendezvous scheduling
     };
 

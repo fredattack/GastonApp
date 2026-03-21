@@ -278,7 +278,6 @@ const EventCalendar = () => {
         }
     };
 
-    // console.log("filters", filters);
     return (
         <div key={viewMode} className="event-calendar">
             <div className="toolbar flex items-center justify-end mb-4 mx-3">
@@ -323,7 +322,6 @@ const EventCalendar = () => {
                     <EventCalendarDropdown
                         filters={filters}
                         onFiltersChange={(filters: any) => {
-                            // console.log("filters in calendar", filters);
                             setFilters(filters);
                         }}
                     />

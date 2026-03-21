@@ -33,7 +33,6 @@ export default class EventService {
             return await this.eventRepository
                 .changeDoneStatus(payload)
                 .then((resp) => {
-                    console.log("resp in service", resp);
                     return true;
                 });
         } catch (error) {
@@ -47,7 +46,6 @@ export default class EventService {
         withRecurrences: boolean,
         date: string | Date | null = null,
     ) {
-        console.log("date", date);
         try {
             return await this.eventRepository.update(
                 event,

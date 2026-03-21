@@ -49,7 +49,6 @@ const ConfirmDeleteEventAlert: React.FC<ConfirmationAlertProps> = ({
                             "The event has been deleted.",
                             "success",
                         );
-                        console.log("onsuccess");
                         if (onSuccess) onSuccess(); // Callback après suppression réussie
                     } catch (error) {
                         swalWithBootstrapButtons.fire(
@@ -67,7 +66,6 @@ const ConfirmDeleteEventAlert: React.FC<ConfirmationAlertProps> = ({
                         "All events have been deleted.",
                         "success",
                     );
-                    console.log("onsuccess");
                     if (onSuccess) onSuccess();
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     swalWithBootstrapButtons.fire(

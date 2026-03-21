@@ -21,7 +21,6 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
     }, [currentDate, isCalendarOpen]);
 
     const renderCalendar = () => {
-        console.log("currentDate", currentDate);
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -79,7 +78,6 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
     };
 
     const handleApply = () => {
-        console.log("selectedDate", selectedDate);
         if (selectedDate) {
             setIsCalendarOpen(false);
         }

@@ -35,15 +35,12 @@ const EventCalendarDropdown = ({
     // };
 
     const handleChange = (key: string, value: any) => {
-        console.log("e", value);
         if (value) {
             onFiltersChange({
                 ...filters,
                 [key]: value,
             });
         }
-
-        console.log(filters);
     };
 
     return (

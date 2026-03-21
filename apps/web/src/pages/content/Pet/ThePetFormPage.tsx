@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useToast } from "../../../providers/ToastProvider";
 import PetForm from "../../../components/Pets/form/PetForm";
 import { modelService } from "../../../services";
+import { logger } from "@/utils/logger";
 
 interface PetData {
     name: string;
@@ -50,8 +51,8 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
                     breed: pet.breed || "",
                 });
             });
-            console.log(`Fetching pet data for ID: ${id}`);
         }
+
     }, [pet, id]);
 
     const handleChange = (
@@ -78,7 +79,7 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
 
             const petId = await modelService.add("pets", data);
 
-            console.log("Pet successfully added with ID:", petId);
+            logger.info("Pet successfully added with ID:", petId);
             addToast({
                 message: "Pet successfully added!",
                 type: "success",
@@ -105,7 +106,7 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
 
             await modelService.update("pets", id, data);
 
-            console.log("Pet successfully updated!");
+            logger.info("Pet successfully updated!");
             addToast({
                 message: "Pet successfully updated!",
                 type: "success",
@@ -127,7 +128,7 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
         if (id) {
             try {
                 await updatePet(id, formData);
-                console.log("Pet successfully updated!");
+                logger.info("Pet successfully updated!");
                 navigate("/content/pets"); // Redirection après mise à jour
             } catch (error) {
                 console.error("Failed to update pet:", error);
@@ -135,7 +136,7 @@ const ThePetFormPage = ({ pet }: { pet?: Pet }) => {
         } else {
             try {
                 await addPet(formData);
-                console.log("Pet successfully added!");
+                logger.info("Pet successfully added!");
                 navigate("/content/pets");
             } catch (error) {
                 console.error("Failed to add pet:", error);
