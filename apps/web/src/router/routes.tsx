@@ -17,6 +17,7 @@ const FeedingDashboard = lazy(
     () => import("../pages/content/Feeding/FeedingDashboardPage"),
 );
 const Onboarding = lazy(() => import("../pages/Onboarding"));
+const Profile = lazy(() => import("../pages/Profile"));
 
 const routes = [
     // auth
@@ -105,6 +106,18 @@ const routes = [
             <ProtectedRoute>
                 <ErrorBoundary>
                     <EventCalendar />
+                </ErrorBoundary>
+            </ProtectedRoute>
+        ),
+        layout: "default",
+    },
+    // profile
+    {
+        path: "/profile",
+        element: (
+            <ProtectedRoute>
+                <ErrorBoundary>
+                    <Profile />
                 </ErrorBoundary>
             </ProtectedRoute>
         ),
