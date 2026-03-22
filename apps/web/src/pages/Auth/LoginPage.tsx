@@ -113,6 +113,19 @@ export default function LoginPage() {
                         S'inscrire
                     </button>
                 </p>
+
+                <div className="flex justify-center gap-3 mt-4 text-xs text-gray-400">
+                    <a href="/cgu" className="hover:text-[#8FA998] transition">
+                        CGU
+                    </a>
+                    <span>·</span>
+                    <a
+                        href="/privacy"
+                        className="hover:text-[#8FA998] transition"
+                    >
+                        Confidentialité
+                    </a>
+                </div>
             </div>
         </div>
     );

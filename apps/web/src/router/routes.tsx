@@ -18,6 +18,8 @@ const FeedingDashboard = lazy(
 );
 const Onboarding = lazy(() => import("../pages/Onboarding"));
 const Profile = lazy(() => import("../pages/Profile"));
+const TermsOfService = lazy(() => import("../pages/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy"));
 
 const routes = [
     // auth
@@ -35,6 +37,25 @@ const routes = [
         element: (
             <ErrorBoundary>
                 <RegisterPage />
+            </ErrorBoundary>
+        ),
+        layout: "blank",
+    },
+    // legal (public, no auth required)
+    {
+        path: "/cgu",
+        element: (
+            <ErrorBoundary>
+                <TermsOfService />
+            </ErrorBoundary>
+        ),
+        layout: "blank",
+    },
+    {
+        path: "/privacy",
+        element: (
+            <ErrorBoundary>
+                <PrivacyPolicy />
             </ErrorBoundary>
         ),
         layout: "blank",

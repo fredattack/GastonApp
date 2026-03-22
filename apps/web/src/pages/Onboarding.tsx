@@ -19,7 +19,8 @@ const DEFAULT_PET_FORM: PetFormData = {
 export default function Onboarding() {
     const navigate = useNavigate();
     const { refreshPets } = usePets();
-    const [petFormData, setPetFormData] = useState<PetFormData>(DEFAULT_PET_FORM);
+    const [petFormData, setPetFormData] =
+        useState<PetFormData>(DEFAULT_PET_FORM);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const petFormRef = useRef<{ handleSubmit: () => Promise<void> }>(null);
 
