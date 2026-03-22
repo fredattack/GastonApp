@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { usePets } from "../../../contexts/PetsContext";
 import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
+import { SkeletonList } from "../../../components/Skeleton";
 import { modelService } from "../../../services";
 import { logger } from "@/utils/logger";
 
@@ -23,7 +24,7 @@ const Pets = () => {
     const navigate = useNavigate();
 
     const [search, setSearch] = useState("");
-    const { pets, refreshPets } = usePets();
+    const { pets, isLoading, refreshPets } = usePets();
 
     const [deletionQueue, setDeletionQueue] = useState<DeletionQueueItem[]>([]);
 
@@ -180,7 +181,8 @@ const Pets = () => {
                 <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
-                        <PawPrint size={20} className="inline mr-1" /> {t("my_pets")}
+                        <PawPrint size={20} className="inline mr-1" />{" "}
+                        {t("my_pets")}
                     </h5>
 
                     {/* Bouton et Search */}
@@ -205,21 +207,23 @@ const Pets = () => {
                         </div>
                     </div>
                 </div>
-                {
+                {isLoading ? (
+                    <SkeletonList count={6} height="h-40" columns={3} />
+                ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {// @ts-ignore
                         filteredData?.map((pet: Pet) => {
                             const actions = generateActions(pet.id);
                             return (
                                 <PetsCard
-                                    key={pet.id || Math.random()} // Utiliser une clé de secours
+                                    key={pet.id || Math.random()}
                                     pet={pet}
                                     actions={actions}
                                 />
                             );
                         })}
                     </div>
-                }
+                )}
             </div>
         </div>
     );

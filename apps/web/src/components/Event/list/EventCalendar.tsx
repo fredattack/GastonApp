@@ -16,6 +16,7 @@ import DayView from "../../Calendar/DayView";
 import EventQuickView from "../../Calendar/EventQuickView";
 import { EventTypes } from "../../../enums/EventTypes";
 import { useEvents } from "../../../contexts/EventsContext";
+import { SkeletonCard } from "../../Skeleton";
 
 const VIEW_MODES = {
     DAY: "day",
@@ -29,7 +30,7 @@ const VIEW_STYLES = {
 };
 
 const EventCalendar = () => {
-    const { events, fetchEvents } = useEvents();
+    const { events, isLoading, fetchEvents } = useEvents();
 
     const [filters, setFilters] = useState({
         pet_species: ["cat", "dog"],
@@ -312,35 +313,48 @@ const EventCalendar = () => {
 
             {/* Calendar Views */}
             <div className="mx-3">
-                {viewMode === VIEW_MODES.MONTH && (
-                    <CalendarGrid
-                        currentDate={currentDate}
-                        events={filteredEvents}
-                        onDateClick={handleDateClick}
-                        onEventClick={handleEventClick}
-                    />
-                )}
+                {isLoading ? (
+                    <div className="space-y-3">
+                        <SkeletonCard height="h-64" />
+                        <div className="grid grid-cols-7 gap-2">
+                            {Array.from({ length: 7 }).map((_, i) => (
+                                <SkeletonCard key={i} height="h-8" />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {viewMode === VIEW_MODES.MONTH && (
+                            <CalendarGrid
+                                currentDate={currentDate}
+                                events={filteredEvents}
+                                onDateClick={handleDateClick}
+                                onEventClick={handleEventClick}
+                            />
+                        )}
 
-                {viewMode === VIEW_MODES.WEEK && (
-                    <WeekView
-                        currentDate={currentDate}
-                        events={filteredEvents}
-                        onTimeSlotClick={handleTimeSlotClick}
-                        onEventClick={handleEventClick}
-                        onEventMove={handleEventMove}
-                        onEventResize={handleEventResize}
-                    />
-                )}
+                        {viewMode === VIEW_MODES.WEEK && (
+                            <WeekView
+                                currentDate={currentDate}
+                                events={filteredEvents}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventClick={handleEventClick}
+                                onEventMove={handleEventMove}
+                                onEventResize={handleEventResize}
+                            />
+                        )}
 
-                {viewMode === VIEW_MODES.DAY && (
-                    <DayView
-                        currentDate={currentDate}
-                        events={filteredEvents}
-                        onTimeSlotClick={handleTimeSlotClick}
-                        onEventClick={handleEventClick}
-                        onEventMove={handleEventMove}
-                        onEventResize={handleEventResize}
-                    />
+                        {viewMode === VIEW_MODES.DAY && (
+                            <DayView
+                                currentDate={currentDate}
+                                events={filteredEvents}
+                                onTimeSlotClick={handleTimeSlotClick}
+                                onEventClick={handleEventClick}
+                                onEventMove={handleEventMove}
+                                onEventResize={handleEventResize}
+                            />
+                        )}
+                    </>
                 )}
             </div>
 

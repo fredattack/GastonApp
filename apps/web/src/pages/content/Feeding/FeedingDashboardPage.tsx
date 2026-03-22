@@ -97,12 +97,22 @@ const FeedingDashboardContent: React.FC = () => {
     if (isLoading) {
         return (
             <div className="space-y-4 animate-pulse">
-                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
-                <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                <div
+                    className="h-8 rounded w-2/3"
+                    style={{ backgroundColor: "#E8E5DC", borderRadius: "20px" }}
+                />
+                <div
+                    className="h-12 rounded-xl"
+                    style={{ backgroundColor: "#E8E5DC", borderRadius: "20px" }}
+                />
                 {[1, 2, 3, 4, 5].map((i) => (
                     <div
                         key={i}
-                        className="h-16 bg-gray-200 dark:bg-gray-700 rounded-xl"
+                        className="h-16 rounded-xl"
+                        style={{
+                            backgroundColor: "#E8E5DC",
+                            borderRadius: "20px",
+                        }}
                     />
                 ))}
             </div>
