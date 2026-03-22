@@ -159,7 +159,7 @@ const initialState = {
 };
 
 const themeConfigSlice = createSlice({
-    name: "auth",
+    name: "themeConfig",
     initialState,
     reducers: {
         toggleTheme(state, action) {
