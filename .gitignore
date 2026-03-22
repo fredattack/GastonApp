@@ -84,3 +84,7 @@ apps/web/playwright-report/
 
 # Reports
 NIGHT-REPORT.md
+/screenshots/ai-assistant-panel.png
+/screenshots/ai-chat-error.png
+/screenshots/command-bar-open.png
+/screenshots/dashboard-initial.png

@@ -45,7 +45,11 @@
       "Bash(nc -z localhost 4480)",
       "Bash(lsof -i :8000 -sTCP:LISTEN)",
       "Bash(lsof -i :4480 -sTCP:LISTEN)",
-      "Bash(lsof -i :3008 -sTCP:LISTEN)"
+      "Bash(lsof -i :3008 -sTCP:LISTEN)",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_press_key",
+      "Bash(gh auth:*)",
+      "Bash(gh run:*)"
     ],
     "deny": [],
     "ask": []
