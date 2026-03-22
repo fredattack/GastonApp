@@ -114,9 +114,11 @@ const EventForm = forwardRef(
         const handleSubmit = async (e: React.FormEvent) => {
             try {
                 if (!eventFormData.type || !eventFormData.start_date) {
-                    alert(
-                        "Les champs Type et Date de début sont obligatoires !",
-                    );
+                    addToast({
+                        message:
+                            "Les champs Type et Date de début sont obligatoires !",
+                        type: "error",
+                    });
                     return;
                 }
                 if (eventFormData.id) {
@@ -135,7 +137,10 @@ const EventForm = forwardRef(
                 if (onSubmit) onSubmit(eventFormData);
             } catch (error) {
                 console.error("Erreur lors de la soumission :", error);
-                alert("Une erreur est survenue lors de la soumission.");
+                addToast({
+                    message: "Une erreur est survenue lors de la soumission.",
+                    type: "error",
+                });
             }
         };
 

@@ -373,7 +373,7 @@ const ComponentsShowcase: React.FC = () => {
                         <Card
                             variant="standard"
                             padding="md"
-                            onClick={() => alert("Card clicked!")}
+                            onClick={() => console.log("Card clicked!")}
                         >
                             <div className="flex items-center justify-between">
                                 <div>
