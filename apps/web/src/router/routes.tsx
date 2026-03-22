@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
 import { ProtectedRoute } from "../components/Router/ProtectedRoute";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 const Index = lazy(() => import("../pages/Index"));
 const ComponentsShowcase = lazy(() => import("../pages/ComponentsShowcase"));
@@ -20,12 +21,20 @@ const routes = [
     // auth
     {
         path: "/login",
-        element: <LoginPage />,
+        element: (
+            <ErrorBoundary>
+                <LoginPage />
+            </ErrorBoundary>
+        ),
         layout: "blank",
     },
     {
         path: "/register",
-        element: <RegisterPage />,
+        element: (
+            <ErrorBoundary>
+                <RegisterPage />
+            </ErrorBoundary>
+        ),
         layout: "blank",
     },
     // dashboard
@@ -33,7 +42,9 @@ const routes = [
         path: "/",
         element: (
             <ProtectedRoute>
-                <Index />
+                <ErrorBoundary>
+                    <Index />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -43,7 +54,9 @@ const routes = [
         path: "/components-showcase",
         element: (
             <ProtectedRoute>
-                <ComponentsShowcase />
+                <ErrorBoundary>
+                    <ComponentsShowcase />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -53,7 +66,9 @@ const routes = [
         path: "/ai-assistant",
         element: (
             <ProtectedRoute>
-                <AIAssistant />
+                <ErrorBoundary>
+                    <AIAssistant />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "blank",
@@ -63,7 +78,9 @@ const routes = [
         path: "/feeding",
         element: (
             <ProtectedRoute>
-                <FeedingDashboard />
+                <ErrorBoundary>
+                    <FeedingDashboard />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -73,7 +90,9 @@ const routes = [
         path: "/calendar",
         element: (
             <ProtectedRoute>
-                <EventCalendar />
+                <ErrorBoundary>
+                    <EventCalendar />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -83,7 +102,9 @@ const routes = [
         path: "/content/pets",
         element: (
             <ProtectedRoute>
-                <Pets />
+                <ErrorBoundary>
+                    <Pets />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -92,7 +113,9 @@ const routes = [
         path: "/content/pets/create",
         element: (
             <ProtectedRoute>
-                <PetForm pet={undefined} />
+                <ErrorBoundary>
+                    <PetForm pet={undefined} />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
@@ -101,7 +124,9 @@ const routes = [
         path: "/content/pets/:id",
         element: (
             <ProtectedRoute>
-                <PetForm pet={undefined} />
+                <ErrorBoundary>
+                    <PetForm pet={undefined} />
+                </ErrorBoundary>
             </ProtectedRoute>
         ),
         layout: "default",
