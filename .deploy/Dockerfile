@@ -20,7 +20,7 @@ COPY apps/web ./apps/web
 RUN pnpm install --frozen-lockfile
 
 # Build the web app
-RUN pnpm --filter @gastonapp/web build
+RUN pnpm build:web
 
 # Stage 2: Production
 FROM nginx:alpine AS production
