@@ -76,8 +76,11 @@ docs/
 /design-system/img_exemples/*.webp
 /design-system/img_exemples/*.pdf
 
-# Playwright MCP screenshots
+# Playwright
 .playwright-mcp/
+apps/web/tests/e2e/.auth/
+apps/web/test-results/
+apps/web/playwright-report/
 
 # Reports
 NIGHT-REPORT.md
