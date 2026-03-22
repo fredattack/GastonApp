@@ -42,7 +42,10 @@
       "Bash(BASE=\"/Users/fred/Library/CloudStorage/GoogleDrive-fredmoras8@gmail.com/Mon Drive/🧳 01 - Projects/[02] App Gaston/docs/briefs\")",
       "Read(//Users/fred/PhpstormProjects/GastonApp/$BASE/**)",
       "Bash(npx playwright:*)",
-      "Bash(nc -z localhost 4480)"
+      "Bash(nc -z localhost 4480)",
+      "Bash(lsof -i :8000 -sTCP:LISTEN)",
+      "Bash(lsof -i :4480 -sTCP:LISTEN)",
+      "Bash(lsof -i :3008 -sTCP:LISTEN)"
     ],
     "deny": [],
     "ask": []
