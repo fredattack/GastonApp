@@ -16,6 +16,7 @@ const EventCalendar = lazy(
 const FeedingDashboard = lazy(
     () => import("../pages/content/Feeding/FeedingDashboardPage"),
 );
+const Onboarding = lazy(() => import("../pages/Onboarding"));
 
 const routes = [
     // auth
@@ -34,6 +35,18 @@ const routes = [
             <ErrorBoundary>
                 <RegisterPage />
             </ErrorBoundary>
+        ),
+        layout: "blank",
+    },
+    // onboarding
+    {
+        path: "/onboarding",
+        element: (
+            <ProtectedRoute>
+                <ErrorBoundary>
+                    <Onboarding />
+                </ErrorBoundary>
+            </ProtectedRoute>
         ),
         layout: "blank",
     },

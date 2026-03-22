@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { usePets } from "../contexts/PetsContext";
 import { useEvents } from "../contexts/EventsContext";
@@ -77,6 +77,11 @@ const Index: React.FC = () => {
 
     const isLoading = petsLoading || eventsLoading;
     const greeting = getGreeting();
+
+    // Redirect to onboarding if user has no pets and loading is done
+    if (!petsLoading && pets.length === 0) {
+        return <Navigate to="/onboarding" replace />;
+    }
 
     return (
         <div
