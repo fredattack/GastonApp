@@ -142,17 +142,14 @@ export class OpenAiService {
         }
 
         try {
-            const token = document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("XSRF-TOKEN="))
-                ?.split("=")[1];
+            const authToken = localStorage.getItem("auth_token");
 
             const headers: HeadersInit = {
                 "Content-Type": "application/json",
             };
 
-            if (token) {
-                headers["X-XSRF-TOKEN"] = decodeURIComponent(token);
+            if (authToken) {
+                headers["Authorization"] = `Bearer ${authToken}`;
             }
 
             const response = await fetch(
@@ -160,7 +157,6 @@ export class OpenAiService {
                 {
                     method: "POST",
                     headers,
-                    credentials: "include",
                     body: JSON.stringify({
                         messages: messages.map((m) => ({
                             role: m.role,

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchCsrfToken } from "../../providers/apiClientProvider/axiosClient";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 interface RegisterCredentials {
@@ -22,10 +21,6 @@ export default function RegisterPage() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        fetchCsrfToken();
-    }, []);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -46,7 +41,6 @@ export default function RegisterPage() {
         }
 
         try {
-            await fetchCsrfToken();
             await register(formData);
             navigate("/");
         } catch (err: any) {

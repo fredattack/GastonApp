@@ -1,7 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import axiosClient, {
-    fetchCsrfToken,
-} from "../providers/apiClientProvider/axiosClient";
+import axiosClient from "../providers/apiClientProvider/axiosClient";
 import { logger } from "@/utils/logger";
 
 export interface User {
@@ -50,9 +48,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (token) {
                 try {
-                    // Fetch CSRF token first (same as login flow)
-                    await fetchCsrfToken();
-
                     axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
                     const response = await axiosClient.get<User>("/auth/user");
                     const fetchedUser = response.data;
@@ -95,7 +90,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     ): Promise<User> => {
         setError(null);
         try {
-            await fetchCsrfToken();
             const response = await axiosClient.post<{
                 data: { user: User; token: string };
             }>("/auth/register", credentials);
@@ -116,7 +110,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = async (credentials: LoginCredentials): Promise<User> => {
         setError(null);
         try {
-            await fetchCsrfToken();
             const response = await axiosClient.post<{
                 data: { user: User; token: string };
             }>("/auth/login", credentials);
