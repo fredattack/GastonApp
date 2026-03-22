@@ -83,7 +83,7 @@ export async function registerUserViaApi(userData: {
 }
 
 /**
- * Create a pet via API (Node-side)
+ * Create a pet via API (Node-side, with Accept: application/json)
  */
 export async function createPetViaApi(
   token: string,
@@ -94,17 +94,18 @@ export async function createPetViaApi(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name: petData.name,
       species: petData.species,
-      breed: petData.breed || '',
-      birthDate: '2020-01-15',
-      isActive: true,
-      ownerId: userId,
+      breed: petData.breed || 'Mixed',
+      birth_date: '2020-01-15',
+      is_active: true,
+      owner_id: userId,
+      gender: 'male',
       order: 0,
-      created_at: new Date().toISOString(),
     }),
   });
 
@@ -122,4 +123,41 @@ export async function createPetViaApi(
     console.warn(`Create pet: unexpected response — ${text.substring(0, 200)}`);
     return '';
   }
+}
+
+/**
+ * Intercept all API calls to the backend and relay via Node.js fetch.
+ * Adds Accept: application/json (required by Laravel) and bypasses CSRF.
+ */
+export async function interceptAllApi(page: Page) {
+  await page.route('http://localhost:3008/api/**', async (route) => {
+    const req = route.request();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
+    const authHeader = req.headers()['authorization'];
+    if (authHeader) headers['Authorization'] = authHeader;
+
+    const fetchOptions: RequestInit = {
+      method: req.method(),
+      headers,
+    };
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method())) {
+      const body = req.postData();
+      if (body) fetchOptions.body = body;
+    }
+
+    try {
+      const response = await fetch(req.url(), fetchOptions);
+      const body = await response.text();
+      await route.fulfill({
+        status: response.status,
+        contentType: 'application/json',
+        body,
+      });
+    } catch {
+      await route.continue();
+    }
+  });
 }

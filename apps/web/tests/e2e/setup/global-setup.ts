@@ -50,17 +50,18 @@ async function globalSetup(config: FullConfig) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name: 'Rex E2E',
       species: 'dog',
       breed: 'Labrador',
-      birthDate: '2020-01-15',
-      isActive: true,
-      ownerId: userId,
+      birth_date: '2020-01-15',
+      is_active: true,
+      owner_id: userId,
+      gender: 'male',
       order: 0,
-      created_at: new Date().toISOString(),
     }),
   });
 
