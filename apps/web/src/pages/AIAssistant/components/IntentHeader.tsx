@@ -75,17 +75,41 @@ const IntentHeader: React.FC<IntentHeaderProps> = ({
 
         switch (eventType) {
             case "feeding":
-                return { Icon: ForkKnife, label: "REPAS", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: ForkKnife,
+                    label: "REPAS",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
             case "medical":
-                return { Icon: FirstAidKit, label: "TRAITEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: FirstAidKit,
+                    label: "TRAITEMENT",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
             case "appointment":
-                return { Icon: Calendar, label: "RENDEZ-VOUS", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: Calendar,
+                    label: "RENDEZ-VOUS",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
             case "training":
-                return { Icon: Barbell, label: "ENTRAÎNEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: Barbell,
+                    label: "ENTRAÎNEMENT",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
             case "social":
-                return { Icon: PawPrint, label: "SOCIAL", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: PawPrint,
+                    label: "SOCIAL",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
             default:
-                return { Icon: Calendar, label: "ÉVÉNEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
+                return {
+                    Icon: Calendar,
+                    label: "ÉVÉNEMENT",
+                    iconColor: "text-gray-600 dark:text-gray-400",
+                };
         }
     };
 

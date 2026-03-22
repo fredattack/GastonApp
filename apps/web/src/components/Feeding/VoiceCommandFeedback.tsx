@@ -9,12 +9,7 @@
  * Auto-dismisses after 4 seconds.
  */
 import React, { useEffect, useRef } from "react";
-import {
-    CheckCircle,
-    Warning,
-    XCircle,
-    X,
-} from "@phosphor-icons/react";
+import { CheckCircle, Warning, XCircle, X } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 
 interface VoiceCommandFeedbackProps {
@@ -125,10 +120,7 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
                 className={`flex-shrink-0 p-1 rounded-md transition-colors hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${variant.iconClass}`}
                 aria-label="Fermer"
             >
-                <X
-                    size={14}
-                    aria-hidden="true"
-                />
+                <X size={14} aria-hidden="true" />
             </button>
 
             {/* Progress bar showing time until auto-dismiss */}

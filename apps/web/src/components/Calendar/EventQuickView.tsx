@@ -396,9 +396,15 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                     className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                 >
                                     {event.is_done ? (
-                                        <Circle size={16} className="mr-2 inline" />
+                                        <Circle
+                                            size={16}
+                                            className="mr-2 inline"
+                                        />
                                     ) : (
-                                        <CheckCircle size={16} className="mr-2 inline" />
+                                        <CheckCircle
+                                            size={16}
+                                            className="mr-2 inline"
+                                        />
                                     )}
                                     {event.is_done
                                         ? "Marquer non fait"
@@ -410,14 +416,20 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                         disabled={isDeleting}
                                         className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                                     >
-                                        <Trash size={16} className="mr-2 inline" />
+                                        <Trash
+                                            size={16}
+                                            className="mr-2 inline"
+                                        />
                                         Supprimer
                                     </button>
                                     <button
                                         onClick={handleEditClick}
                                         className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors"
                                     >
-                                        <PencilSimple size={16} className="mr-2 inline" />
+                                        <PencilSimple
+                                            size={16}
+                                            className="mr-2 inline"
+                                        />
                                         Modifier
                                     </button>
                                 </div>

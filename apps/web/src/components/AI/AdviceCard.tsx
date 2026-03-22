@@ -98,7 +98,9 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 <div className="flex-shrink-0">
                     <AdviceIcon
                         size={24}
-                        className={severity ? getSeverityColor() : getIconColor()}
+                        className={
+                            severity ? getSeverityColor() : getIconColor()
+                        }
                     />
                 </div>
                 <div className="flex-1">

@@ -28,9 +28,15 @@ const SecondaryDetails: React.FC<SecondaryDetailsProps> = ({ event }) => {
                     supplémentaires
                 </span>
                 {isExpanded ? (
-                    <CaretUp size={16} className="text-gray-500 dark:text-gray-400" />
+                    <CaretUp
+                        size={16}
+                        className="text-gray-500 dark:text-gray-400"
+                    />
                 ) : (
-                    <CaretDown size={16} className="text-gray-500 dark:text-gray-400" />
+                    <CaretDown
+                        size={16}
+                        className="text-gray-500 dark:text-gray-400"
+                    />
                 )}
             </button>
 

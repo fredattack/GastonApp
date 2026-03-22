@@ -16,7 +16,10 @@ import type { Icon } from "@phosphor-icons/react";
 
 import EventDropdown from "./EventDropdown";
 
-const EVENT_TYPE_STYLES: Record<string, { Icon: Icon; color: string; bg: string }> = {
+const EVENT_TYPE_STYLES: Record<
+    string,
+    { Icon: Icon; color: string; bg: string }
+> = {
     medical: {
         Icon: Pill,
         color: "text-danger",
@@ -81,10 +84,7 @@ const EventCard: React.FC<{
                         className={`btn btn-outline-${style?.bg} flex items-center justify-center w-9 h-9 p-0 rounded-full`}
                     >
                         {style && (
-                            <style.Icon
-                                size={20}
-                                className={style.color}
-                            />
+                            <style.Icon size={20} className={style.color} />
                         )}
                     </div>
                 </div>

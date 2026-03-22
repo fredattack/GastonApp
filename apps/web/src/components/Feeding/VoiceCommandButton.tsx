@@ -1,9 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-    Microphone,
-    MicrophoneSlash,
-    SpinnerGap,
-} from "@phosphor-icons/react";
+import { Microphone, MicrophoneSlash, SpinnerGap } from "@phosphor-icons/react";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import { feedingService } from "../../services/FeedingService";
 import { logger } from "@/utils/logger";
@@ -163,10 +159,7 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({
                     aria-hidden="true"
                 />
             ) : buttonState === "error" ? (
-                <MicrophoneSlash
-                    size={16}
-                    aria-hidden="true"
-                />
+                <MicrophoneSlash size={16} aria-hidden="true" />
             ) : (
                 <Microphone
                     size={16}

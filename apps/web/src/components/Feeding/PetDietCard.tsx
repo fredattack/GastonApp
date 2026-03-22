@@ -113,10 +113,7 @@ const PetDietCard: React.FC<PetDietCardProps> = ({
                         className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Fermer"
                     >
-                        <X
-                            size={20}
-                            className="text-gray-500"
-                        />
+                        <X size={20} className="text-gray-500" />
                     </button>
                 </div>
 

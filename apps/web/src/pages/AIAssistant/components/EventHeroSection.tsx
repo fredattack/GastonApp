@@ -54,10 +54,7 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
                 {pets.map((petInfo, idx) => (
                     <div key={idx} className="flex items-center gap-2 md:gap-3">
                         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700/50">
-                            <PawPrint
-                                size={24}
-                                className="text-primary"
-                            />
+                            <PawPrint size={24} className="text-primary" />
                         </div>
                         <div>
                             <p className="text-xs text-gray-500 dark:text-gray-400">

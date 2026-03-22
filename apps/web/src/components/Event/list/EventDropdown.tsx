@@ -61,9 +61,7 @@ const EventDropdown = ({
             <Dropdown
                 placement="top-end"
                 btnClassName="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
-                button={
-                    <DotsThree size={20} className="m-auto" />
-                }
+                button={<DotsThree size={20} className="m-auto" />}
             >
                 <ul className="!min-w-[170px] z-50 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2">
                     <li>
@@ -75,7 +73,10 @@ const EventDropdown = ({
                             {event.is_done ? (
                                 <X size={16} className="mr-2 inline" />
                             ) : (
-                                <CheckSquare size={16} className="mr-2 inline" />
+                                <CheckSquare
+                                    size={16}
+                                    className="mr-2 inline"
+                                />
                             )}
                             {event.is_done ? "Mark as Undone" : "Mark as Done"}
                         </button>

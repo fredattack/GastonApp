@@ -149,7 +149,7 @@ export class OpenAiService {
             };
 
             if (authToken) {
-                headers["Authorization"] = `Bearer ${authToken}`;
+                headers.Authorization = `Bearer ${authToken}`;
             }
 
             const response = await fetch(

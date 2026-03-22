@@ -76,9 +76,7 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
                                     }
                                 `}
                                 >
-                                    {ActionIcon && (
-                                        <ActionIcon size={14} />
-                                    )}
+                                    {ActionIcon && <ActionIcon size={14} />}
                                     {action.label}
                                 </button>
                             );

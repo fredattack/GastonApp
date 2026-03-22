@@ -13,9 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 
-const IconContext = createContext<Record<string, Icon> | undefined>(
-    undefined,
-);
+const IconContext = createContext<Record<string, Icon> | undefined>(undefined);
 
 export const IconProvider: React.FC<{
     children: React.ReactNode;

@@ -20,8 +20,8 @@ import IconUser from "../Icon/IconUser";
 import IconMail from "../Icon/IconMail";
 import IconLockDots from "../Icon/IconLockDots";
 import IconLogout from "../Icon/IconLogout";
-const Header = () => {
 
+const Header = () => {
     const location = useLocation();
     useEffect(() => {
         const selector = document.querySelector(

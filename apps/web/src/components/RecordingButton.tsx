@@ -32,11 +32,7 @@ const RecordingButton = ({
                 }`}
             >
                 {!isLocalRecording && (
-                    <Circle
-                        size={48}
-                        weight="fill"
-                        className="text-red-600"
-                    />
+                    <Circle size={48} weight="fill" className="text-red-600" />
                 )}
             </div>
         </button>

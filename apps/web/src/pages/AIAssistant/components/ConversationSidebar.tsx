@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Plus, Trash, MagnifyingGlass, ChatCircle } from "@phosphor-icons/react";
+import {
+    Plus,
+    Trash,
+    MagnifyingGlass,
+    ChatCircle,
+} from "@phosphor-icons/react";
 import { useAIAssistant } from "../../../contexts/AIAssistantContext";
 
 interface ConversationSidebarProps {

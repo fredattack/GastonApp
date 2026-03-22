@@ -1,5 +1,10 @@
 import React from "react";
-import { ChartLine, ArrowUp, ArrowDown, ArrowRight } from "@phosphor-icons/react";
+import {
+    ChartLine,
+    ArrowUp,
+    ArrowDown,
+    ArrowRight,
+} from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 
 interface MetricsChartProps {
