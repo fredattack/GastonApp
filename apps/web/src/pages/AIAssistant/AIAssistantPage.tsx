@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { ArrowLeft, List, X } from "@phosphor-icons/react";
+import { ArrowLeft, Info, List, X } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { useAIAssistant } from "../../contexts/AIAssistantContext";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
@@ -61,7 +61,11 @@ const AIAssistantPage: React.FC = () => {
                             className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             aria-label="Toggle sidebar"
                         >
-                            {isSidebarOpen ? <X size={20} /> : <List size={20} />}
+                            {isSidebarOpen ? (
+                                <X size={20} />
+                            ) : (
+                                <List size={20} />
+                            )}
                         </button>
 
                         <div>
@@ -117,6 +121,27 @@ const AIAssistantPage: React.FC = () => {
 
                 {/* Conversation Thread */}
                 <div className="flex-1 flex flex-col overflow-hidden">
+                    {/* AI Health Disclaimer */}
+                    <div
+                        className="flex-shrink-0 flex items-center gap-2 px-4 py-2"
+                        style={{
+                            backgroundColor: "#F4F1E8",
+                            fontFamily: "Nunito, sans-serif",
+                            fontSize: "12px",
+                            color: "#6B5E4F",
+                        }}
+                    >
+                        <Info
+                            size={16}
+                            weight="bold"
+                            style={{ color: "#8FA998", flexShrink: 0 }}
+                        />
+                        <span>
+                            Gaston utilise l'intelligence artificielle. Ses
+                            conseils ne remplacent pas l'avis d'un vétérinaire.
+                        </span>
+                    </div>
+
                     <ConversationThread
                         conversation={activeConversation}
                         isLoading={isLoading}
