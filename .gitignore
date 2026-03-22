@@ -94,3 +94,5 @@ yarn-error.log*
 
 # Documentation synchronisée via Google Drive (symlink)
 docs/
+
+NIGHT-REPORT.md

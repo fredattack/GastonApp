@@ -36,7 +36,9 @@
       "Bash(git:*)",
       "Bash(curl -s http://localhost:4480/login)",
       "mcp__playwright__browser_run_code",
-      "Bash(docker ps:*)"
+      "Bash(docker ps:*)",
+      "Bash(pnpm --filter @gastonapp/web remove react-scripts firebase openai)",
+      "Bash(docker exec:*)"
     ],
     "deny": [],
     "ask": []
