@@ -1,9 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExclamationTriangle,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { Warning, X } from "@phosphor-icons/react";
 
 interface ConfirmationDialogProps {
     title: string;
@@ -28,10 +24,9 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                 {/* Header */}
                 <div className="flex items-start justify-between p-6 pb-4">
                     <div className="flex items-start gap-3 flex-1">
-                        <FontAwesomeIcon
-                            icon={faExclamationTriangle}
+                        <Warning
+                            size={24}
                             className="text-yellow-500 mt-1 flex-shrink-0"
-                            size="lg"
                         />
                         <div className="flex-1">
                             <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
@@ -47,8 +42,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                         disabled={isLoading}
                         className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
                     >
-                        <FontAwesomeIcon
-                            icon={faTimes}
+                        <X
+                            size={20}
                             className="text-gray-500 dark:text-gray-400"
                         />
                     </button>

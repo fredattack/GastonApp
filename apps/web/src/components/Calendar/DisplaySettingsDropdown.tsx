@@ -1,12 +1,11 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faEllipsisV,
-    faPills,
-    faShare,
-    faUtensils,
-    faWindowRestore,
-} from "@fortawesome/free-solid-svg-icons";
+    DotsThreeVertical,
+    Pill,
+    ShareNetwork,
+    ForkKnife,
+    SquaresFour,
+} from "@phosphor-icons/react";
 
 export default function DisplaySettingsDropdown({
     viewMode,
@@ -21,7 +20,7 @@ export default function DisplaySettingsDropdown({
         <Menu as="div" className="relative inline-block text-left">
             <div>
                 <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md  px-3 py-2 text-sm font-semibold text-gray-500  hover:bg-gray-50">
-                    <FontAwesomeIcon icon={faEllipsisV} className="w-5 h-5" />
+                    <DotsThreeVertical size={20} />
                 </MenuButton>
             </div>
 
@@ -65,9 +64,9 @@ export default function DisplaySettingsDropdown({
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => onChangeViewStyle("card")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faWindowRestore}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <SquaresFour
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Default
                             </div>
@@ -76,9 +75,9 @@ export default function DisplaySettingsDropdown({
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => onChangeViewStyle("feeding")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faUtensils}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <ForkKnife
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Repas
                             </div>
@@ -87,13 +86,9 @@ export default function DisplaySettingsDropdown({
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => onChangeViewStyle("care")}
                             >
-                                {/* <DocumentDuplicateIcon */}
-                                {/* aria-hidden="true" */}
-                                {/* className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500" */}
-                                {/* /> */}
-                                <FontAwesomeIcon
-                                    icon={faPills}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <Pill
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Soins médicaux
                             </div>
@@ -108,11 +103,10 @@ export default function DisplaySettingsDropdown({
                                 href="#"
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                             >
-                                <FontAwesomeIcon
-                                    icon={faShare}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <ShareNetwork
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
-                                {/* <UserPlusIcon aria-hidden="true" className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500" /> */}
                                 Share
                             </a>
                         </div>

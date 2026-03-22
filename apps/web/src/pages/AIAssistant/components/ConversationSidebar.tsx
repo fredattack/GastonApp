@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faPlus,
-    faTrash,
-    faSearch,
-    faMessage,
-} from "@fortawesome/free-solid-svg-icons";
+import { Plus, Trash, MagnifyingGlass, ChatCircle } from "@phosphor-icons/react";
 import { useAIAssistant } from "../../../contexts/AIAssistantContext";
 
 interface ConversationSidebarProps {
@@ -77,15 +71,14 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                         onClick={handleNewConversation}
                         className="w-full py-3 px-4 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-md"
                     >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <Plus size={20} />
                         Nouvelle conversation
                     </button>
 
                     <div className="mt-3 relative group">
-                        <FontAwesomeIcon
-                            icon={faSearch}
+                        <MagnifyingGlass
+                            size={16}
                             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
-                            size="sm"
                         />
                         <input
                             type="text"
@@ -124,9 +117,9 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <FontAwesomeIcon
-                                                    icon={faMessage}
-                                                    className={`text-xs flex-shrink-0 transition-colors ${
+                                                <ChatCircle
+                                                    size={14}
+                                                    className={`flex-shrink-0 transition-colors ${
                                                         activeConversation?.id ===
                                                         conv.id
                                                             ? "text-primary"
@@ -162,10 +155,7 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                                             className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all hover:scale-110"
                                             aria-label="Supprimer la conversation"
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faTrash}
-                                                size="sm"
-                                            />
+                                            <Trash size={16} />
                                         </button>
                                     </div>
                                 </div>

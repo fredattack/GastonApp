@@ -1,50 +1,49 @@
 import React, { useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
-    faAngleDown,
-    faAngleUp,
-    faPills, // medical
-    faHeart, // care
-    faUtensils,
-    faCalendarCheck, // appointment
-    faDumbbell, // training
-    faUsers,
-    faClock,
-    faCheckSquare, // social
-} from "@fortawesome/free-solid-svg-icons";
+    CaretDown,
+    CaretUp,
+    Pill,
+    Heart,
+    ForkKnife,
+    CalendarCheck,
+    Barbell,
+    Users,
+    Clock,
+    CheckSquare,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 import EventDropdown from "./EventDropdown";
 
-const EVENT_TYPE_STYLES = {
+const EVENT_TYPE_STYLES: Record<string, { Icon: Icon; color: string; bg: string }> = {
     medical: {
-        icon: faPills,
+        Icon: Pill,
         color: "text-danger",
         bg: "danger",
     },
     care: {
-        icon: faHeart,
+        Icon: Heart,
         color: "text-danger-light",
         bg: "danger-light",
     },
     feeding: {
-        icon: faUtensils,
+        Icon: ForkKnife,
         color: "text-info",
         bg: "info",
     },
     appointment: {
-        icon: faCalendarCheck,
+        Icon: CalendarCheck,
         color: "text-blue-500",
         bg: "blue-100",
     },
     training: {
-        icon: faDumbbell,
+        Icon: Barbell,
         color: "text-success",
         bg: "success",
     },
     social: {
-        icon: faUsers,
+        Icon: Users,
         color: "text-warning",
         bg: "warning",
     },
@@ -60,11 +59,11 @@ const EventCard: React.FC<{
     const donestyle = event.is_done
         ? {
               class: "text-green-600",
-              icon: faCheckSquare,
+              hasIcon: true,
           }
-        : { class: "text-red-600" };
+        : { class: "text-red-600", hasIcon: false };
     const style =
-        EVENT_TYPE_STYLES[type as keyof typeof EVENT_TYPE_STYLES] || {};
+        EVENT_TYPE_STYLES[type as keyof typeof EVENT_TYPE_STYLES] || null;
 
     const handleDelete = () => {
         if (onRefresh) {
@@ -79,12 +78,14 @@ const EventCard: React.FC<{
             <div className="mb-auto border grid grid-cols-12 py-3">
                 <div className="text-xs flex items-center justify-center  col-span-2 hover:bg-white  transition duration-500 ease-in-out">
                     <div
-                        className={`btn btn-outline-${style.bg} flex items-center justify-center w-9 h-9 p-0 rounded-full`}
+                        className={`btn btn-outline-${style?.bg} flex items-center justify-center w-9 h-9 p-0 rounded-full`}
                     >
-                        <FontAwesomeIcon
-                            icon={style.icon}
-                            className={`${style.color}`}
-                        />
+                        {style && (
+                            <style.Icon
+                                size={20}
+                                className={style.color}
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="col-span-8 px-3 overflow-hidden">
@@ -100,10 +101,11 @@ const EventCard: React.FC<{
                     className="text-xs flex items-center justify-center  transition duration-500 ease-in-out"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
-                    <FontAwesomeIcon
-                        icon={isExpanded ? faAngleUp : faAngleDown}
-                        className="text-gray-500"
-                    />
+                    {isExpanded ? (
+                        <CaretUp size={16} className="text-gray-500" />
+                    ) : (
+                        <CaretDown size={16} className="text-gray-500" />
+                    )}
                 </div>
             </div>
             {isExpanded && (
@@ -130,16 +132,12 @@ const EventCard: React.FC<{
                 <div
                     className={`p-2 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center justify-center col-span-2 ${donestyle.class}`}
                 >
-                    {donestyle.icon && (
-                        <FontAwesomeIcon
-                            icon={donestyle.icon}
-                            size="lg"
-                            className="mr-2"
-                        />
+                    {donestyle.hasIcon && (
+                        <CheckSquare size={24} className="mr-2" />
                     )}
                 </div>
                 <div className="p-2 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                    <FontAwesomeIcon icon={faClock} className="mr-2" />
+                    <Clock size={16} className="mr-2" />
                 </div>
                 <div className="p-2 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center col-span-7">
                     <span className="ml-1">

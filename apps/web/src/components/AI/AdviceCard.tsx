@@ -1,14 +1,14 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faLightbulb,
-    faUtensils,
-    faHeartbeat,
-    faPaw,
-    faCheckCircle,
-    faExternalLinkAlt,
-    faExclamationCircle,
-} from "@fortawesome/free-solid-svg-icons";
+    Lightbulb,
+    ForkKnife,
+    Heartbeat,
+    PawPrint,
+    CheckCircle,
+    ArrowSquareOut,
+    WarningCircle,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface AdviceCardProps {
     adviceData: AdviceData;
@@ -22,26 +22,24 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
         sources,
         relatedTopics,
         confidence,
-        // Nutrition fields
         dailyCalories,
         feedingFrequency,
         toxicFoods,
-        // Health fields
         severity,
         redFlags,
         nextSteps,
     } = adviceData;
 
-    const getIcon = () => {
+    const getIcon = (): Icon => {
         switch (adviceType) {
             case "nutrition":
-                return faUtensils;
+                return ForkKnife;
             case "health":
-                return faHeartbeat;
+                return Heartbeat;
             case "behavior":
-                return faPaw;
+                return PawPrint;
             default:
-                return faLightbulb;
+                return Lightbulb;
         }
     };
 
@@ -90,15 +88,17 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
         return "text-orange-600 dark:text-orange-400";
     };
 
+    const AdviceIcon = getIcon();
+
     return (
         <div
             className={`bg-gradient-to-br ${getTypeColor()} rounded-xl p-4 mt-3`}
         >
             <div className="flex items-start gap-3 mb-3">
                 <div className="flex-shrink-0">
-                    <FontAwesomeIcon
-                        icon={getIcon()}
-                        className={`${severity ? getSeverityColor() : getIconColor()} text-xl`}
+                    <AdviceIcon
+                        size={24}
+                        className={severity ? getSeverityColor() : getIconColor()}
                     />
                 </div>
                 <div className="flex-1">
@@ -115,7 +115,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                     <div
                         className={`flex-shrink-0 flex items-center gap-1 ${getConfidenceColor()}`}
                     >
-                        <FontAwesomeIcon icon={faCheckCircle} size="xs" />
+                        <CheckCircle size={14} />
                         <span className="text-xs font-medium whitespace-nowrap">
                             {Math.round(confidence)}%
                         </span>
@@ -123,7 +123,6 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 )}
             </div>
 
-            {/* Nutrition-specific fields */}
             {adviceType === "nutrition" && (
                 <>
                     {(dailyCalories || feedingFrequency) && (
@@ -154,7 +153,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                     {toxicFoods && toxicFoods.length > 0 && (
                         <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg mb-3 border border-red-200 dark:border-red-800">
                             <p className="text-xs font-semibold text-red-800 dark:text-red-200 mb-2">
-                                ⚠️ Aliments toxiques à éviter :
+                                Aliments toxiques :
                             </p>
                             <div className="flex flex-wrap gap-1">
                                 {toxicFoods.map((food, index) => (
@@ -171,11 +170,10 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 </>
             )}
 
-            {/* Health-specific fields */}
             {redFlags && redFlags.length > 0 && (
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg mb-3 border border-yellow-200 dark:border-yellow-800">
                     <p className="text-xs font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                        🚩 Signes d'alerte :
+                        Signes d'alerte :
                     </p>
                     <ul className="text-xs text-yellow-900 dark:text-yellow-100 space-y-1">
                         {redFlags.map((flag, index) => (
@@ -191,7 +189,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
             {nextSteps && nextSteps.length > 0 && (
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-3 border border-blue-200 dark:border-blue-800">
                     <p className="text-xs font-semibold text-blue-800 dark:text-blue-200 mb-2">
-                        📋 Prochaines étapes :
+                        Prochaines etapes :
                     </p>
                     <ol className="text-xs text-blue-900 dark:text-blue-100 space-y-1 list-decimal list-inside">
                         {nextSteps.map((step, index) => (
@@ -201,7 +199,6 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 </div>
             )}
 
-            {/* Sources */}
             {sources && sources.length > 0 && (
                 <div className="mb-3">
                     <h5 className="font-semibold text-gray-900 dark:text-white text-xs mb-2">
@@ -216,10 +213,7 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                                 rel="noopener noreferrer"
                                 className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                             >
-                                <FontAwesomeIcon
-                                    icon={faExternalLinkAlt}
-                                    size="xs"
-                                />
+                                <ArrowSquareOut size={14} />
                                 <span className="truncate">{source}</span>
                             </a>
                         ))}
@@ -227,7 +221,6 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
                 </div>
             )}
 
-            {/* Related Topics */}
             {relatedTopics && relatedTopics.length > 0 && (
                 <div>
                     <h5 className="font-semibold text-gray-900 dark:text-white text-xs mb-2">

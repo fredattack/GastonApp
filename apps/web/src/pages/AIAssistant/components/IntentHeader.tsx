@@ -1,16 +1,15 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faUtensils,
-    faKitMedical,
-    faCalendar,
-    faDumbbell,
-    faPaw,
-    faPlus,
-    faEdit,
-    faTrash,
-    faQuestion,
-} from "@fortawesome/free-solid-svg-icons";
+    ForkKnife,
+    FirstAidKit,
+    Calendar,
+    Barbell,
+    PawPrint,
+    Plus,
+    PencilSimple,
+    Trash,
+    Question,
+} from "@phosphor-icons/react";
 
 interface IntentHeaderProps {
     requestType: string;
@@ -76,59 +75,36 @@ const IntentHeader: React.FC<IntentHeaderProps> = ({
 
         switch (eventType) {
             case "feeding":
-                return {
-                    icon: faUtensils,
-                    label: "REPAS",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: ForkKnife, label: "REPAS", iconColor: "text-gray-600 dark:text-gray-400" };
             case "medical":
-                return {
-                    icon: faKitMedical,
-                    label: "TRAITEMENT",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: FirstAidKit, label: "TRAITEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
             case "appointment":
-                return {
-                    icon: faCalendar,
-                    label: "RENDEZ-VOUS",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: Calendar, label: "RENDEZ-VOUS", iconColor: "text-gray-600 dark:text-gray-400" };
             case "training":
-                return {
-                    icon: faDumbbell,
-                    label: "ENTRAÎNEMENT",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: Barbell, label: "ENTRAÎNEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
             case "social":
-                return {
-                    icon: faPaw,
-                    label: "SOCIAL",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: PawPrint, label: "SOCIAL", iconColor: "text-gray-600 dark:text-gray-400" };
             default:
-                return {
-                    icon: faCalendar,
-                    label: "ÉVÉNEMENT",
-                    iconColor: "text-gray-600 dark:text-gray-400",
-                };
+                return { Icon: Calendar, label: "ÉVÉNEMENT", iconColor: "text-gray-600 dark:text-gray-400" };
         }
     };
 
     const getActionIcon = () => {
         switch (requestType) {
             case "createEvent":
-                return faPlus;
+                return Plus;
             case "updateEvent":
-                return faEdit;
+                return PencilSimple;
             case "deleteEvent":
-                return faTrash;
+                return Trash;
             default:
-                return faQuestion;
+                return Question;
         }
     };
 
     const intentConfig = getIntentConfig();
     const eventConfig = getEventTypeConfig();
+    const ActionIcon = getActionIcon();
 
     return (
         <div
@@ -140,9 +116,9 @@ const IntentHeader: React.FC<IntentHeaderProps> = ({
                     <div
                         className={`p-2 md:p-2.5 rounded-lg ${intentConfig.iconBg} border border-gray-200 dark:border-gray-700 flex-shrink-0`}
                     >
-                        <FontAwesomeIcon
-                            icon={getActionIcon()}
-                            className={`text-lg md:text-xl ${intentConfig.iconColor}`}
+                        <ActionIcon
+                            size={24}
+                            className={intentConfig.iconColor}
                         />
                     </div>
 
@@ -150,9 +126,9 @@ const IntentHeader: React.FC<IntentHeaderProps> = ({
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 md:gap-2 mb-1">
                             {eventConfig && (
-                                <FontAwesomeIcon
-                                    icon={eventConfig.icon}
-                                    className={`text-sm md:text-base ${eventConfig.iconColor} flex-shrink-0`}
+                                <eventConfig.Icon
+                                    size={18}
+                                    className={`${eventConfig.iconColor} flex-shrink-0`}
                                 />
                             )}
                             <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate">

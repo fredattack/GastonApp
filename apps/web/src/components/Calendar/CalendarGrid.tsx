@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Plus } from "@phosphor-icons/react";
 
 interface CalendarGridProps {
     currentDate: Date;
@@ -17,7 +16,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 }) => {
     const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
 
-    // Get days in month and starting weekday
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
         const month = date.getMonth();
@@ -28,7 +26,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         const year = date.getFullYear();
         const month = date.getMonth();
         const firstDay = new Date(year, month, 1).getDay();
-        // Convert Sunday (0) to 7 for Monday-first week
         return firstDay === 0 ? 6 : firstDay - 1;
     };
 
@@ -37,20 +34,16 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    // Generate calendar grid
     const calendarDays: (Date | null)[] = [];
 
-    // Add empty cells for days before month starts
     for (let i = 0; i < firstDayOfWeek; i++) {
         calendarDays.push(null);
     }
 
-    // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
         calendarDays.push(new Date(year, month, day));
     }
 
-    // Add empty cells to complete the last week (total should be multiple of 7)
     const remainingCells = 7 - (calendarDays.length % 7);
     if (remainingCells < 7) {
         for (let i = 0; i < remainingCells; i++) {
@@ -58,7 +51,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         }
     }
 
-    // Group events by day
     const getEventsForDate = (date: Date | null): EventFormData[] => {
         if (!date) return [];
 
@@ -99,7 +91,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
     return (
         <div className="calendar-grid bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            {/* Week day headers */}
             <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
                 {weekDays.map((day) => (
                     <div
@@ -111,7 +102,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                 ))}
             </div>
 
-            {/* Calendar grid */}
             <div className="grid grid-cols-7">
                 {calendarDays.map((date, index) => {
                     const dayEvents = getEventsForDate(date);
@@ -135,7 +125,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                         >
                             {date && (
                                 <>
-                                    {/* Date number */}
                                     <div className="flex items-center justify-between mb-1">
                                         <span
                                             className={`
@@ -150,7 +139,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                             {date.getDate()}
                                         </span>
 
-                                        {/* Quick add button on hover */}
                                         {isHovered && (
                                             <button
                                                 onClick={(e) => {
@@ -159,15 +147,11 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                                 }}
                                                 className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-primary p-1"
                                             >
-                                                <FontAwesomeIcon
-                                                    icon={faPlus}
-                                                    size="xs"
-                                                />
+                                                <Plus size={14} />
                                             </button>
                                         )}
                                     </div>
 
-                                    {/* Events list */}
                                     <div className="space-y-1 overflow-y-auto max-h-[80px]">
                                         {dayEvents
                                             .slice(0, 3)
@@ -200,7 +184,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                                 </div>
                                             ))}
 
-                                        {/* Show "+X more" if more than 3 events */}
                                         {dayEvents.length > 3 && (
                                             <div className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1">
                                                 +{dayEvents.length - 3} autre

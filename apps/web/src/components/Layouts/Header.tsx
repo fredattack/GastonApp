@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import i18next from "i18next";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { IRootState } from "../../store";
 
 import {
@@ -20,10 +20,7 @@ import IconUser from "../Icon/IconUser";
 import IconMail from "../Icon/IconMail";
 import IconLockDots from "../Icon/IconLockDots";
 import IconLogout from "../Icon/IconLogout";
-import { useIcons } from "../../providers/FontawesomeProvider";
-
 const Header = () => {
-    const icons = useIcons();
 
     const location = useLocation();
     useEffect(() => {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import { getEventTypeLabel } from "../../../utils/aiTransformers";
 
 interface SecondaryDetailsProps {
@@ -28,10 +27,11 @@ const SecondaryDetails: React.FC<SecondaryDetailsProps> = ({ event }) => {
                     {isExpanded ? "Masquer" : "Afficher"} les détails
                     supplémentaires
                 </span>
-                <FontAwesomeIcon
-                    icon={isExpanded ? faChevronUp : faChevronDown}
-                    className="text-gray-500 dark:text-gray-400"
-                />
+                {isExpanded ? (
+                    <CaretUp size={16} className="text-gray-500 dark:text-gray-400" />
+                ) : (
+                    <CaretDown size={16} className="text-gray-500 dark:text-gray-400" />
+                )}
             </button>
 
             {isExpanded && (
@@ -156,7 +156,7 @@ const SecondaryDetails: React.FC<SecondaryDetailsProps> = ({ event }) => {
                     {event.notes && (
                         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                                📝 Notes :
+                                Notes :
                             </p>
                             <p className="text-sm text-gray-900 dark:text-white">
                                 {event.notes}

@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { faPlus, faPaw } from "@fortawesome/free-solid-svg-icons";
+import { Plus, PawPrint } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePets } from "../../../contexts/PetsContext";
 import PetsCard from "../../../components/Pets/index/PetsCard"; // @ts-ignore
 import { useToast } from "../../../providers/ToastProvider";
-import { useIcons } from "../../../providers/FontawesomeProvider";
 import { modelService } from "../../../services";
 import { logger } from "@/utils/logger";
 
@@ -176,15 +174,13 @@ const Pets = () => {
         // Add logic to handle rendezvous scheduling
     };
 
-    const icons = useIcons();
-
     return (
         <div>
             <div className="panel mt-6">
                 <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
                     <h5 className="font-semibold text-lg dark:text-white-light capitalize">
-                        <FontAwesomeIcon icon={faPaw} /> {t("my_pets")}
+                        <PawPrint size={20} className="inline mr-1" /> {t("my_pets")}
                     </h5>
 
                     {/* Bouton et Search */}
@@ -194,7 +190,7 @@ const Pets = () => {
                             onClick={handleCreate}
                             className="btn btn-primary self-end md:self-auto"
                         >
-                            <FontAwesomeIcon icon={faPlus} />
+                            <Plus size={20} />
                         </button>
 
                         {/* Search Input */}

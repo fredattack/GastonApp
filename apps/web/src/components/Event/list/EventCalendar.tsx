@@ -1,11 +1,10 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CaretDoubleLeft, CaretDoubleRight } from "@phosphor-icons/react";
 import { dateStartOfDay, dateEndOfDay } from "../../../helpers";
 import { eventService } from "../../../services";
 
-import { useIcons } from "../../../providers/FontawesomeProvider";
 import EventCard from "./EventCard";
 import EventSummary from "./EventSummary";
 import EventCalendarDropdown from "./EventCalendarDropdown";
@@ -30,7 +29,6 @@ const VIEW_STYLES = {
 };
 
 const EventCalendar = () => {
-    const icons = useIcons();
     const { events, fetchEvents } = useEvents();
 
     const [filters, setFilters] = useState({
@@ -53,20 +51,6 @@ const EventCalendar = () => {
         const { start_date, end_date } = getDateRange(currentDate);
         fetchEvents(start_date, end_date);
     }, []);
-
-    // const fetchEvents = async (start_date: any, end_date: any) => {
-    //     const events = await eventService.getEventsForPeriod(
-    //         formatDateToIso(start_date),
-    //         formatDateToIso(end_date),
-    //     );
-    //
-    //     setEvents(
-    //         events.map((event: EventFormData) => ({
-    //             ...event,
-    //             // Ensure all required Event type fields are set here, as necessary
-    //         })),
-    //     );
-    // };
 
     const handleRefetchEvents = () => {
         const { start_date, end_date } = getDateRange(currentDate);
@@ -93,7 +77,7 @@ const EventCalendar = () => {
 
         if (mode === VIEW_MODES.DAY) {
             return {
-                start_date: formatDateToIso(dateStartOfDay(new Date(date))), // Start of the day (00:00:00.000)
+                start_date: formatDateToIso(dateStartOfDay(new Date(date))),
                 end_date: formatDateToIso(dateEndOfDay(new Date(date))),
             };
         }
@@ -223,7 +207,6 @@ const EventCalendar = () => {
 
     const handleEventMove = async (event: EventFormData, newDate: Date) => {
         try {
-            // Update event with new date
             const updatedEvent = {
                 ...event,
                 start_date: newDate.toISOString(),
@@ -232,10 +215,8 @@ const EventCalendar = () => {
             // @ts-ignore
             await eventService.update(event.id!, updatedEvent);
 
-            // Refresh events
             handleRefetchEvents();
 
-            // Show success toast
             const { addToast } =
                 require("../../../providers/ToastProvider").useToast();
             addToast({
@@ -258,7 +239,6 @@ const EventCalendar = () => {
         newDuration: number,
     ) => {
         try {
-            // Calculate new end date based on duration
             const startDate = new Date(event.start_date);
             const endDate = new Date(
                 startDate.getTime() + newDuration * 60 * 60 * 1000,
@@ -271,7 +251,6 @@ const EventCalendar = () => {
 
             await eventService.update(event.id!, updatedEvent);
 
-            // Refresh events
             handleRefetchEvents();
 
             const { addToast } =
@@ -304,23 +283,13 @@ const EventCalendar = () => {
             <div className="toolbar flex items-center justify-between mb-4 mx-3">
                 <div className="navigation-buttons flex items-center gap-2">
                     <button onClick={handlePrev} className="text-gray-500">
-                        {/* @ts-ignore */}
-                        <FontAwesomeIcon
-                            // @ts-ignore
-                            icon={icons?.anglesLeft}
-                            className="m-auto"
-                        />
+                        <CaretDoubleLeft size={20} className="m-auto" />
                     </button>
 
                     <span>{formatDate(currentDate)}</span>
 
                     <button onClick={handleNext} className="text-gray-500">
-                        {/* @ts-ignore */}
-                        <FontAwesomeIcon
-                            // @ts-ignore
-                            icon={icons?.anglesRight}
-                            className="m-auto"
-                        />
+                        <CaretDoubleRight size={20} className="m-auto" />
                     </button>
                 </div>
                 <div>

@@ -1,6 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw } from "@fortawesome/free-solid-svg-icons";
+import { PawPrint } from "@phosphor-icons/react";
 import { formatDateConversational } from "../../../utils/dateFormatters";
 
 interface PetInfo {
@@ -55,9 +54,9 @@ const EventHeroSection: React.FC<EventHeroSectionProps> = ({
                 {pets.map((petInfo, idx) => (
                     <div key={idx} className="flex items-center gap-2 md:gap-3">
                         <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700/50">
-                            <FontAwesomeIcon
-                                icon={faPaw}
-                                className="text-lg md:text-xl text-primary"
+                            <PawPrint
+                                size={24}
+                                className="text-primary"
                             />
                         </div>
                         <div>

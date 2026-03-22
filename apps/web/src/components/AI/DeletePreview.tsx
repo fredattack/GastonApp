@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTrash,
-    faExclamationTriangle,
-    faCalendar,
-    faPaw,
-} from "@fortawesome/free-solid-svg-icons";
+import { Trash, Warning, Calendar, PawPrint } from "@phosphor-icons/react";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 interface DeletePreviewProps {
@@ -27,7 +21,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
         deleteData;
 
     const getIcon = () => {
-        return requestType === "deleteEvent" ? faCalendar : faPaw;
+        return requestType === "deleteEvent" ? Calendar : PawPrint;
     };
 
     const getTitle = () => {
@@ -89,12 +83,14 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
         return [];
     };
 
+    const Icon = getIcon();
+
     return (
         <>
             <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl p-4 mt-3">
                 <div className="flex items-center gap-2 mb-3">
-                    <FontAwesomeIcon
-                        icon={getIcon()}
+                    <Icon
+                        size={20}
                         className="text-red-600 dark:text-red-400"
                     />
                     <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -112,8 +108,8 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                 {confirmationRequired && (
                     <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-3">
                         <div className="flex items-start gap-2">
-                            <FontAwesomeIcon
-                                icon={faExclamationTriangle}
+                            <Warning
+                                size={16}
                                 className="text-yellow-600 dark:text-yellow-400 mt-0.5"
                             />
                             <p className="text-xs text-yellow-800 dark:text-yellow-200">
@@ -189,7 +185,7 @@ const DeletePreview: React.FC<DeletePreviewProps> = ({
                         disabled={isLoading}
                         className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                        <FontAwesomeIcon icon={faTrash} size="sm" />
+                        <Trash size={16} />
                         {isLoading ? "Suppression..." : "Supprimer"}
                     </button>
                 </div>

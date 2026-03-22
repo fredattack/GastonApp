@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faUndo } from "@fortawesome/free-solid-svg-icons";
+import { Check, ArrowCounterClockwise } from "@phosphor-icons/react";
 
 interface FeedingPetRowProps {
     item: FeedingItem;
@@ -47,10 +46,11 @@ const FeedingPetRow: React.FC<FeedingPetRowProps> = ({
                         : `Marquer ${item.pet_name} comme nourri`
                 }
             >
-                <FontAwesomeIcon
-                    icon={item.is_done ? faUndo : faCheck}
-                    className="text-sm"
-                />
+                {item.is_done ? (
+                    <ArrowCounterClockwise size={16} />
+                ) : (
+                    <Check size={16} />
+                )}
             </button>
 
             <div className="flex-1 min-w-0">

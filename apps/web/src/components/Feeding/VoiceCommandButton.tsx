@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faMicrophone,
-    faMicrophoneSlash,
-    faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+    Microphone,
+    MicrophoneSlash,
+    SpinnerGap,
+} from "@phosphor-icons/react";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import { feedingService } from "../../services/FeedingService";
 import { logger } from "@/utils/logger";
@@ -106,8 +105,6 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({
                 "[Voice] stopping recording manually, transcript:",
                 transcriptRef.current,
             );
-            // Don't submit here — let the useEffect on isRecording handle it
-            // This avoids the race condition where stopRecording() hasn't fired onend yet
             stopRecording();
             return;
         }
@@ -160,21 +157,20 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({
             )}
 
             {buttonState === "processing" ? (
-                <FontAwesomeIcon
-                    icon={faSpinner}
-                    className="w-4 h-4 animate-spin"
+                <SpinnerGap
+                    size={16}
+                    className="animate-spin"
                     aria-hidden="true"
                 />
             ) : buttonState === "error" ? (
-                <FontAwesomeIcon
-                    icon={faMicrophoneSlash}
-                    className="w-4 h-4"
+                <MicrophoneSlash
+                    size={16}
                     aria-hidden="true"
                 />
             ) : (
-                <FontAwesomeIcon
-                    icon={faMicrophone}
-                    className={`w-4 h-4 relative ${buttonState === "recording" ? "text-white" : ""}`}
+                <Microphone
+                    size={16}
+                    className={`relative ${buttonState === "recording" ? "text-white" : ""}`}
                     aria-hidden="true"
                 />
             )}

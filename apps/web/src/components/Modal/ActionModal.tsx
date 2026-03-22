@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { X } from "@phosphor-icons/react";
 
 import EventForm from "../Event/Form/EventForm";
 import PetForm from "../Pets/form/PetForm";
@@ -195,7 +194,7 @@ const ActionModal: React.FC<SpeechRecognitionModalProps> = ({
                         onClick={onClose}
                         className=" text-white-dark hover:text-dark dark:text-white dark:hover:text-white-dark"
                     >
-                        <FontAwesomeIcon size="xl" icon={faTimes} />
+                        <X size={28} />
                     </button>
                 </div>
                 <div className="mt-2">

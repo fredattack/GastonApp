@@ -1,11 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCheck,
-    faEdit,
-    faTimes,
-    faExclamationTriangle,
-} from "@fortawesome/free-solid-svg-icons";
+import { Check, PencilSimple, X, Warning } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface ContextualActionsProps {
     requestType: string;
@@ -28,12 +23,12 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                 return {
                     primary: {
                         label: "Créer cet événement",
-                        icon: faCheck,
+                        Icon: Check,
                         className: "bg-success hover:bg-success/90 text-white",
                     },
                     secondary: {
                         label: "Modifier d'abord",
-                        icon: faEdit,
+                        Icon: PencilSimple,
                         className:
                             "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
                     },
@@ -43,19 +38,19 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                 return {
                     primary: {
                         label: "Appliquer la modification",
-                        icon: faCheck,
+                        Icon: Check,
                         className: "bg-warning hover:bg-warning/90 text-white",
                     },
                     secondary: {
                         label: "Ajuster",
-                        icon: faEdit,
+                        Icon: PencilSimple,
                         className:
                             "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
                     },
                     tertiary: onCancel
                         ? {
                               label: "Annuler",
-                              icon: faTimes,
+                              Icon: X,
                               className:
                                   "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
                           }
@@ -66,12 +61,12 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                 return {
                     primary: {
                         label: "Confirmer la suppression",
-                        icon: faExclamationTriangle,
+                        Icon: Warning,
                         className: "bg-danger hover:bg-danger/90 text-white",
                     },
                     secondary: {
                         label: "Annuler",
-                        icon: faTimes,
+                        Icon: X,
                         className:
                             "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
                     },
@@ -81,12 +76,12 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                 return {
                     primary: {
                         label: "Confirmer",
-                        icon: faCheck,
+                        Icon: Check,
                         className: "bg-primary hover:bg-primary/90 text-white",
                     },
                     secondary: {
                         label: "Modifier",
-                        icon: faEdit,
+                        Icon: PencilSimple,
                         className:
                             "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
                     },
@@ -108,10 +103,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     <span className="animate-spin inline-block w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent rounded-full" />
                 ) : (
                     <>
-                        <FontAwesomeIcon
-                            icon={actions.primary.icon}
-                            className="text-sm md:text-base"
-                        />
+                        <actions.primary.Icon size={18} />
                         <span className="truncate">
                             {actions.primary.label}
                         </span>
@@ -129,10 +121,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                 disabled={isLoading}
                 className={`min-h-[44px] py-2.5 px-4 md:py-3 md:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 font-medium text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${actions.secondary.className}`}
             >
-                <FontAwesomeIcon
-                    icon={actions.secondary.icon}
-                    className="text-sm md:text-base"
-                />
+                <actions.secondary.Icon size={18} />
                 <span className="truncate">{actions.secondary.label}</span>
             </button>
 
@@ -143,10 +132,7 @@ const ContextualActions: React.FC<ContextualActionsProps> = ({
                     disabled={isLoading}
                     className={`min-h-[44px] py-2.5 px-4 md:py-3 md:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 font-medium text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed ${actions.tertiary.className}`}
                 >
-                    <FontAwesomeIcon
-                        icon={actions.tertiary.icon}
-                        className="text-sm md:text-base"
-                    />
+                    <actions.tertiary.Icon size={18} />
                     <span className="truncate">{actions.tertiary.label}</span>
                 </button>
             )}

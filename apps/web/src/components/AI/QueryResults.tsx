@@ -1,11 +1,11 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faCalendar,
-    faPaw,
-    faChartLine,
-    faHistory,
-} from "@fortawesome/free-solid-svg-icons";
+    Calendar,
+    PawPrint,
+    ChartLine,
+    ClockCounterClockwise,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface QueryResultsProps {
     queryResult: QueryResult;
@@ -14,18 +14,18 @@ interface QueryResultsProps {
 const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
     const { queryType, results, totalCount, summary } = queryResult;
 
-    const getIcon = () => {
+    const getIcon = (): Icon => {
         switch (queryType) {
             case "events":
-                return faCalendar;
+                return Calendar;
             case "pets":
-                return faPaw;
+                return PawPrint;
             case "statistics":
-                return faChartLine;
+                return ChartLine;
             case "history":
-                return faHistory;
+                return ClockCounterClockwise;
             default:
-                return faCalendar;
+                return Calendar;
         }
     };
 
@@ -165,11 +165,13 @@ const QueryResults: React.FC<QueryResultsProps> = ({ queryResult }) => {
         );
     };
 
+    const ResultIcon = getIcon();
+
     return (
         <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 mt-3">
             <div className="flex items-center gap-2 mb-3">
-                <FontAwesomeIcon
-                    icon={getIcon()}
+                <ResultIcon
+                    size={20}
                     className="text-purple-600 dark:text-purple-400"
                 />
                 <h4 className="font-semibold text-gray-900 dark:text-white">

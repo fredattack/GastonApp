@@ -1,12 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faPaw,
-    faCakeCandles,
-    faDna,
-    faCat,
-    faDog,
-} from "@fortawesome/free-solid-svg-icons";
+import { PawPrint, Cake, Dna, Cat, Dog } from "@phosphor-icons/react";
 
 interface PetHeroSectionProps {
     petData: PetFormData;
@@ -16,11 +9,11 @@ const PetHeroSection: React.FC<PetHeroSectionProps> = ({ petData }) => {
     const getSpeciesIcon = () => {
         switch (petData.species) {
             case "cat":
-                return faCat;
+                return Cat;
             case "dog":
-                return faDog;
+                return Dog;
             default:
-                return faPaw;
+                return PawPrint;
         }
     };
 
@@ -58,15 +51,17 @@ const PetHeroSection: React.FC<PetHeroSectionProps> = ({ petData }) => {
         return `${years} an${years > 1 ? "s" : ""} et ${months} mois`;
     };
 
+    const SpeciesIcon = getSpeciesIcon();
+
     return (
         <div className="mt-4">
             {/* Hero Header */}
             <div className="flex items-start gap-4 mb-4">
                 {/* Pet Icon/Avatar */}
                 <div className="flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center border-2 border-purple-200 dark:border-purple-700">
-                    <FontAwesomeIcon
-                        icon={getSpeciesIcon()}
-                        className="text-3xl text-purple-600 dark:text-purple-400"
+                    <SpeciesIcon
+                        size={32}
+                        className="text-purple-600 dark:text-purple-400"
                     />
                 </div>
 
@@ -77,18 +72,12 @@ const PetHeroSection: React.FC<PetHeroSectionProps> = ({ petData }) => {
                     </h3>
                     <div className="flex flex-wrap gap-2 items-center">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200">
-                            <FontAwesomeIcon
-                                icon={getSpeciesIcon()}
-                                className="text-xs"
-                            />
+                            <SpeciesIcon size={14} />
                             {getSpeciesLabel()}
                         </span>
                         {petData.breed && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
-                                <FontAwesomeIcon
-                                    icon={faDna}
-                                    className="text-xs"
-                                />
+                                <Dna size={14} />
                                 {petData.breed}
                             </span>
                         )}
@@ -107,10 +96,7 @@ const PetHeroSection: React.FC<PetHeroSectionProps> = ({ petData }) => {
                 {petData.birthDate && (
                     <div className="bg-white dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-                            <FontAwesomeIcon
-                                icon={faCakeCandles}
-                                className="text-xs"
-                            />
+                            <Cake size={14} />
                             <span className="font-medium">
                                 Date de naissance
                             </span>
@@ -134,7 +120,7 @@ const PetHeroSection: React.FC<PetHeroSectionProps> = ({ petData }) => {
                 {/* Species & Breed Combined */}
                 <div className="bg-white dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        <FontAwesomeIcon icon={faPaw} className="text-xs" />
+                        <PawPrint size={14} />
                         <span className="font-medium">Informations</span>
                     </div>
                     <p className="text-gray-900 dark:text-white font-semibold">

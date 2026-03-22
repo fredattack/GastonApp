@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { CalendarDots } from "@phosphor-icons/react";
 
 interface DatePickerProps {
     label: string;
@@ -138,7 +137,7 @@ export default function DatePicker({ label, onChange }: DatePickerProps) {
                                 onClick={handleToggleCalendar}
                                 className="absolute inset-y-0 flex h-12 w-12 items-center justify-center text-dark-5 cursor-pointer"
                             >
-                                <FontAwesomeIcon icon={faCalendarDays} />
+                                <CalendarDots size={20} />
                             </span>
                         </div>
 

@@ -1,10 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExclamationTriangle,
-    faPhone,
-    faMapMarkerAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { Warning, Phone, MapPin } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface HealthDisclaimerProps {
     disclaimer: HealthDisclaimer;
@@ -29,11 +25,11 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
         critical: "text-red-500",
     };
 
-    const actionIcons = {
-        findVet: faMapMarkerAlt,
-        callEmergency: faPhone,
-        dismiss: faExclamationTriangle,
-        learnMore: faExclamationTriangle,
+    const actionIcons: Record<string, Icon> = {
+        findVet: MapPin,
+        callEmergency: Phone,
+        dismiss: Warning,
+        learnMore: Warning,
     };
 
     return (
@@ -41,10 +37,9 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
             className={`border-l-4 p-4 mb-4 rounded-r-lg ${severityStyles[disclaimer.severity]}`}
         >
             <div className="flex items-start gap-3">
-                <FontAwesomeIcon
-                    icon={faExclamationTriangle}
+                <Warning
+                    size={24}
                     className={`mt-1 ${iconStyles[disclaimer.severity]}`}
-                    size="lg"
                 />
                 <div className="flex-1">
                     <h4 className="font-bold text-sm mb-2">
@@ -63,11 +58,13 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
                     )}
 
                     <div className="flex flex-wrap gap-2">
-                        {disclaimer.actions.map((action, index) => (
-                            <button
-                                key={index}
-                                onClick={() => onAction(action.action)}
-                                className={`
+                        {disclaimer.actions.map((action, index) => {
+                            const ActionIcon = actionIcons[action.action];
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => onAction(action.action)}
+                                    className={`
                                     px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
                                     flex items-center gap-1.5
                                     ${
@@ -78,16 +75,14 @@ const HealthDisclaimer: React.FC<HealthDisclaimerProps> = ({
                                               : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                                     }
                                 `}
-                            >
-                                {actionIcons[action.action] && (
-                                    <FontAwesomeIcon
-                                        icon={actionIcons[action.action]}
-                                        size="xs"
-                                    />
-                                )}
-                                {action.label}
-                            </button>
-                        ))}
+                                >
+                                    {ActionIcon && (
+                                        <ActionIcon size={14} />
+                                    )}
+                                    {action.label}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

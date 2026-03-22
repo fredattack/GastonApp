@@ -5,8 +5,7 @@ import React, {
     KeyboardEvent,
     ChangeEvent,
 } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import { PaperPlaneTilt, Microphone } from "@phosphor-icons/react";
 
 interface ChatInputProps {
     onSend: (message: string) => void;
@@ -109,7 +108,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                     : "Démarrer l'enregistrement"
                             }
                         >
-                            <FontAwesomeIcon icon={faMicrophone} />
+                            <Microphone size={20} />
                         </button>
                     )}
 
@@ -122,7 +121,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                         {isLoading ? (
                             <span className="animate-spin inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
                         ) : (
-                            <FontAwesomeIcon icon={faPaperPlane} />
+                            <PaperPlaneTilt size={20} />
                         )}
                     </button>
                 </div>

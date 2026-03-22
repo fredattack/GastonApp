@@ -2,12 +2,7 @@
 // @ts-nocheck
 
 import React, { useState, useRef, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faClock,
-    faPlus,
-    faGripVertical,
-} from "@fortawesome/free-solid-svg-icons";
+import { Clock, Plus, DotsSixVertical } from "@phosphor-icons/react";
 
 interface DayViewProps {
     currentDate: Date;
@@ -34,7 +29,6 @@ const DayView: React.FC<DayViewProps> = ({
 
     const hours = Array.from({ length: 24 }, (_, i) => i);
 
-    // Scroll to current hour on mount
     useEffect(() => {
         if (currentHourRef.current && isToday()) {
             currentHourRef.current.scrollIntoView({
@@ -44,7 +38,6 @@ const DayView: React.FC<DayViewProps> = ({
         }
     }, []);
 
-    // Get events for a specific hour
     const getEventsForHour = (hour: number): EventFormData[] => {
         return events.filter((event) => {
             const eventDate = new Date(event.start_date);
@@ -87,19 +80,16 @@ const DayView: React.FC<DayViewProps> = ({
         return colors[type] || "bg-gray-500 border-gray-600";
     };
 
-    // Calculate position of current time indicator
     const getCurrentTimePosition = () => {
         const minutes = getCurrentMinutes();
-        return (minutes / 60) * 100; // Percentage within the hour
+        return (minutes / 60) * 100;
     };
 
-    // Drag and Drop handlers
     const handleDragStart = (e: React.DragEvent, event: Event) => {
         e.stopPropagation();
         setDraggedEvent(event);
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData("text/html", e.currentTarget.innerHTML);
-        // Add visual feedback
         (e.currentTarget as HTMLElement).style.opacity = "0.5";
     };
 
@@ -125,7 +115,6 @@ const DayView: React.FC<DayViewProps> = ({
         setDraggedEvent(null);
     };
 
-    // Resize handlers
     const handleResizeStart = (e: React.MouseEvent, event: Event) => {
         e.stopPropagation();
         e.preventDefault();
@@ -137,18 +126,17 @@ const DayView: React.FC<DayViewProps> = ({
         if (!resizingEvent) return;
 
         const deltaY = e.clientY - resizeStartY;
-        const hourHeight = 80; // min-h-[80px]
+        const hourHeight = 80;
         const hoursChanged = Math.round(deltaY / hourHeight);
 
         if (hoursChanged !== 0) {
-            // Calculate new duration
             const startDate = new Date(resizingEvent.start_date);
             const endDate = resizingEvent.end_date
                 ? new Date(resizingEvent.end_date)
                 : new Date(startDate.getTime() + 60 * 60 * 1000);
             const currentDuration =
-                (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60); // in hours
-            const newDuration = Math.max(1, currentDuration + hoursChanged); // Minimum 1 hour
+                (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+            const newDuration = Math.max(1, currentDuration + hoursChanged);
 
             if (onEventResize && newDuration !== currentDuration) {
                 onEventResize(resizingEvent, newDuration);
@@ -193,7 +181,7 @@ const DayView: React.FC<DayViewProps> = ({
                     )}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <FontAwesomeIcon icon={faClock} />
+                    <Clock size={16} />
                     <span>
                         {events.length} événement{events.length > 1 ? "s" : ""}
                     </span>
@@ -275,9 +263,8 @@ const DayView: React.FC<DayViewProps> = ({
                                             {/* Drag handle */}
                                             {onEventMove && (
                                                 <div className="absolute left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-50 transition-opacity">
-                                                    <FontAwesomeIcon
-                                                        icon={faGripVertical}
-                                                        size="sm"
+                                                    <DotsSixVertical
+                                                        size={16}
                                                     />
                                                 </div>
                                             )}
@@ -291,11 +278,9 @@ const DayView: React.FC<DayViewProps> = ({
                                                         event.pets.length >
                                                             0 && (
                                                             <div className="text-xs opacity-90 mb-2">
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faClock
-                                                                    }
-                                                                    className="mr-1"
+                                                                <Clock
+                                                                    size={12}
+                                                                    className="mr-1 inline"
                                                                 />
                                                                 {new Date(
                                                                     event.start_date,
@@ -370,10 +355,7 @@ const DayView: React.FC<DayViewProps> = ({
                                     hourEvents.length === 0 &&
                                     !draggedEvent && (
                                         <div className="absolute inset-0 flex items-center justify-center text-gray-400 opacity-50">
-                                            <FontAwesomeIcon
-                                                icon={faPlus}
-                                                size="lg"
-                                            />
+                                            <Plus size={24} />
                                         </div>
                                     )}
                             </div>

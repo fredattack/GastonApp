@@ -2,17 +2,16 @@
 // @ts-nocheck
 
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faTimes,
-    faEdit,
-    faTrash,
-    faClock,
-    faNoteSticky,
-    faRepeat,
-    faCheckCircle,
-    faCircle,
-} from "@fortawesome/free-solid-svg-icons";
+    X,
+    PencilSimple,
+    Trash,
+    Clock,
+    NoteBlank,
+    ArrowsClockwise,
+    CheckCircle,
+    Circle,
+} from "@phosphor-icons/react";
 import EventForm from "../Event/Form/EventForm";
 import RecurringEventDialog from "./RecurringEventDialog";
 import { eventService } from "../../services";
@@ -280,9 +279,9 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                                 {getEventTypeLabel(event.type)}
                                             </span>
                                             {event.is_recurring && (
-                                                <FontAwesomeIcon
-                                                    icon={faRepeat}
-                                                    className="text-xs opacity-75"
+                                                <ArrowsClockwise
+                                                    size={14}
+                                                    className="opacity-75"
                                                 />
                                             )}
                                         </div>
@@ -307,7 +306,7 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                         onClick={onClose}
                                         className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
                                     >
-                                        <FontAwesomeIcon icon={faTimes} />
+                                        <X size={20} />
                                     </button>
                                 </div>
                             </div>
@@ -316,8 +315,8 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                             <div className="p-6 space-y-4 overflow-y-auto max-h-[60vh]">
                                 {/* Date & Time */}
                                 <div className="flex items-start gap-3">
-                                    <FontAwesomeIcon
-                                        icon={faClock}
+                                    <Clock
+                                        size={20}
                                         className="text-gray-400 mt-1"
                                     />
                                     <div>
@@ -359,8 +358,8 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                 {/* Notes */}
                                 {event.notes && (
                                     <div className="flex items-start gap-3">
-                                        <FontAwesomeIcon
-                                            icon={faNoteSticky}
+                                        <NoteBlank
+                                            size={20}
                                             className="text-gray-400 mt-1"
                                         />
                                         <div>
@@ -373,18 +372,17 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
 
                                 {/* Status */}
                                 <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                    <FontAwesomeIcon
-                                        icon={
-                                            event.is_done
-                                                ? faCheckCircle
-                                                : faCircle
-                                        }
-                                        className={
-                                            event.is_done
-                                                ? "text-green-500"
-                                                : "text-gray-300"
-                                        }
-                                    />
+                                    {event.is_done ? (
+                                        <CheckCircle
+                                            size={20}
+                                            className="text-green-500"
+                                        />
+                                    ) : (
+                                        <Circle
+                                            size={20}
+                                            className="text-gray-300"
+                                        />
+                                    )}
                                     <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {event.is_done ? "Terminé" : "À faire"}
                                     </span>
@@ -397,14 +395,11 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                     onClick={handleToggleDone}
                                     className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={
-                                            event.is_done
-                                                ? faCircle
-                                                : faCheckCircle
-                                        }
-                                        className="mr-2"
-                                    />
+                                    {event.is_done ? (
+                                        <Circle size={16} className="mr-2 inline" />
+                                    ) : (
+                                        <CheckCircle size={16} className="mr-2 inline" />
+                                    )}
                                     {event.is_done
                                         ? "Marquer non fait"
                                         : "Marquer fait"}
@@ -415,20 +410,14 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                         disabled={isDeleting}
                                         className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faTrash}
-                                            className="mr-2"
-                                        />
+                                        <Trash size={16} className="mr-2 inline" />
                                         Supprimer
                                     </button>
                                     <button
                                         onClick={handleEditClick}
                                         className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors"
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faEdit}
-                                            className="mr-2"
-                                        />
+                                        <PencilSimple size={16} className="mr-2 inline" />
                                         Modifier
                                     </button>
                                 </div>
@@ -447,7 +436,7 @@ const EventQuickView: React.FC<EventQuickViewProps> = ({
                                     onClick={onClose}
                                     className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                                 >
-                                    <FontAwesomeIcon icon={faTimes} />
+                                    <X size={20} />
                                 </button>
                             </div>
                             <div className="p-6 overflow-y-auto max-h-[70vh]">

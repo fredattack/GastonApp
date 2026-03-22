@@ -1,6 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckDouble } from "@fortawesome/free-solid-svg-icons";
+import { Checks } from "@phosphor-icons/react";
 
 interface BatchActionBarProps {
     label: string;
@@ -25,7 +24,7 @@ const BatchActionBar: React.FC<BatchActionBarProps> = ({
             "
             aria-label={`${label} (${pendingCount} restants)`}
         >
-            <FontAwesomeIcon icon={faCheckDouble} />
+            <Checks size={20} />
             <span>{label}</span>
             <span className="text-xs opacity-70">({pendingCount})</span>
         </button>

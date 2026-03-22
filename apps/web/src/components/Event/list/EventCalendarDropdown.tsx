@@ -1,15 +1,14 @@
 import React from "react";
 import {
-    faEllipsisH,
-    faEye,
-    faEdit,
-    faTrash,
-    faCopy,
-    faCheckSquare,
-    faTimes,
-    faFilter,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+    DotsThree,
+    Eye,
+    PencilSimple,
+    Trash,
+    Copy,
+    CheckSquare,
+    X,
+    Funnel,
+} from "@phosphor-icons/react";
 import { useMessage } from "../../../contexts/MessageContext";
 import Toggle from "../../Form/Toggle";
 
@@ -30,10 +29,6 @@ const EventCalendarDropdown = ({
     const { addToast } = useToast();
     const { handelOpenModal } = useMessage();
 
-    // const handleEdit = () => {
-    //     handelOpenModal("event", "edit", event);
-    // };
-
     const handleChange = (key: string, value: any) => {
         if (value) {
             onFiltersChange({
@@ -48,14 +43,13 @@ const EventCalendarDropdown = ({
             <Dropdown
                 placement="top-end"
                 btnClassName="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
-                button={<FontAwesomeIcon icon={faFilter} className="m-auto" />}
+                button={<Funnel size={20} className="m-auto" />}
             >
                 <ul className="!min-w-[170px] z-50 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2">
                     <li>
                         <button
                             type="button"
                             className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
-                            // onClick={handleEdit}
                         >
                             <Toggle
                                 label="Show done"
@@ -92,7 +86,7 @@ const EventCalendarDropdown = ({
                             type="button"
                             className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
                         >
-                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                            <Trash size={16} className="mr-2 inline" />
                             Delete Event
                         </button>
                     </li>

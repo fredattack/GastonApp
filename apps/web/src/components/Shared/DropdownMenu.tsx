@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconHorizontalDots from "../Icon/IconHorizontalDots";
 import Dropdown from "../Dropdown";
 
@@ -28,13 +27,14 @@ const DropdownMenu: ({
         setIsOpen(!isOpen);
     };
     const icons = useIcons();
+    const BarsIcon = icons?.bars;
     return (
         <Dropdown
             offset={[0, 5]}
             placement={`${openingDirection == "left" ? "bottom-start" : "bottom-end"}`}
             btnClassName="text-black"
             // @ts-ignore
-            button={<FontAwesomeIcon icon={icons.bars} />}
+            button={BarsIcon ? <BarsIcon size={20} /> : null}
             // <IconHorizontalDots className="rotate-90 opacity-70 hover:opacity-100" />
         >
             <ul className="text-sm font-medium bg-white">

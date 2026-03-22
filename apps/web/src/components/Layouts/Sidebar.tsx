@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CaretDoubleLeft } from "@phosphor-icons/react";
 import { toggleSidebar } from "../../store/themeConfigSlice";
 import { IRootState } from "../../store";
-
-// @ts-ignore
-import { useIcons } from "@/providers/FontawesomeProvider";
 
 /**
  * Sidebar Navigation - Desktop Only
@@ -20,7 +17,6 @@ const Sidebar = () => {
 
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const icons = useIcons();
 
     return (
         <div className={semidark ? "dark" : ""}>
@@ -52,8 +48,8 @@ const Sidebar = () => {
                             onClick={() => dispatch(toggleSidebar())}
                             aria-label="Réduire la barre de navigation"
                         >
-                            <FontAwesomeIcon
-                                icon={icons?.anglesLeft as any}
+                            <CaretDoubleLeft
+                                size={20}
                                 className="text-gray-600 dark:text-gray-400"
                                 aria-hidden="true"
                             />

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import { Robot } from "@phosphor-icons/react";
 import { usePets } from "../../../contexts/PetsContext";
 import { extractPrimaryData } from "../../../utils/aiTransformers";
 import EventForm from "../../../components/Event/Form/EventForm";
@@ -344,7 +343,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     return (
         <div className="flex gap-3 mb-4 items-start">
             <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                <FontAwesomeIcon icon={faRobot} size="sm" />
+                <Robot size={16} />
             </div>
 
             <div className="flex-1 max-w-[85%]">
@@ -556,8 +555,8 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                         onClick={handleBackToPreview}
                                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faRobot}
+                                        <Robot
+                                            size={20}
                                             className="text-gray-600 dark:text-gray-400"
                                         />
                                     </button>
@@ -612,8 +611,8 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                                         onClick={handleBackToPreview}
                                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faRobot}
+                                        <Robot
+                                            size={20}
                                             className="text-gray-600 dark:text-gray-400"
                                         />
                                     </button>

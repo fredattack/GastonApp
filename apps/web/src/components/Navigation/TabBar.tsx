@@ -1,17 +1,17 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faHome,
-    faPaw,
-    faCalendar,
-    faUser,
-    faUtensils,
-} from "@fortawesome/free-solid-svg-icons";
+    House,
+    PawPrint,
+    Calendar,
+    User,
+    ForkKnife,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface Tab {
     path: string;
-    icon: any;
+    icon: Icon;
     label: string;
     emoji?: string;
 }
@@ -26,31 +26,31 @@ const TabBar: React.FC = () => {
     const tabs: Tab[] = [
         {
             path: "/",
-            icon: faHome,
+            icon: House,
             emoji: "🏠",
             label: "Accueil",
         },
         {
             path: "/feeding",
-            icon: faUtensils,
+            icon: ForkKnife,
             emoji: "🍽️",
             label: "Repas",
         },
         {
             path: "/content/pets",
-            icon: faPaw,
+            icon: PawPrint,
             emoji: "🐾",
             label: "Animaux",
         },
         {
             path: "/calendar",
-            icon: faCalendar,
+            icon: Calendar,
             emoji: "📅",
             label: "Calendrier",
         },
         {
             path: "/profile",
-            icon: faUser,
+            icon: User,
             emoji: "👤",
             label: "Profil",
         },
@@ -78,6 +78,7 @@ const TabBar: React.FC = () => {
             <div className="grid grid-cols-5 h-16">
                 {tabs.map((tab) => {
                     const active = isActive(tab.path);
+                    const TabIcon = tab.icon;
                     return (
                         <Link
                             key={tab.path}
@@ -104,9 +105,9 @@ const TabBar: React.FC = () => {
                                     {tab.emoji}
                                 </span>
                             ) : (
-                                <FontAwesomeIcon
-                                    icon={tab.icon}
-                                    className="text-xl mb-1"
+                                <TabIcon
+                                    size={24}
+                                    className="mb-1"
                                     aria-hidden="true"
                                 />
                             )}

@@ -1,11 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faChartLine,
-    faArrowUp,
-    faArrowDown,
-    faArrowRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { ChartLine, ArrowUp, ArrowDown, ArrowRight } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface MetricsChartProps {
     metricsHistory: MetricsHistory;
@@ -25,14 +20,14 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
         }
     };
 
-    const getTrendIcon = () => {
+    const getTrendIcon = (): Icon => {
         switch (analysis.trend) {
             case "increasing":
-                return faArrowUp;
+                return ArrowUp;
             case "decreasing":
-                return faArrowDown;
+                return ArrowDown;
             default:
-                return faArrowRight;
+                return ArrowRight;
         }
     };
 
@@ -49,18 +44,19 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
         }
     };
 
-    // Normalize values for chart display (0-100%)
     const normalizeValue = (value: number) => {
         const range = analysis.max - analysis.min;
-        if (range === 0) return 50; // If all values are the same
+        if (range === 0) return 50;
         return ((value - analysis.min) / range) * 100;
     };
+
+    const TrendIcon = getTrendIcon();
 
     return (
         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-4 mt-3">
             <div className="flex items-center gap-2 mb-4">
-                <FontAwesomeIcon
-                    icon={faChartLine}
+                <ChartLine
+                    size={20}
                     className="text-indigo-600 dark:text-indigo-400"
                 />
                 <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -110,7 +106,7 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                     <p
                         className={`text-base font-bold flex items-center justify-center gap-1 ${getTrendColor()}`}
                     >
-                        <FontAwesomeIcon icon={getTrendIcon()} size="xs" />
+                        <TrendIcon size={14} />
                         {analysis.changePercent > 0 ? "+" : ""}
                         {analysis.changePercent}%
                     </p>
@@ -120,7 +116,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
             {/* Simple Line Chart */}
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
                 <div className="relative h-32">
-                    {/* Y-axis labels */}
                     <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 w-12">
                         <span>{analysis.max}</span>
                         <span>
@@ -129,22 +124,18 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                         <span>{analysis.min}</span>
                     </div>
 
-                    {/* Chart area */}
                     <div className="ml-12 relative h-full">
-                        {/* Grid lines */}
                         <div className="absolute inset-0 flex flex-col justify-between">
                             <div className="border-t border-gray-200 dark:border-gray-700" />
                             <div className="border-t border-gray-200 dark:border-gray-700" />
                             <div className="border-t border-gray-200 dark:border-gray-700" />
                         </div>
 
-                        {/* Data points and line */}
                         <svg
                             className="w-full h-full"
                             preserveAspectRatio="none"
                             viewBox="0 0 100 100"
                         >
-                            {/* Line path */}
                             <polyline
                                 points={metrics
                                     .map((metric, index) => {
@@ -162,7 +153,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                                 vectorEffect="non-scaling-stroke"
                             />
 
-                            {/* Data points */}
                             {metrics.map((metric, index) => {
                                 const x = (index / (metrics.length - 1)) * 100;
                                 const y = 100 - normalizeValue(metric.value);
@@ -188,7 +178,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                     </div>
                 </div>
 
-                {/* X-axis labels (dates) */}
                 <div className="ml-12 mt-2 flex justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>
                         {new Date(metrics[0].measured_at).toLocaleDateString(
@@ -222,7 +211,6 @@ const MetricsChart: React.FC<MetricsChartProps> = ({ metricsHistory }) => {
                 </div>
             </div>
 
-            {/* Trend Analysis */}
             {analysis.trend !== "stable" && (
                 <div
                     className={`mt-3 p-3 rounded-lg ${

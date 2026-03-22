@@ -1,36 +1,36 @@
 import React, { createContext, useContext } from "react";
 import {
-    faAngleUp,
-    faAnglesLeft,
-    faAnglesRight,
-    faBars,
-    faMicrophone,
-    faHome,
-    faPaw,
-    faUtensils,
-    faCapsules,
-    faGauge,
-} from "@fortawesome/free-solid-svg-icons";
+    CaretUp,
+    CaretDoubleLeft,
+    CaretDoubleRight,
+    List,
+    Microphone,
+    House,
+    PawPrint,
+    ForkKnife,
+    Pill,
+    Gauge,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
-const IconContext = createContext<Record<string, unknown> | undefined>(
+const IconContext = createContext<Record<string, Icon> | undefined>(
     undefined,
 );
 
 export const IconProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
-    const icons = {
-        angleUp: faAngleUp,
-        anglesLeft: faAnglesLeft,
-        anglesRight: faAnglesRight,
-        bars: faBars,
-        capsules: faCapsules,
-        gauge: faGauge,
-        home: faHome,
-        microphone: faMicrophone,
-        paw: faPaw,
-        utensils: faUtensils,
-        // Add more icons here
+    const icons: Record<string, Icon> = {
+        angleUp: CaretUp,
+        anglesLeft: CaretDoubleLeft,
+        anglesRight: CaretDoubleRight,
+        bars: List,
+        capsules: Pill,
+        gauge: Gauge,
+        home: House,
+        microphone: Microphone,
+        paw: PawPrint,
+        utensils: ForkKnife,
     };
 
     return (

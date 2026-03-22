@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faMicrophone,
-    faKitMedical,
-    faKeyboard,
-    faCalendarDays,
-    faPaw,
-    faPlus,
-    faUtensils,
-} from "@fortawesome/free-solid-svg-icons";
+    Microphone,
+    Keyboard,
+    CalendarDots,
+    PawPrint,
+    Plus,
+    ForkKnife,
+    FirstAidKit,
+} from "@phosphor-icons/react";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import ActionModal from "../Modal/ActionModal";
 
@@ -141,7 +140,7 @@ const CTAButton = () => {
         <Menu as="div" className="relative inline-block text-left">
             <div>
                 <MenuButton className="btn btn-primary text-white w-10 h-10 P-0 rounded-full bg-primary ">
-                    <FontAwesomeIcon size="xl" icon={faPlus} />
+                    <Plus size={28} />
                 </MenuButton>
             </div>
 
@@ -162,9 +161,9 @@ const CTAButton = () => {
                                     }
                                 }}
                             >
-                                <FontAwesomeIcon
-                                    icon={faMicrophone}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <Microphone
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 {isRecording
                                     ? "Stop Recording"
@@ -175,9 +174,9 @@ const CTAButton = () => {
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => handlePromptInput()}
                             >
-                                <FontAwesomeIcon
-                                    icon={faKeyboard}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <Keyboard
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Manual Input
                             </div>
@@ -185,9 +184,9 @@ const CTAButton = () => {
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => localHandleModelInput("feeding")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faUtensils}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <ForkKnife
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Add Feeding
                             </div>
@@ -195,9 +194,9 @@ const CTAButton = () => {
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => localHandleModelInput("care")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faKitMedical}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <FirstAidKit
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Add Care
                             </div>
@@ -205,9 +204,9 @@ const CTAButton = () => {
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => localHandleModelInput("event")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faCalendarDays}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <CalendarDots
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Add Event
                             </div>
@@ -216,9 +215,9 @@ const CTAButton = () => {
                                 className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                                 onClick={() => localHandleModelInput("Pet")}
                             >
-                                <FontAwesomeIcon
-                                    icon={faPaw}
-                                    className="mr-3 size-5 text-gray-400 group-data-[focus]:text-gray-500"
+                                <PawPrint
+                                    size={20}
+                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
                                 />
                                 Add Pet
                             </div>

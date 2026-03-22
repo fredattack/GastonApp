@@ -9,13 +9,13 @@
  * Auto-dismisses after 4 seconds.
  */
 import React, { useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faCheckCircle,
-    faExclamationTriangle,
-    faTimesCircle,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+    CheckCircle,
+    Warning,
+    XCircle,
+    X,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface VoiceCommandFeedbackProps {
     result: VoiceCommandResult | null;
@@ -58,7 +58,7 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
 
     const config = {
         executed: {
-            icon: faCheckCircle,
+            IconComponent: CheckCircle,
             containerClass:
                 "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700",
             iconClass: "text-green-500 dark:text-green-400",
@@ -66,7 +66,7 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
             subTextClass: "text-green-600 dark:text-green-400",
         },
         error: {
-            icon: faTimesCircle,
+            IconComponent: XCircle,
             containerClass:
                 "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700",
             iconClass: "text-red-500 dark:text-red-400",
@@ -74,7 +74,7 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
             subTextClass: "text-red-600 dark:text-red-400",
         },
         low_confidence: {
-            icon: faExclamationTriangle,
+            IconComponent: Warning,
             containerClass:
                 "bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700",
             iconClass: "text-amber-500 dark:text-amber-400",
@@ -84,6 +84,7 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
     } as const;
 
     const variant = config[result.status];
+    const StatusIcon = variant.IconComponent;
 
     return (
         <div
@@ -99,9 +100,9 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
                 animation: "slideDown 0.25s ease-out forwards",
             }}
         >
-            <FontAwesomeIcon
-                icon={variant.icon}
-                className={`w-5 h-5 mt-0.5 flex-shrink-0 ${variant.iconClass}`}
+            <StatusIcon
+                size={20}
+                className={`mt-0.5 flex-shrink-0 ${variant.iconClass}`}
                 aria-hidden="true"
             />
 
@@ -124,9 +125,8 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
                 className={`flex-shrink-0 p-1 rounded-md transition-colors hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${variant.iconClass}`}
                 aria-label="Fermer"
             >
-                <FontAwesomeIcon
-                    icon={faTimes}
-                    className="w-3.5 h-3.5"
+                <X
+                    size={14}
                     aria-hidden="true"
                 />
             </button>

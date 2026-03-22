@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { Circle } from "@phosphor-icons/react";
 
 const RecordingButton = ({
     isRecording,
@@ -33,16 +32,13 @@ const RecordingButton = ({
                 }`}
             >
                 {!isLocalRecording && (
-                    <FontAwesomeIcon
-                        size="3x"
+                    <Circle
+                        size={48}
+                        weight="fill"
                         className="text-red-600"
-                        icon={faCircle}
                     />
                 )}
             </div>
-            {/* <span className="sr-only"> */}
-            {/*    {isLocalRecording ? "Stop Recording" : "Start Recording"} */}
-            {/* </span> */}
         </button>
     );
 };

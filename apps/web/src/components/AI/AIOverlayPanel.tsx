@@ -1,12 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTimes,
-    faExpand,
-    faMicrophone,
-} from "@fortawesome/free-solid-svg-icons";
+import { X, ArrowsOut, Microphone } from "@phosphor-icons/react";
 import { useAIAssistant } from "../../contexts/AIAssistantContext";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import ConversationThread from "../../pages/AIAssistant/components/ConversationThread";
@@ -117,10 +112,7 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
                             className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             title={t("Open full assistant")}
                         >
-                            <FontAwesomeIcon
-                                icon={faExpand}
-                                className="text-sm"
-                            />
+                            <ArrowsOut size={16} />
                         </button>
                         <button
                             type="button"
@@ -128,10 +120,7 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
                             className="p-2 text-gray-500 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             title={t("Close")}
                         >
-                            <FontAwesomeIcon
-                                icon={faTimes}
-                                className="text-sm"
-                            />
+                            <X size={16} />
                         </button>
                     </div>
                 </div>

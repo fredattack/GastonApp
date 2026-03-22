@@ -1,10 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faArrowLeft,
-    faBars,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { ArrowLeft, List, X } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { useAIAssistant } from "../../contexts/AIAssistantContext";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
@@ -54,7 +49,7 @@ const AIAssistantPage: React.FC = () => {
                             className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors lg:hidden"
                             aria-label="Go back"
                         >
-                            <FontAwesomeIcon icon={faArrowLeft} />
+                            <ArrowLeft size={20} />
                         </button>
 
                         <button
@@ -66,9 +61,7 @@ const AIAssistantPage: React.FC = () => {
                             className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             aria-label="Toggle sidebar"
                         >
-                            <FontAwesomeIcon
-                                icon={isSidebarOpen ? faTimes : faBars}
-                            />
+                            {isSidebarOpen ? <X size={20} /> : <List size={20} />}
                         </button>
 
                         <div>
@@ -87,7 +80,7 @@ const AIAssistantPage: React.FC = () => {
                         onClick={handleBack}
                         className="hidden lg:flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                     >
-                        <FontAwesomeIcon icon={faArrowLeft} />
+                        <ArrowLeft size={20} />
                         <span>Back to Calendar</span>
                     </button>
                 </div>

@@ -2,8 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { X } from "@phosphor-icons/react";
 
 import SingleSelect from "../../Form/SingleSelect";
 
@@ -53,7 +52,7 @@ const PetDetails = ({ formData, pets, handleChange }: PetDetailsProps) => {
                                 onClick={() => removePetDetail(index)}
                                 className="text-red-500 hover:text-red-700 "
                             >
-                                <FontAwesomeIcon icon={faTimes} />
+                                <X size={20} />
                             </button>
                         </div>
 

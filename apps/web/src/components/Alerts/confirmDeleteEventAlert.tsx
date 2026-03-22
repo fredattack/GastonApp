@@ -1,7 +1,6 @@
 import React from "react";
 import Swal from "sweetalert2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Trash } from "@phosphor-icons/react";
 import { modelService } from "../../services";
 
 interface ConfirmationAlertProps {
@@ -83,7 +82,7 @@ const ConfirmDeleteEventAlert: React.FC<ConfirmationAlertProps> = ({
             className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
             onClick={showAlert}
         >
-            <FontAwesomeIcon icon={faTrash} className="mr-2" />
+            <Trash size={16} className="mr-2 inline" />
             Delete Event
         </button>
     );

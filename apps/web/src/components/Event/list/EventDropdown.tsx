@@ -1,12 +1,6 @@
 import React from "react";
 
-import {
-    faEllipsisH,
-    faEdit,
-    faCheckSquare,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DotsThree, PencilSimple, CheckSquare, X } from "@phosphor-icons/react";
 import { useToast } from "../../../providers/ToastProvider";
 import { useMessage } from "../../../contexts/MessageContext";
 import Dropdown from "../../Dropdown";
@@ -68,7 +62,7 @@ const EventDropdown = ({
                 placement="top-end"
                 btnClassName="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
                 button={
-                    <FontAwesomeIcon icon={faEllipsisH} className="m-auto" />
+                    <DotsThree size={20} className="m-auto" />
                 }
             >
                 <ul className="!min-w-[170px] z-50 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2">
@@ -78,10 +72,11 @@ const EventDropdown = ({
                             className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 ${donestyle}`}
                             onClick={handleChangeDoneStatus}
                         >
-                            <FontAwesomeIcon
-                                icon={event.is_done ? faTimes : faCheckSquare}
-                                className="mr-2"
-                            />
+                            {event.is_done ? (
+                                <X size={16} className="mr-2 inline" />
+                            ) : (
+                                <CheckSquare size={16} className="mr-2 inline" />
+                            )}
                             {event.is_done ? "Mark as Undone" : "Mark as Done"}
                         </button>
                     </li>
@@ -91,7 +86,7 @@ const EventDropdown = ({
                             className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
                             onClick={handleEdit}
                         >
-                            <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                            <PencilSimple size={16} className="mr-2 inline" />
                             Edit Event
                         </button>
                     </li>

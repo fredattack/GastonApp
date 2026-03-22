@@ -1,8 +1,7 @@
 // @ts-nocheck
 
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { Clock } from "@phosphor-icons/react";
 
 interface WeekViewProps {
     currentDate: Date;
@@ -97,7 +96,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
                 {/* Time column header */}
                 <div className="p-3 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center">
-                    <FontAwesomeIcon icon={faClock} className="text-gray-400" />
+                    <Clock size={20} className="text-gray-400" />
                 </div>
 
                 {/* Day headers */}

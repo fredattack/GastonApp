@@ -1,10 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faRepeat,
-    faCalendar,
-    faCalendarDay,
-} from "@fortawesome/free-solid-svg-icons";
+    ArrowsClockwise,
+    Calendar,
+    CalendarBlank,
+} from "@phosphor-icons/react";
 
 interface RecurringEventDialogProps {
     isOpen: boolean;
@@ -42,8 +41,8 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                     <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                                <FontAwesomeIcon
-                                    icon={faRepeat}
+                                <ArrowsClockwise
+                                    size={20}
                                     className="text-purple-600 dark:text-purple-400"
                                 />
                             </div>
@@ -74,7 +73,7 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                             >
                                 <div className="flex items-start gap-3">
                                     <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <FontAwesomeIcon icon={faCalendarDay} />
+                                        <CalendarBlank size={16} />
                                     </div>
                                     <div className="flex-1">
                                         <div className="font-semibold text-gray-900 dark:text-white mb-1">
@@ -95,7 +94,7 @@ const RecurringEventDialog: React.FC<RecurringEventDialogProps> = ({
                             >
                                 <div className="flex items-start gap-3">
                                     <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <FontAwesomeIcon icon={faCalendar} />
+                                        <Calendar size={16} />
                                     </div>
                                     <div className="flex-1">
                                         <div className="font-semibold text-gray-900 dark:text-white mb-1">

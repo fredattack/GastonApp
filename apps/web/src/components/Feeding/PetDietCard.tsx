@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { X } from "@phosphor-icons/react";
 import { feedingService } from "../../services/FeedingService";
 
 interface PetDietCardProps {
@@ -114,8 +113,8 @@ const PetDietCard: React.FC<PetDietCardProps> = ({
                         className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Fermer"
                     >
-                        <FontAwesomeIcon
-                            icon={faTimes}
+                        <X
+                            size={20}
                             className="text-gray-500"
                         />
                     </button>
