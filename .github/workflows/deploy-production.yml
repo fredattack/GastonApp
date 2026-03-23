@@ -85,6 +85,17 @@ jobs:
             echo "✅ Docker is already installed"
           fi
 
+      - name: Upload built assets to droplet
+        env:
+          DROPLET_IP: ${{ secrets.DROPLET_IP }}
+          DROPLET_USER: ${{ secrets.DROPLET_USER }}
+          REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        run: |
+          echo "📦 Uploading built assets to droplet..."
+          ssh $DROPLET_USER@$DROPLET_IP "mkdir -p $REMOTE_PATH/apps/web/dist"
+          scp -r apps/web/dist/* $DROPLET_USER@$DROPLET_IP:$REMOTE_PATH/apps/web/dist/
+          echo "✅ Assets uploaded"
+
       - name: Deploy to Digital Ocean Droplet
         env:
           DROPLET_IP: ${{ secrets.DROPLET_IP }}
@@ -93,7 +104,6 @@ jobs:
         run: |
           echo "🚀 Deploying to $DROPLET_IP..."
 
-          # Update code on droplet
           ssh $DROPLET_USER@$DROPLET_IP << 'ENDSSH'
             set -e
             cd ${{ secrets.REMOTE_PATH }}
@@ -102,14 +112,6 @@ jobs:
             git fetch origin
             git checkout master
             git pull origin master
-
-            echo "📝 Updating environment variables..."
-            cat > apps/web/.env << 'ENVEOF'
-          VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}
-          VITE_API_URL=${{ secrets.VITE_API_URL }}
-          VITE_BUGSNAG_API_KEY=${{ secrets.VITE_BUGSNAG_API_KEY }}
-          VITE_NODE_ENV=production
-          ENVEOF
 
             echo "🐳 Deploying with Docker..."
             ./.deploy/deploy.sh

@@ -89,6 +89,18 @@ jobs:
             echo "✅ Docker is already installed"
           fi
 
+      - name: Upload built assets to staging droplet
+        if: vars.STAGING_DROPLET_IP != ''
+        env:
+          DROPLET_IP: ${{ vars.STAGING_DROPLET_IP }}
+          DROPLET_USER: ${{ vars.STAGING_DROPLET_USER }}
+          REMOTE_PATH: ${{ vars.STAGING_REMOTE_PATH }}
+        run: |
+          echo "📦 Uploading built assets to staging droplet..."
+          ssh $DROPLET_USER@$DROPLET_IP "mkdir -p $REMOTE_PATH/apps/web/dist"
+          scp -r apps/web/dist/* $DROPLET_USER@$DROPLET_IP:$REMOTE_PATH/apps/web/dist/
+          echo "✅ Assets uploaded"
+
       - name: Deploy to Staging Droplet
         if: vars.STAGING_DROPLET_IP != ''
         env:
@@ -107,14 +119,6 @@ jobs:
             BRANCH=${GITHUB_REF#refs/heads/}
             git checkout $BRANCH
             git pull origin $BRANCH
-
-            echo "📝 Updating environment variables..."
-            cat > apps/web/.env << 'ENVEOF'
-          VITE_OPENAI_API_KEY=${{ secrets.STAGING_VITE_OPENAI_API_KEY }}
-          VITE_API_URL=${{ secrets.STAGING_VITE_API_URL }}
-          VITE_BUGSNAG_API_KEY=${{ secrets.STAGING_VITE_BUGSNAG_API_KEY }}
-          VITE_NODE_ENV=staging
-          ENVEOF
 
             echo "🐳 Deploying with Docker..."
             ./.deploy/deploy.sh

@@ -1,35 +1,12 @@
-# Multi-stage Dockerfile for GastonApp Web
-# Stage 1: Build
-FROM node:22.3-alpine AS builder
-
-# Install pnpm directly via npm (avoids corepack signature verification issues)
-RUN npm install -g pnpm@10.14.0
-
-# Set working directory
-WORKDIR /app
-
-# Copy workspace files
-COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
-COPY turbo.json ./
-
-# Copy all packages and apps
-COPY packages ./packages
-COPY apps/web ./apps/web
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Build the web app
-RUN pnpm build:web
-
-# Stage 2: Production
-FROM nginx:alpine AS production
+# Dockerfile for GastonApp Web
+# Assets are pre-built on CI runner and copied here
+FROM nginx:alpine
 
 # Copy custom nginx config
 COPY .deploy/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built assets from builder
-COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+# Copy pre-built assets
+COPY apps/web/dist /usr/share/nginx/html
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
