@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User, Robot } from "@phosphor-icons/react";
+import { User, Robot, ArrowClockwise, WarningCircle } from "@phosphor-icons/react";
 
 interface MessageBubbleProps {
     message: Message;
@@ -45,8 +45,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
                 </div>
 
                 {message.metadata?.error && (
-                    <div className="mt-2 text-xs text-red-500">
-                        Error: {message.metadata.error}
+                    <div className="mt-2 flex items-center gap-2">
+                        <WarningCircle
+                            size={14}
+                            weight="fill"
+                            className="text-red-400 flex-shrink-0"
+                        />
+                        <span className="text-xs text-red-400">
+                            Oups, je n'ai pas pu répondre.
+                        </span>
                     </div>
                 )}
 

@@ -70,7 +70,7 @@ const AIAssistantPage: React.FC = () => {
 
                         <div>
                             <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                AI Assistant
+                                Assistant Gaston
                             </h1>
                             {activeConversation && (
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -85,7 +85,7 @@ const AIAssistantPage: React.FC = () => {
                         className="hidden lg:flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                     >
                         <ArrowLeft size={20} />
-                        <span>Back to Calendar</span>
+                        <span>Retour</span>
                     </button>
                 </div>
             </header>
@@ -154,7 +154,7 @@ const AIAssistantPage: React.FC = () => {
                         onVoiceStop={stopRecording}
                         isRecording={isRecording}
                         isLoading={isLoading}
-                        placeholder="Ask anything about your pets..."
+                        placeholder="Posez votre question..."
                         externalValue={voiceTranscript}
                     />
                 </div>

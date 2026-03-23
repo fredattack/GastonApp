@@ -244,9 +244,11 @@ declare global {
             | "createPet"
             | "updatePet"
             | "deletePet"
+            | "updateFeedingSchedule"
             | "query"
             | "advice"
-            | "metrics";
+            | "metrics"
+            | "petQuery";
         description: string;
         data:
             | AIEventData
@@ -258,6 +260,21 @@ declare global {
             | DeleteData;
         metadata?: AIResponseMetadata;
         healthDisclaimer?: HealthDisclaimer;
+        status?:
+            | "executed"
+            | "needs_confirmation"
+            | "needs_clarification"
+            | "low_confidence"
+            | "failed"
+            | "error";
+        conversationResponse?: string;
+        confidenceScore?: number;
+        emotionalTone?: string;
+        result?: Record<string, unknown>;
+        message?: string;
+        confirmationNeeded?: {
+            question: string;
+        };
     }
 
     interface AIError {

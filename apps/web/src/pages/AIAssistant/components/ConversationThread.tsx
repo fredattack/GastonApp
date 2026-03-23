@@ -1,4 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import {
+    Robot,
+    CalendarPlus,
+    Stethoscope,
+    Pill,
+} from "@phosphor-icons/react";
 import MessageBubble from "./MessageBubble";
 import AIMessageCard from "./AIMessageCard";
 
@@ -21,119 +27,73 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
         scrollToBottom();
     }, [conversation?.messages]);
 
-    if (!conversation) {
-        return (
-            <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-                <div className="text-center max-w-2xl mx-auto">
-                    <div className="relative mb-6">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
-                        </div>
-                        <div className="relative text-7xl animate-bounce-slow">
-                            🤖
-                        </div>
+    const emptyState = (
+        <div className="flex-1 flex flex-col items-center justify-center p-6">
+            <Robot size={32} weight="duotone" className="text-primary mb-3" />
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
+                Comment puis-je aider ?
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
+                Essayez un exemple ci-dessous
+            </p>
+            <div className="w-full max-w-sm space-y-2">
+                <button
+                    type="button"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-left bg-[#FDFCFA] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors"
+                >
+                    <CalendarPlus
+                        size={18}
+                        className="text-primary flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 dark:text-white truncate">
+                            Planifier un repas
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                            "Pablo mange 365g de barf demain matin"
+                        </p>
                     </div>
-                    <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                        Assistant IA Gaston
-                    </h2>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                        Votre assistant intelligent pour la gestion de vos
-                        animaux
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-                            <div className="text-3xl mb-2">📅</div>
-                            <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                                Planifier
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Créez des événements et rappels
-                            </p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-                            <div className="text-3xl mb-2">🐾</div>
-                            <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                                Gérer
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Suivez vos animaux au quotidien
-                            </p>
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700">
-                            <div className="text-3xl mb-2">💡</div>
-                            <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                                Conseiller
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Obtenez des recommandations
-                            </p>
-                        </div>
+                </button>
+                <button
+                    type="button"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-left bg-[#FDFCFA] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors"
+                >
+                    <Stethoscope
+                        size={18}
+                        className="text-secondary flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 dark:text-white truncate">
+                            Rendez-vous vétérinaire
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                            "RDV véto pour Luna jeudi à 14h"
+                        </p>
                     </div>
-                </div>
+                </button>
+                <button
+                    type="button"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-left bg-[#FDFCFA] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors"
+                >
+                    <Pill
+                        size={18}
+                        className="text-amber-500 flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 dark:text-white truncate">
+                            Rappel médicament
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                            "Rappel : antibiotique pour Max"
+                        </p>
+                    </div>
+                </button>
             </div>
-        );
-    }
+        </div>
+    );
 
-    if (conversation.messages.length === 0) {
-        return (
-            <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-                <div className="text-center max-w-2xl mx-auto">
-                    <div className="text-6xl mb-6 animate-wave">👋</div>
-                    <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">
-                        Comment puis-je vous aider ?
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400 mb-8">
-                        Posez-moi une question ou essayez un exemple
-                    </p>
-                    <div className="grid gap-3 text-left">
-                        <button className="group bg-white dark:bg-gray-800 p-4 rounded-xl text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 hover:border-primary hover:shadow-md">
-                            <div className="flex items-start gap-3">
-                                <div className="text-2xl">🍖</div>
-                                <div className="flex-1">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                                        Planifier un repas
-                                    </div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                        "Pablo doit manger 365gr de barf demain
-                                        matin"
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-
-                        <button className="group bg-white dark:bg-gray-800 p-4 rounded-xl text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 hover:border-primary hover:shadow-md">
-                            <div className="flex items-start gap-3">
-                                <div className="text-2xl">🏥</div>
-                                <div className="flex-1">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                                        Rendez-vous vétérinaire
-                                    </div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                        "Crée un rendez-vous véto pour Luna
-                                        jeudi à 14h"
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-
-                        <button className="group bg-white dark:bg-gray-800 p-4 rounded-xl text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 hover:border-primary hover:shadow-md">
-                            <div className="flex items-start gap-3">
-                                <div className="text-2xl">💊</div>
-                                <div className="flex-1">
-                                    <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                                        Médicament quotidien
-                                    </div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                        "Rappel quotidien : donner antibiotique
-                                        à Max"
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
+    if (!conversation || conversation.messages.length === 0) {
+        return emptyState;
     }
 
     return (

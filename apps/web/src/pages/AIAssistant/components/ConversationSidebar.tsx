@@ -4,6 +4,7 @@ import {
     Trash,
     MagnifyingGlass,
     ChatCircle,
+    ChatCircleDots,
 } from "@phosphor-icons/react";
 import { useAIAssistant } from "../../../contexts/AIAssistantContext";
 
@@ -43,7 +44,7 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
     const handleDeleteConversation = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
         if (
-            window.confirm("Are you sure you want to delete this conversation?")
+            window.confirm("Supprimer cette conversation ?")
         ) {
             deleteConversation(id);
         }
@@ -54,9 +55,9 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
         const diffMs = now.getTime() - new Date(date).getTime();
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 0) return "Today";
-        if (diffDays === 1) return "Yesterday";
-        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays === 0) return "Aujourd'hui";
+        if (diffDays === 1) return "Hier";
+        if (diffDays < 7) return `Il y a ${diffDays} jours`;
 
         return new Date(date).toLocaleDateString("fr-FR", {
             month: "short",
@@ -74,7 +75,7 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                 <div className="p-4 border-b border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
                     <button
                         onClick={handleNewConversation}
-                        className="w-full py-3 px-4 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-md"
+                        className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-md"
                     >
                         <Plus size={20} />
                         Nouvelle conversation
@@ -98,7 +99,11 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                 <div className="flex-1 overflow-y-auto">
                     {displayedConversations.length === 0 ? (
                         <div className="p-8 text-center">
-                            <div className="text-4xl mb-3">💬</div>
+                            <ChatCircleDots
+                                size={40}
+                                weight="duotone"
+                                className="text-gray-300 dark:text-gray-600 mb-3"
+                            />
                             <p className="text-gray-500 dark:text-gray-400 text-sm">
                                 {searchQuery
                                     ? "Aucune conversation trouvée"
@@ -115,7 +120,7 @@ const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                                     }
                                     className={`p-3 mb-2 rounded-xl cursor-pointer transition-all duration-200 group ${
                                         activeConversation?.id === conv.id
-                                            ? "bg-gradient-to-r from-primary/10 to-blue-500/10 border border-primary/30 shadow-md scale-[1.02]"
+                                            ? "bg-primary/10 border border-primary/30 shadow-md scale-[1.02]"
                                             : "hover:bg-white dark:hover:bg-gray-800 hover:shadow-md hover:scale-[1.01] border border-transparent"
                                     }`}
                                 >

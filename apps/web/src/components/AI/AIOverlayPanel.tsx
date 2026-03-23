@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { X, ArrowsOut, Microphone } from "@phosphor-icons/react";
+import { X, ArrowsOut, Microphone, Robot } from "@phosphor-icons/react";
 import { useAIAssistant } from "../../contexts/AIAssistantContext";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import ConversationThread from "../../pages/AIAssistant/components/ConversationThread";
@@ -68,14 +68,14 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
 
             {/* Panel */}
             <div
-                className={`fixed top-0 right-0 h-full z-[70] w-full sm:w-[420px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out ${
+                className={`fixed top-0 right-0 h-full z-[70] w-full sm:w-[420px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col ${
                     isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-primary/5 to-transparent">
                     <div className="flex items-center gap-3">
-                        <span className="text-xl">✨</span>
+                        <Robot size={20} weight="duotone" className="text-primary" />
                         <div>
                             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                 {t("AI Assistant")}
@@ -126,7 +126,7 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Conversation */}
-                <div className="flex flex-col h-[calc(100%-120px)]">
+                <div className="flex flex-col flex-1 overflow-hidden">
                     <ConversationThread
                         conversation={activeConversation}
                         isLoading={isLoading}
@@ -134,7 +134,7 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Input */}
-                <div className="absolute bottom-0 left-0 right-0">
+                <div className="shrink-0">
                     <ChatInput
                         onSend={handleSend}
                         onVoiceStart={startRecording}

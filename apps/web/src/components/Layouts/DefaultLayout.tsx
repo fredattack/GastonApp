@@ -7,6 +7,7 @@ import {
     useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import App from "../../App";
 import { IRootState } from "../../store";
 import { toggleSidebar } from "../../store/themeConfigSlice";
@@ -19,20 +20,55 @@ import TabBar from "../Navigation/TabBar";
 import FAB from "../Common/FAB";
 import { CommandBar, useCommandBar } from "../AI/CommandBar";
 import AIOverlayPanel from "../AI/AIOverlayPanel";
+import { useAIAssistant } from "../../contexts/AIAssistantContext";
+
+const AIWidgets = ({
+    commandBarIsOpen,
+    commandBarClose,
+}: {
+    commandBarIsOpen: boolean;
+    commandBarClose: () => void;
+}) => {
+    const navigate = useNavigate();
+    const { injectConversation } = useAIAssistant();
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+    const handleFABClick = useCallback(() => {
+        navigate("/ai-assistant");
+    }, [navigate]);
+
+    const handleOverlayClose = useCallback(() => {
+        setIsOverlayOpen(false);
+    }, []);
+
+    const handleOpenChat = useCallback(
+        (query: string, response: AIResponse) => {
+            injectConversation(query, response);
+            navigate("/ai-assistant");
+        },
+        [injectConversation, navigate],
+    );
+
+    return (
+        <>
+            <FAB onClick={handleFABClick} />
+            <AIOverlayPanel
+                isOpen={isOverlayOpen}
+                onClose={handleOverlayClose}
+            />
+            <CommandBar
+                isOpen={commandBarIsOpen}
+                onClose={commandBarClose}
+                onOpenChat={handleOpenChat}
+            />
+        </>
+    );
+};
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
     const commandBar = useCommandBar();
-    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-
-    const handleFABClick = useCallback(() => {
-        setIsOverlayOpen(true);
-    }, []);
-
-    const handleOverlayClose = useCallback(() => {
-        setIsOverlayOpen(false);
-    }, []);
 
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
@@ -176,23 +212,11 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     <TabBar />
                     {/* END MOBILE TAB BAR */}
 
-                    {/* BEGIN FAB */}
-                    <FAB onClick={handleFABClick} />
-                    {/* END FAB */}
-
-                    {/* BEGIN AI OVERLAY PANEL */}
-                    <AIOverlayPanel
-                        isOpen={isOverlayOpen}
-                        onClose={handleOverlayClose}
+                    {/* AI Widgets (rendered inside App/AIAssistantProvider) */}
+                    <AIWidgets
+                        commandBarIsOpen={commandBar.isOpen}
+                        commandBarClose={commandBar.close}
                     />
-                    {/* END AI OVERLAY PANEL */}
-
-                    {/* BEGIN AI COMMAND BAR */}
-                    <CommandBar
-                        isOpen={commandBar.isOpen}
-                        onClose={commandBar.close}
-                    />
-                    {/* END AI COMMAND BAR */}
                 </div>
             </div>
         </App>

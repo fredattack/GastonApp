@@ -115,7 +115,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     <button
                         onClick={handleSend}
                         disabled={!message.trim() || isLoading}
-                        className="p-3 rounded-xl bg-gradient-to-r from-primary to-blue-600 text-white hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200 shadow-md"
+                        className="p-3 rounded-xl bg-primary hover:bg-primary/90 text-white hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200 shadow-md"
                         aria-label="Envoyer le message"
                     >
                         {isLoading ? (
@@ -126,22 +126,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     </button>
                 </div>
 
-                <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
-                    <span className="inline-flex items-center gap-1">
-                        Appuyez sur{" "}
-                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
-                            Entrée
-                        </kbd>{" "}
-                        pour envoyer,{" "}
-                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
-                            Shift
-                        </kbd>{" "}
-                        +{" "}
-                        <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
-                            Entrée
-                        </kbd>{" "}
-                        pour une nouvelle ligne
-                    </span>
+                <div className="mt-1.5 text-[10px] text-center text-gray-400 dark:text-gray-500">
+                    <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">
+                        Entrée
+                    </kbd>{" "}
+                    envoyer{" "}
+                    <span className="mx-1">·</span>{" "}
+                    <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">
+                        Shift+Entrée
+                    </kbd>{" "}
+                    nouvelle ligne
                 </div>
             </div>
         </div>

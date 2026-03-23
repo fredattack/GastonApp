@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import useConversations from "../hooks/ai/useConversations";
 import useAIStream from "../hooks/ai/useAIStream";
+import ConversationService from "../services/ConversationService";
 
 interface AIAssistantContextValue {
     conversations: Conversation[];
@@ -17,6 +18,7 @@ interface AIAssistantContextValue {
     createConversation: (title?: string) => Conversation;
     loadConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
+    injectConversation: (query: string, aiResponse: AIResponse) => void;
     deleteConversation: (id: string) => void;
     updateConversationTitle: (id: string, title: string) => void;
     searchConversations: (query: string) => Conversation[];
@@ -83,6 +85,39 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
         ],
     );
 
+    const injectConversation = useCallback(
+        (query: string, aiResponse: AIResponse) => {
+            const convService = ConversationService.getInstance();
+            const conv = createConversation(
+                query.slice(0, 40) + (query.length > 40 ? "..." : ""),
+            );
+
+            convService.addMessage(conv.id, {
+                role: "user",
+                content: query,
+            });
+
+            convService.addMessage(conv.id, {
+                role: "assistant",
+                content:
+                    aiResponse.conversationResponse ||
+                    aiResponse.description ||
+                    "",
+                metadata: {
+                    isStreaming: false,
+                    aiResponse,
+                },
+            });
+
+            // Sync state
+            const updated = convService.getById(conv.id);
+            if (updated) {
+                updateConversationMessages(conv.id, () => updated.messages);
+            }
+        },
+        [createConversation, updateConversationMessages],
+    );
+
     const value: AIAssistantContextValue = {
         conversations,
         activeConversation,
@@ -92,6 +127,7 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
         createConversation,
         loadConversation,
         sendMessage,
+        injectConversation,
         deleteConversation,
         updateConversationTitle,
         searchConversations,

@@ -1,6 +1,11 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {
+    CalendarPlus,
+    FirstAid,
+    Sparkle,
+} from "@phosphor-icons/react";
 import CommandBarInput from "./CommandBarInput";
 import CommandBarResults, { QuickAction } from "./CommandBarResults";
 import useSpeechRecognition from "../../../hooks/useSpeechRecognition";
@@ -9,16 +14,22 @@ import { OpenAiService } from "../../../services/OpenAIService";
 interface CommandBarProps {
     isOpen: boolean;
     onClose: () => void;
+    onOpenChat?: (query: string, response: AIResponse) => void;
 }
 
-const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
+const CommandBar: React.FC<CommandBarProps> = ({
+    isOpen,
+    onClose,
+    onOpenChat,
+}) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
 
     const [query, setQuery] = useState("");
-    const [aiResponse, setAiResponse] = useState<string | null>(null);
+    const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const handleTranscription = useCallback((text: string) => {
         setQuery(text);
@@ -41,6 +52,7 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
             onClose();
             setQuery("");
             setAiResponse(null);
+            setSuccessMessage(null);
         },
         [navigate, onClose],
     );
@@ -48,40 +60,8 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
     const quickActions = useMemo<QuickAction[]>(() => {
         const actions: QuickAction[] = [
             {
-                id: "nav-dashboard",
-                icon: "🏠",
-                label: t("Dashboard"),
-                description: t("Go to dashboard"),
-                action: () => navigateAndClose("/"),
-                category: "navigation",
-            },
-            {
-                id: "nav-calendar",
-                icon: "📅",
-                label: t("Calendar"),
-                description: t("View event calendar"),
-                action: () => navigateAndClose("/calendar"),
-                category: "navigation",
-            },
-            {
-                id: "nav-pets",
-                icon: "🐾",
-                label: t("My Pets"),
-                description: t("Manage your pets"),
-                action: () => navigateAndClose("/content/pets"),
-                category: "navigation",
-            },
-            {
-                id: "nav-add-pet",
-                icon: "➕",
-                label: t("Add a Pet"),
-                description: t("Register a new pet"),
-                action: () => navigateAndClose("/content/pets/create"),
-                category: "navigation",
-            },
-            {
                 id: "ai-assistant",
-                icon: "✨",
+                icon: <Sparkle size={18} />,
                 label: t("AI Assistant"),
                 description: t("Open full conversation"),
                 action: () => navigateAndClose("/ai-assistant"),
@@ -89,7 +69,7 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
             },
             {
                 id: "ai-create-event",
-                icon: "📝",
+                icon: <CalendarPlus size={18} />,
                 label: t("Create an event"),
                 description: t("Tell the AI what event to create"),
                 action: () => {
@@ -99,7 +79,7 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
             },
             {
                 id: "ai-health-advice",
-                icon: "💊",
+                icon: <FirstAid size={18} />,
                 label: t("Health advice"),
                 description: t("Ask about your pet's health"),
                 action: () => {
@@ -111,6 +91,53 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
 
         return actions;
     }, [t, navigateAndClose]);
+
+    const sendQuery = useCallback(
+        async (prompt: string) => {
+            if (!prompt.trim() || isLoading) return;
+
+            setIsLoading(true);
+            setAiResponse(null);
+            setSuccessMessage(null);
+
+            try {
+                const openAiService = OpenAiService.getInstance();
+                const response =
+                    await openAiService.sendPromptApi(prompt.trim());
+
+                // Clarification/low confidence: redirect to assistant page
+                const redirectStatuses = [
+                    "needs_clarification",
+                    "low_confidence",
+                ];
+                if (redirectStatuses.includes(response.status || "")) {
+                    if (onOpenChat) {
+                        onOpenChat(prompt, response);
+                    }
+                    onClose();
+                    setQuery("");
+                    setIsLoading(false);
+                    return;
+                }
+
+                setAiResponse(response);
+            } catch {
+                setAiResponse({
+                    status: "error",
+                    conversationResponse: t(
+                        "The service is temporarily unavailable.",
+                    ),
+                    score: 0,
+                    requestType: "query",
+                    description: "",
+                    data: {} as QueryResult,
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [isLoading, t, onOpenChat, onClose],
+    );
 
     const handleSubmit = useCallback(async () => {
         if (!query.trim() || isLoading) return;
@@ -140,40 +167,86 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
             }
         }
 
-        // Send to AI
-        setIsLoading(true);
-        setAiResponse(null);
+        await sendQuery(query);
+    }, [query, isLoading, navigateAndClose, sendQuery]);
 
+    const handleConfirm = useCallback(async () => {
+        if (!query.trim()) return;
+
+        setIsLoading(true);
         try {
             const openAiService = OpenAiService.getInstance();
-            const response = await openAiService.sendPromptApi(query.trim());
+            const response = await openAiService.sendPromptApi(query.trim(), {
+                confirmed: true,
+            });
 
-            // Handle response based on type
-            const actionableTypes = [
-                "createEvent",
-                "updateEvent",
-                "createPet",
-                "updatePet",
-            ];
-
-            if (actionableTypes.includes(response.requestType)) {
-                // Redirect to AI assistant with context for complex actions
-                navigate("/ai-assistant");
-                onClose();
-                setQuery("");
-                return;
+            if (
+                response.status === "executed" ||
+                !response.status
+            ) {
+                setSuccessMessage(
+                    response.conversationResponse ||
+                        response.description ||
+                        t("Action completed!"),
+                );
+                setAiResponse(null);
+                setTimeout(() => {
+                    onClose();
+                    setQuery("");
+                    setSuccessMessage(null);
+                }, 1500);
+            } else {
+                setAiResponse(response);
             }
-
-            // For queries, advice, etc. — show inline response
-            setAiResponse(response.description);
-        } catch (error) {
-            setAiResponse(
-                t("Sorry, I couldn't process your request. Please try again."),
-            );
+        } catch {
+            setAiResponse({
+                status: "error",
+                conversationResponse: t(
+                    "The action could not be executed.",
+                ),
+                score: 0,
+                requestType: "query",
+                description: "",
+                data: {} as QueryResult,
+            });
         } finally {
             setIsLoading(false);
         }
-    }, [query, isLoading, navigate, navigateAndClose, onClose, t]);
+    }, [query, onClose, t]);
+
+    const handleRetry = useCallback(() => {
+        setAiResponse(null);
+        sendQuery(query);
+    }, [query, sendQuery]);
+
+    const handleClarify = useCallback(
+        (correctedName: string) => {
+            // Replace the ambiguous part in the original query
+            const newQuery = query.replace(
+                /\b\w+\b/,
+                correctedName,
+            );
+            setQuery(newQuery);
+            sendQuery(newQuery);
+        },
+        [query, sendQuery],
+    );
+
+    const handleContinueInChat = useCallback(() => {
+        if (aiResponse && onOpenChat) {
+            onOpenChat(query, aiResponse);
+        }
+        onClose();
+        setQuery("");
+        setAiResponse(null);
+    }, [aiResponse, query, onOpenChat, onClose]);
+
+    const handleNavigate = useCallback(
+        (path: string) => {
+            navigateAndClose(path);
+        },
+        [navigateAndClose],
+    );
 
     const handleActionSelect = useCallback((action: QuickAction) => {
         action.action();
@@ -183,6 +256,7 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
         onClose();
         setQuery("");
         setAiResponse(null);
+        setSuccessMessage(null);
         if (isRecording) stopRecording();
     }, [onClose, isRecording, stopRecording]);
 
@@ -197,55 +271,90 @@ const CommandBar: React.FC<CommandBarProps> = ({ isOpen, onClose }) => {
             />
 
             {/* Command Bar Modal */}
-            <div className="relative w-full max-w-xl mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate__animated animate__fadeInDown animate__faster">
-                {/* Header hint */}
-                <div className="flex items-center justify-between px-4 pt-3 pb-0">
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                        <span className="text-primary">✨</span>
-                        <span>{t("AI-powered command bar")}</span>
+            <div className="relative w-full max-w-xl mx-4 bg-[#FDFCFA] dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate__animated animate__fadeInDown animate__faster">
+                {/* Success State */}
+                {successMessage ? (
+                    <div className="flex flex-col items-center justify-center py-10 px-6">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                            <svg
+                                className="w-6 h-6 text-primary"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200 text-center">
+                            {successMessage}
+                        </p>
                     </div>
-                    <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] text-gray-400 bg-gray-100 dark:bg-gray-700 rounded font-mono">
-                        ⌘K
-                    </kbd>
-                </div>
-
-                {/* Input */}
-                <CommandBarInput
-                    value={query}
-                    onChange={setQuery}
-                    onSubmit={handleSubmit}
-                    onRecordToggle={handleRecordToggle}
-                    isRecording={isRecording}
-                    isLoading={isLoading}
-                />
-
-                {/* Results */}
-                <CommandBarResults
-                    query={query}
-                    actions={quickActions}
-                    aiResponse={aiResponse}
-                    isLoading={isLoading}
-                    onActionSelect={handleActionSelect}
-                />
-
-                {/* Footer */}
-                <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-400">
-                    <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-mono">
-                                ↵
+                ) : (
+                    <>
+                        {/* Header hint */}
+                        <div className="flex items-center justify-between px-4 pt-3 pb-0">
+                            <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <Sparkle
+                                    size={14}
+                                    weight="fill"
+                                    className="text-primary"
+                                />
+                                <span>
+                                    {t("AI-powered command bar")}
+                                </span>
+                            </div>
+                            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] text-gray-400 bg-gray-100 dark:bg-gray-700 rounded font-mono">
+                                {"\u2318"}K
                             </kbd>
-                            {t("to send")}
-                        </span>
-                        <span className="flex items-center gap-1">
-                            <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-mono">
-                                esc
-                            </kbd>
-                            {t("to close")}
-                        </span>
-                    </div>
-                    <span>{t("Powered by AI")}</span>
-                </div>
+                        </div>
+
+                        {/* Input */}
+                        <CommandBarInput
+                            value={query}
+                            onChange={setQuery}
+                            onSubmit={handleSubmit}
+                            onRecordToggle={handleRecordToggle}
+                            isRecording={isRecording}
+                            isLoading={isLoading}
+                        />
+
+                        {/* Results */}
+                        <CommandBarResults
+                            query={query}
+                            actions={quickActions}
+                            aiResponse={aiResponse}
+                            isLoading={isLoading}
+                            onActionSelect={handleActionSelect}
+                            onConfirm={handleConfirm}
+                            onRetry={handleRetry}
+                            onClarify={handleClarify}
+                            onContinueInChat={handleContinueInChat}
+                            onNavigate={handleNavigate}
+                        />
+
+                        {/* Footer */}
+                        <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-400">
+                            <div className="flex items-center gap-3">
+                                <span className="flex items-center gap-1">
+                                    <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-mono">
+                                        {"\u21B5"}
+                                    </kbd>
+                                    {t("to send")}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-mono">
+                                        esc
+                                    </kbd>
+                                    {t("to close")}
+                                </span>
+                            </div>
+                            <span>{t("Powered by AI")}</span>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

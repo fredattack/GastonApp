@@ -85,7 +85,17 @@ const useAIStream = (): UseAIStreamReturn => {
                     },
                     // onComplete
                     async (finalResponse: AIResponse) => {
+                        const hasData =
+                            finalResponse.data &&
+                            typeof finalResponse.data === "object";
+                        const isExecuted =
+                            !finalResponse.status ||
+                            finalResponse.status === "executed" ||
+                            finalResponse.status === "needs_confirmation";
+
                         const transformedEvent =
+                            hasData &&
+                            isExecuted &&
                             "title" in finalResponse.data &&
                             "petId" in finalResponse.data
                                 ? transformAIResponseToEventForm(
@@ -94,6 +104,8 @@ const useAIStream = (): UseAIStreamReturn => {
                                 : null;
 
                         const transformedPet =
+                            hasData &&
+                            isExecuted &&
                             "name" in finalResponse.data &&
                             "species" in finalResponse.data
                                 ? transformAIResponseToPetForm(
