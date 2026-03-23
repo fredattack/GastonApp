@@ -41,7 +41,7 @@ echo -e "${YELLOW}⏳ Waiting for services to be healthy...${NC}"
 sleep 5
 
 # Check if the web service is running
-if docker compose -f .deploy/docker-compose.yml ps | grep -q "web.*Up"; then
+if docker compose -f .deploy/docker-compose.yml ps | grep -qE "web.*(Up|running)"; then
     echo -e "${GREEN}✅ Deployment successful!${NC}"
     echo -e "${GREEN}🌐 Application is running at: http://localhost${NC}"
 else
