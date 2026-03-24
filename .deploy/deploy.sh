@@ -45,7 +45,8 @@ if docker compose -f .deploy/docker-compose.yml ps | grep -qE "web.*(Up|running)
     echo -e "${GREEN}✅ Deployment successful!${NC}"
     echo -e "${GREEN}🌐 Application is running at: http://localhost${NC}"
 else
-    echo -e "${RED}❌ Deployment failed. Check logs with: docker compose -f .deploy/docker-compose.yml logs${NC}"
+    echo -e "${RED}❌ Deployment failed. Container logs:${NC}"
+    docker compose -f .deploy/docker-compose.yml logs --tail=50
     exit 1
 fi
 
