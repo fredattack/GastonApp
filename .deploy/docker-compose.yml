@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build:
@@ -14,8 +12,8 @@ services:
     networks:
       - gastonapp-network
     volumes:
-      # Mount SSL certificates if needed
-      - ./ssl:/etc/nginx/ssl:ro
+      # Mount Let's Encrypt certificates
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       # Mount logs
       - ./logs:/var/log/nginx
 
