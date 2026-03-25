@@ -74,6 +74,7 @@ const TabBar: React.FC = () => {
             "
             role="navigation"
             aria-label="Navigation principale mobile"
+            data-testid="mobile-tab-bar"
         >
             <div className="grid grid-cols-5 h-16">
                 {tabs.map((tab) => {
@@ -83,6 +84,7 @@ const TabBar: React.FC = () => {
                         <Link
                             key={tab.path}
                             to={tab.path}
+                            data-testid={`tab-${tab.label.toLowerCase()}`}
                             className={`
                                 flex flex-col items-center justify-center
                                 min-h-[44px]

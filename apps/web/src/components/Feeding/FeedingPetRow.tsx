@@ -20,6 +20,7 @@ const FeedingPetRow: React.FC<FeedingPetRowProps> = ({
 
     return (
         <div
+            data-testid={`feeding-pet-row-${item.pet_name}`}
             className={`
                 flex items-center gap-3 p-3 rounded-xl transition-all duration-300
                 ${
@@ -31,6 +32,7 @@ const FeedingPetRow: React.FC<FeedingPetRowProps> = ({
         >
             <button
                 onClick={handleToggle}
+                data-testid={`feeding-toggle-${item.pet_name}`}
                 className={`
                     flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center
                     transition-all duration-200 active:scale-95

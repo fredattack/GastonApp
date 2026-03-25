@@ -54,6 +54,7 @@ export default function Onboarding() {
     return (
         <div
             className="min-h-screen flex items-center justify-center p-4"
+            data-testid="onboarding-page"
             style={{
                 background:
                     "linear-gradient(135deg, var(--color-lin-2), var(--color-lin-0))",
@@ -145,6 +146,7 @@ export default function Onboarding() {
                     {/* Submit Button */}
                     <button
                         type="button"
+                        data-testid="onboarding-submit"
                         onClick={handleSubmit}
                         disabled={isSubmitting || !petFormData.name.trim()}
                         style={{

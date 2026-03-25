@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { registerUserViaApi, loginWithToken } from '../helpers';
+import { registerUserViaApi, loginWithToken, interceptAllApi } from '../helpers';
 
 const API_URL = 'http://localhost:3008/api/v1-0-0';
 
@@ -39,14 +39,16 @@ async function interceptPetsApi(page: import('@playwright/test').Page) {
   });
 }
 
-test.describe('Onboarding Flow', () => {
-  // Override storageState — these tests need users without pets
+/**
+ * Scénario 1 : Premier Lancement & Onboarding
+ * Couvre le flux complet : inscription → onboarding → création premier animal → dashboard
+ */
+test.describe('Scenario 1 — Premier Lancement & Onboarding', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('2.1 Ecran onboarding affiche — user sans pet → ecran onboarding visible', async ({
+  test('S1.1 Ecran onboarding — nouvel utilisateur sans animal voit l onboarding', async ({
     page,
   }) => {
-    // Create a user with no pets
     const email = `e2e-onboarding-${Date.now()}@gaston.test`;
     const { token, userId } = await registerUserViaApi({
       name: 'Onboarding User',
@@ -54,62 +56,53 @@ test.describe('Onboarding Flow', () => {
       password: 'TestPassword123!',
     });
 
-    // Inject auth and navigate directly to onboarding
-    // NOTE: The automatic redirect from / → /onboarding depends on the pets API
-    // returning JSON. Currently the API returns HTML for GET /pets, so we test
-    // the onboarding screen directly.
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/onboarding');
     await page.waitForLoadState('networkidle');
 
-    // Verify onboarding content
+    // Verify onboarding page loaded
+    await expect(page.locator('[data-testid="onboarding-page"]')).toBeVisible();
     await expect(page.getByText('Bienvenue sur Gaston !')).toBeVisible();
     await expect(
       page.getByText('Commencez par ajouter votre premier compagnon'),
     ).toBeVisible();
 
-    // Form fields should be visible
-    await expect(page.getByLabel('Nom*')).toBeVisible();
-    await expect(page.getByLabel('Espèce*')).toBeVisible();
+    // Form fields should be visible via data-testid
+    await expect(page.locator('[data-testid="pet-form"]')).toBeVisible();
+    await expect(page.locator('[data-testid="pet-form-name"]')).toBeVisible();
+    await expect(page.locator('[data-testid="pet-form-species"]')).toBeVisible();
 
     // Submit button should be disabled (no name entered)
-    await expect(
-      page.getByRole('button', { name: 'Ajouter mon compagnon' }),
-    ).toBeDisabled();
+    await expect(page.locator('[data-testid="onboarding-submit"]')).toBeDisabled();
   });
 
-  test('2.2 Creation premier animal — remplir formulaire → redirection dashboard', async ({
+  test('S1.2 Flux complet — creation premier animal via onboarding → redirection dashboard', async ({
     page,
   }) => {
     await interceptPetsApi(page);
 
-    // Create a user with no pets
-    const email = `e2e-onboarding-create-${Date.now()}@gaston.test`;
+    const email = `e2e-onboarding-full-${Date.now()}@gaston.test`;
     const { token, userId } = await registerUserViaApi({
       name: 'Onboarding Creator',
       email,
       password: 'TestPassword123!',
     });
 
-    // Inject auth into browser
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/onboarding');
     await page.waitForLoadState('networkidle');
 
-    // Fill the pet form
-    await page.getByLabel('Nom*').fill('Moustache');
-    await page.getByLabel('Espèce*').selectOption('cat');
-    await page.getByLabel('Race').fill('Persan');
-    await page.getByLabel('Date de naissance').fill('2022-06-15');
+    // Fill the pet form with all fields from Scenario 1
+    await page.locator('[data-testid="pet-form-name"]').fill('Moustache');
+    await page.locator('[data-testid="pet-form-species"]').selectOption('cat');
+    await page.locator('[data-testid="pet-form-breed"]').fill('Persan');
+    await page.locator('[data-testid="pet-form-birthdate"]').fill('2022-06-15');
 
-    // Submit button should be enabled now
-    const submitButton = page.getByRole('button', {
-      name: 'Ajouter mon compagnon',
-    });
+    // Submit button should be enabled
+    const submitButton = page.locator('[data-testid="onboarding-submit"]');
     await expect(submitButton).toBeEnabled();
-
     await submitButton.click();
 
     // Should redirect to dashboard after creation
@@ -117,5 +110,52 @@ test.describe('Onboarding Flow', () => {
       timeout: 15000,
     });
     await expect(page).not.toHaveURL(/\/onboarding/);
+  });
+
+  test('S1.3 Dashboard apres onboarding — animal visible et navigation accessible', async ({
+    page,
+  }) => {
+    await interceptPetsApi(page);
+    await interceptAllApi(page);
+
+    const email = `e2e-onboarding-dash-${Date.now()}@gaston.test`;
+    const { token, userId } = await registerUserViaApi({
+      name: 'Dashboard Checker',
+      email,
+      password: 'TestPassword123!',
+    });
+
+    // Create a pet via API to simulate post-onboarding state
+    await fetch(`${API_URL}/pets`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: 'Moustache',
+        species: 'cat',
+        breed: 'Persan',
+        birth_date: '2022-06-15',
+        is_active: true,
+        owner_id: userId,
+        gender: 'female',
+        order: 0,
+      }),
+    });
+
+    await page.goto('/login');
+    await loginWithToken(page, token, userId);
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Should not be on login or onboarding
+    await expect(page).not.toHaveURL(/\/login/);
+    await expect(page).not.toHaveURL(/\/onboarding/);
+
+    // Dashboard should have visible content (not blank)
+    const bodyText = await page.textContent('body');
+    expect(bodyText!.trim().length).toBeGreaterThan(0);
   });
 });

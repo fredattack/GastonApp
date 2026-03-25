@@ -176,7 +176,7 @@ const Pets = () => {
     };
 
     return (
-        <div>
+        <div data-testid="pets-page">
             <div className="panel mt-6">
                 <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-5 gap-5">
                     {/* Titre */}
@@ -190,6 +190,7 @@ const Pets = () => {
                         {/* Bouton */}
                         <button
                             onClick={handleCreate}
+                            data-testid="pets-create-button"
                             className="btn btn-primary self-end md:self-auto"
                         >
                             <Plus size={20} />
@@ -200,6 +201,7 @@ const Pets = () => {
                             <input
                                 type="text"
                                 className="form-input w-full md:w-auto md:ml-2"
+                                data-testid="pets-search-input"
                                 placeholder="Search..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}

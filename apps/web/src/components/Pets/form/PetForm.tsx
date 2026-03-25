@@ -94,7 +94,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
         }));
 
         return (
-            <div>
+            <div data-testid="pet-form">
                 <h6 className="text-lg font-bold mb-5">
                     Informations générales
                 </h6>
@@ -105,6 +105,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                             id="name"
                             name="name"
                             type="text"
+                            data-testid="pet-form-name"
                             value={petFormData?.name}
                             onChange={onChange}
                             placeholder="Entrez le nom de l'animal"
@@ -117,6 +118,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                         <select
                             id="species"
                             name="species"
+                            data-testid="pet-form-species"
                             value={petFormData?.species}
                             onChange={onChange}
                             className="form-select text-white-dark"
@@ -131,6 +133,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                             id="breed"
                             name="breed"
                             type="text"
+                            data-testid="pet-form-breed"
                             value={petFormData?.breed}
                             onChange={onChange}
                             placeholder="Entrez la race"
@@ -144,6 +147,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                             id="birthDate"
                             name="birthDate"
                             type="date"
+                            data-testid="pet-form-birthdate"
                             value={formatBirthDate(
                                 petFormData?.birthDate ?? null,
                             )}
@@ -173,6 +177,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                     <div className="flex justify-end space-x-4 mt-5">
                         <button
                             type="button"
+                            data-testid="pet-form-cancel"
                             onClick={onCancel}
                             className="btn btn-secondary"
                         >
@@ -180,6 +185,7 @@ const PetForm = forwardRef<{ handleSubmit: () => Promise<void> }, PetFormProps>(
                         </button>
                         <button
                             type="submit"
+                            data-testid="pet-form-submit"
                             onSubmit={(e) => {
                                 e.preventDefault();
                                 onSubmit?.(petFormData);

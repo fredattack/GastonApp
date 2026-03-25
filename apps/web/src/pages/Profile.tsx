@@ -21,7 +21,7 @@ export default function Profile() {
     };
 
     return (
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-lg mx-auto" data-testid="profile-page">
             <h1
                 style={{
                     fontSize: "var(--font-size-h3)",
@@ -88,6 +88,7 @@ export default function Profile() {
                     }}
                 >
                     <h2
+                        data-testid="profile-user-name"
                         style={{
                             fontSize: "var(--font-size-h4)",
                             fontWeight: "var(--font-weight-bold)",
@@ -142,6 +143,7 @@ export default function Profile() {
                                 Email
                             </p>
                             <p
+                                data-testid="profile-user-email"
                                 style={{
                                     fontSize: "var(--font-size-body-m)",
                                     color: "var(--color-text-primary)",
@@ -213,6 +215,7 @@ export default function Profile() {
                 >
                     <button
                         type="button"
+                        data-testid="profile-logout-button"
                         onClick={handleLogout}
                         style={{
                             width: "100%",
@@ -249,6 +252,7 @@ export default function Profile() {
             >
                 <a
                     href="/cgu"
+                    data-testid="profile-cgu-link"
                     style={{
                         fontSize: "var(--font-size-caption)",
                         color: "var(--color-text-tertiary)",
@@ -266,6 +270,7 @@ export default function Profile() {
                 </span>
                 <a
                     href="/privacy"
+                    data-testid="profile-privacy-link"
                     style={{
                         fontSize: "var(--font-size-caption)",
                         color: "var(--color-text-tertiary)",

@@ -18,7 +18,7 @@ const FeedingSlotTabs: React.FC<FeedingSlotTabsProps> = ({
     slotCounts,
 }) => {
     return (
-        <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+        <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl" data-testid="feeding-slot-tabs">
             {SLOT_CONFIG.map(({ key, label, emoji }) => {
                 const isActive = activeSlot === key;
                 const counts = slotCounts[key];
@@ -30,6 +30,7 @@ const FeedingSlotTabs: React.FC<FeedingSlotTabsProps> = ({
                 return (
                     <button
                         key={key}
+                        data-testid={`feeding-slot-${key}`}
                         onClick={() => onSlotChange(key)}
                         className={`
                             flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg

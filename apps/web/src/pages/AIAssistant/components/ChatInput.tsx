@@ -87,6 +87,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                             placeholder={placeholder}
                             disabled={isLoading}
                             rows={1}
+                            data-testid="chat-input"
                             className="w-full resize-none rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md group-focus-within:shadow-lg"
                             style={{ maxHeight: "200px" }}
                             aria-label="Message input"
@@ -97,6 +98,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                         <button
                             onClick={handleVoiceClick}
                             disabled={isLoading}
+                            data-testid="chat-voice-button"
                             className={`p-3 rounded-xl transition-all duration-200 shadow-md ${
                                 isRecording
                                     ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-lg hover:scale-105 animate-pulse"
@@ -115,6 +117,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     <button
                         onClick={handleSend}
                         disabled={!message.trim() || isLoading}
+                        data-testid="chat-send-button"
                         className="p-3 rounded-xl bg-primary hover:bg-primary/90 text-white hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200 shadow-md"
                         aria-label="Envoyer le message"
                     >

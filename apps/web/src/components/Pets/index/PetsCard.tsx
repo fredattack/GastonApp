@@ -5,7 +5,7 @@ const PetCard = ({ pet, actions }: { pet: Pet; actions: any }) => {
     const { t } = useTranslation();
 
     return (
-        <div className="flex items-center justify-between border rounded-md shadow-md p-4 bg-white dark:bg-[#1b2e4b] dark:text-white-dark transition-all duration-300 hover:shadow-lg">
+        <div className="flex items-center justify-between border rounded-md shadow-md p-4 bg-white dark:bg-[#1b2e4b] dark:text-white-dark transition-all duration-300 hover:shadow-lg" data-testid={`pet-card-${pet.name}`}>
             {/* Image */}
             <img
                 src={pet.photo || "https://via.placeholder.com/50"}
@@ -15,7 +15,7 @@ const PetCard = ({ pet, actions }: { pet: Pet; actions: any }) => {
 
             {/* Info Section */}
             <div className="flex-1">
-                <h3 className="text-lg font-semibold">{pet.name}</h3>
+                <h3 className="text-lg font-semibold" data-testid="pet-card-name">{pet.name}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                     {pet.breed}
                 </p>
