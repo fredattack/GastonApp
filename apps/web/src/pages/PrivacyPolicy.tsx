@@ -6,6 +6,7 @@ export default function PrivacyPolicy() {
     return (
         <div
             className="min-h-screen"
+            data-testid="privacy-policy-page"
             style={{
                 background:
                     "linear-gradient(135deg, var(--color-lin-2), var(--color-lin-0))",

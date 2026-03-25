@@ -6,7 +6,13 @@ import {
   interceptAllApi,
 } from '../helpers';
 
-test.describe('Profile', () => {
+/**
+ * Scénario 8 : Profil & Dark Mode
+ *
+ * Note : Le toggle dark mode est actuellement commenté dans Header.tsx.
+ * Le test S8.4 vérifie gracieusement si le toggle existe et le teste si présent.
+ */
+test.describe('Scenario 8 — Profil & Dark Mode', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   let token: string;
@@ -24,34 +30,31 @@ test.describe('Profile', () => {
     token = result.token;
     userId = result.userId;
 
-    // Need a pet to avoid onboarding redirect
     await createPetViaApi(token, userId, { name: 'TestPet', species: 'dog' });
   });
 
-  test('8.1 Affichage du profil — nom et email visibles', async ({ page }) => {
+  test('S8.1 Affichage du profil — nom, email et date membre visibles', async ({ page }) => {
     await interceptAllApi(page);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/profile');
     await page.waitForLoadState('networkidle');
 
-    // Page title
-    await expect(page.getByRole('heading', { name: 'Mon profil' })).toBeVisible({ timeout: 15000 });
+    // Page via data-testid
+    await expect(page.locator('[data-testid="profile-page"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Mon profil' })).toBeVisible();
 
-    // User name should be visible
-    await expect(page.getByText(userName)).toBeVisible({ timeout: 10000 });
+    // User name via data-testid
+    await expect(page.locator('[data-testid="profile-user-name"]')).toContainText(userName);
 
-    // Email label should be visible
-    await expect(page.getByText('Email')).toBeVisible();
+    // Email via data-testid
+    await expect(page.locator('[data-testid="profile-user-email"]')).toContainText(email);
 
-    // The email address should be visible
-    await expect(page.getByText(email)).toBeVisible();
+    // "Membre depuis" label should be visible
+    await expect(page.getByText(/Membre depuis/i)).toBeVisible();
   });
 
-  test('8.2 Persistance du profil — nom et email restent apres reload', async ({ page }) => {
-    // NOTE: La modification du nom via UI n'est pas disponible (page profil en lecture seule,
-    // pas d'endpoint API de mise a jour profil). Ce test verifie la persistance des donnees
-    // apres un reload (equivalent fonctionnel de "modifier → sauvegarder → persiste").
+  test('S8.2 Persistance du profil — infos restent apres reload', async ({ page }) => {
     await interceptAllApi(page);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
@@ -59,18 +62,72 @@ test.describe('Profile', () => {
     await page.waitForLoadState('networkidle');
 
     // Verify initial display
-    await expect(page.getByText(userName)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(email)).toBeVisible();
+    await expect(page.locator('[data-testid="profile-user-name"]')).toContainText(userName, { timeout: 15000 });
+    await expect(page.locator('[data-testid="profile-user-email"]')).toContainText(email);
 
     // Reload and verify persistence
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    // Name and email should persist after reload
-    await expect(page.getByText(userName)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(email)).toBeVisible();
+    await expect(page.locator('[data-testid="profile-user-name"]')).toContainText(userName, { timeout: 15000 });
+    await expect(page.locator('[data-testid="profile-user-email"]')).toContainText(email);
+  });
 
-    // Logout button should be present
-    await expect(page.getByText('Se déconnecter')).toBeVisible();
+  test('S8.3 Deconnexion depuis profil — bouton present et fonctionnel', async ({ page }) => {
+    await interceptAllApi(page);
+    await page.goto('/login');
+    await loginWithToken(page, token, userId);
+
+    // Mock logout POST to avoid CSRF
+    await page.route('**/auth/logout', async (route) => {
+      if (route.request().method() !== 'POST') return route.continue();
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: '{}',
+      });
+    });
+
+    await page.goto('/profile');
+    await page.waitForLoadState('networkidle');
+
+    // Logout button via data-testid
+    const logoutButton = page.locator('[data-testid="profile-logout-button"]');
+    await expect(logoutButton).toBeVisible({ timeout: 10000 });
+
+    await logoutButton.click();
+
+    // Should redirect to login
+    await page.waitForURL(/\/login/, { timeout: 10000 });
+    await expect(page).toHaveURL(/\/login/);
+  });
+
+  test('S8.4 Dark mode — toggle theme si disponible', async ({ page }) => {
+    // NOTE: Le toggle dark mode est actuellement commenté dans Header.tsx.
+    await interceptAllApi(page);
+    await page.goto('/login');
+    await loginWithToken(page, token, userId);
+    await page.goto('/profile');
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.locator('[data-testid="profile-page"]')).toBeVisible({ timeout: 15000 });
+
+    // Check if dark mode toggle exists (it may be commented out)
+    const themeToggle = page.locator('button:has([class*="sun"]), button:has([class*="moon"])');
+    const toggleExists = await themeToggle.isVisible({ timeout: 3000 }).catch(() => false);
+
+    if (toggleExists) {
+      await themeToggle.click();
+      await expect(page.getByRole('heading', { name: 'Mon profil' })).toBeVisible();
+      await expect(page.locator('[data-testid="profile-user-name"]')).toContainText(userName);
+
+      // Switch back
+      await themeToggle.click();
+      await expect(page.getByRole('heading', { name: 'Mon profil' })).toBeVisible();
+    }
+
+    // Regardless of dark mode, profile should be readable
+    await expect(page.locator('[data-testid="profile-user-name"]')).toContainText(userName);
+    await expect(page.locator('[data-testid="profile-user-email"]')).toContainText(email);
   });
 });

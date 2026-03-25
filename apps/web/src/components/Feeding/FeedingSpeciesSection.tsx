@@ -28,7 +28,7 @@ const FeedingSpeciesSection: React.FC<FeedingSpeciesSectionProps> = ({
     const speciesEmoji = group.species === "dog" ? "🐕" : "🐱";
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2" data-testid={`feeding-species-${group.species}`}>
             <div className="flex items-center justify-between px-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-2">
                     <span aria-hidden="true">{speciesEmoji}</span>

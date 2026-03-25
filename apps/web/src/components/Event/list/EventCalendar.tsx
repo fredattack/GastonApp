@@ -272,7 +272,7 @@ const EventCalendar = () => {
     };
 
     return (
-        <div key={viewMode} className="event-calendar">
+        <div key={viewMode} className="event-calendar" data-testid="event-calendar">
             <div className="toolbar flex items-center justify-end mb-4 mx-3">
                 <DisplaySettingsDropdown
                     key={viewMode}
@@ -297,6 +297,7 @@ const EventCalendar = () => {
                     <button
                         onClick={handleToday}
                         className="btn btn-outline-dark btn-sm"
+                        data-testid="calendar-today-button"
                     >
                         Today
                     </button>

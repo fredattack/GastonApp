@@ -15,6 +15,7 @@ const BatchActionBar: React.FC<BatchActionBarProps> = ({
     return (
         <button
             onClick={onBatch}
+            data-testid={`feeding-batch-${label.toLowerCase().replace(/\s+/g, '-')}`}
             className="
                 w-full flex items-center justify-center gap-2 py-3 px-4
                 bg-primary/10 hover:bg-primary/20 active:bg-primary/30

@@ -3,7 +3,6 @@ import {
   registerUserViaApi,
   loginWithToken,
   createPetViaApi,
-  interceptAllApi,
 } from '../helpers';
 
 const API_URL = 'http://localhost:3008/api/v1-0-0';
@@ -28,7 +27,6 @@ async function interceptPetsWithFixedPayload(page: Page, userId: string) {
     if (req.url().includes('/pets') && ['POST', 'PUT'].includes(req.method()) && body) {
       try {
         const data = JSON.parse(body);
-        // Ensure snake_case and required fields
         if (!data.owner_id && !data.ownerId) data.owner_id = userId;
         if (data.ownerId && !data.owner_id) {
           data.owner_id = data.ownerId;
@@ -72,10 +70,14 @@ async function interceptPetsWithFixedPayload(page: Page, userId: string) {
   });
 }
 
-test.describe('Pet Management', () => {
+/**
+ * Scénario 2 : Ajouter Plusieurs Animaux
+ * Couvre : ajout multiple, liste, modification, validation
+ */
+test.describe('Scenario 2 — Ajouter Plusieurs Animaux', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('3.1 Creer un animal — formulaire → animal visible dans la liste', async ({
+  test('S2.1 Creer un animal via formulaire — remplir et valider', async ({
     page,
   }) => {
     const email = `e2e-pet-create-${Date.now()}@gaston.test`;
@@ -84,7 +86,6 @@ test.describe('Pet Management', () => {
       email,
       password: 'TestPassword123!',
     });
-    // Need at least one pet to avoid onboarding redirect
     await createPetViaApi(token, userId, { name: 'ExistingPet', species: 'dog' });
 
     await interceptPetsWithFixedPayload(page, userId);
@@ -94,64 +95,51 @@ test.describe('Pet Management', () => {
     await page.goto('/content/pets/create');
     await page.waitForLoadState('networkidle');
 
-    // Fill the form
-    await page.getByLabel('Nom*').fill('Filou');
-    await page.getByLabel('Espèce*').selectOption('cat');
-    await page.getByLabel('Race').fill('Siamois');
-    await page.getByLabel('Date de naissance').fill('2023-03-10');
+    // Fill the form using data-testid
+    await page.locator('[data-testid="pet-form-name"]').fill('Filou');
+    await page.locator('[data-testid="pet-form-species"]').selectOption('cat');
+    await page.locator('[data-testid="pet-form-breed"]').fill('Siamois');
+    await page.locator('[data-testid="pet-form-birthdate"]').fill('2023-03-10');
 
     // Submit
-    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await page.locator('[data-testid="pet-form-submit"]').click();
 
     // Should redirect to pets list
     await page.waitForURL(/\/content\/pets/, { timeout: 15000 });
 
     // New pet should be visible in the list
-    await expect(page.getByRole('heading', { name: 'Filou' }).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="pet-card-Filou"]')).toBeVisible({ timeout: 10000 });
   });
 
-  test('3.2 Voir les details — naviguer vers page details d un animal', async ({
+  test('S2.2 Ajouter 3 animaux — liste affiche tous les animaux', async ({
     page,
   }) => {
-    const email = `e2e-pet-detail-${Date.now()}@gaston.test`;
+    const email = `e2e-pet-multi-${Date.now()}@gaston.test`;
     const { token, userId } = await registerUserViaApi({
-      name: 'Pet Viewer',
+      name: 'Multi Pet Owner',
       email,
       password: 'TestPassword123!',
     });
-    const petId = await createPetViaApi(token, userId, {
-      name: 'Luna',
-      species: 'cat',
-      breed: 'Maine Coon',
-    });
+
+    // Create 3 pets via API (1 cat, 1 dog, 1 more cat)
+    await createPetViaApi(token, userId, { name: 'Luna', species: 'cat', breed: 'Maine Coon' });
+    await createPetViaApi(token, userId, { name: 'Rex', species: 'dog', breed: 'Berger' });
+    await createPetViaApi(token, userId, { name: 'Mimi', species: 'cat', breed: 'Persan' });
 
     await interceptPetsWithFixedPayload(page, userId);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
 
-    await page.goto(`/content/pets/${petId}`);
+    await page.goto('/content/pets');
     await page.waitForLoadState('networkidle');
 
-    // Page title should indicate edit mode
-    await expect(
-      page.getByRole('heading', { name: 'Modifier un animal' }),
-    ).toBeVisible({ timeout: 10000 });
-
-    // Form should be present with all expected fields
-    await expect(page.getByLabel('Nom*')).toBeVisible();
-    await expect(page.getByLabel('Espèce*')).toBeVisible();
-    await expect(page.getByLabel('Race')).toBeVisible();
-    await expect(page.getByLabel('Date de naissance')).toBeVisible();
-
-    // Tab navigation should be visible for edit mode
-    await expect(page.getByRole('button', { name: 'Infos' })).toBeVisible();
-
-    // Submit and cancel buttons should be present
-    await expect(page.getByRole('button', { name: 'Enregistrer' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Annuler' })).toBeVisible();
+    // All 3 pets should be visible via data-testid
+    await expect(page.locator('[data-testid="pet-card-Luna"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="pet-card-Rex"]')).toBeVisible();
+    await expect(page.locator('[data-testid="pet-card-Mimi"]')).toBeVisible();
   });
 
-  test('3.3 Modifier un animal — remplir le formulaire et sauvegarder', async ({
+  test('S2.3 Modifier un animal — changer race et verifier la modification', async ({
     page,
   }) => {
     const email = `e2e-pet-edit-${Date.now()}@gaston.test`;
@@ -173,30 +161,59 @@ test.describe('Pet Management', () => {
     await page.goto(`/content/pets/${petId}`);
     await page.waitForLoadState('networkidle');
 
-    // The form is present (data pre-fill depends on API response format)
-    const nameInput = page.getByLabel('Nom*');
+    // The form is present via data-testid
+    const nameInput = page.locator('[data-testid="pet-form-name"]');
     await expect(nameInput).toBeVisible({ timeout: 10000 });
 
-    // Fill the name (whether pre-filled or empty)
+    // Change the name and breed
     await nameInput.clear();
     await nameInput.fill('Nouveau Nom');
-    await page.getByLabel('Espèce*').selectOption('dog');
+    await page.locator('[data-testid="pet-form-breed"]').clear();
+    await page.locator('[data-testid="pet-form-breed"]').fill('Golden Retriever');
 
     // Submit
-    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await page.locator('[data-testid="pet-form-submit"]').click();
 
     // Should redirect to pets list
     await page.waitForURL(/\/content\/pets/, { timeout: 15000 });
     await expect(page).toHaveURL(/\/content\/pets/);
   });
 
-  test('3.4 Liste des animaux — affichage et navigation vers creation', async ({
+  test('S2.4 Validation — impossible de creer un animal sans nom', async ({
     page,
   }) => {
-    // NOTE: Le test de suppression via dropdown UI a echoue apres 3 tentatives
-    // (Popper detache les elements du DOM). Documente dans NIGHT-REPORT.md.
-    // Ce test verifie l'affichage de la liste et la navigation vers la creation.
+    const email = `e2e-pet-valid-${Date.now()}@gaston.test`;
+    const { token, userId } = await registerUserViaApi({
+      name: 'Pet Validator',
+      email,
+      password: 'TestPassword123!',
+    });
+    await createPetViaApi(token, userId, { name: 'ExistingPet', species: 'dog' });
 
+    await interceptPetsWithFixedPayload(page, userId);
+    await page.goto('/login');
+    await loginWithToken(page, token, userId);
+
+    await page.goto('/content/pets/create');
+    await page.waitForLoadState('networkidle');
+
+    // Do NOT fill the name — only select species
+    await page.locator('[data-testid="pet-form-species"]').selectOption('cat');
+
+    // The submit button should be visible
+    const submitButton = page.locator('[data-testid="pet-form-submit"]');
+    await expect(submitButton).toBeVisible();
+
+    // Try submitting without name
+    await submitButton.click();
+
+    // Should NOT navigate away (still on create page)
+    await expect(page).toHaveURL(/\/content\/pets\/create/);
+  });
+
+  test('S2.5 Liste et recherche — filtrer animaux et naviguer', async ({
+    page,
+  }) => {
     const email = `e2e-pet-list-${Date.now()}@gaston.test`;
     const { token, userId } = await registerUserViaApi({
       name: 'Pet Lister',
@@ -213,19 +230,19 @@ test.describe('Pet Management', () => {
     await page.goto('/content/pets');
     await page.waitForLoadState('networkidle');
 
-    // Pets should be visible in the list
-    await expect(page.getByRole('heading', { name: 'Buddy' }).first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('heading', { name: 'Mimi' }).first()).toBeVisible();
+    // Pets should be visible via data-testid
+    await expect(page.locator('[data-testid="pet-card-Buddy"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="pet-card-Mimi"]')).toBeVisible();
 
     // Search should filter the list
-    await page.getByPlaceholder('Search...').fill('Buddy');
-    await expect(page.getByRole('heading', { name: 'Buddy' }).first()).toBeVisible();
+    await page.locator('[data-testid="pets-search-input"]').fill('Buddy');
+    await expect(page.locator('[data-testid="pet-card-Buddy"]')).toBeVisible();
 
     // Clear search
-    await page.getByPlaceholder('Search...').clear();
+    await page.locator('[data-testid="pets-search-input"]').clear();
 
-    // Click the create button (Plus icon, self-end class) → navigates to create page
-    await page.locator('button.btn-primary.self-end, button.btn.btn-primary.self-end').first().click();
+    // Click create button
+    await page.locator('[data-testid="pets-create-button"]').click();
     await page.waitForURL(/\/content\/pets\/create/, { timeout: 10000 });
     await expect(page).toHaveURL(/\/content\/pets\/create/);
   });

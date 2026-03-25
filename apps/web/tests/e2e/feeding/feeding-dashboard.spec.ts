@@ -8,9 +8,6 @@ import {
 
 const API_URL = 'http://localhost:3008/api/v1-0-0';
 
-/**
- * Create a feeding schedule for a pet via API
- */
 async function createFeedingScheduleViaApi(
   token: string,
   petId: string,
@@ -43,13 +40,14 @@ async function createFeedingScheduleViaApi(
   return json.id || json.data?.id || 0;
 }
 
-test.describe('Feeding Dashboard', () => {
+/**
+ * Scénario 3 : Dashboard Alimentation Quotidienne (affichage)
+ */
+test.describe('Scenario 3 — Dashboard Alimentation (affichage)', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   let token: string;
   let userId: string;
-  let petId1: string;
-  let petId2: string;
 
   test.beforeAll(async () => {
     const email = `e2e-feeding-dash-${Date.now()}@gaston.test`;
@@ -61,11 +59,9 @@ test.describe('Feeding Dashboard', () => {
     token = result.token;
     userId = result.userId;
 
-    // Create two pets: a dog and a cat
-    petId1 = await createPetViaApi(token, userId, { name: 'Buddy', species: 'dog', breed: 'Labrador' });
-    petId2 = await createPetViaApi(token, userId, { name: 'Minou', species: 'cat', breed: 'Siamois' });
+    const petId1 = await createPetViaApi(token, userId, { name: 'Buddy', species: 'dog', breed: 'Labrador' });
+    const petId2 = await createPetViaApi(token, userId, { name: 'Minou', species: 'cat', breed: 'Siamois' });
 
-    // Create feeding schedules for morning, noon and evening
     for (const slot of ['morning', 'noon', 'evening']) {
       await createFeedingScheduleViaApi(token, petId1, {
         meal_slot: slot,
@@ -82,71 +78,67 @@ test.describe('Feeding Dashboard', () => {
     }
   });
 
-  test('4.1 Affichage du dashboard — titre et animaux visibles', async ({ page }) => {
+  test('S3.1 Affichage du dashboard — date du jour, titre et animaux visibles', async ({ page }) => {
     await interceptAllApi(page);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/feeding');
     await page.waitForLoadState('networkidle');
 
-    // Title "Repas du jour" is visible
-    await expect(page.getByRole('heading', { name: 'Repas du jour' })).toBeVisible({ timeout: 15000 });
+    // Title via data-testid
+    await expect(page.locator('[data-testid="feeding-title"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="feeding-dashboard"]')).toBeVisible();
 
-    // Pet names should appear in the feeding rows
-    await expect(page.getByRole('button', { name: 'Buddy' }).first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: 'Minou' }).first()).toBeVisible();
+    // Pet names should appear via data-testid
+    await expect(page.locator('[data-testid="feeding-pet-row-Buddy"]').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="feeding-pet-row-Minou"]').first()).toBeVisible();
   });
 
-  test('4.2 Affichage des creneaux repas — tabs matin, midi, soir', async ({ page }) => {
+  test('S3.2 Creneaux repas — tabs matin, midi, soir avec compteur', async ({ page }) => {
     await interceptAllApi(page);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/feeding');
     await page.waitForLoadState('networkidle');
 
-    // Slot tabs should be visible
-    await expect(page.getByRole('button', { name: /Matin/i })).toBeVisible({ timeout: 15000 });
-    await expect(page.getByRole('button', { name: /Midi/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Soir/i })).toBeVisible();
+    // Slot tabs via data-testid
+    await expect(page.locator('[data-testid="feeding-slot-tabs"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="feeding-slot-morning"]')).toBeVisible();
+    await expect(page.locator('[data-testid="feeding-slot-noon"]')).toBeVisible();
+    await expect(page.locator('[data-testid="feeding-slot-evening"]')).toBeVisible();
 
     // Each tab should show a count (e.g. "2/2" or "0/2")
-    const morningTab = page.getByRole('button', { name: /Matin/i });
-    await expect(morningTab).toContainText(/\d+\/\d+/);
+    await expect(page.locator('[data-testid="feeding-slot-morning"]')).toContainText(/\d+\/\d+/);
 
     // Click on "Midi" tab
-    await page.getByRole('button', { name: /Midi/i }).click();
+    await page.locator('[data-testid="feeding-slot-noon"]').click();
 
     // Pets should still be visible in the noon slot
-    await expect(page.getByRole('button', { name: 'Buddy' }).first()).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: 'Minou' }).first()).toBeVisible();
+    await expect(page.locator('[data-testid="feeding-pet-row-Buddy"]').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="feeding-pet-row-Minou"]').first()).toBeVisible();
   });
 
-  test('4.3 Etat visuel des repas — distinguer marque et non marque', async ({ page }) => {
+  test('S3.3 Etat visuel — distinction entre repas marque et non marque', async ({ page }) => {
     await interceptAllApi(page);
     await page.goto('/login');
     await loginWithToken(page, token, userId);
     await page.goto('/feeding');
     await page.waitForLoadState('networkidle');
 
-    // Wait for content to load
-    await expect(page.getByRole('heading', { name: 'Repas du jour' })).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="feeding-title"]')).toBeVisible({ timeout: 15000 });
 
-    // Find the first toggle button for Buddy (not yet marked)
-    const buddyToggle = page.getByRole('button', { name: /Marquer Buddy comme nourri/i }).first();
+    // Find the toggle button for Buddy via data-testid
+    const buddyToggle = page.locator('[data-testid="feeding-toggle-Buddy"]').first();
     await expect(buddyToggle).toBeVisible({ timeout: 10000 });
 
-    // Before marking: the toggle button should have border style (not marked)
+    // Before marking: should have border style (not marked)
     await expect(buddyToggle).toHaveClass(/border-2/);
     await expect(buddyToggle).not.toHaveClass(/bg-green-500/);
 
     // Mark Buddy as fed
     await buddyToggle.click();
 
-    // After marking: the undo button should appear — "Annuler Buddy"
-    const undoButton = page.getByRole('button', { name: /Annuler Buddy/i }).first();
-    await expect(undoButton).toBeVisible({ timeout: 10000 });
-
-    // The undo button should have green bg (marked state)
-    await expect(undoButton).toHaveClass(/bg-green-500/);
+    // After marking: the toggle should have green bg (marked state)
+    await expect(buddyToggle).toHaveClass(/bg-green-500/, { timeout: 10000 });
   });
 });

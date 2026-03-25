@@ -120,7 +120,7 @@ const FeedingDashboardContent: React.FC = () => {
     }
 
     return (
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-24" data-testid="feeding-dashboard">
             {/* Voice feedback banner — sits at the very top, above everything */}
             <div className="relative">
                 <VoiceCommandFeedback
@@ -132,7 +132,7 @@ const FeedingDashboardContent: React.FC = () => {
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="feeding-title">
                         Repas du jour
                     </h1>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
