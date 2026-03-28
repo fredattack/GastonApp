@@ -5,7 +5,6 @@ import {
     transformAIResponseToEventForm,
     transformAIResponseToPetForm,
 } from "../../utils/aiTransformers";
-import { modelService } from "../../services";
 
 interface UseAIStreamReturn {
     isLoading: boolean;
@@ -19,6 +18,13 @@ interface UseAIStreamReturn {
         ) => void,
     ) => Promise<void>;
 }
+
+const EVENT_TYPES: AIRequestType[] = [
+    "createEvent",
+    "updateEvent",
+    "logHealthEvent",
+];
+const PET_TYPES: AIRequestType[] = ["createPet", "updatePet"];
 
 const useAIStream = (): UseAIStreamReturn => {
     const [isLoading, setIsLoading] = useState(false);
@@ -85,73 +91,34 @@ const useAIStream = (): UseAIStreamReturn => {
                     },
                     // onComplete
                     async (finalResponse: AIResponse) => {
-                        const hasData =
-                            finalResponse.data &&
-                            typeof finalResponse.data === "object";
-                        const isExecuted =
-                            !finalResponse.status ||
+                        const result = finalResponse.result;
+                        const hasResult =
+                            result !== null &&
+                            result !== undefined &&
+                            typeof result === "object";
+                        const isActionable =
                             finalResponse.status === "executed" ||
                             finalResponse.status === "needs_confirmation";
 
+                        // Transform event data if applicable
                         const transformedEvent =
-                            hasData &&
-                            isExecuted &&
-                            "title" in finalResponse.data &&
-                            "petId" in finalResponse.data
+                            hasResult &&
+                            isActionable &&
+                            EVENT_TYPES.includes(finalResponse.requestType) &&
+                            "title" in result
                                 ? transformAIResponseToEventForm(
-                                      finalResponse.data as AIEventData,
+                                      result as unknown as AIEventData,
                                   )
                                 : null;
 
+                        // Transform pet data if applicable
                         const transformedPet =
-                            hasData &&
-                            isExecuted &&
-                            "name" in finalResponse.data &&
-                            "species" in finalResponse.data
-                                ? transformAIResponseToPetForm(
-                                      finalResponse.data,
-                                  )
+                            hasResult &&
+                            isActionable &&
+                            PET_TYPES.includes(finalResponse.requestType) &&
+                            "name" in result
+                                ? transformAIResponseToPetForm(result)
                                 : undefined;
-
-                        // Enrich query responses
-                        let enrichedResponse = finalResponse;
-                        if (
-                            finalResponse.requestType === "query" &&
-                            "queryType" in finalResponse.data &&
-                            !("results" in finalResponse.data)
-                        ) {
-                            const queryData = finalResponse.data as QueryResult;
-                            if (queryData.queryType === "pets") {
-                                try {
-                                    const allPets =
-                                        (await modelService.getModels(
-                                            "pets",
-                                        )) as Pet[];
-                                    let filteredPets = allPets || [];
-                                    if (
-                                        queryData.filters?.petIds &&
-                                        queryData.filters.petIds.length > 0
-                                    ) {
-                                        filteredPets = filteredPets.filter(
-                                            (pet) =>
-                                                queryData.filters!.petIds!.includes(
-                                                    pet.id,
-                                                ),
-                                        );
-                                    }
-                                    enrichedResponse = {
-                                        ...finalResponse,
-                                        data: {
-                                            ...queryData,
-                                            results: filteredPets,
-                                            totalCount: filteredPets.length,
-                                        },
-                                    };
-                                } catch {
-                                    // Failed to fetch pets for query enrichment
-                                }
-                            }
-                        }
 
                         conversationService.updateMessage(
                             conversationId,
@@ -161,7 +128,7 @@ const useAIStream = (): UseAIStreamReturn => {
                                     isStreaming: false,
                                     attachedEvent: transformedEvent,
                                     attachedPet: transformedPet,
-                                    aiResponse: enrichedResponse,
+                                    aiResponse: finalResponse,
                                 },
                             },
                         );
@@ -175,7 +142,7 @@ const useAIStream = (): UseAIStreamReturn => {
                                               isStreaming: false,
                                               attachedEvent: transformedEvent,
                                               attachedPet: transformedPet,
-                                              aiResponse: enrichedResponse,
+                                              aiResponse: finalResponse,
                                           },
                                       }
                                     : m,

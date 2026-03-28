@@ -109,13 +109,10 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                 },
             });
 
-            // Sync state
-            const updated = convService.getById(conv.id);
-            if (updated) {
-                updateConversationMessages(conv.id, () => updated.messages);
-            }
+            // Reload conversation from localStorage to sync messages with state
+            loadConversation(conv.id);
         },
-        [createConversation, updateConversationMessages],
+        [createConversation, loadConversation],
     );
 
     const value: AIAssistantContextValue = {

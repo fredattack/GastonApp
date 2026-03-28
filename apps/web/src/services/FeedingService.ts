@@ -84,7 +84,7 @@ class FeedingService {
     }
 
     async sendVoiceCommand(transcript: string): Promise<VoiceCommandResult> {
-        const response = await axiosClient.post("/ai/command", { transcript });
+        const response = await axiosClient.post("/ai", { prompt: transcript });
         return response.data;
     }
 }

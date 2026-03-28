@@ -4,12 +4,43 @@ import { logger } from "../../utils/logger";
 import { handleApiError } from "../../utils/errorHandler";
 
 const baseURL = import.meta.env.VITE_API_URL;
+const apiOrigin = new URL(baseURL).origin;
 
 const axiosClient = axios.create({
     baseURL,
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
+});
+
+// Fetch CSRF cookie from Sanctum before mutating requests (POST/PUT/PATCH/DELETE)
+let csrfReady = false;
+
+async function ensureCsrf(): Promise<void> {
+    if (csrfReady) return;
+    await axios.get(`${apiOrigin}/sanctum/csrf-cookie`, {
+        withCredentials: true,
+    });
+    csrfReady = true;
+}
+
+function getXsrfToken(): string | null {
+    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+    if (!match) return null;
+    return decodeURIComponent(match[1]);
+}
+
+axiosClient.interceptors.request.use(async (config) => {
+    const method = config.method?.toLowerCase();
+    if (method && ["post", "put", "patch", "delete"].includes(method)) {
+        await ensureCsrf();
+        const token = getXsrfToken();
+        if (token) {
+            config.headers["X-XSRF-TOKEN"] = token;
+        }
+    }
+    return config;
 });
 
 axiosClient.interceptors.response.use(

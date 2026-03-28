@@ -130,151 +130,61 @@ declare global {
         autoMedicationWarning?: string;
     }
 
-    interface AIResponseMetadata {
-        hasMedicalContext: boolean;
-        processedAt: string;
-        originalPrompt?: string;
-        confidence?: number;
-    }
+    // AI Response — matches backend AiOrchestratorResponse DTO exactly
+    type AIRequestType =
+        | "createEvent"
+        | "updateEvent"
+        | "deleteEvent"
+        | "createPet"
+        | "updatePet"
+        | "deletePet"
+        | "query"
+        | "advice"
+        | "petQuery"
+        | "logHealthEvent"
+        | "createMetric"
+        | "markFeeding"
+        | "batchMarkFeeding"
+        | "updateFeedingSchedule"
+        | "queryDiet"
+        | "queryFeedingStatus"
+        | "multiAction"
+        | "clarification"
+        | "error";
 
-    // Query Response Types
-    interface QueryResult {
-        queryType: "events" | "pets" | "statistics" | "history";
-        results: Event[] | Pet[] | any[];
-        totalCount: number;
-        filters?: {
-            petIds?: string[];
-            startDate?: string;
-            endDate?: string;
-            eventTypes?: string[];
-        };
-        summary?: string;
-    }
-
-    // Advice Response Types
-    interface AdviceData {
-        adviceType: "nutrition" | "health" | "behavior" | "general";
-        question: string;
-        answer: string;
-        sources?: string[];
-        relatedTopics?: string[];
-        confidence: number;
-
-        // Nutrition-specific fields
-        species?: "dog" | "cat" | string;
-        weight?: number;
-        age?: "puppy" | "kitten" | "adult" | "senior" | string;
-        dailyCalories?: number;
-        feedingFrequency?: string;
-        toxicFoods?: string[];
-
-        // Health-specific fields
-        symptom?: string;
-        severity?: "low" | "medium" | "high" | "unknown";
-        redFlags?: string[];
-        nextSteps?: string[];
-    }
-
-    // Metrics Response Types
-    interface Metric {
-        id?: string;
-        pet_id: string;
-        metric_type: "weight" | "temperature" | "heart_rate" | "custom";
-        value: number;
-        unit: string;
-        measured_at: string;
-        notes?: string;
-    }
-
-    interface MetricsAnalysis {
-        average: number;
-        min: number;
-        max: number;
-        change: number;
-        changePercent: number;
-        trend: "increasing" | "decreasing" | "stable";
-    }
-
-    interface MetricsHistory {
-        metrics: Metric[];
-        analysis: MetricsAnalysis;
-        petId: string;
-        metricType: string;
-        startDate?: string;
-        endDate?: string;
-    }
-
-    // Legacy MetricData for single metric entry
-    interface MetricData {
-        metricType: "weight" | "height" | "activity" | "custom";
-        petId: string;
-        value: number;
-        unit: string;
-        timestamp: string;
-        notes?: string;
-    }
-
-    // Delete Operations Types
-    interface DeleteFilters {
-        petIds?: string[];
-        type?: string;
-        startDate?: string;
-        endDate?: string;
-        eventId?: string;
-    }
-
-    interface DeleteData {
-        filters: DeleteFilters;
-        confirmationRequired: boolean;
-        itemsToDelete?: Array<{
-            id: string;
-            title: string;
-            type?: string;
-            date?: string;
-        }>;
-        estimatedCount?: number;
-    }
+    type AIStatus =
+        | "executed"
+        | "needs_confirmation"
+        | "needs_clarification"
+        | "low_confidence"
+        | "failed"
+        | "error";
 
     interface AIResponse {
-        score: number;
-        requestType:
-            | "createEvent"
-            | "updateEvent"
-            | "deleteEvent"
-            | "createPet"
-            | "updatePet"
-            | "deletePet"
-            | "updateFeedingSchedule"
-            | "query"
-            | "advice"
-            | "metrics"
-            | "petQuery";
+        status: AIStatus;
+        requestType: AIRequestType;
         description: string;
-        data:
-            | AIEventData
-            | PetFormData
-            | QueryResult
-            | AdviceData
-            | MetricData
-            | MetricsHistory
-            | DeleteData;
-        metadata?: AIResponseMetadata;
-        healthDisclaimer?: HealthDisclaimer;
-        status?:
-            | "executed"
-            | "needs_confirmation"
-            | "needs_clarification"
-            | "low_confidence"
-            | "failed"
-            | "error";
-        conversationResponse?: string;
-        confidenceScore?: number;
-        emotionalTone?: string;
-        result?: Record<string, unknown>;
+        confidenceScore: number;
+        result?: Record<string, unknown> | Record<string, unknown>[] | null;
         message?: string;
-        confirmationNeeded?: {
-            question: string;
+        conversationResponse?: string;
+        emotionalTone?: string;
+        healthDisclaimer?: HealthDisclaimer;
+        petWarning?: {
+            title?: string;
+            message?: string;
+            suggestions?: string[];
+            availablePets?: Array<{ id: string; name: string; species: string }>;
         };
+        confirmationNeeded?: {
+            message: string;
+            action?: string;
+            summary?: string;
+            data?: Record<string, unknown>;
+            actions?: Record<string, unknown>[];
+        };
+        metadata?: Record<string, unknown>;
+        failureReason?: string;
     }
 
     interface AIError {
@@ -369,12 +279,7 @@ declare global {
 
     type MealSlot = "morning" | "noon" | "evening";
 
-    interface VoiceCommandResult {
-        status: "executed" | "error" | "low_confidence";
-        action: string;
-        message: string;
-        data?: any;
-    }
+    type VoiceCommandResult = AIResponse;
 
     interface PetScheduleInfo {
         id: number;

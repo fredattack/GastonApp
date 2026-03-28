@@ -49,7 +49,11 @@
       "mcp__playwright__browser_fill_form",
       "mcp__playwright__browser_press_key",
       "Bash(gh auth:*)",
-      "Bash(gh run:*)"
+      "Bash(gh run:*)",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_evaluate"
     ],
     "deny": [],
     "ask": []

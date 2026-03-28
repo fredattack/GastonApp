@@ -36,24 +36,20 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
     // Get requestType from AI response
     const requestType = aiResponse?.requestType || "createEvent";
-    const isQuery = requestType === "query";
-    const isAdvice = requestType === "advice";
-    const isMetrics = requestType === "metrics";
+    const isQuery = requestType === "query" || requestType === "petQuery" || requestType === "queryDiet" || requestType === "queryFeedingStatus";
+    const isAdvice = requestType === "advice" || requestType === "logHealthEvent";
+    const isMetrics = requestType === "createMetric";
     const isDelete =
         requestType === "deleteEvent" || requestType === "deletePet";
-    const isEvent = requestType?.includes("Event");
-    const isPet = requestType?.includes("Pet");
+    const isEvent = requestType === "createEvent" || requestType === "updateEvent" || requestType === "logHealthEvent";
+    const isPet = requestType === "createPet" || requestType === "updatePet";
+    const isFeeding = requestType === "updateFeedingSchedule" || requestType === "markFeeding" || requestType === "batchMarkFeeding";
+    const isClarification = requestType === "clarification";
+    const isMultiAction = requestType === "multiAction";
+    const hasAiResponse = !!aiResponse;
 
-    // For query, advice, metrics, and delete, we don't need attachedEvent or attachedPet
-    // For events we need attachedEvent, for pets we need attachedPet
-    if (
-        !attachedEvent &&
-        !attachedPet &&
-        !isQuery &&
-        !isAdvice &&
-        !isMetrics &&
-        !isDelete
-    ) {
+    // Render for any AI response — the card handles all types
+    if (!hasAiResponse && !attachedEvent && !attachedPet) {
         return null;
     }
 
@@ -210,7 +206,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
 
         setIsCreating(true);
         try {
-            const deleteData = aiResponse.data as DeleteData;
+            const deleteData = aiResponse.result as DeleteData;
             const collection = requestType === "deletePet" ? "pets" : "events";
             const items = deleteData.itemsToDelete || [];
 
@@ -336,7 +332,7 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
         (attachedEvent &&
             (!attachedEvent.pets || attachedEvent.pets.length === 0));
 
-    const score = aiResponse?.score;
+    const score = aiResponse?.confidenceScore;
     const description =
         message.content || aiResponse?.description || "Génération en cours...";
 
@@ -376,28 +372,28 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                     {/* Query Results */}
                     {!isStreaming && isQuery && aiResponse?.data && (
                         <QueryResults
-                            queryResult={aiResponse.data as QueryResult}
+                            queryResult={aiResponse.result as QueryResult}
                         />
                     )}
 
                     {/* Advice Card */}
                     {!isStreaming && isAdvice && aiResponse?.data && (
                         <AdviceCard
-                            adviceData={aiResponse.data as AdviceData}
+                            adviceData={aiResponse.result as AdviceData}
                         />
                     )}
 
                     {/* Metrics Chart */}
                     {!isStreaming && isMetrics && aiResponse?.data && (
                         <MetricsChart
-                            metricsHistory={aiResponse.data as MetricsHistory}
+                            metricsHistory={aiResponse.result as MetricsHistory}
                         />
                     )}
 
                     {/* Delete Preview */}
                     {!isStreaming && isDelete && aiResponse?.data && (
                         <DeletePreview
-                            deleteData={aiResponse.data as DeleteData}
+                            deleteData={aiResponse.result as DeleteData}
                             requestType={
                                 requestType as "deleteEvent" | "deletePet"
                             }

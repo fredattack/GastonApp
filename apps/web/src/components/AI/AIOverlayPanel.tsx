@@ -69,7 +69,7 @@ const AIOverlayPanel: React.FC<AIOverlayPanelProps> = ({ isOpen, onClose }) => {
             {/* Panel */}
             <div
                 className={`fixed top-0 right-0 h-full z-[70] w-full sm:w-[420px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col ${
-                    isOpen ? "translate-x-0" : "translate-x-full"
+                    isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
                 }`}
             >
                 {/* Header */}

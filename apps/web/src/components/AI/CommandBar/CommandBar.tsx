@@ -127,10 +127,9 @@ const CommandBar: React.FC<CommandBarProps> = ({
                     conversationResponse: t(
                         "The service is temporarily unavailable.",
                     ),
-                    score: 0,
+                    confidenceScore: 0,
                     requestType: "query",
                     description: "",
-                    data: {} as QueryResult,
                 });
             } finally {
                 setIsLoading(false);

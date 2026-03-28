@@ -106,10 +106,18 @@ const ExecutedResponse: React.FC<
         }
         if (
             response.requestType === "createEvent" ||
-            response.requestType === "updateEvent" ||
-            response.requestType === "updateFeedingSchedule"
+            response.requestType === "updateEvent"
         ) {
             return { label: t("View calendar"), path: "/calendar" };
+        }
+        if (
+            response.requestType === "updateFeedingSchedule" ||
+            response.requestType === "markFeeding" ||
+            response.requestType === "batchMarkFeeding" ||
+            response.requestType === "queryDiet" ||
+            response.requestType === "queryFeedingStatus"
+        ) {
+            return { label: t("View feeding"), path: "/feeding" };
         }
         return null;
     };
