@@ -16,6 +16,7 @@ interface UseAIStreamReturn {
             conversationId: string,
             updater: (messages: Message[]) => Message[],
         ) => void,
+        onPersisted?: () => Promise<void>,
     ) => Promise<void>;
 }
 
@@ -43,14 +44,20 @@ const useAIStream = (): UseAIStreamReturn => {
                 conversationId: string,
                 updater: (messages: Message[]) => Message[],
             ) => void,
+            onPersisted?: () => Promise<void>,
         ) => {
             if (!content.trim()) return;
 
-            // Add user message
-            const userMessage = conversationService.addMessage(conversationId, {
+            const userMessageId = crypto.randomUUID();
+            const aiMessageId = crypto.randomUUID();
+
+            // Add user message to local state only
+            const userMessage: Message = {
+                id: userMessageId,
                 role: "user",
                 content: content.trim(),
-            });
+                timestamp: new Date(),
+            };
 
             onConversationUpdate(conversationId, (messages) => [
                 ...messages,
@@ -58,27 +65,24 @@ const useAIStream = (): UseAIStreamReturn => {
             ]);
             setIsLoading(true);
 
-            // Add placeholder assistant message
-            const aiMessage = conversationService.addMessage(conversationId, {
+            // Add placeholder assistant message to local state only
+            const aiMessage: Message = {
+                id: aiMessageId,
                 role: "assistant",
                 content: "",
+                timestamp: new Date(),
                 metadata: { isStreaming: true },
-            });
+            };
 
-            const aiMessageId = aiMessage.id;
             setStreamingMessageId(aiMessageId);
-
             onConversationUpdate(conversationId, (messages) => [
                 ...messages,
                 aiMessage,
             ]);
 
-            const conversation = conversationService.getById(conversationId);
-            if (!conversation) return;
-
             try {
                 await openAiService.sendPromptStream(
-                    conversation.messages,
+                    [userMessage],
                     // onChunk
                     (chunk: string) => {
                         onConversationUpdate(conversationId, (messages) =>
@@ -100,7 +104,6 @@ const useAIStream = (): UseAIStreamReturn => {
                             finalResponse.status === "executed" ||
                             finalResponse.status === "needs_confirmation";
 
-                        // Transform event data if applicable
                         const transformedEvent =
                             hasResult &&
                             isActionable &&
@@ -111,7 +114,6 @@ const useAIStream = (): UseAIStreamReturn => {
                                   )
                                 : null;
 
-                        // Transform pet data if applicable
                         const transformedPet =
                             hasResult &&
                             isActionable &&
@@ -120,52 +122,50 @@ const useAIStream = (): UseAIStreamReturn => {
                                 ? transformAIResponseToPetForm(result)
                                 : undefined;
 
-                        conversationService.updateMessage(
-                            conversationId,
-                            aiMessageId,
-                            {
-                                metadata: {
-                                    isStreaming: false,
-                                    attachedEvent: transformedEvent,
-                                    attachedPet: transformedPet,
-                                    aiResponse: finalResponse,
-                                },
-                            },
-                        );
+                        const finalMetadata = {
+                            isStreaming: false,
+                            attachedEvent: transformedEvent,
+                            attachedPet: transformedPet,
+                            aiResponse: finalResponse,
+                        };
 
+                        // Update local state immediately
                         onConversationUpdate(conversationId, (messages) =>
                             messages.map((m) =>
                                 m.id === aiMessageId
-                                    ? {
-                                          ...m,
-                                          metadata: {
-                                              isStreaming: false,
-                                              attachedEvent: transformedEvent,
-                                              attachedPet: transformedPet,
-                                              aiResponse: finalResponse,
-                                          },
-                                      }
+                                    ? { ...m, metadata: finalMetadata }
                                     : m,
                             ),
                         );
 
                         setIsLoading(false);
                         setStreamingMessageId(null);
+
+                        // Persist both messages to DB then refresh
+                        conversationService
+                            .addMessage(conversationId, {
+                                role: "user",
+                                content: content.trim(),
+                            })
+                            .then(() =>
+                                conversationService.addMessage(
+                                    conversationId,
+                                    {
+                                        role: "assistant",
+                                        content:
+                                            finalResponse.conversationResponse ||
+                                            finalResponse.description ||
+                                            "",
+                                        metadata:
+                                            finalMetadata as unknown as Message["metadata"],
+                                    },
+                                ),
+                            )
+                            .then(() => onPersisted?.())
+                            .catch(() => {});
                     },
                     // onError
-                    (error: Error) => {
-                        conversationService.updateMessage(
-                            conversationId,
-                            aiMessageId,
-                            {
-                                content: "Désolé, une erreur est survenue.",
-                                metadata: {
-                                    isStreaming: false,
-                                    error: error.message,
-                                },
-                            },
-                        );
-
+                    async (error: Error) => {
                         onConversationUpdate(conversationId, (messages) =>
                             messages.map((m) =>
                                 m.id === aiMessageId

@@ -5,10 +5,12 @@ interface UseConversationsReturn {
     conversations: Conversation[];
     activeConversation: Conversation | null;
     activeConversationId: string | null;
-    createConversation: (title?: string) => Conversation;
+    isLoading: boolean;
+    createConversation: (title?: string) => Promise<Conversation>;
     loadConversation: (id: string) => void;
-    deleteConversation: (id: string) => void;
-    updateConversationTitle: (id: string, title: string) => void;
+    deleteConversation: (id: string) => Promise<void>;
+    updateConversationTitle: (id: string, title: string) => Promise<void>;
+    togglePin: (id: string) => Promise<void>;
     searchConversations: (query: string) => Conversation[];
     clearAllConversations: () => void;
     setActiveConversationId: (id: string | null) => void;
@@ -16,7 +18,7 @@ interface UseConversationsReturn {
         conversationId: string,
         updater: (messages: Message[]) => Message[],
     ) => void;
-    refreshConversations: () => void;
+    refreshConversations: () => Promise<void>;
 }
 
 const useConversations = (): UseConversationsReturn => {
@@ -24,57 +26,86 @@ const useConversations = (): UseConversationsReturn => {
     const [activeConversationId, setActiveConversationId] = useState<
         string | null
     >(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const conversationService = ConversationService.getInstance();
 
+    // Load conversations from API on mount
     useEffect(() => {
-        setConversations(conversationService.getAll());
+        const loadConversations = async () => {
+            setIsLoading(true);
+            try {
+                const loaded = await conversationService.getAll();
+                setConversations(loaded);
+            } catch (error) {
+                console.error("Failed to load conversations:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadConversations();
     }, []);
 
     const activeConversation =
         conversations.find((c) => c.id === activeConversationId) || null;
 
-    const createConversation = useCallback((title?: string): Conversation => {
-        const newConversation = conversationService.create(title);
-        setConversations((prev) => [newConversation, ...prev]);
-        setActiveConversationId(newConversation.id);
-        return newConversation;
-    }, []);
+    const createConversation = useCallback(
+        async (title?: string): Promise<Conversation> => {
+            const newConversation = await conversationService.create(title);
+            setConversations((prev) => [newConversation, ...prev]);
+            setActiveConversationId(newConversation.id);
+            return newConversation;
+        },
+        [],
+    );
 
     const loadConversation = useCallback((id: string) => {
-        const conversation = conversationService.getById(id);
-        if (conversation) {
-            setConversations((prev) => {
-                const exists = prev.find((c) => c.id === id);
-                return exists ? prev : [conversation, ...prev];
-            });
-            setActiveConversationId(id);
-        }
+        setActiveConversationId(id);
     }, []);
 
-    const deleteConversation = useCallback((id: string) => {
-        conversationService.delete(id);
+    const deleteConversation = useCallback(async (id: string) => {
+        await conversationService.delete(id);
         setConversations((prev) => prev.filter((c) => c.id !== id));
         setActiveConversationId((prev) => (prev === id ? null : prev));
     }, []);
 
-    const updateConversationTitle = useCallback((id: string, title: string) => {
-        const conversation = conversationService.getById(id);
-        if (conversation) {
-            conversation.title = title;
-            conversationService.save(conversation);
+    const updateConversationTitle = useCallback(
+        async (id: string, title: string) => {
+            await conversationService.updateConversation(id, { title });
             setConversations((prev) =>
                 prev.map((c) => (c.id === id ? { ...c, title } : c)),
             );
-        }
-    }, []);
+        },
+        [],
+    );
 
-    const searchConversations = useCallback((query: string): Conversation[] => {
-        return conversationService.search(query);
-    }, []);
+    const togglePin = useCallback(
+        async (id: string) => {
+            const conv = conversations.find((c) => c.id === id);
+            if (!conv) return;
+
+            const newPinned = !conv.isPinned;
+            await conversationService.updateConversation(id, {
+                isPinned: newPinned,
+            });
+            setConversations((prev) =>
+                prev.map((c) =>
+                    c.id === id ? { ...c, isPinned: newPinned } : c,
+                ),
+            );
+        },
+        [conversations],
+    );
+
+    const searchConversations = useCallback(
+        (query: string): Conversation[] => {
+            return conversationService.search(query);
+        },
+        [],
+    );
 
     const clearAllConversations = useCallback(() => {
-        conversationService.clear();
+        conversationService.invalidateCache();
         setConversations([]);
         setActiveConversationId(null);
     }, []);
@@ -99,18 +130,22 @@ const useConversations = (): UseConversationsReturn => {
         [],
     );
 
-    const refreshConversations = useCallback(() => {
-        setConversations(conversationService.getAll());
+    const refreshConversations = useCallback(async () => {
+        conversationService.invalidateCache();
+        const loaded = await conversationService.getAll();
+        setConversations(loaded);
     }, []);
 
     return {
         conversations,
         activeConversation,
         activeConversationId,
+        isLoading,
         createConversation,
         loadConversation,
         deleteConversation,
         updateConversationTitle,
+        togglePin,
         searchConversations,
         clearAllConversations,
         setActiveConversationId,

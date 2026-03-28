@@ -39,7 +39,7 @@ const AIAssistantPage: React.FC = () => {
     };
 
     return (
-        <div className="h-screen flex flex-col bg-white dark:bg-gray-900" data-testid="ai-assistant-page">
+        <div className="h-screen flex flex-col overflow-hidden bg-white dark:bg-gray-900" data-testid="ai-assistant-page">
             {/* Header */}
             <header className="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3">
                 <div className="flex items-center justify-between">
@@ -93,7 +93,7 @@ const AIAssistantPage: React.FC = () => {
             {/* Main Content */}
             <div className="flex-1 flex overflow-hidden">
                 {/* Desktop Sidebar */}
-                <div className="hidden lg:block">
+                <div className="hidden lg:block h-full overflow-hidden">
                     <ConversationSidebar isOpen={isSidebarOpen} />
                 </div>
 

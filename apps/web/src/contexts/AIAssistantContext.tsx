@@ -15,12 +15,13 @@ interface AIAssistantContextValue {
     streamingMessage: Message | null;
     isStreaming: boolean;
 
-    createConversation: (title?: string) => Conversation;
+    createConversation: (title?: string) => Promise<Conversation>;
     loadConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
     injectConversation: (query: string, aiResponse: AIResponse) => void;
-    deleteConversation: (id: string) => void;
-    updateConversationTitle: (id: string, title: string) => void;
+    deleteConversation: (id: string) => Promise<void>;
+    updateConversationTitle: (id: string, title: string) => Promise<void>;
+    togglePin: (id: string) => Promise<void>;
     searchConversations: (query: string) => Conversation[];
     clearAllConversations: () => void;
 }
@@ -44,10 +45,12 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
         loadConversation,
         deleteConversation,
         updateConversationTitle,
+        togglePin,
         searchConversations,
         clearAllConversations,
         setActiveConversationId,
         updateConversationMessages,
+        refreshConversations,
     } = useConversations();
 
     const {
@@ -67,7 +70,7 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
             let conversationId = activeConversationId;
 
             if (!conversationId) {
-                const newConv = createConversation();
+                const newConv = await createConversation();
                 conversationId = newConv.id;
             }
 
@@ -75,6 +78,7 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
                 content,
                 conversationId,
                 updateConversationMessages,
+                refreshConversations,
             );
         },
         [
@@ -82,35 +86,38 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
             createConversation,
             sendStreamMessage,
             updateConversationMessages,
+            refreshConversations,
         ],
     );
 
     const injectConversation = useCallback(
         (query: string, aiResponse: AIResponse) => {
             const convService = ConversationService.getInstance();
-            const conv = createConversation(
-                query.slice(0, 40) + (query.length > 40 ? "..." : ""),
-            );
+            const doInject = async () => {
+                const conv = await createConversation(
+                    query.slice(0, 40) + (query.length > 40 ? "..." : ""),
+                );
 
-            convService.addMessage(conv.id, {
-                role: "user",
-                content: query,
-            });
+                await convService.addMessage(conv.id, {
+                    role: "user",
+                    content: query,
+                });
 
-            convService.addMessage(conv.id, {
-                role: "assistant",
-                content:
-                    aiResponse.conversationResponse ||
-                    aiResponse.description ||
-                    "",
-                metadata: {
-                    isStreaming: false,
-                    aiResponse,
-                },
-            });
+                await convService.addMessage(conv.id, {
+                    role: "assistant",
+                    content:
+                        aiResponse.conversationResponse ||
+                        aiResponse.description ||
+                        "",
+                    metadata: {
+                        isStreaming: false,
+                        aiResponse,
+                    },
+                });
 
-            // Reload conversation from localStorage to sync messages with state
-            loadConversation(conv.id);
+                loadConversation(conv.id);
+            };
+            doInject();
         },
         [createConversation, loadConversation],
     );
@@ -127,6 +134,7 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
         injectConversation,
         deleteConversation,
         updateConversationTitle,
+        togglePin,
         searchConversations,
         clearAllConversations,
     };
