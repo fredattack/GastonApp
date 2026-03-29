@@ -1,63 +1,80 @@
 import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {
+    CalendarPlus,
+    PawPrint,
+    Sparkle,
+    ListBullets,
+    Sun,
+    CloudSun,
+    Moon,
+    Dog,
+    Cat,
+    CaretRight,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 import { usePets } from "../contexts/PetsContext";
 import { useEvents } from "../contexts/EventsContext";
-import { useCommandBar, CommandBar } from "../components/AI/CommandBar";
+import { useCommandBar } from "../components/AI/CommandBar";
 import AIInsightsPanel from "../components/Dashboard/AIInsightsPanel";
 import RecentEventsTimeline from "../components/Dashboard/RecentEventsTimeline";
 
-const QUICK_ACTIONS = [
+const MAX_PETS_DISPLAYED = 5;
+
+const QUICK_ACTIONS: {
+    icon: Icon;
+    variant: "mint" | "lavender" | "coral" | "yellow";
+    labelKey: string;
+    descKey: string;
+    route: string;
+}[] = [
     {
-        icon: "📅",
-        variant: "mint" as const,
-        labelKey: "New Event",
-        descKey: "Plan an activity",
+        icon: CalendarPlus,
+        variant: "mint",
+        labelKey: "Nouvel evenement",
+        descKey: "Planifier une activite",
         route: "/calendar",
     },
     {
-        icon: "🐾",
-        variant: "lavender" as const,
-        labelKey: "Add Pet",
-        descKey: "Register new",
+        icon: PawPrint,
+        variant: "lavender",
+        labelKey: "Ajouter un animal",
+        descKey: "Enregistrer",
         route: "/content/pets/create",
     },
     {
-        icon: "✨",
-        variant: "coral" as const,
-        labelKey: "AI Assistant",
-        descKey: "Full conversation",
+        icon: Sparkle,
+        variant: "coral",
+        labelKey: "Assistant IA",
+        descKey: "Conversation complete",
         route: "/ai-assistant",
     },
     {
-        icon: "📊",
-        variant: "yellow" as const,
-        labelKey: "My Pets",
-        descKey: "{{count}} registered",
+        icon: ListBullets,
+        variant: "yellow",
+        labelKey: "Mes animaux",
+        descKey: "{{count}} enregistre(s)",
         route: "/content/pets",
     },
-] as const;
+];
 
 const VARIANT_STYLES = {
     mint: {
         background:
             "linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100))",
-        iconBg: "var(--color-primary-50)",
     },
     lavender: {
         background:
             "linear-gradient(135deg, var(--color-lavender-light), rgba(209, 179, 232, 0.3))",
-        iconBg: "var(--color-lavender-light)",
     },
     coral: {
         background:
             "linear-gradient(135deg, var(--color-coral-light), rgba(255, 181, 154, 0.3))",
-        iconBg: "var(--color-coral-light)",
     },
     yellow: {
         background:
             "linear-gradient(135deg, var(--color-yellow-light), rgba(255, 232, 140, 0.3))",
-        iconBg: "var(--color-yellow-light)",
     },
 } as const;
 
@@ -66,22 +83,34 @@ const Index: React.FC = () => {
     const navigate = useNavigate();
     const { pets, isLoading: petsLoading } = usePets();
     const { events, isLoading: eventsLoading } = useEvents();
-    const { isOpen, open, close } = useCommandBar();
+    const { open } = useCommandBar();
 
-    const getGreeting = (): { text: string; icon: string } => {
+    const getGreeting = (): { text: string; Icon: Icon } => {
         const hour = new Date().getHours();
-        if (hour < 12) return { text: t("Good morning"), icon: "☀️" };
-        if (hour < 18) return { text: t("Good afternoon"), icon: "🌤️" };
-        return { text: t("Good evening"), icon: "🌙" };
+        if (hour < 12) return { text: t("Bonjour"), Icon: Sun };
+        if (hour < 18) return { text: t("Bon apres-midi"), Icon: CloudSun };
+        return { text: t("Bonsoir"), Icon: Moon };
     };
 
     const isLoading = petsLoading || eventsLoading;
     const greeting = getGreeting();
+    const GreetingIcon = greeting.Icon;
 
     // Redirect to onboarding if user has no pets and loading is done
     if (!petsLoading && pets.length === 0) {
         return <Navigate to="/onboarding" replace />;
     }
+
+    // Actionable stat for the greeting
+    const todayCount = events.filter((e) => {
+        const d =
+            typeof e.start_date === "string"
+                ? e.start_date.split("T")[0]
+                : new Date(e.start_date).toISOString().split("T")[0];
+        return d === new Date().toISOString().split("T")[0];
+    }).length;
+
+    const displayedPets = pets.slice(0, MAX_PETS_DISPLAYED);
 
     return (
         <div
@@ -89,136 +118,68 @@ const Index: React.FC = () => {
             style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "var(--spacing-32)",
+                gap: "var(--spacing-24)",
             }}
         >
-            {/* Hero Section */}
+            {/* Greeting Section */}
             <section
                 style={{
                     background:
                         "linear-gradient(135deg, var(--color-lin-0), var(--color-lin-1))",
                     borderRadius: "var(--radius-xl)",
-                    padding: "var(--spacing-32)",
+                    padding: "var(--spacing-24) var(--spacing-32)",
                     position: "relative",
                     overflow: "hidden",
                 }}
             >
                 <div style={{ position: "relative", zIndex: 1 }}>
                     <h1
+                        className="flex items-center gap-3"
                         style={{
-                            fontSize: "var(--font-size-h2)",
+                            fontSize: "var(--font-size-h3)",
                             fontWeight: "var(--font-weight-bold)",
                             color: "var(--color-text-primary)",
                             lineHeight: "var(--line-height-tight)",
-                            marginBottom: "var(--spacing-8)",
+                            marginBottom: "var(--spacing-4)",
                         }}
                     >
-                        <span style={{ fontSize: "var(--font-size-h1)" }}>
-                            {greeting.icon}
-                        </span>{" "}
-                        {greeting.text} 👋
+                        <GreetingIcon
+                            size={28}
+                            weight="duotone"
+                            className="text-primary"
+                        />
+                        {greeting.text}
                     </h1>
                     <p
                         style={{
-                            fontSize: "var(--font-size-body-l)",
+                            fontSize: "var(--font-size-body-m)",
                             color: "var(--color-text-secondary)",
-                            marginBottom: "var(--spacing-24)",
                         }}
                     >
-                        {pets.length > 0
-                            ? t(
-                                  "You have {{petCount}} pet(s) and {{eventCount}} event(s)",
-                                  {
-                                      petCount: pets.length,
-                                      eventCount: events.length,
-                                  },
-                              )
-                            : t("Welcome to GastonApp! Let's get started.")}
+                        {todayCount > 0
+                            ? t("{{count}} evenement(s) prevu(s) aujourd'hui", {
+                                  count: todayCount,
+                              })
+                            : t("Tout est a jour")}
                     </p>
-
-                    {/* AI Quick Input */}
-                    <button
-                        type="button"
-                        onClick={open}
-                        className="group"
-                        style={{
-                            width: "100%",
-                            maxWidth: "520px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "var(--spacing-12)",
-                            padding: "var(--spacing-16) var(--spacing-20)",
-                            background: "rgba(255, 255, 255, 0.8)",
-                            backdropFilter: "blur(12px)",
-                            borderRadius: "var(--radius-md)",
-                            border: "1px solid var(--color-lin-3)",
-                            boxShadow: "var(--shadow-sm)",
-                            cursor: "pointer",
-                            textAlign: "left",
-                            transition: "all var(--transition-normal)",
-                        }}
-                    >
-                        <span
-                            style={{
-                                fontSize: "var(--font-size-body-l)",
-                                color: "var(--color-primary-400)",
-                            }}
-                        >
-                            ✨
-                        </span>
-                        <span
-                            className="flex-1"
-                            style={{
-                                color: "var(--color-text-hint)",
-                                fontSize: "var(--font-size-body-m)",
-                            }}
-                        >
-                            {t("Ask anything about your pets...")}
-                        </span>
-                        <kbd
-                            className="hidden sm:inline-flex items-center"
-                            style={{
-                                padding: "2px 8px",
-                                fontSize: "var(--font-size-caption)",
-                                color: "var(--color-text-tertiary)",
-                                background: "var(--color-lin-2)",
-                                borderRadius: "var(--radius-xs)",
-                                fontFamily: "monospace",
-                            }}
-                        >
-                            ⌘K
-                        </kbd>
-                    </button>
                 </div>
 
-                {/* Decorative circles */}
+                {/* Decorative circle */}
                 <div
                     style={{
                         position: "absolute",
                         top: "-64px",
                         right: "-32px",
-                        width: "256px",
-                        height: "256px",
+                        width: "200px",
+                        height: "200px",
                         borderRadius: "var(--radius-full)",
                         background: "var(--color-primary-50)",
-                        opacity: 0.5,
-                    }}
-                />
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: "-48px",
-                        left: "-24px",
-                        width: "192px",
-                        height: "192px",
-                        borderRadius: "var(--radius-full)",
-                        background: "var(--color-secondary-50)",
                         opacity: 0.4,
                     }}
                 />
             </section>
 
-            {/* AI Insights */}
+            {/* AI Insights (max 4 aggregated cards) */}
             {!isLoading && (
                 <AIInsightsPanel
                     pets={pets}
@@ -237,7 +198,7 @@ const Index: React.FC = () => {
                         marginBottom: "var(--spacing-16)",
                     }}
                 >
-                    {t("Quick Actions")}
+                    {t("Actions rapides")}
                 </h2>
                 <div
                     className="grid grid-cols-2 md:grid-cols-4"
@@ -265,7 +226,7 @@ const Index: React.FC = () => {
                 className="grid grid-cols-1 lg:grid-cols-3"
                 style={{ gap: "var(--spacing-24)" }}
             >
-                {/* Pets Summary */}
+                {/* Pets Summary (limited to MAX_PETS_DISPLAYED) */}
                 <section className="lg:col-span-1">
                     <div
                         style={{
@@ -282,10 +243,10 @@ const Index: React.FC = () => {
                                 color: "var(--color-text-primary)",
                             }}
                         >
-                            {t("My Pets")}{" "}
+                            {t("Mes animaux")}{" "}
                             {pets.length > 0 && `(${pets.length})`}
                         </h2>
-                        {pets.length > 0 && (
+                        {pets.length > MAX_PETS_DISPLAYED && (
                             <button
                                 type="button"
                                 onClick={() => navigate("/content/pets")}
@@ -298,7 +259,7 @@ const Index: React.FC = () => {
                                     fontWeight: "var(--font-weight-semibold)",
                                 }}
                             >
-                                {t("View all")}
+                                {t("Voir tout")}
                             </button>
                         )}
                     </div>
@@ -322,7 +283,7 @@ const Index: React.FC = () => {
                                 />
                             ))}
                         </div>
-                    ) : pets.length > 0 ? (
+                    ) : (
                         <div
                             style={{
                                 display: "flex",
@@ -330,7 +291,7 @@ const Index: React.FC = () => {
                                 gap: "var(--spacing-12)",
                             }}
                         >
-                            {pets.map((pet) => (
+                            {displayedPets.map((pet) => (
                                 <button
                                     type="button"
                                     key={pet.id}
@@ -364,15 +325,28 @@ const Index: React.FC = () => {
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
-                                            fontSize: "var(--font-size-h4)",
                                             flexShrink: 0,
                                         }}
                                     >
-                                        {pet.species === "dog"
-                                            ? "🐕"
-                                            : pet.species === "cat"
-                                              ? "🐈"
-                                              : "🐾"}
+                                        {pet.species === "dog" ? (
+                                            <Dog
+                                                size={24}
+                                                weight="duotone"
+                                                className="text-primary"
+                                            />
+                                        ) : pet.species === "cat" ? (
+                                            <Cat
+                                                size={24}
+                                                weight="duotone"
+                                                className="text-primary"
+                                            />
+                                        ) : (
+                                            <PawPrint
+                                                size={24}
+                                                weight="duotone"
+                                                className="text-primary"
+                                            />
+                                        )}
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <p
@@ -399,60 +373,24 @@ const Index: React.FC = () => {
                                             {pet.breed || pet.species}
                                         </p>
                                     </div>
-                                    <svg
-                                        style={{
-                                            width: "16px",
-                                            height: "16px",
-                                            color: "var(--color-lin-6)",
-                                        }}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
+                                    <CaretRight
+                                        size={16}
+                                        className="text-gray-400"
+                                    />
                                 </button>
                             ))}
+                            {pets.length > MAX_PETS_DISPLAYED && (
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/content/pets")}
+                                    className="text-center py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                                >
+                                    {t("Voir les {{count}} animaux", {
+                                        count: pets.length,
+                                    })}
+                                </button>
+                            )}
                         </div>
-                    ) : (
-                        <button
-                            type="button"
-                            onClick={() => navigate("/content/pets/create")}
-                            style={{
-                                width: "100%",
-                                padding: "var(--spacing-24)",
-                                background: "var(--color-lin-0)",
-                                borderRadius: "var(--radius-xl)",
-                                border: "2px dashed var(--color-lin-5)",
-                                cursor: "pointer",
-                                textAlign: "center",
-                                transition: "all var(--transition-normal)",
-                            }}
-                            className="hover:border-primary/50"
-                        >
-                            <p
-                                style={{
-                                    fontSize: "var(--font-size-h2)",
-                                    marginBottom: "var(--spacing-8)",
-                                }}
-                            >
-                                🐾
-                            </p>
-                            <p
-                                style={{
-                                    fontSize: "var(--font-size-body-s)",
-                                    fontWeight: "var(--font-weight-semibold)",
-                                    color: "var(--color-text-secondary)",
-                                }}
-                            >
-                                {t("Add your first pet")}
-                            </p>
-                        </button>
                     )}
                 </section>
 
@@ -466,7 +404,7 @@ const Index: React.FC = () => {
                             marginBottom: "var(--spacing-16)",
                         }}
                     >
-                        {t("Recent Events")}
+                        {t("Evenements recents")}
                     </h2>
                     <div
                         style={{
@@ -504,15 +442,12 @@ const Index: React.FC = () => {
                     </div>
                 </section>
             </div>
-
-            {/* Command Bar */}
-            <CommandBar isOpen={isOpen} onClose={close} />
         </div>
     );
 };
 
 interface QuickActionCardProps {
-    icon: string;
+    icon: Icon;
     label: string;
     description: string;
     variant: keyof typeof VARIANT_STYLES;
@@ -520,7 +455,7 @@ interface QuickActionCardProps {
 }
 
 const QuickActionCard: React.FC<QuickActionCardProps> = ({
-    icon,
+    icon: IconComponent,
     label,
     description,
     variant,
@@ -549,16 +484,12 @@ const QuickActionCard: React.FC<QuickActionCardProps> = ({
                 transition: "all var(--transition-normal)",
             }}
         >
-            <span
-                className="group-hover:scale-110 transition-transform"
-                style={{
-                    fontSize: "var(--font-size-h3)",
-                    display: "block",
-                    marginBottom: "var(--spacing-4)",
-                }}
-            >
-                {icon}
-            </span>
+            <IconComponent
+                size={28}
+                weight="duotone"
+                className="group-hover:scale-110 transition-transform text-gray-700"
+                style={{ marginBottom: "var(--spacing-4)" }}
+            />
             <div>
                 <p
                     style={{

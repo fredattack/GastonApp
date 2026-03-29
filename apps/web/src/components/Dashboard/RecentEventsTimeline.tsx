@@ -1,20 +1,32 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import {
+    Stethoscope,
+    ForkKnife,
+    ClipboardText,
+    Target,
+    Dog,
+    Scissors,
+    PersonSimpleWalk,
+    PushPin,
+    CalendarBlank,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface RecentEventsTimelineProps {
     events: EventFormData[];
 }
 
-const eventTypeIcons: Record<string, string> = {
-    medical: "💊",
-    feeding: "🍖",
-    appointment: "📋",
-    training: "🎯",
-    social: "🐕",
-    grooming: "✂️",
-    walk: "🚶",
-    other: "📌",
+const eventTypeIcons: Record<string, Icon> = {
+    medical: Stethoscope,
+    feeding: ForkKnife,
+    appointment: ClipboardText,
+    training: Target,
+    social: Dog,
+    grooming: Scissors,
+    walk: PersonSimpleWalk,
+    other: PushPin,
 };
 
 const RecentEventsTimeline: React.FC<RecentEventsTimelineProps> = ({
@@ -36,10 +48,10 @@ const RecentEventsTimeline: React.FC<RecentEventsTimelineProps> = ({
     if (recentEvents.length === 0) {
         return (
             <div className="text-center py-8 text-gray-400">
-                <p className="text-4xl mb-3">📅</p>
-                <p className="text-sm">{t("No events yet")}</p>
+                <CalendarBlank size={40} weight="duotone" className="mx-auto mb-3" />
+                <p className="text-sm">{t("Aucun evenement")}</p>
                 <p className="text-xs mt-1">
-                    {t("Use the AI to create your first event")}
+                    {t("Utilisez l'IA pour creer votre premier evenement")}
                 </p>
             </div>
         );
@@ -70,9 +82,14 @@ const RecentEventsTimeline: React.FC<RecentEventsTimelineProps> = ({
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
                     onClick={() => navigate("/calendar")}
                 >
-                    <span className="text-lg w-8 text-center flex-shrink-0">
-                        {eventTypeIcons[event.type] || "📌"}
-                    </span>
+                    {(() => {
+                        const EventIcon = eventTypeIcons[event.type] || PushPin;
+                        return (
+                            <div className="w-8 flex-shrink-0 flex items-center justify-center">
+                                <EventIcon size={20} weight="duotone" className="text-gray-500 dark:text-gray-400" />
+                            </div>
+                        );
+                    })()}
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                             {event.title}

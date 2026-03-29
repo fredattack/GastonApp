@@ -21,25 +21,22 @@ import {
 
 import { IconProvider } from "./providers/FontawesomeProvider";
 import { GlobalProvider } from "./contexts/GlobalContext";
-import { AIAssistantProvider } from "./contexts/AIAssistantContext";
+
+// Initialize Bugsnag once at module level (not inside component render)
+const bugsnagApiKey = import.meta.env.VITE_BUGSNAG_API_KEY;
+let BugsnagErrorBoundary: React.ComponentType<any> | null = null;
+
+if (bugsnagApiKey) {
+    Bugsnag.start({
+        apiKey: bugsnagApiKey,
+        plugins: [new BugsnagPluginReact()],
+    });
+    BugsnagPerformance.start({ apiKey: bugsnagApiKey });
+    BugsnagErrorBoundary =
+        Bugsnag.getPlugin("react")?.createErrorBoundary(React) || null;
+}
 
 const App = ({ children }: PropsWithChildren) => {
-    const bugsnagApiKey = import.meta.env.VITE_BUGSNAG_API_KEY;
-
-    // Initialize Bugsnag only if API key is available
-    let ErrorBoundary: React.ComponentType<any> | null = null;
-
-    if (bugsnagApiKey) {
-        Bugsnag.start({
-            apiKey: bugsnagApiKey,
-            plugins: [new BugsnagPluginReact()],
-        });
-        BugsnagPerformance.start({ apiKey: bugsnagApiKey });
-
-        // Get Bugsnag ErrorBoundary
-        ErrorBoundary =
-            Bugsnag.getPlugin("react")?.createErrorBoundary(React) || null;
-    }
 
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
@@ -88,21 +85,22 @@ const App = ({ children }: PropsWithChildren) => {
     const content = (
         <IconProvider>
             <GlobalProvider>
-                <AIAssistantProvider>
-                    <div
-                        className={`${(store.getState().themeConfig.sidebar && "toggle-sidebar") || ""} ${themeConfig.menu} ${themeConfig.layout} ${
-                            themeConfig.rtlClass
-                        } main-section antialiased relative font-nunito text-sm font-normal`}
-                    >
-                        {children}
-                    </div>
-                </AIAssistantProvider>
+                <div
+                    className={`${(store.getState().themeConfig.sidebar && "toggle-sidebar") || ""} ${themeConfig.menu} ${themeConfig.layout} ${
+                        themeConfig.rtlClass
+                    } main-section antialiased relative font-nunito text-sm font-normal`}
+                >
+                    {children}
+                </div>
             </GlobalProvider>
         </IconProvider>
     );
 
-    // Wrap with Bugsnag ErrorBoundary if available, otherwise return content directly
-    return ErrorBoundary ? <ErrorBoundary>{content}</ErrorBoundary> : content;
+    return BugsnagErrorBoundary ? (
+        <BugsnagErrorBoundary>{content}</BugsnagErrorBoundary>
+    ) : (
+        content
+    );
 };
 
 export default App;

@@ -8,19 +8,21 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ArrowUp } from "@phosphor-icons/react";
 import App from "../../App";
 import { IRootState } from "../../store";
 import { toggleSidebar } from "../../store/themeConfigSlice";
 import Footer from "./Footer";
 import Header from "./Header";
-import Setting from "./Setting";
 import Sidebar from "./Sidebar";
 import Portals from "../Portals";
 import TabBar from "../Navigation/TabBar";
-import FAB from "../Common/FAB";
 import { CommandBar, useCommandBar } from "../AI/CommandBar";
 import AIOverlayPanel from "../AI/AIOverlayPanel";
-import { useAIAssistant } from "../../contexts/AIAssistantContext";
+import {
+    useAIAssistant,
+    AIAssistantProvider,
+} from "../../contexts/AIAssistantContext";
 
 const AIWidgets = ({
     commandBarIsOpen,
@@ -32,10 +34,6 @@ const AIWidgets = ({
     const navigate = useNavigate();
     const { injectConversation } = useAIAssistant();
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-
-    const handleFABClick = useCallback(() => {
-        navigate("/ai-assistant");
-    }, [navigate]);
 
     const handleOverlayClose = useCallback(() => {
         setIsOverlayOpen(false);
@@ -51,7 +49,6 @@ const AIWidgets = ({
 
     return (
         <>
-            <FAB onClick={handleFABClick} />
             <AIOverlayPanel
                 isOpen={isOverlayOpen}
                 onClose={handleOverlayClose}
@@ -87,7 +84,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 const scrollTop =
                     document.body.scrollTop ||
                     document.documentElement.scrollTop;
-                setShowTopButton(scrollTop > 50);
+                setShowTopButton(scrollTop > 200);
                 ticking.current = false;
             });
         }
@@ -111,114 +108,92 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
     return (
         <App>
-            {/* BEGIN MAIN CONTAINER */}
-            <div className="relative">
-                {/* sidebar menu overlay */}
-                <div
-                    className={`${(!themeConfig.sidebar && "hidden") || ""} fixed inset-0 bg-[black]/60 z-50 lg:hidden`}
-                    onClick={() => dispatch(toggleSidebar())}
-                />
-                {/* screen loader */}
-                {showLoader && (
-                    <div className="screen_loader fixed inset-0 bg-[#fafafa] dark:bg-[#060818] z-[60] grid place-content-center animate__animated">
-                        <svg
-                            width="64"
-                            height="64"
-                            viewBox="0 0 135 135"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="#4361ee"
-                        >
-                            <path d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z">
-                                <animateTransform
-                                    attributeName="transform"
-                                    type="rotate"
-                                    from="0 67 67"
-                                    to="-360 67 67"
-                                    dur="2.5s"
-                                    repeatCount="indefinite"
-                                />
-                            </path>
-                            <path d="M28.19 40.31c6.627 0 12-5.374 12-12 0-6.628-5.373-12-12-12-6.628 0-12 5.372-12 12 0 6.626 5.372 12 12 12zm30.72-19.825c4.686 4.687 12.284 4.687 16.97 0 4.686-4.686 4.686-12.284 0-16.97-4.686-4.687-12.284-4.687-16.97 0-4.687 4.686-4.687 12.284 0 16.97zm35.74 7.705c0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.628-5.374-12-12-12-6.63 0-12 5.372-12 12zm19.822 30.72c-4.686 4.686-4.686 12.284 0 16.97 4.687 4.686 12.285 4.686 16.97 0 4.687-4.686 4.687-12.284 0-16.97-4.685-4.687-12.283-4.687-16.97 0zm-7.704 35.74c-6.627 0-12 5.37-12 12 0 6.626 5.373 12 12 12s12-5.374 12-12c0-6.63-5.373-12-12-12zm-30.72 19.822c-4.686-4.686-12.284-4.686-16.97 0-4.686 4.687-4.686 12.285 0 16.97 4.686 4.687 12.284 4.687 16.97 0 4.687-4.685 4.687-12.283 0-16.97zm-35.74-7.704c0-6.627-5.372-12-12-12-6.626 0-12 5.373-12 12s5.374 12 12 12c6.628 0 12-5.373 12-12zm-19.823-30.72c4.687-4.686 4.687-12.284 0-16.97-4.686-4.686-12.284-4.686-16.97 0-4.687 4.686-4.687 12.284 0 16.97 4.686 4.687 12.284 4.687 16.97 0z">
-                                <animateTransform
-                                    attributeName="transform"
-                                    type="rotate"
-                                    from="0 67 67"
-                                    to="360 67 67"
-                                    dur="8s"
-                                    repeatCount="indefinite"
-                                />
-                            </path>
-                        </svg>
-                    </div>
-                )}
-                <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-50">
+            <AIAssistantProvider>
+                <div className="relative">
+                    {/* sidebar menu overlay (mobile) */}
+                    <div
+                        className={`${(!themeConfig.sidebar && "hidden") || ""} fixed inset-0 bg-black/60 z-50 lg:hidden`}
+                        onClick={() => dispatch(toggleSidebar())}
+                    />
+
+                    {/* screen loader */}
+                    {showLoader && (
+                        <div className="screen_loader fixed inset-0 bg-[var(--color-bg-base,#F4F1E8)] z-[60] grid place-content-center animate__animated">
+                            <svg
+                                width="64"
+                                height="64"
+                                viewBox="0 0 135 135"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="#8FA998"
+                            >
+                                <path d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z">
+                                    <animateTransform
+                                        attributeName="transform"
+                                        type="rotate"
+                                        from="0 67 67"
+                                        to="-360 67 67"
+                                        dur="2.5s"
+                                        repeatCount="indefinite"
+                                    />
+                                </path>
+                                <path d="M28.19 40.31c6.627 0 12-5.374 12-12 0-6.628-5.373-12-12-12-6.628 0-12 5.372-12 12 0 6.626 5.372 12 12 12zm30.72-19.825c4.686 4.687 12.284 4.687 16.97 0 4.686-4.686 4.686-12.284 0-16.97-4.686-4.687-12.284-4.687-16.97 0-4.687 4.686-4.687 12.284 0 16.97zm35.74 7.705c0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.628-5.374-12-12-12-6.63 0-12 5.372-12 12zm19.822 30.72c-4.686 4.686-4.686 12.284 0 16.97 4.687 4.686 12.285 4.686 16.97 0 4.687-4.686 4.687-12.284 0-16.97-4.685-4.687-12.283-4.687-16.97 0zm-7.704 35.74c-6.627 0-12 5.37-12 12 0 6.626 5.373 12 12 12s12-5.374 12-12c0-6.63-5.373-12-12-12zm-30.72 19.822c-4.686-4.686-12.284-4.686-16.97 0-4.686 4.687-4.686 12.285 0 16.97 4.686 4.687 12.284 4.687 16.97 0 4.687-4.685 4.687-12.283 0-16.97zm-35.74-7.704c0-6.627-5.372-12-12-12-6.626 0-12 5.373-12 12s5.374 12 12 12c6.628 0 12-5.373 12-12zm-19.823-30.72c4.687-4.686 4.687-12.284 0-16.97-4.686-4.686-12.284-4.686-16.97 0-4.687 4.686-4.687 12.284 0 16.97 4.686 4.687 12.284 4.687 16.97 0z">
+                                    <animateTransform
+                                        attributeName="transform"
+                                        type="rotate"
+                                        from="0 67 67"
+                                        to="360 67 67"
+                                        dur="8s"
+                                        repeatCount="indefinite"
+                                    />
+                                </path>
+                            </svg>
+                        </div>
+                    )}
+
+                    {/* Scroll to top */}
                     {showTopButton && (
                         <button
                             type="button"
-                            className="btn btn-outline-primary rounded-full p-2 animate-pulse bg-[#fafafa] dark:bg-[#060818] dark:hover:bg-primary"
+                            className="fixed bottom-24 lg:bottom-8 right-6 z-30 w-10 h-10 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                             onClick={goToTop}
+                            aria-label="Retour en haut"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M8 7l4-4m0 0l4 4m-4-4v18"
-                                />
-                            </svg>
+                            <ArrowUp
+                                size={18}
+                                className="text-gray-600 dark:text-gray-300"
+                            />
                         </button>
                     )}
-                </div>
 
-                {/* BEGIN APP SETTING LAUNCHER */}
-                <Setting />
-                {/* END APP SETTING LAUNCHER */}
+                    <div
+                        className={`${themeConfig.navbar} main-container text-black dark:text-white-dark min-h-screen`}
+                    >
+                        <Sidebar />
 
-                <div
-                    className={`${themeConfig.navbar} main-container text-black dark:text-white-dark min-h-screen`}
-                >
-                    {/* BEGIN SIDEBAR */}
-                    <Sidebar />
-                    {/* END SIDEBAR */}
+                        <div className="main-content flex flex-col min-h-screen">
+                            <Header />
 
-                    <div className="main-content flex flex-col min-h-screen">
-                        {/* BEGIN TOP NAVBAR */}
-                        <Header />
-                        {/* END TOP NAVBAR */}
+                            <Suspense>
+                                <div
+                                    className={`${themeConfig.animation} p-4 sm:p-5 lg:p-6 pb-20 lg:pb-6 animate__animated`}
+                                >
+                                    {children}
+                                </div>
+                            </Suspense>
 
-                        {/* BEGIN CONTENT AREA */}
-                        <Suspense>
-                            <div
-                                className={`${themeConfig.animation} p-6 animate__animated`}
-                            >
-                                {children}
-                            </div>
-                        </Suspense>
-                        {/* END CONTENT AREA */}
+                            <Footer />
+                            <Portals />
+                        </div>
 
-                        {/* BEGIN FOOTER */}
-                        <Footer />
-                        {/* END FOOTER */}
-                        <Portals />
+                        <TabBar />
+
+                        <AIWidgets
+                            commandBarIsOpen={commandBar.isOpen}
+                            commandBarClose={commandBar.close}
+                        />
                     </div>
-
-                    {/* BEGIN MOBILE TAB BAR */}
-                    <TabBar />
-                    {/* END MOBILE TAB BAR */}
-
-                    {/* AI Widgets (rendered inside App/AIAssistantProvider) */}
-                    <AIWidgets
-                        commandBarIsOpen={commandBar.isOpen}
-                        commandBarClose={commandBar.close}
-                    />
                 </div>
-            </div>
+            </AIAssistantProvider>
         </App>
     );
 };

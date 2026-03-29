@@ -1,9 +1,16 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import {
+    CalendarBlank,
+    Stethoscope,
+    Warning,
+    CalendarCheck,
+} from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 
 interface AIInsight {
     id: string;
-    icon: string;
+    icon: Icon;
     title: string;
     description: string;
     type: "info" | "warning" | "success" | "action";
@@ -17,6 +24,8 @@ interface AIInsightsPanelProps {
     onOpenCommandBar: () => void;
 }
 
+const MAX_INSIGHTS = 4;
+
 const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
     pets,
     events,
@@ -29,7 +38,24 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
         const now = new Date();
         const today = now.toISOString().split("T")[0];
 
-        // Upcoming events today
+        // 1. Overdue events (highest priority)
+        const pendingEvents = events.filter(
+            (e) => !e.is_done && new Date(e.start_date) < now,
+        );
+        if (pendingEvents.length > 0) {
+            result.push({
+                id: "pending-events",
+                icon: Warning,
+                title: t("Evenements en retard"),
+                description: t(
+                    "{{count}} evenement(s) necessite(nt) votre attention",
+                    { count: pendingEvents.length },
+                ),
+                type: "warning",
+            });
+        }
+
+        // 2. Today's schedule
         const todayEvents = events.filter((e) => {
             const eventDate =
                 typeof e.start_date === "string"
@@ -37,100 +63,73 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                     : new Date(e.start_date).toISOString().split("T")[0];
             return eventDate === today;
         });
-
         if (todayEvents.length > 0) {
             result.push({
                 id: "today-events",
-                icon: "📅",
-                title: t("Today's Schedule"),
-                description: t("{{count}} event(s) planned for today", {
+                icon: CalendarBlank,
+                title: t("Programme du jour"),
+                description: t("{{count}} evenement(s) prevu(s) aujourd'hui", {
                     count: todayEvents.length,
                 }),
                 type: "info",
             });
         }
 
-        // Upcoming events this week
-        const weekFromNow = new Date(now);
-        weekFromNow.setDate(weekFromNow.getDate() + 7);
-        const weekEvents = events.filter((e) => {
-            const eventDate = new Date(e.start_date);
-            return eventDate >= now && eventDate <= weekFromNow;
-        });
-
-        if (weekEvents.length > 0) {
-            result.push({
-                id: "week-events",
-                icon: "🗓️",
-                title: t("This Week"),
-                description: t("{{count}} event(s) coming up this week", {
-                    count: weekEvents.length,
-                }),
-                type: "info",
-            });
-        }
-
-        // Medical events check for each pet
+        // 3. Health check reminders (AGGREGATED - one card for all pets)
         const thirtyDaysAgo = new Date(now);
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-        pets.forEach((pet) => {
+        const petsWithoutMedical = pets.filter((pet) => {
             const petMedicalEvents = events.filter(
                 (e) =>
                     e.type === "medical" &&
                     e.pets?.some((p) => p.id === pet.id) &&
                     new Date(e.start_date) >= thirtyDaysAgo,
             );
-
-            if (petMedicalEvents.length === 0 && events.length > 0) {
-                result.push({
-                    id: `no-medical-${pet.id}`,
-                    icon: "💊",
-                    title: t("Health Check Reminder"),
-                    description: t(
-                        "No medical events for {{petName}} in the last 30 days",
-                        { petName: pet.name },
-                    ),
-                    type: "warning",
-                    actionLabel: t("Schedule checkup"),
-                    onAction: onOpenCommandBar,
-                });
-            }
+            return petMedicalEvents.length === 0;
         });
 
-        // No pets registered
-        if (pets.length === 0) {
+        if (petsWithoutMedical.length > 0 && events.length > 0) {
             result.push({
-                id: "no-pets",
-                icon: "🐾",
-                title: t("Welcome!"),
-                description: t(
-                    "Start by adding your first pet to get personalized insights",
-                ),
-                type: "action",
-                actionLabel: t("Add a pet"),
+                id: "no-medical-summary",
+                icon: Stethoscope,
+                title: t("Rappels de sante"),
+                description:
+                    petsWithoutMedical.length === 1
+                        ? t(
+                              "{{name}} n'a pas de visite medicale recente",
+                              { name: petsWithoutMedical[0].name },
+                          )
+                        : t(
+                              "{{count}} animaux sans visite medicale recente",
+                              { count: petsWithoutMedical.length },
+                          ),
+                type: "warning",
+                actionLabel: t("Planifier une visite"),
                 onAction: onOpenCommandBar,
             });
         }
 
-        // Pending events (not done)
-        const pendingEvents = events.filter(
-            (e) => !e.is_done && new Date(e.start_date) < now,
-        );
-
-        if (pendingEvents.length > 0) {
+        // 4. This week preview
+        const weekFromNow = new Date(now);
+        weekFromNow.setDate(weekFromNow.getDate() + 7);
+        const weekEvents = events.filter((e) => {
+            const eventDate = new Date(e.start_date);
+            return eventDate >= now && eventDate <= weekFromNow;
+        });
+        if (weekEvents.length > 0) {
             result.push({
-                id: "pending-events",
-                icon: "⏰",
-                title: t("Overdue Events"),
-                description: t("{{count}} event(s) need your attention", {
-                    count: pendingEvents.length,
+                id: "week-events",
+                icon: CalendarCheck,
+                title: t("Cette semaine"),
+                description: t("{{count}} evenement(s) a venir", {
+                    count: weekEvents.length,
                 }),
-                type: "warning",
+                type: "info",
             });
         }
 
-        return result;
+        return result.slice(0, MAX_INSIGHTS);
     }, [pets, events, t, onOpenCommandBar]);
 
     if (insights.length === 0) return null;
@@ -146,41 +145,44 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
 
     return (
         <div className="space-y-3">
-            <h2
-                className="text-lg font-semibold flex items-center gap-2"
-                style={{ color: "var(--color-primary-900, #1a1a2e)" }}
+            <div
+                className="grid gap-3"
+                style={{
+                    gridTemplateColumns: `repeat(${Math.min(insights.length, 4)}, minmax(0, 1fr))`,
+                }}
             >
-                <span>✨</span>
-                {t("AI Insights")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {insights.map((insight) => (
-                    <div
-                        key={insight.id}
-                        className={`flex items-start gap-3 p-4 rounded-xl border ${typeStyles[insight.type]}`}
-                    >
-                        <span className="text-xl flex-shrink-0 mt-0.5">
-                            {insight.icon}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                {insight.title}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
-                                {insight.description}
-                            </p>
-                            {insight.actionLabel && insight.onAction && (
-                                <button
-                                    type="button"
-                                    onClick={insight.onAction}
-                                    className="mt-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                                >
-                                    {insight.actionLabel} →
-                                </button>
-                            )}
+                {insights.map((insight) => {
+                    const IconComponent = insight.icon;
+                    return (
+                        <div
+                            key={insight.id}
+                            className={`flex items-start gap-3 p-4 rounded-xl border ${typeStyles[insight.type]}`}
+                        >
+                            <IconComponent
+                                size={22}
+                                weight="duotone"
+                                className="flex-shrink-0 mt-0.5 text-gray-700 dark:text-gray-300"
+                            />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                    {insight.title}
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+                                    {insight.description}
+                                </p>
+                                {insight.actionLabel && insight.onAction && (
+                                    <button
+                                        type="button"
+                                        onClick={insight.onAction}
+                                        className="mt-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                                    >
+                                        {insight.actionLabel}
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

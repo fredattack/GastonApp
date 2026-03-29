@@ -1,6 +1,7 @@
 import React, { lazy } from "react";
 import { ProtectedRoute } from "../components/Router/ProtectedRoute";
 import ErrorBoundary from "../components/ErrorBoundary";
+import { AIAssistantProvider } from "../contexts/AIAssistantContext";
 
 const Index = lazy(() => import("../pages/Index"));
 const ComponentsShowcase = lazy(() => import("../pages/ComponentsShowcase"));
@@ -101,9 +102,11 @@ const routes = [
         path: "/ai-assistant",
         element: (
             <ProtectedRoute>
-                <ErrorBoundary>
-                    <AIAssistant />
-                </ErrorBoundary>
+                <AIAssistantProvider>
+                    <ErrorBoundary>
+                        <AIAssistant />
+                    </ErrorBoundary>
+                </AIAssistantProvider>
             </ProtectedRoute>
         ),
         layout: "blank",

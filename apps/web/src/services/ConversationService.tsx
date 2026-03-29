@@ -27,11 +27,12 @@ class ConversationService {
         try {
             const apiConversations = await conversationRepository.getAll();
             this.cache = apiConversations.map(this.fromApi);
-            this.loaded = true;
             return this.cache;
         } catch (error) {
             console.error("Failed to load conversations:", error);
             return [];
+        } finally {
+            this.loaded = true;
         }
     }
 
