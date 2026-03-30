@@ -98,6 +98,9 @@ declare global {
 
     interface AIEventPet {
         id: number;
+        name?: string;
+        species?: string;
+        breed?: string;
         pivot: AIEventPivot;
     }
 
@@ -128,6 +131,68 @@ declare global {
         message: string;
         actions: DisclaimerAction[];
         autoMedicationWarning?: string;
+    }
+
+    // AI Sub-types used by AI response rendering components
+    interface AdviceData {
+        adviceType: string;
+        question?: string;
+        answer: string;
+        sources?: string[];
+        relatedTopics?: string[];
+        confidence?: number;
+        dailyCalories?: number;
+        feedingFrequency?: string;
+        toxicFoods?: string[];
+        severity?: "high" | "medium" | "low";
+        redFlags?: string[];
+        nextSteps?: string[];
+    }
+
+    interface DeleteDataItem {
+        id: string;
+        title: string;
+        type?: string;
+        date?: string;
+    }
+
+    interface DeleteData {
+        filters: {
+            petIds?: string[];
+            type?: string;
+            startDate?: string;
+            endDate?: string;
+            eventId?: string;
+        };
+        confirmationRequired: boolean;
+        itemsToDelete?: DeleteDataItem[];
+        estimatedCount?: number;
+    }
+
+    interface QueryResult {
+        queryType: "events" | "pets" | "statistics" | "history";
+        results: unknown[] | Record<string, unknown>;
+        totalCount: number;
+        summary?: string;
+    }
+
+    interface MetricDataPoint {
+        value: number;
+        measured_at: string;
+        unit: string;
+    }
+
+    interface MetricsHistory {
+        metrics: MetricDataPoint[];
+        analysis: {
+            trend: "increasing" | "decreasing" | "stable";
+            average: number;
+            min: number;
+            max: number;
+            change: number;
+            changePercent: number;
+        };
+        metricType: string;
     }
 
     // AI Response — matches backend AiOrchestratorResponse DTO exactly
@@ -178,6 +243,7 @@ declare global {
         };
         confirmationNeeded?: {
             message: string;
+            question?: string;
             action?: string;
             summary?: string;
             data?: Record<string, unknown>;

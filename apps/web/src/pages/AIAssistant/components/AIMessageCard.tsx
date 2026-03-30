@@ -202,11 +202,11 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
     };
 
     const handleDelete = async () => {
-        if (!aiResponse?.data) return;
+        if (!aiResponse?.result) return;
 
         setIsCreating(true);
         try {
-            const deleteData = aiResponse.result as DeleteData;
+            const deleteData = aiResponse.result as unknown as DeleteData;
             const collection = requestType === "deletePet" ? "pets" : "events";
             const items = deleteData.itemsToDelete || [];
 
@@ -370,30 +370,30 @@ const AIMessageCard: React.FC<AIMessageCardProps> = ({
                         )}
 
                     {/* Query Results */}
-                    {!isStreaming && isQuery && aiResponse?.data && (
+                    {!isStreaming && isQuery && aiResponse?.result && (
                         <QueryResults
-                            queryResult={aiResponse.result as QueryResult}
+                            queryResult={aiResponse.result as unknown as QueryResult}
                         />
                     )}
 
                     {/* Advice Card */}
-                    {!isStreaming && isAdvice && aiResponse?.data && (
+                    {!isStreaming && isAdvice && aiResponse?.result && (
                         <AdviceCard
-                            adviceData={aiResponse.result as AdviceData}
+                            adviceData={aiResponse.result as unknown as AdviceData}
                         />
                     )}
 
                     {/* Metrics Chart */}
-                    {!isStreaming && isMetrics && aiResponse?.data && (
+                    {!isStreaming && isMetrics && aiResponse?.result && (
                         <MetricsChart
-                            metricsHistory={aiResponse.result as MetricsHistory}
+                            metricsHistory={aiResponse.result as unknown as MetricsHistory}
                         />
                     )}
 
                     {/* Delete Preview */}
-                    {!isStreaming && isDelete && aiResponse?.data && (
+                    {!isStreaming && isDelete && aiResponse?.result && (
                         <DeletePreview
-                            deleteData={aiResponse.result as DeleteData}
+                            deleteData={aiResponse.result as unknown as DeleteData}
                             requestType={
                                 requestType as "deleteEvent" | "deletePet"
                             }

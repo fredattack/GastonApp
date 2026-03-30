@@ -53,7 +53,9 @@ const VoiceCommandButton: React.FC<VoiceCommandButtonProps> = ({
                 console.error("[Voice] API error:", err);
                 onCommandResult({
                     status: "error",
-                    action: "voice_command",
+                    requestType: "error",
+                    description: "",
+                    confidenceScore: 0,
                     message:
                         "Impossible de traiter la commande. Veuillez reessayer.",
                 });

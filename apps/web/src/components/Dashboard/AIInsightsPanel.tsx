@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
     CalendarBlank,
     Stethoscope,
@@ -32,6 +33,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
     onOpenCommandBar,
 }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const insights = useMemo<AIInsight[]>(() => {
         const result: AIInsight[] = [];
@@ -72,6 +74,8 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                     count: todayEvents.length,
                 }),
                 type: "info",
+                actionLabel: t("Voir le calendrier"),
+                onAction: () => navigate("/calendar"),
             });
         }
 
@@ -126,11 +130,13 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                     count: weekEvents.length,
                 }),
                 type: "info",
+                actionLabel: t("Voir la semaine"),
+                onAction: () => navigate("/calendar?view=week"),
             });
         }
 
         return result.slice(0, MAX_INSIGHTS);
-    }, [pets, events, t, onOpenCommandBar]);
+    }, [pets, events, t, onOpenCommandBar, navigate]);
 
     if (insights.length === 0) return null;
 

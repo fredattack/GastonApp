@@ -55,7 +55,13 @@
       "mcp__playwright__browser_console_messages",
       "mcp__playwright__browser_evaluate",
       "mcp__playwright__browser_resize",
-      "mcp__playwright__browser_close"
+      "mcp__playwright__browser_close",
+      "Bash(xxd)",
+      "Bash(killall \"Google Chrome\")",
+      "mcp__playwright__browser_install",
+      "Bash(pkill:*)",
+      "Bash(cd:*)",
+      "Bash(php artisan:*)"
     ],
     "deny": [],
     "ask": []

@@ -87,10 +87,11 @@ const ExecutedResponse: React.FC<
 > = ({ response, onContinueInChat, onNavigate, t }) => {
     const text =
         response.conversationResponse || response.description || "";
-    const petData = response.result?.pet as
+    const result = response.result as Record<string, unknown> | undefined;
+    const petData = result?.pet as
         | { name?: string; breed?: string; id?: number }
         | undefined;
-    const petName = response.result?.petName as string | undefined;
+    const petName = result?.petName as string | undefined;
 
     const getActionLink = (): { label: string; path: string } | null => {
         if (
@@ -152,12 +153,6 @@ const ExecutedResponse: React.FC<
                                 </span>
                             )}
                         </div>
-                    )}
-
-                    {response.confidenceScore !== undefined && (
-                        <span className="inline-block mt-2 px-2 py-0.5 text-[10px] font-medium text-primary/70 bg-primary/10 rounded-full">
-                            {response.confidenceScore}%
-                        </span>
                     )}
 
                     <div className="mt-3 flex items-center gap-2 flex-wrap">

@@ -2,11 +2,20 @@ import React, {
     createContext,
     useContext,
     useCallback,
+    useEffect,
     ReactNode,
 } from "react";
 import useConversations from "../hooks/ai/useConversations";
 import useAIStream from "../hooks/ai/useAIStream";
 import ConversationService from "../services/ConversationService";
+
+export const PENDING_INJECTION_KEY = "ai_assistant_pending_injection";
+
+interface PendingInjection {
+    query: string;
+    aiResponse: AIResponse;
+    timestamp: number;
+}
 
 interface AIAssistantContextValue {
     conversations: Conversation[];
@@ -18,7 +27,7 @@ interface AIAssistantContextValue {
     createConversation: (title?: string) => Promise<Conversation>;
     loadConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
-    injectConversation: (query: string, aiResponse: AIResponse) => void;
+    injectConversation: (query: string, aiResponse: AIResponse) => Promise<void>;
     deleteConversation: (id: string) => Promise<void>;
     updateConversationTitle: (id: string, title: string) => Promise<void>;
     togglePin: (id: string) => Promise<void>;
@@ -91,36 +100,73 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
     );
 
     const injectConversation = useCallback(
-        (query: string, aiResponse: AIResponse) => {
+        async (query: string, aiResponse: AIResponse) => {
             const convService = ConversationService.getInstance();
-            const doInject = async () => {
-                const conv = await createConversation(
-                    query.slice(0, 40) + (query.length > 40 ? "..." : ""),
-                );
+            const conv = await createConversation(
+                query.slice(0, 40) + (query.length > 40 ? "..." : ""),
+            );
 
+            await convService.addMessage(conv.id, {
+                role: "user",
+                content: query,
+            });
+
+            await convService.addMessage(conv.id, {
+                role: "assistant",
+                content:
+                    aiResponse.conversationResponse ||
+                    aiResponse.description ||
+                    "",
+                metadata: {
+                    isStreaming: false,
+                    aiResponse,
+                },
+            });
+
+            await refreshConversations();
+            loadConversation(conv.id);
+        },
+        [createConversation, loadConversation, refreshConversations],
+    );
+
+    // Process pending injection from CommandBar redirect (sessionStorage bridge)
+    useEffect(() => {
+        const raw = sessionStorage.getItem(PENDING_INJECTION_KEY);
+        if (!raw) return;
+        sessionStorage.removeItem(PENDING_INJECTION_KEY);
+
+        try {
+            const pending: PendingInjection = JSON.parse(raw);
+            if (Date.now() - pending.timestamp > 30_000) return;
+
+            const convService = ConversationService.getInstance();
+            (async () => {
+                const conv = await createConversation(
+                    pending.query.slice(0, 40) +
+                        (pending.query.length > 40 ? "..." : ""),
+                );
                 await convService.addMessage(conv.id, {
                     role: "user",
-                    content: query,
+                    content: pending.query,
                 });
-
                 await convService.addMessage(conv.id, {
                     role: "assistant",
                     content:
-                        aiResponse.conversationResponse ||
-                        aiResponse.description ||
+                        pending.aiResponse.conversationResponse ||
+                        pending.aiResponse.description ||
                         "",
                     metadata: {
                         isStreaming: false,
-                        aiResponse,
+                        aiResponse: pending.aiResponse,
                     },
                 });
-
+                await refreshConversations();
                 loadConversation(conv.id);
-            };
-            doInject();
-        },
-        [createConversation, loadConversation],
-    );
+            })();
+        } catch {
+            // Malformed sessionStorage data, ignore
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const value: AIAssistantContextValue = {
         conversations,

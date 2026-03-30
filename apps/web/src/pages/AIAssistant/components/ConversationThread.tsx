@@ -110,7 +110,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
                                 message.metadata.aiResponse.requestType ===
                                     "advice" ||
                                 message.metadata.aiResponse.requestType ===
-                                    "metrics" ||
+                                    "createMetric" ||
                                 message.metadata.aiResponse.requestType ===
                                     "deleteEvent" ||
                                 message.metadata.aiResponse.requestType ===

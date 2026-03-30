@@ -78,7 +78,11 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
         },
     } as const;
 
-    const variant = config[result.status];
+    type FeedbackStatus = keyof typeof config;
+    const status: FeedbackStatus = (result.status in config)
+        ? result.status as FeedbackStatus
+        : "error";
+    const variant = config[status];
     const StatusIcon = variant.IconComponent;
 
     return (
@@ -107,9 +111,9 @@ const VoiceCommandFeedback: React.FC<VoiceCommandFeedbackProps> = ({
                 >
                     {result.message}
                 </p>
-                {result.action && result.action !== "voice_command" && (
+                {result.description && (
                     <p className={`text-xs mt-0.5 ${variant.subTextClass}`}>
-                        {result.action}
+                        {result.description}
                     </p>
                 )}
             </div>

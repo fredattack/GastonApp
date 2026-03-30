@@ -18,10 +18,9 @@ import Sidebar from "./Sidebar";
 import Portals from "../Portals";
 import TabBar from "../Navigation/TabBar";
 import { CommandBar, useCommandBar } from "../AI/CommandBar";
-import AIOverlayPanel from "../AI/AIOverlayPanel";
 import {
-    useAIAssistant,
     AIAssistantProvider,
+    PENDING_INJECTION_KEY,
 } from "../../contexts/AIAssistantContext";
 
 const AIWidgets = ({
@@ -32,33 +31,28 @@ const AIWidgets = ({
     commandBarClose: () => void;
 }) => {
     const navigate = useNavigate();
-    const { injectConversation } = useAIAssistant();
-    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-
-    const handleOverlayClose = useCallback(() => {
-        setIsOverlayOpen(false);
-    }, []);
 
     const handleOpenChat = useCallback(
         (query: string, response: AIResponse) => {
-            injectConversation(query, response);
+            sessionStorage.setItem(
+                PENDING_INJECTION_KEY,
+                JSON.stringify({
+                    query,
+                    aiResponse: response,
+                    timestamp: Date.now(),
+                }),
+            );
             navigate("/ai-assistant");
         },
-        [injectConversation, navigate],
+        [navigate],
     );
 
     return (
-        <>
-            <AIOverlayPanel
-                isOpen={isOverlayOpen}
-                onClose={handleOverlayClose}
-            />
-            <CommandBar
-                isOpen={commandBarIsOpen}
-                onClose={commandBarClose}
-                onOpenChat={handleOpenChat}
-            />
-        </>
+        <CommandBar
+            isOpen={commandBarIsOpen}
+            onClose={commandBarClose}
+            onOpenChat={handleOpenChat}
+        />
     );
 };
 

@@ -22,7 +22,19 @@ const Dropdown = (props: any, forwardedRef: any) => {
                 {
                     name: "offset",
                     options: {
-                        offset: props.offset || [0],
+                        offset: props.offset || [0, 4],
+                    },
+                },
+                {
+                    name: "flip",
+                    options: {
+                        fallbackPlacements: ["top-end", "bottom-start", "top-start"],
+                    },
+                },
+                {
+                    name: "preventOverflow",
+                    options: {
+                        padding: 8,
                     },
                 },
             ],

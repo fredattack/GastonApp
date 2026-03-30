@@ -26,9 +26,9 @@ export function transformAIResponseToEventForm(
         pets:
             data.pets?.map((aiPet) => ({
                 id: aiPet.id.toString(),
-                name: "",
-                species: "",
-                breed: "",
+                name: aiPet.name || "",
+                species: aiPet.species || "",
+                breed: aiPet.breed || "",
                 birthDate: "",
                 ownerId: "",
                 created_at: new Date().toISOString(),

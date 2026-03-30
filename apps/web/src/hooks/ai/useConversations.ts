@@ -52,7 +52,10 @@ const useConversations = (): UseConversationsReturn => {
     const createConversation = useCallback(
         async (title?: string): Promise<Conversation> => {
             const newConversation = await conversationService.create(title);
-            setConversations((prev) => [newConversation, ...prev]);
+            setConversations((prev) => {
+                if (prev.some((c) => c.id === newConversation.id)) return prev;
+                return [newConversation, ...prev];
+            });
             setActiveConversationId(newConversation.id);
             return newConversation;
         },

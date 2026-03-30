@@ -16,7 +16,7 @@ const Sidebar = () => {
     return (
         <div className={semidark ? "dark" : ""}>
             <nav
-                className={`sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(143,169,152,0.1)] z-50 transition-all duration-300 hidden lg:block ${semidark ? "text-white-dark" : ""}`}
+                className={`sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(143,169,152,0.1)] z-50 transition-all duration-300 ${semidark ? "text-white-dark" : ""}`}
                 role="navigation"
                 aria-label="Navigation principale desktop"
             >

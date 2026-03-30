@@ -203,10 +203,9 @@ const CommandBar: React.FC<CommandBarProps> = ({
                 conversationResponse: t(
                     "The action could not be executed.",
                 ),
-                score: 0,
+                confidenceScore: 0,
                 requestType: "query",
                 description: "",
-                data: {} as QueryResult,
             });
         } finally {
             setIsLoading(false);

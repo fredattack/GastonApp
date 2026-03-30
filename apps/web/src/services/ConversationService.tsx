@@ -10,6 +10,7 @@ class ConversationService {
     private static instance: ConversationService;
     private cache: Conversation[] = [];
     private loaded = false;
+    private loadingPromise: Promise<Conversation[]> | null = null;
 
     static getInstance(): ConversationService {
         if (!ConversationService.instance) {
@@ -21,7 +22,13 @@ class ConversationService {
 
     async getAll(): Promise<Conversation[]> {
         if (this.loaded) return this.cache;
+        if (this.loadingPromise) return this.loadingPromise;
 
+        this.loadingPromise = this.doLoad();
+        return this.loadingPromise;
+    }
+
+    private async doLoad(): Promise<Conversation[]> {
         await this.migrateFromLocalStorage();
 
         try {
@@ -33,6 +40,7 @@ class ConversationService {
             return [];
         } finally {
             this.loaded = true;
+            this.loadingPromise = null;
         }
     }
 
@@ -47,7 +55,7 @@ class ConversationService {
         });
 
         const conversation = this.fromApi(apiConv);
-        this.cache = [conversation, ...this.cache];
+        this.cache = [conversation, ...this.cache.filter((c) => c.id !== conversation.id)];
         return conversation;
     }
 

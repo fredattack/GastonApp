@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     List,
@@ -9,6 +9,8 @@ import {
     User,
     Moon,
     Sun,
+    CaretLeft,
+    CaretDoubleRight,
 } from "@phosphor-icons/react";
 
 import { IRootState } from "../../store";
@@ -20,9 +22,11 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+    const location = useLocation();
     const { user, logout } = useAuthContext();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const isHome = location.pathname === "/";
 
     const handleLogout = async () => {
         await logout();
@@ -35,8 +39,21 @@ const Header = () => {
         <header className="z-40">
             <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between px-4 py-2.5 lg:px-6">
-                    {/* Left: Logo (mobile) + Hamburger */}
-                    <div className="flex items-center gap-2 lg:hidden">
+                    {/* Left: Back button + Logo (mobile) + Hamburger */}
+                    <div className="flex items-center gap-1 lg:hidden">
+                        {!isHome && (
+                            <button
+                                type="button"
+                                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                onClick={() => navigate(-1)}
+                                aria-label={t("Retour")}
+                            >
+                                <CaretLeft
+                                    size={20}
+                                    className="text-gray-700 dark:text-gray-300"
+                                />
+                            </button>
+                        )}
                         <button
                             type="button"
                             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -57,6 +74,21 @@ const Header = () => {
                         </Link>
                     </div>
 
+                    {/* Desktop: Sidebar reopen button (when collapsed) */}
+                    {themeConfig.sidebar && (
+                        <button
+                            type="button"
+                            className="hidden lg:flex p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] min-w-[44px] items-center justify-center"
+                            onClick={() => dispatch(toggleSidebar())}
+                            aria-label={t("Ouvrir la barre de navigation")}
+                        >
+                            <CaretDoubleRight
+                                size={20}
+                                className="text-gray-600 dark:text-gray-400"
+                            />
+                        </button>
+                    )}
+
                     {/* Center: AI Search trigger */}
                     <div className="flex-1 flex justify-center lg:justify-start lg:ml-0">
                         <button
@@ -66,28 +98,13 @@ const Header = () => {
                                     new CustomEvent("open-command-bar"),
                                 )
                             }
-                            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors text-sm min-h-[44px]"
+                            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors text-sm min-h-[44px] flex-1 sm:flex-initial max-w-xs sm:max-w-none"
                         >
                             <MagnifyingGlass size={16} />
-                            <span>{t("Rechercher ou poser une question...")}</span>
-                            <kbd className="ml-2 px-1.5 py-0.5 text-[10px] bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 font-mono">
+                            <span className="truncate">{t("Rechercher ou poser une question...")}</span>
+                            <kbd className="hidden sm:inline ml-2 px-1.5 py-0.5 text-[10px] bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 font-mono">
                                 ⌘K
                             </kbd>
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() =>
-                                window.dispatchEvent(
-                                    new CustomEvent("open-command-bar"),
-                                )
-                            }
-                            className="sm:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                            aria-label={t("Rechercher")}
-                        >
-                            <MagnifyingGlass
-                                size={20}
-                                className="text-gray-600 dark:text-gray-400"
-                            />
                         </button>
                     </div>
 

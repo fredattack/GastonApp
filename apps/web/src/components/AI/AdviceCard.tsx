@@ -83,8 +83,8 @@ const AdviceCard: React.FC<AdviceCardProps> = ({ adviceData }) => {
     };
 
     const getConfidenceColor = () => {
-        if (confidence >= 80) return "text-green-600 dark:text-green-400";
-        if (confidence >= 60) return "text-yellow-600 dark:text-yellow-400";
+        if (confidence !== undefined && confidence >= 80) return "text-green-600 dark:text-green-400";
+        if (confidence !== undefined && confidence >= 60) return "text-yellow-600 dark:text-yellow-400";
         return "text-orange-600 dark:text-orange-400";
     };
 
