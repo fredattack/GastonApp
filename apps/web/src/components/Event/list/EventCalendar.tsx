@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { CaretDoubleLeft, CaretDoubleRight } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { dateStartOfDay, dateEndOfDay } from "../../../helpers";
 import { eventService } from "../../../services";
 
@@ -31,13 +32,20 @@ const VIEW_STYLES = {
 
 const EventCalendar = () => {
     const { events, isLoading, fetchEvents } = useEvents();
+    const [searchParams] = useSearchParams();
 
     const [filters, setFilters] = useState({
         pet_species: ["cat", "dog"],
         is_done: false,
     });
 
-    const [viewMode, setViewMode] = useState(VIEW_MODES.MONTH);
+    const [viewMode, setViewMode] = useState(() => {
+        const urlView = searchParams.get("view");
+        if (urlView && Object.values(VIEW_MODES).includes(urlView)) {
+            return urlView;
+        }
+        return VIEW_MODES.MONTH;
+    });
     const [viewStyle, setViewStyle] = useState(VIEW_STYLES.CARD);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState<EventFormData | null>(
@@ -49,7 +57,7 @@ const EventCalendar = () => {
     >();
 
     useEffect(() => {
-        const { start_date, end_date } = getDateRange(currentDate);
+        const { start_date, end_date } = getDateRange(currentDate, viewMode);
         fetchEvents(start_date, end_date);
     }, []);
 
@@ -84,15 +92,17 @@ const EventCalendar = () => {
         }
         if (mode === VIEW_MODES.WEEK) {
             const startOfWeek = new Date(date);
-            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
-            const endOfWeek = new Date(date);
+            const day = date.getDay();
+            const diffToMonday = day === 0 ? -6 : 1 - day;
+            startOfWeek.setDate(date.getDate() + diffToMonday);
+            const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             return {
                 start_date: formatDateToIso(dateStartOfDay(startOfWeek)),
                 end_date: formatDateToIso(dateEndOfDay(endOfWeek)),
             };
         }
-        const startOfMonth = new Date(currentDate);
+        const startOfMonth = new Date(date);
         startOfMonth.setDate(1);
         const endOfMonth = new Date(startOfMonth);
         endOfMonth.setMonth(startOfMonth.getMonth() + 1);
@@ -114,7 +124,9 @@ const EventCalendar = () => {
         }
         if (viewMode === VIEW_MODES.WEEK) {
             const startOfWeek = new Date(date);
-            startOfWeek.setDate(date.getDate() - date.getDay());
+            const day = date.getDay();
+            const diffToMonday = day === 0 ? -6 : 1 - day;
+            startOfWeek.setDate(date.getDate() + diffToMonday);
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             return `${startOfWeek.toLocaleDateString("fr-FR", {
@@ -136,7 +148,7 @@ const EventCalendar = () => {
 
         const { start_date, end_date } = getDateRange(currentDate, mode);
 
-        fetchEvents(formatDateToIso(start_date), formatDateToIso(end_date));
+        fetchEvents(start_date, end_date);
     };
 
     const handleSetViewStyle = async (style: any) => {
@@ -272,37 +284,64 @@ const EventCalendar = () => {
     };
 
     return (
-        <div key={viewMode} className="event-calendar" data-testid="event-calendar">
-            <div className="toolbar flex items-center justify-end mb-4 mx-3">
-                <DisplaySettingsDropdown
-                    key={viewMode}
-                    onChangeViewMode={handleSetViewMode}
-                    onChangeViewStyle={handleSetViewStyle}
-                    viewMode={viewMode}
-                />
-            </div>
-            <div className="toolbar flex items-center justify-between mb-4 mx-3">
-                <div className="navigation-buttons flex items-center gap-2">
-                    <button onClick={handlePrev} className="text-gray-500">
-                        <CaretDoubleLeft size={20} className="m-auto" />
+        <div className="event-calendar" data-testid="event-calendar">
+            <div className="toolbar flex items-center justify-between mb-4 mx-3 gap-3 flex-wrap">
+                {/* Navigation */}
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={handlePrev}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-lin-0 hover:bg-lin-2 shadow-ds-xs transition-colors"
+                    >
+                        <CaretLeft size={18} className="text-[#6B6B6B]" />
                     </button>
-
-                    <span>{formatDate(currentDate)}</span>
-
-                    <button onClick={handleNext} className="text-gray-500">
-                        <CaretDoubleRight size={20} className="m-auto" />
+                    <span className="font-nunito font-bold text-[#1A1A1A] whitespace-nowrap min-w-[100px] text-center">
+                        {formatDate(currentDate)}
+                    </span>
+                    <button
+                        onClick={handleNext}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-lin-0 hover:bg-lin-2 shadow-ds-xs transition-colors"
+                    >
+                        <CaretRight size={18} className="text-[#6B6B6B]" />
                     </button>
-                </div>
-                <div>
                     <button
                         onClick={handleToday}
-                        className="btn btn-outline-dark btn-sm"
+                        className="text-sm font-semibold text-primary-700 hover:bg-primary-50 px-4 py-2 rounded-full transition-colors ml-1"
                         data-testid="calendar-today-button"
                     >
-                        Today
+                        Aujourd'hui
                     </button>
                 </div>
-                <div>
+
+                {/* Segmented Control + Actions */}
+                <div className="flex items-center gap-2">
+                    {/* View Mode Segmented Control */}
+                    <div className="flex bg-lin-2 rounded-full p-1">
+                        {[
+                            { mode: "day", label: "Jour" },
+                            { mode: "week", label: "Semaine" },
+                            { mode: "month", label: "Mois" },
+                        ].map(({ mode, label }) => (
+                            <button
+                                key={mode}
+                                type="button"
+                                onClick={() => handleSetViewMode(mode)}
+                                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                                    viewMode === mode
+                                        ? "bg-lin-0 shadow-ds-sm text-[#1A1A1A]"
+                                        : "text-[#6B6B6B] hover:text-[#4A4A4A]"
+                                }`}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* More Options */}
+                    <DisplaySettingsDropdown
+                        onChangeViewStyle={handleSetViewStyle}
+                    />
+
+                    {/* Filters */}
                     <EventCalendarDropdown
                         filters={filters}
                         onFiltersChange={(filters: any) => {
@@ -370,8 +409,8 @@ const EventCalendar = () => {
                         />
                     )}
                     {viewStyle === VIEW_STYLES.CARE && (
-                        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                            <p className="text-gray-600 dark:text-gray-400">
+                        <div className="p-4 bg-lin-0 rounded-[16px]">
+                            <p className="text-[#6B6B6B]">
                                 Vue soins médicaux à implémenter
                             </p>
                         </div>

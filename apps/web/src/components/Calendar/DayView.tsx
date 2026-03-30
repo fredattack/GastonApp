@@ -1,8 +1,8 @@
 // @ts-nocheck
-// @ts-nocheck
 
 import React, { useState, useRef, useEffect } from "react";
-import { Clock, Plus, DotsSixVertical } from "@phosphor-icons/react";
+import { Clock, Plus, DotsSixVertical, CalendarBlank, CheckCircle } from "@phosphor-icons/react";
+import { getEventTypeColor } from "../../constants/eventColors";
 
 interface DayViewProps {
     currentDate: Date;
@@ -65,19 +65,6 @@ const DayView: React.FC<DayViewProps> = ({
 
     const getCurrentMinutes = (): number => {
         return new Date().getMinutes();
-    };
-
-    const getEventColor = (type: string) => {
-        const colors: Record<string, string> = {
-            medical: "bg-red-500 border-red-600",
-            care: "bg-pink-400 border-pink-500",
-            feeding: "bg-blue-500 border-blue-600",
-            appointment: "bg-purple-500 border-purple-600",
-            training: "bg-green-500 border-green-600",
-            social: "bg-yellow-500 border-yellow-600",
-            other: "bg-gray-500 border-gray-600",
-        };
-        return colors[type] || "bg-gray-500 border-gray-600";
     };
 
     const getCurrentTimePosition = () => {
@@ -162,11 +149,11 @@ const DayView: React.FC<DayViewProps> = ({
     }, [resizingEvent, resizeStartY]);
 
     return (
-        <div className="day-view bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="day-view bg-lin-0 rounded-[20px] shadow-ds-md border border-lin-4 overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <div className="flex items-center justify-between p-4 border-b border-lin-4 bg-lin-1">
                 <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-bold text-[#1A1A1A]">
                         {currentDate.toLocaleDateString("fr-FR", {
                             weekday: "long",
                             day: "numeric",
@@ -180,11 +167,18 @@ const DayView: React.FC<DayViewProps> = ({
                         </p>
                     )}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-[#6B6B6B]">
                     <Clock size={16} />
-                    <span>
-                        {events.length} événement{events.length > 1 ? "s" : ""}
-                    </span>
+                    {events.length === 0 ? (
+                        <span className="flex items-center gap-1.5">
+                            <CalendarBlank size={14} className="text-[#8E8E8E]" />
+                            <span className="text-[#8E8E8E]">Aucun événement prévu</span>
+                        </span>
+                    ) : (
+                        <span>
+                            {events.length} événement{events.length > 1 ? "s" : ""}
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -200,12 +194,12 @@ const DayView: React.FC<DayViewProps> = ({
                         <div
                             key={hour}
                             ref={isCurrentHour ? currentHourRef : null}
-                            className="flex border-b border-gray-200 dark:border-gray-700 relative"
+                            className="flex border-b border-lin-4 relative"
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, hour)}
                         >
                             {/* Hour label */}
-                            <div className="w-20 flex-shrink-0 py-3 px-3 text-sm text-gray-500 dark:text-gray-400 text-right bg-gray-50 dark:bg-gray-900">
+                            <div className="w-20 flex-shrink-0 py-3 px-3 text-sm tabular-nums text-[#6B6B6B] text-right bg-lin-1">
                                 {hour.toString().padStart(2, "0")}:00
                             </div>
 
@@ -213,9 +207,9 @@ const DayView: React.FC<DayViewProps> = ({
                             <div
                                 className={`
                                     flex-1 min-h-[80px] p-2
-                                    hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors
+                                    hover:bg-primary-50 cursor-pointer transition-colors
                                     ${isCurrentHour ? "bg-primary/5" : ""}
-                                    ${draggedEvent ? "bg-blue-100 dark:bg-blue-900/30" : ""}
+                                    ${draggedEvent ? "bg-primary/10" : ""}
                                     relative
                                 `}
                                 onClick={() =>
@@ -227,98 +221,74 @@ const DayView: React.FC<DayViewProps> = ({
                                 {/* Current time indicator */}
                                 {isCurrentHour && (
                                     <div
-                                        className="absolute left-0 right-0 h-0.5 bg-primary z-10 flex items-center"
+                                        className="absolute left-0 right-0 h-0.5 bg-secondary-400 z-10 flex items-center"
                                         style={{
                                             top: `${getCurrentTimePosition()}%`,
                                         }}
                                     >
-                                        <div className="w-3 h-3 rounded-full bg-primary -ml-1.5 shadow-md" />
+                                        <div className="w-3 h-3 rounded-full bg-secondary-400 -ml-1.5 shadow-md" />
                                         <div className="flex-1 h-full" />
                                     </div>
                                 )}
 
                                 {/* Events */}
                                 <div className="space-y-2">
-                                    {hourEvents.map((event, idx) => (
-                                        <div
-                                            key={event.id || idx}
-                                            draggable={!!onEventMove}
-                                            onDragStart={(e) =>
-                                                onEventMove &&
-                                                handleDragStart(e, event)
-                                            }
-                                            onDragEnd={handleDragEnd}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onEventClick(event);
-                                            }}
-                                            className={`
-                                                p-3 rounded-lg border-l-4 cursor-move
-                                                ${getEventColor(event.type)} text-white
-                                                hover:opacity-90 transition-all hover:shadow-md
-                                                ${draggedEvent?.id === event.id ? "opacity-50" : ""}
-                                                relative group
-                                            `}
-                                        >
-                                            {/* Drag handle */}
-                                            {onEventMove && (
-                                                <div className="absolute left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-50 transition-opacity">
-                                                    <DotsSixVertical
-                                                        size={16}
-                                                    />
-                                                </div>
-                                            )}
-
-                                            <div className="flex items-start justify-between">
-                                                <div className="flex-1">
-                                                    <div className="font-semibold text-sm mb-1">
-                                                        {event.title}
+                                    {hourEvents.map((event, idx) => {
+                                        const typeColors = getEventTypeColor(event.type);
+                                        return (
+                                            <div
+                                                key={event.id || idx}
+                                                draggable={!!onEventMove}
+                                                onDragStart={(e) =>
+                                                    onEventMove &&
+                                                    handleDragStart(e, event)
+                                                }
+                                                onDragEnd={handleDragEnd}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onEventClick(event);
+                                                }}
+                                                className={`
+                                                    p-3 rounded-lg border-l-4 cursor-move
+                                                    ${typeColors.bgLight} ${typeColors.text} ${typeColors.border}
+                                                    hover:opacity-90 transition-all hover:shadow-md
+                                                    ${draggedEvent?.id === event.id ? "opacity-50" : ""}
+                                                    relative group
+                                                `}
+                                            >
+                                                {/* Drag handle */}
+                                                {onEventMove && (
+                                                    <div className="absolute left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-50 transition-opacity">
+                                                        <DotsSixVertical
+                                                            size={16}
+                                                        />
                                                     </div>
-                                                    {event.pets &&
-                                                        event.pets.length >
-                                                            0 && (
-                                                            <div className="text-xs opacity-90 mb-2">
-                                                                <Clock
-                                                                    size={12}
-                                                                    className="mr-1 inline"
+                                                )}
+
+                                                <div className="flex items-start justify-between">
+                                                    <div className="flex-1">
+                                                        <div className="font-semibold text-sm mb-1 flex items-center gap-1">
+                                                            {event.is_done && (
+                                                                <CheckCircle
+                                                                    size={14}
+                                                                    weight="fill"
+                                                                    className="text-success shrink-0"
                                                                 />
-                                                                {new Date(
-                                                                    event.start_date,
-                                                                ).toLocaleTimeString(
-                                                                    "fr-FR",
-                                                                    {
-                                                                        hour: "2-digit",
-                                                                        minute: "2-digit",
-                                                                    },
-                                                                )}
-                                                                {" • "}
-                                                                {event.pets
-                                                                    .map(
-                                                                        (p) =>
-                                                                            p.name,
-                                                                    )
-                                                                    .join(", ")}
-                                                            </div>
-                                                        )}
-                                                    {event.notes && (
-                                                        <div className="text-xs opacity-80 line-clamp-2">
-                                                            {event.notes}
+                                                            )}
+                                                            <span className={event.is_done ? "line-through opacity-60" : ""}>
+                                                                {event.title}
+                                                            </span>
                                                         </div>
-                                                    )}
-                                                </div>
-                                                <div className="ml-2 opacity-50">
-                                                    <div className="text-xs">
-                                                        {event.end_date &&
-                                                            new Date(
-                                                                event.end_date,
-                                                            ).getHours() !==
-                                                                new Date(
-                                                                    event.start_date,
-                                                                ).getHours() && (
-                                                                <>
-                                                                    →{" "}
+                                                        {event.pets &&
+                                                            event.pets.length >
+                                                                0 && (
+                                                                <div className="text-xs opacity-90 mb-2">
+                                                                    <Clock
+                                                                        size={12}
+                                                                        className="mr-1 inline"
+                                                                    />
                                                                     {new Date(
-                                                                        event.end_date,
+                                                                        event.start_date,
                                                                     ).toLocaleTimeString(
                                                                         "fr-FR",
                                                                         {
@@ -326,35 +296,71 @@ const DayView: React.FC<DayViewProps> = ({
                                                                             minute: "2-digit",
                                                                         },
                                                                     )}
-                                                                </>
+                                                                    {" • "}
+                                                                    {event.pets
+                                                                        .map(
+                                                                            (p) =>
+                                                                                p.name,
+                                                                        )
+                                                                        .join(", ")}
+                                                                </div>
                                                             )}
+                                                        {event.notes && (
+                                                            <div className="text-xs opacity-80 line-clamp-2">
+                                                                {event.notes}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="ml-2 opacity-50">
+                                                        <div className="text-xs">
+                                                            {event.end_date &&
+                                                                new Date(
+                                                                    event.end_date,
+                                                                ).getHours() !==
+                                                                    new Date(
+                                                                        event.start_date,
+                                                                    ).getHours() && (
+                                                                    <>
+                                                                        →{" "}
+                                                                        {new Date(
+                                                                            event.end_date,
+                                                                        ).toLocaleTimeString(
+                                                                            "fr-FR",
+                                                                            {
+                                                                                hour: "2-digit",
+                                                                                minute: "2-digit",
+                                                                            },
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            {/* Resize handle */}
-                                            {onEventResize && (
-                                                <div
-                                                    className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
-                                                    onMouseDown={(e) =>
-                                                        handleResizeStart(
-                                                            e,
-                                                            event,
-                                                        )
-                                                    }
-                                                >
-                                                    <div className="h-1 bg-white/50 mx-auto w-12 rounded-full mt-0.5" />
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                                {/* Resize handle */}
+                                                {onEventResize && (
+                                                    <div
+                                                        className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
+                                                        onMouseDown={(e) =>
+                                                            handleResizeStart(
+                                                                e,
+                                                                event,
+                                                            )
+                                                        }
+                                                    >
+                                                        <div className="h-1 bg-white/50 mx-auto w-12 rounded-full mt-0.5" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Hover indicator */}
                                 {isHovered &&
                                     hourEvents.length === 0 &&
                                     !draggedEvent && (
-                                        <div className="absolute inset-0 flex items-center justify-center text-gray-400 opacity-50">
+                                        <div className="absolute inset-0 flex items-center justify-center text-[#8E8E8E] opacity-50">
                                             <Plus size={24} />
                                         </div>
                                     )}

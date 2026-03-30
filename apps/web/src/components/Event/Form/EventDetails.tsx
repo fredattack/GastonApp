@@ -7,6 +7,9 @@ import MultiSelect from "../../Form/MultiSelect";
 
 import { EventTypes } from "../../../enums/EventTypes";
 
+const inputClasses =
+    "block w-full bg-lin-1 border-2 border-lin-5 rounded-[12px] px-4 py-3 text-base text-[#1A1A1A] font-nunito min-h-[48px] placeholder:text-[#8E8E8E] hover:border-lin-6 focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 transition-colors duration-150";
+
 const EventDetails = ({
     formData,
     handleChange,
@@ -19,62 +22,65 @@ const EventDetails = ({
     const { t } = useTranslation();
 
     return (
-        <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
-            {/* Title */}
-            <div className="relative">
+        <div className="space-y-5 px-1">
+            {/* Title - Full width */}
+            <div>
                 <label
-                    htmlFor="name"
-                    className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first"
+                    htmlFor="title"
+                    className="block text-sm font-semibold text-[#4A4A4A] mb-2"
                 >
-                    {t("title")}
+                    {t("event.title")}
                 </label>
                 <input
                     id="title"
                     name="title"
                     type="text"
+                    placeholder={t("event.title")}
                     value={formData.title}
                     onChange={(e) => handleChange("title", e.target.value)}
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                    className={inputClasses}
                 />
             </div>
 
-            {/* Type */}
-            <SingleSelect
-                label={t("type")}
-                options={EventTypes.asOptionArray()}
-                value={formData.type}
-                onChange={(value) => handleChange("type", value)}
-            />
-            {![EventTypes.Feeding, EventTypes.Medical].includes(
-                formData.type,
-            ) && (
-                <MultiSelect
-                    label={t("pets")}
-                    options={petOptions}
-                    value={formData.petId}
-                    onChange={(value) => handleChange("petId", value)}
+            {/* Type + Pets - Side by side on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <SingleSelect
+                    label={t("event.type")}
+                    options={EventTypes.asOptionArray()}
+                    value={formData.type}
+                    onChange={(value) => handleChange("type", value)}
+                />
+
+                {![EventTypes.Feeding, EventTypes.Medical].includes(
+                    formData.type,
+                ) && (
+                    <MultiSelect
+                        label={t("event.pets")}
+                        options={petOptions}
+                        value={formData.petId}
+                        onChange={(value) => handleChange("petId", value)}
+                    />
+                )}
+            </div>
+
+            {/* Full day toggle */}
+            {formData.type !== EventTypes.Feeding && (
+                <Toggle
+                    label={t("event.full_day")}
+                    initialState={formData.is_full_day}
+                    onChange={(e) => handleChange("is_full_day", e)}
                 />
             )}
-            {/* #region toggle fullday */}
-            {formData.type !== EventTypes.Feeding && (
-                <div className="sm:col-span-6">
-                    <Toggle
-                        label={t("full_day")}
-                        initialState={formData.is_full_day}
-                        onChange={(e) => handleChange("is_full_day", e)}
-                    />
-                </div>
-            )}
-            {/* #region date start */}
-            <div className="sm:col-span-3">
-                <div className="relative">
+
+            {/* Dates - Side by side */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
                     <label
                         htmlFor="start_date"
-                        className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first"
+                        className="block text-sm font-semibold text-[#4A4A4A] mb-2"
                     >
-                        {t("when")}
+                        {t("event.start_date")}
                     </label>
-
                     <input
                         id="start_date"
                         name="start_date"
@@ -83,44 +89,51 @@ const EventDetails = ({
                             formData.start_date
                                 ? new Date(formData.start_date)
                                       .toISOString()
-                                      .slice(0, formData.is_full_day ? 10 : 16) // 📅 Ajuste selon le type
+                                      .slice(
+                                          0,
+                                          formData.is_full_day ? 10 : 16,
+                                      )
                                 : ""
                         }
                         onChange={(e) =>
                             handleChange("start_date", e.target.value)
                         }
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                        className={inputClasses}
                     />
                 </div>
-            </div>
-            {/* #region date end */}
-            {!["feeding"].includes(formData.type) && (
-                <div className="relative">
-                    <label
-                        htmlFor="end_date"
-                        className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first"
-                    >
-                        {t("end")}
-                    </label>
 
-                    <input
-                        id="end_date"
-                        name="end_date"
-                        type={formData.is_full_day ? "date" : "datetime-local"}
-                        value={
-                            formData.end_date
-                                ? new Date(formData.end_date)
-                                      .toISOString()
-                                      .slice(0, formData.is_full_day ? 10 : 16)
-                                : ""
-                        }
-                        onChange={(e) =>
-                            handleChange("end_date", e.target.value)
-                        }
-                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
-                    />
-                </div>
-            )}
+                {!["feeding"].includes(formData.type) && (
+                    <div>
+                        <label
+                            htmlFor="end_date"
+                            className="block text-sm font-semibold text-[#4A4A4A] mb-2"
+                        >
+                            {t("event.end_date")}
+                        </label>
+                        <input
+                            id="end_date"
+                            name="end_date"
+                            type={
+                                formData.is_full_day ? "date" : "datetime-local"
+                            }
+                            value={
+                                formData.end_date
+                                    ? new Date(formData.end_date)
+                                          .toISOString()
+                                          .slice(
+                                              0,
+                                              formData.is_full_day ? 10 : 16,
+                                          )
+                                    : ""
+                            }
+                            onChange={(e) =>
+                                handleChange("end_date", e.target.value)
+                            }
+                            className={inputClasses}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,20 +1,7 @@
 import React from "react";
-import {
-    DotsThree,
-    Eye,
-    PencilSimple,
-    Trash,
-    Copy,
-    CheckSquare,
-    X,
-    Funnel,
-} from "@phosphor-icons/react";
-import { useMessage } from "../../../contexts/MessageContext";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { Funnel } from "@phosphor-icons/react";
 import Toggle from "../../Form/Toggle";
-
-import Dropdown from "../../Dropdown";
-import { eventService } from "../../../services";
-import { useToast } from "../../../providers/ToastProvider";
 import MultiSelect from "../../Form/MultiSelect";
 
 interface EventDropdownProps {
@@ -26,11 +13,8 @@ const EventCalendarDropdown = ({
     filters,
     onFiltersChange,
 }: EventDropdownProps) => {
-    const { addToast } = useToast();
-    const { handelOpenModal } = useMessage();
-
     const handleChange = (key: string, value: any) => {
-        if (value) {
+        if (value !== undefined) {
             onFiltersChange({
                 ...filters,
                 [key]: value,
@@ -39,60 +23,48 @@ const EventCalendarDropdown = ({
     };
 
     return (
-        <div className="dropdown flex justify-center items-center col-span-2">
-            <Dropdown
-                placement="top-end"
-                btnClassName="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
-                button={<Funnel size={20} className="m-auto" />}
+        <Menu as="div" className="relative inline-block text-left">
+            <MenuButton className="flex items-center justify-center w-10 h-10 rounded-full text-[#6B6B6B] hover:bg-lin-2 transition-colors">
+                <Funnel size={18} />
+            </MenuButton>
+
+            <MenuItems
+                transition
+                className="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-[16px] bg-lin-0 shadow-ds-sm ring-1 ring-lin-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
             >
-                <ul className="!min-w-[170px] z-50 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2">
-                    <li>
-                        <button
-                            type="button"
-                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                            <Toggle
-                                label="Show done"
-                                initialState={
-                                    "is_done" in filters
-                                        ? Boolean(filters.is_done)
-                                        : undefined
-                                }
-                                onChange={(e) => handleChange("is_done", e)}
-                            />
-                        </button>
-                    </li>
-                    <li className="border-b" />
-                    <li className="pb-2 px-2">
+                <div className="p-1">
+                    <p className="px-3 py-1.5 text-[11px] font-semibold text-[#9A9A8A] uppercase tracking-wider">
+                        Filtres
+                    </p>
+                    <div className="px-3 py-2 min-h-[44px] flex items-center">
+                        <Toggle
+                            label="Terminés"
+                            initialState={
+                                "is_done" in filters
+                                    ? Boolean((filters as any).is_done)
+                                    : false
+                            }
+                            onChange={(e) => handleChange("is_done", e)}
+                        />
+                    </div>
+                </div>
+                <div className="border-t border-lin-3 p-1">
+                    <p className="px-3 py-1.5 text-[11px] font-semibold text-[#9A9A8A] uppercase tracking-wider">
+                        Espèces
+                    </p>
+                    <div className="px-3 py-2">
                         <MultiSelect
                             options={[
-                                {
-                                    label: "Cat",
-                                    value: "cat",
-                                },
-                                {
-                                    label: "Dog",
-                                    value: "dog",
-                                },
+                                { label: "Chat", value: "cat" },
+                                { label: "Chien", value: "dog" },
                             ]}
-                            // @ts-ignore
-                            value={filters.pet_species ?? []}
+                            value={(filters as any).pet_species ?? []}
                             onChange={(e) => handleChange("pet_species", e)}
                         />
-                    </li>
-                    <li className="border-b" />
-                    <li>
-                        <button
-                            type="button"
-                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
-                        >
-                            <Trash size={16} className="mr-2 inline" />
-                            Delete Event
-                        </button>
-                    </li>
-                </ul>
-            </Dropdown>
-        </div>
+                    </div>
+                </div>
+            </MenuItems>
+        </Menu>
     );
 };
 

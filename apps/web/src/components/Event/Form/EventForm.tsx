@@ -4,6 +4,7 @@ import React, {
     forwardRef,
     useImperativeHandle,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import { usePets } from "../../../contexts/PetsContext";
 import { modelService } from "../../../services";
@@ -19,6 +20,7 @@ interface EventFormProps {
     onSubmit?: (data: EventFormData) => void;
     onChange?: (data: EventFormData) => void;
     onCancel?: () => void;
+    submittable?: boolean;
     submitable?: boolean;
 }
 
@@ -29,41 +31,50 @@ const EventForm = forwardRef(
             onSubmit,
             onChange,
             onCancel,
-            submitable = false,
+            submittable = false,
+            submitable,
         }: EventFormProps,
         ref,
     ) => {
+        const { t } = useTranslation();
         const { addToast } = useToast();
-        const { pets, refreshPets } = usePets();
+        const { pets } = usePets();
 
         const petOptions = pets?.map((pet) => ({
             value: pet.id.toString(),
             label: pet.name,
         }));
 
-        const [eventFormData, setEventFormData] = useState<EventFormData>({
-            id: event?.id || null,
-            master_id: event?.master_id || null,
-            petId: event?.petId || "",
-            type: event?.type || "",
-            start_date: event?.start_date || "",
-            title: event?.title || "",
-            end_date: event?.end_date || "",
-            is_recurring: event?.is_recurring || false,
-            is_full_day: event?.is_full_day || false,
-            recurrence: event?.recurrence || {
+        const buildFormData = (src: EventFormData): EventFormData => ({
+            id: src?.id || null,
+            master_id: src?.master_id || null,
+            petId: src?.petId || "",
+            type: src?.type || "",
+            start_date: src?.start_date || "",
+            title: src?.title || "",
+            end_date: src?.end_date || "",
+            is_recurring: src?.is_recurring || false,
+            is_full_day: src?.is_full_day || false,
+            recurrence: src?.recurrence || {
                 frequency_type: "",
                 frequency: 1,
                 days: [],
                 end_date: "",
                 occurrences: 0,
             },
-            pets: event?.pets || [],
-            notes: event?.notes || "",
-            is_done: event?.is_done || false,
+            pets: src?.pets || [],
+            notes: src?.notes || "",
+            is_done: src?.is_done || false,
         });
 
-        const [isLoadingPets, setIsLoadingPets] = useState<boolean>(false);
+        const [eventFormData, setEventFormData] = useState<EventFormData>(
+            buildFormData(event),
+        );
+
+        // Re-sync when event prop changes (fixes pre-fill bug)
+        useEffect(() => {
+            setEventFormData(buildFormData(event));
+        }, [event]);
 
         useEffect(() => {
             if (!eventFormData.is_recurring) {
@@ -111,7 +122,7 @@ const EventForm = forwardRef(
             }));
         }
 
-        const handleSubmit = async (e: React.FormEvent) => {
+        const handleSubmit = async (e?: React.FormEvent) => {
             try {
                 if (!eventFormData.type || !eventFormData.start_date) {
                     addToast({
@@ -131,7 +142,9 @@ const EventForm = forwardRef(
                     await modelService.add("events", eventFormData);
                 }
                 addToast({
-                    message: "Event successfully created!",
+                    message: eventFormData.id
+                        ? t("event.updated_success")
+                        : t("event.created_success"),
                     type: "success",
                 });
                 if (onSubmit) onSubmit(eventFormData);
@@ -144,76 +157,73 @@ const EventForm = forwardRef(
             }
         };
 
-        if (isLoadingPets) {
-            return (
-                <div className="flex justify-center items-center h-64">
-                    <p className="text-gray-500">Loading pets...</p>
-                </div>
-            );
-        }
-
         return (
-            <form className="shadow-sm ring-1 ring-gray-300 rounded-md py-3 divide-y">
+            <form className="bg-lin-0 rounded-[20px] border border-lin-4 space-y-6 py-6 px-5">
                 <EventDetails
                     formData={eventFormData}
                     handleChange={handleChange}
                     petOptions={petOptions}
                 />
 
-                <EventRecurrence
-                    key={eventFormData.recurrence.toString()}
-                    formData={eventFormData}
-                    handleChange={handleChange}
-                    handelChangeRecurrence={handelChangeRecurrence}
-                />
+                <div className="border-t border-lin-4 pt-5">
+                    <EventRecurrence
+                        key={eventFormData.recurrence.toString()}
+                        formData={eventFormData}
+                        handleChange={handleChange}
+                        handelChangeRecurrence={handelChangeRecurrence}
+                    />
+                </div>
 
                 {[EventTypes.Feeding, EventTypes.Medical].includes(
                     eventFormData.type,
                 ) && (
-                    <PetDetails
-                        pets={petOptions}
-                        formData={eventFormData}
-                        handleChange={handleChange}
-                        // handelChangeRecurrence={handelChangeRecurrence}
-                    />
-                )}
-
-                {/* #region notes */}
-                <div className="px-3 py-2 grid grid-cols-1 sm:grid-cols-6 gap-3">
-                    <div className="relative">
-                        <label
-                            htmlFor="notes"
-                            className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first"
-                        >
-                            Notes
-                        </label>
-                        <textarea
-                            id="notes"
-                            name="notes"
-                            rows={3}
-                            value={eventFormData.notes}
-                            onChange={(e) => handleChange("notes", e)}
-                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                    <div className="border-t border-lin-4 pt-5">
+                        <PetDetails
+                            pets={petOptions}
+                            formData={eventFormData}
+                            handleChange={handleChange}
                         />
                     </div>
+                )}
+
+                {/* Notes */}
+                <div className="border-t border-lin-4 pt-5 px-1">
+                    <label
+                        htmlFor="notes"
+                        className="block text-sm font-semibold text-[#4A4A4A] mb-2"
+                    >
+                        {t("event.notes")}
+                    </label>
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        rows={3}
+                        value={eventFormData.notes}
+                        onChange={(e) =>
+                            handleChange("notes", e.target.value)
+                        }
+                        className="block w-full bg-lin-1 border-2 border-lin-5 rounded-[12px] px-4 py-3 text-base text-[#1A1A1A] font-nunito min-h-[48px] placeholder:text-[#8E8E8E] hover:border-lin-6 focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 transition-colors duration-150"
+                    />
                 </div>
 
                 {/* Action buttons */}
-                {submitable && (
-                    <div className="flex justify-end space-x-4 mt-5 px-3 py-2">
-                        <button
-                            type="button"
-                            onClick={onCancel}
-                            className="btn btn-secondary"
-                        >
-                            Annuler
-                        </button>
+                {(submittable || submitable) && (
+                    <div className="flex justify-end gap-3 pt-4 border-t border-lin-4 px-1">
+                        {onCancel && (
+                            <button
+                                type="button"
+                                onClick={onCancel}
+                                className="px-6 py-3 min-h-[48px] rounded-full border-2 border-primary text-primary-700 font-semibold hover:bg-primary-50 transition-colors focus-visible:ring-[3px] focus-visible:ring-primary focus-visible:ring-offset-2"
+                            >
+                                {t("event.cancel")}
+                            </button>
+                        )}
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            className="btn btn-primary"
+                            className="px-8 py-3 min-h-[48px] rounded-full bg-[#1A1A1A] text-white font-semibold hover:bg-[#333] shadow-ds-md hover:shadow-ds-lg transition-all focus-visible:ring-[3px] focus-visible:ring-primary focus-visible:ring-offset-2"
                         >
-                            Enregistrer
+                            {t("event.save")}
                         </button>
                     </div>
                 )}

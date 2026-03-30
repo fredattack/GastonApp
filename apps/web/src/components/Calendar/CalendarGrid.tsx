@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, CheckCircle } from "@phosphor-icons/react";
+import { getEventTypeColor } from "../../constants/eventColors";
 
 interface CalendarGridProps {
     currentDate: Date;
@@ -76,26 +77,13 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
     const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
-    const getEventColor = (type: string) => {
-        const colors: Record<string, string> = {
-            medical: "bg-red-500",
-            care: "bg-pink-400",
-            feeding: "bg-blue-500",
-            appointment: "bg-purple-500",
-            training: "bg-green-500",
-            social: "bg-yellow-500",
-            other: "bg-gray-500",
-        };
-        return colors[type] || "bg-gray-500";
-    };
-
     return (
-        <div className="calendar-grid bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
+        <div className="calendar-grid bg-lin-0 rounded-[20px] shadow-ds-md border border-lin-4 overflow-hidden">
+            <div className="grid grid-cols-7 border-b border-lin-4">
                 {weekDays.map((day) => (
                     <div
                         key={day}
-                        className="text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                        className="text-center py-3 text-[#6B6B6B] font-semibold text-xs uppercase tracking-wider"
                     >
                         {day}
                     </div>
@@ -109,14 +97,15 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                         hoveredDate &&
                         date &&
                         hoveredDate.toDateString() === date.toDateString();
+                    const todayCell = isToday(date);
 
                     return (
                         <div
                             key={index}
                             className={`
-                                min-h-[120px] border-b border-r border-gray-200 dark:border-gray-700 p-2
-                                ${date ? "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" : "bg-gray-50 dark:bg-gray-900"}
-                                ${isToday(date) ? "ring-2 ring-primary ring-inset" : ""}
+                                group min-h-[120px] border-b border-r border-lin-4 p-2
+                                ${date ? "bg-lin-0 hover:bg-primary-50 cursor-pointer" : "bg-lin-1"}
+                                ${todayCell ? "bg-primary/5 ring-2 ring-primary ring-inset" : ""}
                                 transition-colors relative
                             `}
                             onClick={() => date && onDateClick(date)}
@@ -130,9 +119,9 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                             className={`
                                                 text-sm font-semibold
                                                 ${
-                                                    isToday(date)
+                                                    todayCell
                                                         ? "bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center"
-                                                        : "text-gray-700 dark:text-gray-300"
+                                                        : "text-[#4A4A4A]"
                                                 }
                                             `}
                                         >
@@ -145,7 +134,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                                     e.stopPropagation();
                                                     onDateClick(date);
                                                 }}
-                                                className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-primary p-1"
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#8E8E8E] hover:text-primary p-1"
                                             >
                                                 <Plus size={14} />
                                             </button>
@@ -155,37 +144,50 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                                     <div className="space-y-1 overflow-y-auto max-h-[80px]">
                                         {dayEvents
                                             .slice(0, 3)
-                                            .map((event, idx) => (
-                                                <div
-                                                    key={event.id || idx}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        onEventClick(event);
-                                                    }}
-                                                    className={`
-                                                    text-xs px-2 py-1 rounded truncate cursor-pointer
-                                                    ${getEventColor(event.type)} text-white
-                                                    hover:opacity-80 transition-opacity
-                                                `}
-                                                    title={event.title}
-                                                >
-                                                    <span className="font-medium">
-                                                        {new Date(
-                                                            event.start_date,
-                                                        ).toLocaleTimeString(
-                                                            "fr-FR",
-                                                            {
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            },
+                                            .map((event, idx) => {
+                                                const typeColors = getEventTypeColor(event.type);
+                                                return (
+                                                    <div
+                                                        key={event.id || idx}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onEventClick(event);
+                                                        }}
+                                                        className={`
+                                                            rounded-full px-2 py-0.5 text-xs font-semibold truncate cursor-pointer
+                                                            border-l-2 ${typeColors.border}
+                                                            ${typeColors.bgLight} ${typeColors.text}
+                                                            hover:opacity-80 transition-opacity
+                                                        `}
+                                                        title={event.title}
+                                                    >
+                                                        {event.is_done && (
+                                                            <CheckCircle
+                                                                size={12}
+                                                                weight="fill"
+                                                                className="inline-block text-success shrink-0 -ml-0.5"
+                                                            />
                                                         )}
-                                                    </span>{" "}
-                                                    {event.title}
-                                                </div>
-                                            ))}
+                                                        <span className="font-medium">
+                                                            {new Date(
+                                                                event.start_date,
+                                                            ).toLocaleTimeString(
+                                                                "fr-FR",
+                                                                {
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                },
+                                                            )}
+                                                        </span>{" "}
+                                                        <span className={event.is_done ? "line-through opacity-60" : ""}>
+                                                            {event.title}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
 
                                         {dayEvents.length > 3 && (
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1">
+                                            <div className="text-primary-500 font-semibold text-xs cursor-pointer hover:underline px-2 py-1">
                                                 +{dayEvents.length - 3} autre
                                                 {dayEvents.length - 3 > 1
                                                     ? "s"

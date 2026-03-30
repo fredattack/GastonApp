@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import {
-    DotsThreeVertical,
+    DotsThree,
     Pill,
     ShareNetwork,
     ForkKnife,
@@ -8,130 +8,64 @@ import {
 } from "@phosphor-icons/react";
 
 export default function DisplaySettingsDropdown({
-    viewMode,
-    onChangeViewMode,
     onChangeViewStyle,
 }: {
-    viewMode: string;
-    onChangeViewMode: (mode: string) => void;
     onChangeViewStyle: (mode: string) => void;
 }) {
     return (
         <Menu as="div" className="relative inline-block text-left">
-            <div>
-                <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md  px-3 py-2 text-sm font-semibold text-gray-500  hover:bg-gray-50">
-                    <DotsThreeVertical size={20} />
-                </MenuButton>
-            </div>
+            <MenuButton className="flex items-center justify-center w-10 h-10 rounded-full text-[#6B6B6B] hover:bg-lin-2 transition-colors">
+                <DotsThree size={20} weight="bold" />
+            </MenuButton>
 
             <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-[16px] bg-lin-0 shadow-ds-sm ring-1 ring-lin-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
             >
-                <div className="py-1">
+                <div className="p-1">
+                    <p className="px-3 py-1.5 text-[11px] font-semibold text-[#9A9A8A] uppercase tracking-wider">
+                        Affichage
+                    </p>
                     <MenuItem>
-                        <div className="group p-2 ">
-                            <div className="inline-flex align-middle w-full">
-                                <button
-                                    type="button"
-                                    className={`group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none ${viewMode === "day" ? "border bg-gray-100" : ""}`}
-                                    onClick={() => onChangeViewMode("day")}
-                                >
-                                    Day
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none ${viewMode === "week" ? "border bg-gray-200" : ""}`}
-                                    onClick={() => onChangeViewMode("week")}
-                                >
-                                    Week
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none ${viewMode === "month" ? "border bg-gray-200" : ""}`}
-                                    onClick={() => onChangeViewMode("month")}
-                                >
-                                    Month
-                                </button>
-                            </div>
-                        </div>
+                        <button
+                            type="button"
+                            className="w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 text-sm text-[#4A4A3A] rounded-lg data-[focus]:bg-primary-50 transition-colors"
+                            onClick={() => onChangeViewStyle("card")}
+                        >
+                            <SquaresFour size={18} className="text-[#9A9A8A]" />
+                            Par défaut
+                        </button>
+                    </MenuItem>
+                    <MenuItem>
+                        <button
+                            type="button"
+                            className="w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 text-sm text-[#4A4A3A] rounded-lg data-[focus]:bg-primary-50 transition-colors"
+                            onClick={() => onChangeViewStyle("feeding")}
+                        >
+                            <ForkKnife size={18} className="text-[#9A9A8A]" />
+                            Repas
+                        </button>
+                    </MenuItem>
+                    <MenuItem>
+                        <button
+                            type="button"
+                            className="w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 text-sm text-[#4A4A3A] rounded-lg data-[focus]:bg-primary-50 transition-colors"
+                            onClick={() => onChangeViewStyle("care")}
+                        >
+                            <Pill size={18} className="text-[#9A9A8A]" />
+                            Soins médicaux
+                        </button>
                     </MenuItem>
                 </div>
-                <div className="py-1">
+                <div className="border-t border-lin-3 p-1">
                     <MenuItem>
-                        <div className="group">
-                            <div
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                                onClick={() => onChangeViewStyle("card")}
-                            >
-                                <SquaresFour
-                                    size={20}
-                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
-                                />
-                                Default
-                            </div>
-
-                            <div
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                                onClick={() => onChangeViewStyle("feeding")}
-                            >
-                                <ForkKnife
-                                    size={20}
-                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
-                                />
-                                Repas
-                            </div>
-
-                            <div
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                                onClick={() => onChangeViewStyle("care")}
-                            >
-                                <Pill
-                                    size={20}
-                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
-                                />
-                                Soins médicaux
-                            </div>
-                        </div>
-                    </MenuItem>
-                </div>
-
-                <div className="py-1">
-                    <MenuItem>
-                        <div className="group">
-                            <a
-                                href="#"
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                            >
-                                <ShareNetwork
-                                    size={20}
-                                    className="mr-3 text-gray-400 group-data-[focus]:text-gray-500"
-                                />
-                                Share
-                            </a>
-                        </div>
-                    </MenuItem>
-                    <MenuItem>
-                        <div className="group">
-                            <a
-                                href="#"
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                            >
-                                Add to favorites
-                            </a>
-                        </div>
-                    </MenuItem>
-                </div>
-                <div className="py-1">
-                    <MenuItem>
-                        <div className="group">
-                            <a
-                                href="#"
-                                className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                            >
-                                Delete
-                            </a>
-                        </div>
+                        <button
+                            type="button"
+                            className="w-full min-h-[44px] flex items-center gap-2.5 px-3 py-2 text-sm text-[#4A4A3A] rounded-lg data-[focus]:bg-primary-50 transition-colors"
+                        >
+                            <ShareNetwork size={18} className="text-[#9A9A8A]" />
+                            Partager
+                        </button>
                     </MenuItem>
                 </div>
             </MenuItems>

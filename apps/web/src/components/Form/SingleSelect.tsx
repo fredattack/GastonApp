@@ -10,53 +10,76 @@ interface SingleSelectProps {
     }[];
     value: string;
     onChange: (value: string) => void;
-    required?: boolean; // Notez que required est marqué comme facultatif (optionnel)
+    required?: boolean;
 }
 
 const customStyles = {
     control: (provided: any, state: any) => ({
         ...provided,
-        className:
-            "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6",
-        borderColor: state.isFocused ? "#B38B56" : "#D1D5DB",
-        borderStyle: "solid",
-        boxShadow: "none",
+        backgroundColor: "#F9F7F4",
+        borderWidth: "2px",
+        borderColor: state.isFocused ? "#8FA998" : "#E0D8C3",
+        borderRadius: "12px",
+        minHeight: "48px",
+        boxShadow: state.isFocused
+            ? "0 0 0 3px rgba(143, 169, 152, 0.1)"
+            : "none",
+        "&:hover": {
+            borderColor: "#D6CBB5",
+        },
+        fontFamily: "'Nunito', sans-serif",
     }),
     placeholder: (provided: any) => ({
         ...provided,
-        className: "text-gray-400",
+        color: "#8E8E8E",
     }),
     input: (provided: any) => ({
         ...provided,
-        className: "text-gray-900",
+        color: "#1A1A1A",
     }),
     singleValue: (provided: any) => ({
         ...provided,
-        className: "text-gray-900",
+        color: "#1A1A1A",
     }),
     dropdownIndicator: (provided: any) => ({
         ...provided,
-        color: "#D1D5DB", // Tailwind primary color for the dropdown arrow
+        color: "#A99D85",
     }),
     indicatorSeparator: (provided: any) => ({
         ...provided,
-        backgroundColor: "#D1D5DB", // Tailwind gray-300 for separator
+        backgroundColor: "#E0D8C3",
     }),
     menu: (provided: any) => ({
         ...provided,
-        className: "mt-1 rounded-md bg-white shadow-lg",
+        borderRadius: "12px",
+        overflow: "hidden",
+        boxShadow:
+            "0 4px 8px 0 rgba(143, 169, 152, 0.12), 0 2px 4px 0 rgba(143, 169, 152, 0.06)",
+        border: "1px solid #E9E3D0",
     }),
     menuList: (provided: any) => ({
         ...provided,
-        className: "py-1",
+        padding: "4px",
     }),
     option: (provided: any, state: any) => ({
         ...provided,
-        className: `px-3 cursor-pointer ${
-            state.isSelected ? "bg-primary text-white" : "text-gray-900"
-        } hover:bg-gray-100`,
+        borderRadius: "8px",
+        cursor: "pointer",
+        minHeight: "44px",
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: state.isSelected
+            ? "#8FA998"
+            : state.isFocused
+              ? "#F4F7F5"
+              : "transparent",
+        color: state.isSelected ? "#FFFFFF" : "#1A1A1A",
+        "&:active": {
+            backgroundColor: "#E3EBE7",
+        },
     }),
 };
+
 const SingleSelect = ({
     label = null,
     options,
@@ -66,20 +89,18 @@ const SingleSelect = ({
     required = false,
 }: SingleSelectProps) => {
     return (
-        <div className="relative">
+        <div>
             {label && (
-                <label
-                    htmlFor="petId"
-                    className="absolute -top-2 left-2 inline-block rounded-lg bg-white px-1 text-xs font-medium text-gray-900 capitalize-first z-50"
-                >
+                <label className="block text-sm font-semibold text-[#4A4A4A] mb-2">
                     {label}
-                    {required && <span className="text-red-500">*</span>}
+                    {required && (
+                        <span className="text-danger ml-1">*</span>
+                    )}
                 </label>
             )}
             <Select
                 styles={customStyles}
                 required={required}
-                id="petId"
                 value={options.find((option) => option.value === value)}
                 onChange={(selectedOption) =>
                     selectedOption?.value !== undefined &&

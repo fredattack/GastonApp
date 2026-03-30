@@ -17,12 +17,22 @@ export class EventTypes {
         ];
     }
 
+    static labels(): Record<string, string> {
+        return {
+            [EventTypes.Medical]: "Soins médicaux",
+            [EventTypes.Feeding]: "Repas",
+            [EventTypes.Appointment]: "Rendez-vous",
+            [EventTypes.Other]: "Autre",
+        };
+    }
+
     static asOptionArray(): {
         label: string;
         value: string;
     }[] {
+        const labels = EventTypes.labels();
         return EventTypes.values().map((value) => ({
-            label: value.charAt(0).toUpperCase() + value.slice(1),
+            label: labels[value] ?? value,
             value,
         }));
     }
