@@ -18,10 +18,8 @@ import Sidebar from "./Sidebar";
 import Portals from "../Portals";
 import TabBar from "../Navigation/TabBar";
 import { CommandBar, useCommandBar } from "../AI/CommandBar";
-import {
-    AIAssistantProvider,
-    PENDING_INJECTION_KEY,
-} from "../../contexts/AIAssistantContext";
+import { AIAssistantProvider } from "../../contexts/AIAssistantContext";
+import { AIBridgeProvider, useAIBridge } from "../../contexts/AIBridgeContext";
 
 const AIWidgets = ({
     commandBarIsOpen,
@@ -31,20 +29,17 @@ const AIWidgets = ({
     commandBarClose: () => void;
 }) => {
     const navigate = useNavigate();
+    const { inject } = useAIBridge();
 
     const handleOpenChat = useCallback(
         (query: string, response: AIResponse) => {
-            sessionStorage.setItem(
-                PENDING_INJECTION_KEY,
-                JSON.stringify({
-                    query,
-                    aiResponse: response,
-                    timestamp: Date.now(),
-                }),
-            );
+            inject({
+                type: "redirect",
+                payload: { query, aiResponse: response },
+            });
             navigate("/ai-assistant");
         },
-        [navigate],
+        [navigate, inject],
     );
 
     return (
@@ -102,6 +97,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
     return (
         <App>
+            <AIBridgeProvider>
             <AIAssistantProvider>
                 <div className="relative">
                     {/* sidebar menu overlay (mobile) */}
@@ -188,6 +184,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     </div>
                 </div>
             </AIAssistantProvider>
+            </AIBridgeProvider>
         </App>
     );
 };

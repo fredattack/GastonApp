@@ -195,6 +195,25 @@ declare global {
         metricType: string;
     }
 
+    // Agent types for multi-agent routing
+    type AIAgentType =
+        | "pet"
+        | "health"
+        | "schedule"
+        | "nutrition"
+        | "finance"
+        | "household"
+        | "admin"
+        | "default";
+
+    // Structured block for agent-specific rendering
+    interface StructuredBlock {
+        id: string;
+        type: string;
+        data: Record<string, unknown>;
+        content?: string;
+    }
+
     // AI Response — matches backend AiOrchestratorResponse DTO exactly
     type AIRequestType =
         | "createEvent"
@@ -234,6 +253,8 @@ declare global {
         message?: string;
         conversationResponse?: string;
         emotionalTone?: string;
+        agentType?: AIAgentType;
+        blocks?: StructuredBlock[];
         healthDisclaimer?: HealthDisclaimer;
         petWarning?: {
             title?: string;
