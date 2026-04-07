@@ -1,31 +1,37 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { logger } from "@/utils/logger";
 
 const useSpeechRecognition = (
-    onTranscriptionUpdate: any,
+    onTranscriptionUpdate: (text: string) => void,
     onError?: (message: string) => void,
 ) => {
+    const isSupported = useMemo(() => {
+        if (typeof window === "undefined") return false;
+        return !!(
+            (window as any).SpeechRecognition ||
+            (window as any).webkitSpeechRecognition
+        );
+    }, []);
+
     const [isRecording, setIsRecording] = useState(false);
     const [transcription, setTranscription] = useState("");
     const recognitionRef = useRef<any>(null);
 
     const startRecording = (lang: string = "fr-FR") => {
-        const SpeechRecognition =
-            (window as any).SpeechRecognition ||
-            (window as any).webkitSpeechRecognition;
-
-        if (!SpeechRecognition) {
+        if (!isSupported) {
             const message =
                 "La reconnaissance vocale n'est pas prise en charge par votre navigateur.";
             if (onError) {
                 onError(message);
-            } else {
-                console.warn(message);
             }
             return;
         }
 
-        const recognition = new SpeechRecognition();
+        const SpeechRecognitionAPI =
+            (window as any).SpeechRecognition ||
+            (window as any).webkitSpeechRecognition;
+
+        const recognition = new SpeechRecognitionAPI();
         recognition.lang = lang;
         recognition.interimResults = true;
         recognition.continuous = true;
@@ -79,6 +85,7 @@ const useSpeechRecognition = (
 
     return {
         isRecording,
+        isSupported,
         transcription,
         startRecording,
         stopRecording,

@@ -8,14 +8,7 @@ import React, {
 import useConversations from "../hooks/ai/useConversations";
 import useAIStream from "../hooks/ai/useAIStream";
 import ConversationService from "../services/ConversationService";
-
-export const PENDING_INJECTION_KEY = "ai_assistant_pending_injection";
-
-interface PendingInjection {
-    query: string;
-    aiResponse: AIResponse;
-    timestamp: number;
-}
+import { useAIBridge } from "./AIBridgeContext";
 
 interface AIAssistantContextValue {
     conversations: Conversation[];
@@ -129,44 +122,40 @@ export const AIAssistantProvider: React.FC<AIAssistantProviderProps> = ({
         [createConversation, loadConversation, refreshConversations],
     );
 
-    // Process pending injection from CommandBar redirect (sessionStorage bridge)
+    // Process pending injection from CommandBar redirect (via AIBridgeContext)
+    const { pendingInjection: bridgeInjection, clear: clearBridge } = useAIBridge();
+
     useEffect(() => {
-        const raw = sessionStorage.getItem(PENDING_INJECTION_KEY);
-        if (!raw) return;
-        sessionStorage.removeItem(PENDING_INJECTION_KEY);
+        if (!bridgeInjection || bridgeInjection.type !== "redirect") return;
+        if (!bridgeInjection.payload.aiResponse) return;
 
-        try {
-            const pending: PendingInjection = JSON.parse(raw);
-            if (Date.now() - pending.timestamp > 30_000) return;
+        const { query, aiResponse } = bridgeInjection.payload;
+        clearBridge();
 
-            const convService = ConversationService.getInstance();
-            (async () => {
-                const conv = await createConversation(
-                    pending.query.slice(0, 40) +
-                        (pending.query.length > 40 ? "..." : ""),
-                );
-                await convService.addMessage(conv.id, {
-                    role: "user",
-                    content: pending.query,
-                });
-                await convService.addMessage(conv.id, {
-                    role: "assistant",
-                    content:
-                        pending.aiResponse.conversationResponse ||
-                        pending.aiResponse.description ||
-                        "",
-                    metadata: {
-                        isStreaming: false,
-                        aiResponse: pending.aiResponse,
-                    },
-                });
-                await refreshConversations();
-                loadConversation(conv.id);
-            })();
-        } catch {
-            // Malformed sessionStorage data, ignore
-        }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        const convService = ConversationService.getInstance();
+        (async () => {
+            const conv = await createConversation(
+                query.slice(0, 40) + (query.length > 40 ? "..." : ""),
+            );
+            await convService.addMessage(conv.id, {
+                role: "user",
+                content: query,
+            });
+            await convService.addMessage(conv.id, {
+                role: "assistant",
+                content:
+                    aiResponse.conversationResponse ||
+                    aiResponse.description ||
+                    "",
+                metadata: {
+                    isStreaming: false,
+                    aiResponse,
+                },
+            });
+            await refreshConversations();
+            loadConversation(conv.id);
+        })();
+    }, [bridgeInjection]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const value: AIAssistantContextValue = {
         conversations,
